@@ -119,6 +119,8 @@
         </p>
         <p><b>Setup:</b> extract the zip to a folder and run <b>Forevermore.exe</b>. Files are hosted on GitHub; the
           download button always gives the latest version.</p>
+        <p style="margin-top:8px; font-size:14px">ℹ️ On <a data-vt href="#faq">VirusTotal</a> only one of 64 antivirus
+          engines gives a false alarm; <a href="#antivirus">why?</a></p>
       </div>
       <details><summary>How do I know the file is genuine? (optional)</summary>
         <p>Download Forevermore only from this site; copies from elsewhere may have been modified. Two easy ways:</p>
@@ -144,9 +146,15 @@
           computer" on the old one and enter the key on the new one.</p></details>
       <details><summary>What happens when the subscription ends?</summary>
         <p>The app goes back to the free version. Your changes stay in place and can be undone at any time.</p></details>
-      <details><summary>My antivirus or Windows SmartScreen shows a warning.</summary>
-        <p>This is common for new, unsigned programs. Compare the zip's SHA-256 and the signature fingerprint in the app
-          with the values above; if they match, the file is exactly as published here.</p></details>
+      <details id="antivirus"><summary>My antivirus, VirusTotal or Windows SmartScreen shows a warning.</summary>
+        <p>Forevermore is written in Python and packaged with PyInstaller. Programs packaged this way often trigger false
+          alarms in smaller antivirus engines, because some malware uses the same packaging. As of October 2026, only one
+          of 64 engines on <a data-vt href="#faq">VirusTotal</a> (Zillya, "Trojan.Blank") flags it;
+          the other 63 engines find it clean.</p>
+        <p>Forevermore connects to the internet only to verify a Pro license and never reads passwords or browser data.
+          SmartScreen's "unknown publisher" warning is because the app does not have a paid code-signing certificate yet.
+          If the zip's SHA-256 and the signature fingerprint in the app match the values above, the file is exactly as
+          published here.</p></details>
     </div>
   </section>
 </main>

@@ -67,8 +67,11 @@ Forevermore'u yalnızca bu depodan ya da web sitesinden indirin.
 - Uygulamanın **Bilgi** sayfası "Orijinal kopya" yazmalı ve imza parmak izi şu olmalı: `5FE5-D786-0B89-A56E`
 - Her sürümün zip SHA-256 değeri [Releases](https://github.com/SlimelyW/forevermore/releases) sayfasında yazar.
 
-Antivirüs veya SmartScreen uyarısı yeni ve imzasız programlarda sık görülür; yukarıdaki değerler tutuyorsa dosya
-yayımlandığı gibidir.
+> **Antivirüs uyarısı hakkında:** Forevermore Python ile yazılıp PyInstaller ile paketlenir; bu yöntemle paketlenen
+> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.0.0 sürümünde
+> [VirusTotal](https://www.virustotal.com/gui/file/98fae42651a4a68571f01d4f5bef7a0e905cab99ba0f30c764188b2ea6f219e0)'da
+> 64 motordan yalnızca biri (Zillya, "Trojan.Blank") uyarı veriyor. SmartScreen'in "bilinmeyen yayımcı" uyarısı kod
+> imzalama sertifikası olmamasından kaynaklanır. Yukarıdaki değerler tutuyorsa dosya yayımlandığı gibidir.
 
 ## Gizlilik
 
@@ -100,6 +103,9 @@ measurements and experience.
 - **Download:** [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) →
   extract → run **Forevermore.exe**.
 - **Genuine copy:** the About page says "Original copy" and shows the signature fingerprint `5FE5-D786-0B89-A56E`.
+- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; for 2.0.0 only one of
+  64 engines on [VirusTotal](https://www.virustotal.com/gui/file/98fae42651a4a68571f01d4f5bef7a0e905cab99ba0f30c764188b2ea6f219e0)
+  (Zillya) flags it.
 - **Privacy:** no telemetry; only the license key and an anonymous computer ID are sent when a Pro license is verified.
   [Privacy policy](https://slimelyw.github.io/forevermore/gizlilik.html#en)
 - **License:** © 2026 Kubilay Paşa. All rights reserved. This repository contains only the website and the download;

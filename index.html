@@ -119,6 +119,8 @@
         </p>
         <p><b>Kurulum:</b> zip'i bir klasöre açın ve <b>Forevermore.exe</b>'yi çalıştırın. Dosyalar GitHub'da
           barındırılır; indirme düğmesi her zaman en son sürümü verir.</p>
+        <p style="margin-top:8px; font-size:14px">ℹ️ <a data-vt href="#sss">VirusTotal</a>'da 64 antivirüsten yalnızca
+          biri yanlış alarm veriyor; <a href="#antivirus">neden?</a></p>
       </div>
       <details><summary>Dosyanın orijinal olduğunu nasıl anlarım? (isteğe bağlı)</summary>
         <p>Forevermore'u yalnızca bu siteden indirin; başka yerden gelen kopyalar değiştirilmiş olabilir. İki kolay yol:</p>
@@ -144,9 +146,15 @@
           kaldır" deyip yenisinde anahtarı girmeniz yeterli.</p></details>
       <details><summary>Abonelik bitince ne olur?</summary>
         <p>Uygulama ücretsiz sürüme döner. Yaptığınız değişiklikler yerinde kalır ve istediğiniz zaman geri alınabilir.</p></details>
-      <details><summary>Antivirüs veya Windows SmartScreen uyarı verdi.</summary>
-        <p>Yeni ve imzasız programlarda bu uyarı sık görülür. Dosyanın SHA-256 özetini ve uygulamadaki imza parmak izini
-          yukarıdakilerle karşılaştırın; aynıysa dosya bu siteden çıktığı gibidir.</p></details>
+      <details id="antivirus"><summary>Antivirüs, VirusTotal veya Windows SmartScreen uyarı verdi.</summary>
+        <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bu yöntemle paketlenen programlar, bazı zararlı
+          yazılımlar da aynı yöntemi kullandığı için küçük antivirüslerde sık sık yanlış alarm verir. Ekim 2026 itibarıyla
+          <a data-vt href="#sss">VirusTotal</a>'da 64 antivirüsten yalnızca biri (Zillya, "Trojan.Blank") uyarı veriyor;
+          diğer 63 motor temiz buluyor.</p>
+        <p>Forevermore internete yalnızca Pro lisansını doğrulamak için bağlanır, şifre veya tarayıcı verisi okumaz.
+          SmartScreen'in "bilinmeyen yayımcı" uyarısı ise programın henüz ücretli bir kod imzalama sertifikası
+          olmamasından kaynaklanır. Dosyanın SHA-256 özeti ve uygulamadaki imza parmak izi yukarıdakilerle aynıysa
+          dosya bu siteden çıktığı gibidir.</p></details>
     </div>
   </section>
 </main>
