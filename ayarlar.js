@@ -8,12 +8,14 @@ window.FOREVERMORE = {
   satinal: "",
   // Aboneliği yönet (müşteri portalı): "https://MAGAZA.lemonsqueezy.com/billing"
   portal: "https://forevermore.lemonsqueezy.com/billing",
+  // Tüm sürümler ve sürüm notları (GitHub Releases)
+  github: "https://github.com/SlimelyW/forevermore/releases",
   // Bağış sayfası
   bagis: "https://buymeacoffee.com/forevermore",
   // Aylık fiyat, ekranda olduğu gibi yazılır (ör. "$4.99"). Boşsa "Yakında".
   fiyat: "₺250",
   // Paket doğrulama bilgileri (derle.bat çıktısı)
-  sha256: "D6F1D20ED435B698FFFE7652B75275B0C1FC2B902A64E6A297EF425D52F0BA85",
+  sha256: "98FAE42651A4A68571F01D4F5BEF7A0E905CAB99BA0F30C764188B2EA6F219E0",
   parmakIzi: "5FE5-D786-0B89-A56E",
 };
 

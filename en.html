@@ -110,14 +110,23 @@
 
   <section id="download">
     <div class="wrap verify">
-      <h2>Download and verify</h2>
-      <p class="sub">Download Forevermore only from this site. Copies from elsewhere may have been modified.</p>
+      <h2>Download</h2>
+      <p class="sub">Windows 10 / 11 (64-bit) · no installation needed · about 38 MB</p>
       <div class="card">
-        <p style="margin-bottom:10px"><a class="btn primary" data-link="indir" href="#download">Forevermore.zip</a></p>
-        <p>Extract the zip to a folder and run <b>Forevermore.exe</b>. In a genuine copy the app's About page says
-          "Original copy" and the signature fingerprint is: <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code></p>
-        <p style="margin-top:8px">SHA-256 of the zip: <code data-value="sha256">—</code></p>
+        <p style="margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn primary" data-link="indir" href="#download">Download Forevermore.zip</a>
+          <a class="btn" data-link="github" href="#download">All versions (GitHub)</a>
+        </p>
+        <p><b>Setup:</b> extract the zip to a folder and run <b>Forevermore.exe</b>. Files are hosted on GitHub; the
+          download button always gives the latest version.</p>
       </div>
+      <details><summary>How do I know the file is genuine? (optional)</summary>
+        <p>Download Forevermore only from this site; copies from elsewhere may have been modified. Two easy ways:</p>
+        <p><b>1. In the app:</b> the About page must show a green "Original copy" and the signature fingerprint
+          <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code>. If someone modified the program, a red warning appears at the top.</p>
+        <p><b>2. On the downloaded zip (advanced):</b> type <code>Get-FileHash Forevermore.zip</code> in PowerShell; the
+          result must match: <code data-value="sha256">—</code></p>
+      </details>
     </div>
   </section>
 
@@ -150,6 +159,7 @@
       <a href="gizlilik.html#en">Privacy</a>
       <a href="iade.html#en">Refunds</a>
       <a data-link="bagis" href="#">Buy Me a Coffee</a>
+      <a data-link="github" href="#">GitHub</a>
     </nav>
   </div>
 </footer>
