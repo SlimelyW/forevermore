@@ -110,14 +110,23 @@
 
   <section id="indir">
     <div class="wrap verify">
-      <h2>İndir ve doğrula</h2>
-      <p class="sub">Forevermore'u yalnızca bu siteden indirin. Başka yerden gelen kopyalar değiştirilmiş olabilir.</p>
+      <h2>İndir</h2>
+      <p class="sub">Windows 10 / 11 (64 bit) · kurulum gerektirmez · yaklaşık 38 MB</p>
       <div class="card">
-        <p style="margin-bottom:10px"><a class="btn primary" data-link="indir" href="#indir">Forevermore.zip</a></p>
-        <p>Zip'i bir klasöre açın, <b>Forevermore.exe</b>'yi çalıştırın. Gerçek kopyada uygulamanın Bilgi sayfası
-          "Orijinal kopya" yazar ve imza parmak izi şudur: <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code></p>
-        <p style="margin-top:8px">Zip'in SHA-256 özeti: <code data-value="sha256">—</code></p>
+        <p style="margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn primary" data-link="indir" href="#indir">Forevermore.zip indir</a>
+          <a class="btn" data-link="github" href="#indir">Tüm sürümler (GitHub)</a>
+        </p>
+        <p><b>Kurulum:</b> zip'i bir klasöre açın ve <b>Forevermore.exe</b>'yi çalıştırın. Dosyalar GitHub'da
+          barındırılır; indirme düğmesi her zaman en son sürümü verir.</p>
       </div>
+      <details><summary>Dosyanın orijinal olduğunu nasıl anlarım? (isteğe bağlı)</summary>
+        <p>Forevermore'u yalnızca bu siteden indirin; başka yerden gelen kopyalar değiştirilmiş olabilir. İki kolay yol:</p>
+        <p><b>1. Uygulamada:</b> Bilgi sayfası yeşil "Orijinal kopya" yazmalı ve imza parmak izi
+          <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code> olmalı. Biri programı değiştirdiyse üstte kırmızı uyarı çıkar.</p>
+        <p><b>2. İndirdiğiniz zip'te (ileri düzey):</b> PowerShell'de <code>Get-FileHash Forevermore.zip</code> yazın;
+          çıkan değer şununla aynı olmalı: <code data-value="sha256">—</code></p>
+      </details>
     </div>
   </section>
 
@@ -150,6 +159,7 @@
       <a href="gizlilik.html">Gizlilik</a>
       <a href="iade.html">İade</a>
       <a data-link="bagis" href="#">Buy Me a Coffee</a>
+      <a data-link="github" href="#">GitHub</a>
     </nav>
   </div>
 </footer>
