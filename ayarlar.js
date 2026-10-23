@@ -37,4 +37,21 @@ document.addEventListener("DOMContentLoaded", () => {
     el.textContent = value || (isEn ? "coming soon" : "yakında");
   });
   document.querySelectorAll("[data-year]").forEach((el) => { el.textContent = "2026"; });
+  // Kapalı bir SSS kutusuna giden bağlantı (ör. #antivirus) kutuyu açar
+  const openTarget = (hash) => {
+    const target = hash && document.getElementById(hash.slice(1));
+    if (target && target.tagName === "DETAILS") target.open = true;
+  };
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", () => openTarget(a.getAttribute("href")));
+  });
+  openTarget(location.hash);
+  // VirusTotal raporu: güncel zip'in SHA-256 değerinden kurulur (yeni sürümde kendiliğinden güncellenir)
+  document.querySelectorAll("[data-vt]").forEach((el) => {
+    if (cfg.sha256) {
+      el.href = "https://www.virustotal.com/gui/file/" + cfg.sha256.toLowerCase();
+    } else {
+      el.removeAttribute("href");
+    }
+  });
 });
