@@ -74,9 +74,9 @@ Forevermore'u yalnızca bu depodan ya da web sitesinden indirin.
 - Her sürümün zip SHA-256 değeri [Releases](https://github.com/SlimelyW/forevermore/releases) sayfasında yazar.
 
 > **Antivirüs uyarısı hakkında:** Forevermore Python ile yazılıp PyInstaller ile paketlenir; bu yöntemle paketlenen
-> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.1.0 paketini
-> [VirusTotal](https://www.virustotal.com/gui/file/b0f6ac7fc962ae47eea6ed8f82ecad22aac2c99270ee760d4192f16061720694)'da
-> taranan 66 motorun hiçbiri işaretlemedi (0/66, Ekim 2026); sonuç sürümler arasında değişebilir. SmartScreen'in
+> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.1.1 paketini
+> [VirusTotal](https://www.virustotal.com/gui/file/e710845c4cb7121aeebdefa6ce45e6c133c83a47fc13f34c2d4a4783816ad742)'da
+> taranan 65 motorun hiçbiri işaretlemedi (0/65, Ekim 2026); sonuç sürümler arasında değişebilir. SmartScreen'in
 > "bilinmeyen yayımcı" uyarısı kod imzalama sertifikası olmamasından kaynaklanır. Yukarıdaki değerler tutuyorsa dosya
 > yayımlandığı gibidir.
 
@@ -111,9 +111,9 @@ measurements and experience.
 - **Download:** [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) →
   extract → run **Forevermore.exe**.
 - **Genuine copy:** the About page says "Original copy" and shows the signature fingerprint `5FE5-D786-0B89-A56E`.
-- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; none of the 66 engines on
-  [VirusTotal](https://www.virustotal.com/gui/file/b0f6ac7fc962ae47eea6ed8f82ecad22aac2c99270ee760d4192f16061720694)
-  flagged the 2.1.0 package (0/66, October 2026); results can change between versions.
+- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; none of the 65 engines on
+  [VirusTotal](https://www.virustotal.com/gui/file/e710845c4cb7121aeebdefa6ce45e6c133c83a47fc13f34c2d4a4783816ad742)
+  flagged the 2.1.1 package (0/65, October 2026); results can change between versions.
 - **Privacy:** no telemetry; the app does not connect to the internet by default, and Pro codes are verified offline on your computer.
   [Privacy policy](https://slimelyw.github.io/forevermore/gizlilik.html#en)
 - **License:** © 2026 Kubilay Paşa. All rights reserved. This repository contains only the website and the download;
