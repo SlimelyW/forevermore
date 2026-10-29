@@ -36,20 +36,16 @@
       ödeme bilgileri onların gizlilik politikasına göre işlenir, kart bilgileriniz bize ulaşmaz. Ödeme tamamlandığında
       Buy Me a Coffee tarafından gönderilen bildirim (e-posta adresi, işlem tutarı ve ödeme notu), güvenli yönlendirme
       amacıyla <b>Cloudflare Workers</b> altyapısından geçerek Yapımcının özel <b>Discord</b> bildirim kanalına düşer.
-      E-posta adresiniz ve notunuz Cloudflare Worker tarafından saklanmaz. Worker yalnızca mükerrer bildirimi ve
-      mükerrer kod üretimini önlemek için olay kimliğini, bekleyen ödemenin süresini (1, 3 veya 12 ay) ve üretilen kodun
-      kopyasını (en çok 400 gün) saklar.</li>
+      E-posta adresiniz ve notunuz Cloudflare Worker tarafından saklanmaz. Worker (KV) yalnızca mükerrer bildirimi ve mükerrer kod üretimini önlemek için olay kimliğini, bekleyen ödemenin süresini (1, 3 veya 12 ay) ve üretilen kodun kopyasını en fazla 400 gün süreyle tutar; süre dolunca kendiliğinden silinir.</li>
     <li><b>Kod teslimi ve saklanan kayıtlar (Discord):</b> Pro kodunuzu Discord sunucumuzda açtığınız destek talebi
       (ticket) üzerinden teslim ederiz. Biz yalnızca şunları tutarız: Discord kullanıcı adınız, ödeme bildirimi/notu,
       ilettiğiniz bilgisayar kodu (Windows kurulum kimliğinin uygulamaya özel tek yönlü özeti; takma adlı veridir) ve
       ürettiğimiz kodun kaydı (kod kimliği, süre, üretim tarihi).</li>
     <li><b>Hukuki sebep ve saklama süresi:</b> Bu veriler, 6698 sayılı KVKK m.5/2-c (sözleşmenin kurulması ve ifası: kod
       teslimi, donanım değişikliğinde kod yenileme) ve m.5/2-f (meşru menfaat: mükerrer işlem ve kötüye kullanım
-      denetimi) hukuki sebeplerine dayanılarak işlenir; satılmaz ve üçüncü kişilerle paylaşılmaz. Kayıtlar lisans
-      süreniz boyunca ve olası destek/uyuşmazlık süreçleri için yasal zamanaşımı süresince saklanır.</li>
+      denetimi) hukuki sebeplerine dayanılarak işlenir; satılmaz ve üçüncü kişilerle paylaşılmaz. Discord ve lisans kayıtları, lisans süreniz boyunca ve olası destek/hukuki uyuşmazlık süreçlerinde ispat amacıyla genel zamanaşımı süresince (en fazla 10 yıl) saklanır.</li>
     <li><b>Yurt dışına veri aktarımı:</b> Süreçte kullanılan GitHub, Buy Me a Coffee, Stripe, Cloudflare ve Discord
-      sunucuları yurt dışında bulunmaktadır. Bu altyapılar üzerinden gerçekleşen veri aktarımı, KVKK m.9/6-b uyarınca
-      sizinle olan lisans sözleşmesinin ifası için zorunlu olması hukuki sebebine ve açık rızanıza dayanmaktadır.</li>
+      sunucuları yurt dışında bulunmaktadır. Bu altyapılar üzerinden gerçekleşen veri aktarımı, KVKK m.9/6-b ve m.9/6-c uyarınca sizinle olan lisans sözleşmesinin ifası için zorunlu olması hukuki sebebine dayanmaktadır.</li>
   </ul>
 
   <h2>Bu site</h2>
@@ -59,7 +55,7 @@
   <h2>Haklarınız ve iletişim (KVKK m.11)</h2>
   <p>KVKK'nın 11. maddesi kapsamında; hakkınızda tuttuğumuz bilgileri (ödeme notu, Discord destek talebi ve kod kaydı)
     öğrenmek, düzeltilmesini veya silinmesini istemek ve diğer yasal haklarınızı kullanmak için Discord üzerinden
-    <b>smileyw</b> ile iletişime geçebilirsiniz. Kaydınızın silinmesini istemeniz mevcut çevrimdışı kodunuzu devre dışı
+    <b>smileyw</b> ile ya da <b>forevermore.destek@protonmail.com</b> adresinden iletişime geçebilirsiniz. Kaydınızın silinmesini istemeniz mevcut çevrimdışı kodunuzu devre dışı
     bırakmaz; ancak bilgisayar değişikliği gibi durumlarda kalan sürenizi doğrulamamızı ve yeni kod üretmemizi
     imkânsız hale getirebilir.</p>
 
@@ -86,8 +82,7 @@
         completed, the webhook notification from Buy Me a Coffee (containing your email address, amount, and payment
         note) passes through <b>Cloudflare Workers</b> to a private <b>Discord</b> channel accessible only to the Author.
         Your email and note are not stored by the Cloudflare Worker. To prevent duplicate notifications and duplicate
-        code generation, the Worker stores only the event ID, the pending payment's duration (1, 3 or 12 months) and a
-        copy of the issued code (for up to 400 days).</li>
+        code generation, the Worker (KV) stores only the event ID, the pending payment's duration (1, 3 or 12 months) and a copy of the issued code for up to 400 days, after which they are deleted automatically.</li>
       <li><b>Code delivery and retained records (Discord):</b> We deliver your Pro code through a support ticket on our
         Discord server. We retain only: your Discord username, the payment notification/note, the computer code you sent
         (an app-specific one-way hash of your Windows installation ID; pseudonymous data) and a record of the issued code
@@ -95,11 +90,9 @@
       <li><b>Legal basis and retention:</b> This data is processed solely for the performance of our contract with you
         (code delivery, replacement codes upon hardware changes) and legitimate interests (preventing abuse and duplicate
         transactions) under applicable data protection law (including KVKK Art. 5/2-c and 5/2-f). We never sell or share
-        this data. Records are kept for the duration of your license and the applicable statutory limitation period for
-        support and dispute resolution.</li>
+        this data. Discord and license records are kept for the duration of your license and for the statutory limitation period (up to 10 years) for support and legal dispute resolution.</li>
       <li><b>Cross-border transfers:</b> GitHub, Buy Me a Coffee, Stripe, Cloudflare and Discord operate servers outside
-        of Türkiye. Data transfers through these services are carried out as strictly necessary for the performance of
-        the contract (under KVKK Art. 9/6-b) and based on your explicit consent.</li>
+        of Türkiye. Data transfers through these services are carried out strictly as necessary for the performance of the license contract with you (under KVKK Art. 9/6-b and 9/6-c).</li>
     </ul>
 
     <h2>This website</h2>
@@ -107,7 +100,7 @@
       (e.g. IP address) for security; these are covered by GitHub's privacy statement.</p>
 
     <h2>Your rights and contact</h2>
-    <p>Under applicable data protection laws (including KVKK Art. 11), you may contact <b>smileyw</b> on Discord to
+    <p>Under applicable data protection laws (including KVKK Art. 11), you may contact <b>smileyw</b> on Discord or write to <b>forevermore.destek@protonmail.com</b> to
       access, correct or request the deletion of the information we hold about you (payment note, Discord ticket and code
       record). Deleting your record will not disable a code you already have, but it may make it impossible to verify
       your remaining time for support or replacement-code requests if you change computers.</p>
