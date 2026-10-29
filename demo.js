@@ -229,15 +229,34 @@
   /* ------------------------------------------------------------ fiyat süresi */
   var plan = document.querySelector("[data-sure]");
   if (plan) {
-    var buttons = Array.prototype.slice.call(plan.querySelectorAll("button")), price = document.querySelector("[data-fiyat]"),
-        tl = document.querySelector("[data-tl]"), per = document.querySelector("[data-per]");
-    var months = { 1: "fiyat1", 3: "fiyat3", 12: "fiyat12" };
+    // Düğme metinlerine hiç dokunulmaz (eski hata: [data-per] seçicisi ilk düğmeyi yakalayıp "1 ay" yazısını eziyordu).
+    var buttons = Array.prototype.slice.call(plan.querySelectorAll("button[data-ay]")), price = document.querySelector("[data-aylik]"),
+        bill = document.querySelector("[data-fatura]"), save = document.querySelector("[data-tasarruf]");
+    var months = { 1: "fiyat1", 3: "fiyat3", 12: "fiyat12" }, locale = lang === "en" ? "en-US" : "tr-TR";
+    // "$16 (~₺800)" -> { usd: 16, tl: 800 }
+    function parse(raw) { var m = /^\$(\d+(?:\.\d+)?)\s*\(~₺([\d.]+)\)$/.exec(raw || ""); return m ? { usd: +m[1], tl: +m[2].replace(/\./g, "") } : null; }
+    function money(n) { var d = n % 1 ? 2 : 0; return "$" + n.toLocaleString(locale, { minimumFractionDigits: d, maximumFractionDigits: d }); }
+    var base = parse(cfg.fiyat1);
     function set(btn) {
       buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
-      var raw = cfg[months[btn.dataset.ay]] || "", m = raw.match(/^(\S+)\s*\((.*)\)$/);
-      price.textContent = m ? m[1] : raw || (lang === "en" ? "soon" : "yakında");
-      tl.textContent = m ? m[2] : "";
-      per.textContent = btn.dataset.per;
+      var ay = +btn.dataset.ay, p = parse(cfg[months[ay]]);
+      var amount = document.querySelectorAll("[data-al-tutar]");
+      if (!p) {   // biçim tutmadı: eski tutar düğmede kalmasın
+        price.textContent = lang === "en" ? "soon" : "yakında"; bill.textContent = ""; save.hidden = true;
+        Array.prototype.forEach.call(amount, function (el) { el.textContent = ""; });
+        return;
+      }
+      var monthly = Math.round(p.usd / ay * 100) / 100, pct = base ? Math.round((1 - p.usd / ay / base.usd) * 100) : 0;
+      price.textContent = money(monthly);
+      var total = money(p.usd) + " (~₺" + p.tl.toLocaleString(locale) + ")";
+      bill.textContent = lang === "en"
+        ? (ay === 1 ? "1 month" : ay + " months") + ", paid once: " + total + ". No auto-renewal."
+        : ay + " ay için tek seferde " + total + " ödenir. Otomatik yenilenmez.";
+      save.hidden = pct <= 0;
+      save.textContent = lang === "en" ? "Save " + pct + "% vs monthly" : "1 aylığa göre %" + pct + " tasarruf";
+      // Buy Me a Coffee'de tutar elle girilir: düğme seçilen toplamı gösterir
+      Array.prototype.forEach.call(amount, function (el) { el.textContent = "(" + money(p.usd) + ")"; });
+      save.classList.remove("yeni"); void save.offsetWidth; save.classList.add("yeni");
     }
     buttons.forEach(function (b) { b.addEventListener("click", function () { set(b); }); });
     set(buttons[0]);

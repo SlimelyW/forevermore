@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Forevermore — Windows oyun optimizasyonu</title>
   <meta name="description" content="Forevermore: oyuncular için Windows ayar uygulaması. 154 ayarın her birinin kanıt durumu yazılı; placebo ve zararlı ayarlar ayrılır, her değişiklik geri alınır.">
+  <script>/* okuma tercihi ilk çizimden önce (erisim.js) */try{var d=document.documentElement,s=localStorage;if(s.getItem("forevermore-okunabilir")==="1")d.setAttribute("data-okunabilir","");d.setAttribute("data-ok-font",s.getItem("forevermore-ok-font")||"lexend");d.setAttribute("data-ok-boyut",s.getItem("forevermore-ok-boyut")||"20");if(s.getItem("forevermore-ok-cizgi")==="1")d.setAttribute("data-ok-cizgi","")}catch(e){}</script>
   <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="landing.css">
   <script src="ayarlar.js" defer></script>
   <script src="veri.js" defer></script>
   <script src="demo.js" defer></script>
   <script src="erisim.js" defer></script>
+  <script src="landing.js" defer></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-kilit" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-tik" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></symbol>
+  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+</svg>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="index.html"><img src="img/logo.png" alt="">Forevermore</a>
@@ -25,18 +34,43 @@
       <a href="#sss">SSS</a>
       <button class="a11y" type="button" data-a11y aria-pressed="false" title="Disleksi ve DEHB için: Verdana yazı, geniş satır aralığı">Okuma modu</button>
       <a class="lang" href="en.html" hreflang="en">EN</a>
+      <a class="btn primary nav-cta" data-link="indir" href="#indir">Ücretsiz dene</a>
     </nav>
   </div>
 </header>
 
+<div class="noktalar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <main>
-  <div class="wrap hero">
-    <h1>Placebo değil, gerçekten işe yarayan ayarlar.</h1>
-    <p class="lead">Windows için oyuncu ayar uygulaması. Kataloğundaki <b><!--n:toplam-->154<!--/n--> ayarın</b> her birine kanıt durumu yazılmış: <!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı.</p>
-    <div class="actions">
-      <a class="btn primary" data-link="indir" href="#indir">Ücretsiz indir</a>
-      <a class="textlink" href="#fiyat">Pro'yu gör</a>
+  <div class="hero2">
+    <div class="hero-iz">
+      <canvas aria-hidden="true"></canvas>
+      <div class="ayirici" role="slider" tabindex="0" aria-label="Önce / sonra karşılaştırması" aria-valuemin="5" aria-valuemax="95" aria-valuenow="60" hidden>
+        <span class="yan once" aria-hidden="true">Önce</span><span class="tutamac" aria-hidden="true"><svg class="ikon" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></span><span class="yan sonra" aria-hidden="true">Sonra</span>
+        <span class="ayirici-ipucu" aria-hidden="true">Sürükle: önce / sonra</span>
+      </div>
     </div>
+    <div class="wrap">
+    <h1><span class="satir"><span class="cizik">Placebo</span> değil,</span> <span class="satir">gerçekten işe yarayan ayarlar.</span></h1>
+    <p class="lead">Windows için oyuncu ayar uygulaması. <b><!--n:toplam-->154<!--/n--> ayarın</b> her birine kanıt etiketi yazdık: placeboyu ayıklar, zararlıyı işaretler, her değişikliği tek tıkla geri alır.</p>
+    <div class="actions">
+      <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Ücretsiz dene</a>
+      <a class="btn buyuk hayalet" href="#fiyat"><svg class="ikon" aria-hidden="true"><use href="#i-yildiz"/></svg>Pro'yu gör</a>
+    </div>
+    <p class="not">Windows 10 ve 11. Kurulum, hesap veya kart gerekmez; yaklaşık 38 MB.</p>
+    <aside class="hud" aria-label="Örnek kare süresi">
+      <div class="hud-ust"><span>Kare süresi</span><span class="hud-ornek">örnek veri</span></div>
+      <div class="hud-deger">
+        <div class="once"><small>Önce</small><b data-say data-ondalik="1">16,7</b> <span>ms</span></div>
+        <div class="sonra"><small>Sonra</small><b data-say data-ondalik="1">6,9</b> <span>ms</span></div>
+      </div>
+      <p>144 Hz monitör Windows'ta 60 Hz'de kalmışsa: tek ayar, kare başına 9,8 ms daha kısa bekleme.</p>
+    </aside>
+    <ul class="sayaclar">
+      <li class="sayac"><b data-say><!--n:toplam-->154<!--/n--></b><span>ayar tek tek incelendi</span></li>
+      <li class="sayac placebo"><b data-say><!--n:placebo-->29<!--/n--></b><span>placebo ayıklandı</span></li>
+      <li class="sayac zararli"><b data-say><!--n:zararli-->11<!--/n--></b><span>zararlı ayar işaretlendi</span></li>
+      <li class="sayac sifir"><b>0</b><span>bayt telemetri</span></li>
+    </ul>
     <div class="hero-etiket">
       <div class="dagilim" role="img" aria-label="Katalogdaki etiket dağılımı"><i style="flex:55;--rc:var(--v-gercek)"></i><i style="flex:31;--rc:var(--v-kismen)"></i><i style="flex:16;--rc:var(--v-durumsal)"></i><i style="flex:12;--rc:var(--v-tartisma)"></i><i style="flex:29;--rc:var(--v-placebo)"></i><i style="flex:11;--rc:var(--v-zararli)"></i></div>
       <ul class="dagilim-liste">
@@ -48,7 +82,67 @@
         <li><span class="rozet r-zararli">zararlı</span> <b><!--n:zararli-->11<!--/n--></b></li>
       </ul>
     </div>
+    </div>
   </div>
+
+  <div class="serit" role="group" aria-label="Forevermore'da neler var">
+    <div class="serit-iz">
+      <ul>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Önerilenleri tek tıkla uygula</b>, önce önizleme gösterir</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Her değişiklik yedeklenir</b>, tek tıkla geri alınır</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Geri yükleme noktası</b> ilk değişiklikten önce</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Önce/Sonra ölçümü</b>: ortalama FPS, %1 low, kare süresi</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> ayar</b>, her biri kanıt etiketli</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı</b> ayrıca işaretli</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Kurulum yok</b>, yaklaşık 38 MB</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Telemetri yok</b>, internetsiz çalışır</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>NVIDIA ve AMD</b> sürücü ayarları tek yerde</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Anti-cheat süreçlerine</b> dokunmaz</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>İmzalı paket</b>, parmak izi doğrulanabilir</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Ctrl+K</b> ile ayar arama</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Önerilenleri tek tıkla uygula</b>, önce önizleme gösterir</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Her değişiklik yedeklenir</b>, tek tıkla geri alınır</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Geri yükleme noktası</b> ilk değişiklikten önce</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Önce/Sonra ölçümü</b>: ortalama FPS, %1 low, kare süresi</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> ayar</b>, her biri kanıt etiketli</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı</b> ayrıca işaretli</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Kurulum yok</b>, yaklaşık 38 MB</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Telemetri yok</b>, internetsiz çalışır</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>NVIDIA ve AMD</b> sürücü ayarları tek yerde</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Anti-cheat süreçlerine</b> dokunmaz</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>İmzalı paket</b>, parmak izi doğrulanabilir</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Ctrl+K</b> ile ayar arama</li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="fark" class="fark" data-durum="sonra">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>16,7 → 6,9 ms</b>kare süresi, örnek</span><span class="kenar sag" aria-hidden="true"><i></i><b>60 → 144 Hz</b>ekran yenileme</span>
+    <div class="wrap">
+      <div class="ust">
+        <div>
+          <h2 class="baslik" data-kelime>Aynı bilgisayar, üç ayar sonra.</h2>
+      <p class="kisaca"><b>Kısaca</b>Örnek bilgisayarda üç ayar düzeltildi. Sayılar örnek; kendi bilgisayarının sayılarını uygulama ücretsiz ölçer.</p>
+          <p class="sub">Demodaki örnek bilgisayar: 144 Hz monitörü Windows'ta 60 Hz'de kalmış, açılışta 14 uygulama başlıyor, arka planda oyun kaydı açık. Forevermore bu üçünü tarayıp bulur, sen onaylarsın.</p>
+        </div>
+        <div class="ab" role="group" aria-label="Görünüm">
+          <button type="button" data-ab="once" aria-pressed="false">Önce</button>
+          <button type="button" data-ab="sonra" aria-pressed="true">Sonra</button>
+        </div>
+      </div>
+      <div class="grafik"><canvas aria-hidden="true"></canvas><span class="etiket">Kare süresi, ms (örnek veri; düşük ve düz olan iyi)</span></div>
+      <div class="olculer" aria-live="polite">
+        <div class="olcu" data-once="60" data-sonra="144"><b><span class="v">144</span><small>kare/sn</small></b><span>Ekrana ulaşan en çok kare</span><em>Önce: 60. Ekran yenileme hızı.</em></div>
+        <div class="olcu" data-once="16,7" data-sonra="6,9"><b><span class="v">6,9</span><small>ms</small></b><span>Kare gösterim aralığı</span><em>Önce: 16,7 ms. Aynı ayarın sonucu.</em></div>
+        <div class="olcu" data-once="14" data-sonra="6"><b><span class="v">6</span><small>uygulama</small></b><span>Açılışta başlayan</span><em>Önce: 14. Başlangıç uygulamaları.</em></div>
+        <div class="olcu" data-once="Açık" data-sonra="Kapalı"><b><span class="v">Kapalı</span></b><span>Arka planda oyun kaydı</span><em>Önce: açık. Game DVR.</em></div>
+      </div>
+      <p class="dipnot">Sayılar örnek bilgisayara aittir ve ayarın kendisinden hesaplanır (1000 ÷ 144 = 6,9 ms); FPS artışı vaadi değildir. Kendi bilgisayarının sayılarını uygulamadaki Önce/Sonra ölçümü verir, ücretsiz.</p>
+      <p class="pro-ipucu"><svg class="ikon" aria-hidden="true"><use href="#i-kilit"/></svg>Bu ayarları oyun profiline kaydet; oyunu açınca uygulamayı açmadan kendiliğinden uygulansın. <a class="pro-ac" href="#fiyat">Pro ile aç</a></p>
+    </div>
+  </section>
 
   <div class="wrap demo" id="dene">
     <div class="pencere">
@@ -106,13 +200,17 @@
     </div>
   </div>
 
-  <section id="oyunlar" data-tint="sky">
+  <section id="oyunlar" class="" data-tint="sky">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>25 oyun</b>kaynaklı rehber</span><span class="kenar sag" aria-hidden="true"><i></i><b>8 mağaza</b>oyun taraması</span>
     <div class="wrap">
-      <h2 class="baslik">Her oyunda çalışır mı?</h2>
+      <h2 class="baslik" data-kelime>Her oyunda çalışır mı?</h2>
+      <p class="kisaca"><b>Kısaca</b>Sistem ayarları her oyunda geçerli. 25 oyun için oyun içi ayar rehberi var. Oyunlar sayfası Pro.</p>
       <p class="sub">İki ayrı katman var; ikisi farklı kapsamda çalışır.</p>
+      <div class="oyun-kart"><p class="oyun-sayi"><b data-say data-oyun-sayi>25</b><span>oyun için kaynaklı oyun içi ayar rehberi hazır</span></p><div class="serit oyun-serit" role="group" aria-label="Rehberi olan oyunlar"><div class="serit-iz" data-oyun-serit></div></div>
+      <p class="oyun-not">Oyun adları ve görseller ilgili sahiplerine aittir. Görseller Steam'den ve yayıncıların resmî mağaza sunucularından yüklenir.</p></div>
       <div class="iki">
         <div class="kutu k-green"><h3>Sistem ayarları: bilgisayardaki her oyun</h3><p>Ekran yenileme hızı, güç planı, fare, ağ ve Windows oyun ayarları Windows geneline yazılır. Hangi oyunu açarsan aç geçerlidir; oyunun listede olması gerekmez.</p></div>
-        <div class="kutu k-sky"><h3>Oyuna özel ayarlar: bulunan her oyun</h3><p>Oyunlar sayfası Steam, Epic, GOG, Xbox, Riot, Battle.net, EA, Ubisoft ve Games klasörlerindeki oyunları bulur ve her biri için ayrı ayar kaydeder. Oyun içi ayar rehberi, kaynaklarıyla birlikte 25 oyun için hazır. Anti-cheat süreçlerine dokunulmaz. Oyunlar sayfası Pro'dur.</p></div>
+        <div class="kutu k-sky"><h3>Oyuna özel ayarlar: bulunan her oyun</h3><p>Oyunlar sayfası Steam, Epic, GOG, Xbox, Riot, Battle.net, EA, Ubisoft ve Games klasörlerindeki oyunları bulur ve her biri için ayrı ayar kaydeder. Oyun içi ayar rehberi, kaynaklarıyla birlikte 25 oyun için hazır. Anti-cheat süreçlerine dokunulmaz.</p><p><span class="kilit-satir"><svg class="ikon" aria-hidden="true"><use href="#i-kilit"/></svg>Oyunlar sayfası Pro'dur.</span> <a class="pro-ac" href="#fiyat">Pro ile aç</a></p></div>
       </div>
       <div class="kontrol" data-oyun>
         <label for="oyun-ad">Oyununu yaz</label>
@@ -123,9 +221,11 @@
     </div>
   </section>
 
-  <section id="kanit" data-tint="green">
+  <section id="kanit" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b><!--n:toplam-->154<!--/n--> ayar</b>kanıt etiketli</span><span class="kenar sag" aria-hidden="true"><i></i><b><!--n:placebo-->29<!--/n--> placebo</b>ayrıca işaretli</span>
     <div class="wrap">
-      <h2 class="baslik">Kanıtlar</h2>
+      <h2 class="baslik" data-kelime>Kanıtlar</h2>
+      <p class="kisaca"><b>Kısaca</b>Her ayarın kanıt etiketi var: gerçek, placebo, zararlı ve diğerleri. Her değişiklik yedeklenir ve geri alınabilir.</p>
       <p class="sub">Etiketler kendi testlerime, ölçümlerime ve Microsoft, NVIDIA, AMD belgelerine dayanır. Her ayarın kaynakları uygulamada (i) penceresinde.</p>
       <div class="belge">
         <nav class="icindekiler" aria-label="Bu bölümde">
@@ -179,57 +279,68 @@
     </div>
   </section>
 
-  <section id="erisim" data-tint="rose">
+  <section id="erisim" class="" data-tint="rose">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>3 yazı tipi</b>okuma modu</span><span class="kenar sag" aria-hidden="true"><i></i><b>18–26 px</b>ayarlanabilir</span>
     <div class="wrap">
-      <h2 class="baslik">Dikkat ve okuma için tasarlandı</h2>
+      <h2 class="baslik" data-kelime>Dikkat ve okuma için tasarlandı</h2>
+      <p class="kisaca"><b>Kısaca</b>Okuma modu, sakin hareket ve tek tıkla sıradaki adım.</p>
       <p class="sub">Uzun bir ayar listesi herkes için yorucu olabilir. Forevermore'u disleksi ve DEHB'li kullanıcıları düşünerek kurduk; aşağıdakiler gerçekten var.</p>
       <div class="uclu">
         <div class="kutu k-rose"><h3>Tek tıkla sıradaki adım</h3><p>Özet sayfası "Sıradaki en iyi hamle" kartını tek başına gösterir; listeyi taramak gerekmez. Toplu uygulama önce önizleme gösterir.</p></div>
-        <div class="kutu k-amber"><h3>Okunabilir yazı</h3><p>Verdana ve geniş satır aralığı: bu sitede sağ üstteki Okuma modu, uygulamada Ayarlar > Erişilebilirlik.</p></div>
+        <div class="kutu k-amber"><h3>Okunabilir yazı</h3><p>Bu sitede üstteki Okuma modu: Lexend, Atkinson Hyperlegible veya OpenDyslexic, ayarlanabilir boyut, okuma çizgisi ve her bölümde kısa özet. Uygulamada Ayarlar &gt; Erişilebilirlik (Verdana, geniş satır aralığı).</p></div>
         <div class="kutu k-violet"><h3>Sakin hareket</h3><p>Hareketi azalt ayarı anında etkili olur; yüksek karşıtlık seçeneği ve Ctrl+K ile arama var.</p></div>
       </div>
       <p><a class="btn" href="erisilebilirlik.html">Erişilebilirlik bildirgesi</a></p>
     </div>
   </section>
 
-  <section id="fiyat" data-tint="amber">
+  <section id="fiyat" class="fiyat2" data-tint="amber">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>0 otomatik</b>yenileme yok</span><span class="kenar sag" aria-hidden="true"><i></i><b>1 bilgisayar</b>internetsiz kod</span>
     <div class="wrap">
-      <h2 class="baslik">Fiyat</h2>
+      <h2 class="baslik" data-kelime>Ücretsiz başla, hazır olunca Pro.</h2>
+      <p class="kisaca"><b>Kısaca</b>Ücretsiz sürüm süresiz. Pro: 1 ay $2, 3 ay $5, 12 ay $16. Bir kez ödenir, kendiliğinden yenilenmez.</p>
       <p class="sub">Abonelik yok, otomatik tahsilat yok. Pro, bir bilgisayara bağlı süreli bir kodla açılır ve internet gerektirmez.</p>
-      <div class="plans">
-        <div class="plan">
+      <div class="plans2">
+        <article class="plan2 free">
           <h3>Ücretsiz</h3>
-          <p class="price">0 <small>/ süresiz</small></p>
-          <p class="tl"></p>
+          <p class="price"><span>$0</span></p>
+          <p class="fatura">Süresiz. Hesap veya kart gerekmez.</p>
           <ul>
-            <li>Tarama, PC Detayları ve Rapor</li>
-            <li>Tüm ayar açıklamaları ve rehberler</li>
-            <li>Önce / Sonra ölçümü</li>
-            <li>Aynı anda 10 ayar değişikliği (referansla +10)</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Tarama, PC Detayları ve Rapor</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Tüm ayar açıklamaları ve rehberler</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Önce / Sonra ölçümü</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Aynı anda 10 ayar değişikliği (referansla +10)</li>
+            <li class="kilitli"><svg class="ikon" aria-hidden="true"><use href="#i-kilit"/></svg>Sınırsız ayar değişikliği<span class="pro-etiket">Pro<span class="sr">'da</span></span></li>
+            <li class="kilitli"><svg class="ikon" aria-hidden="true"><use href="#i-kilit"/></svg>Hazır profiller ve oyun profilleri<span class="pro-etiket">Pro<span class="sr">'da</span></span></li>
+            <li class="kilitli"><svg class="ikon" aria-hidden="true"><use href="#i-kilit"/></svg>Oyun açılınca kendiliğinden uygulama<span class="pro-etiket">Pro<span class="sr">'da</span></span></li>
           </ul>
-          <div class="btns"><a class="btn" data-link="indir" href="#indir">Ücretsiz indir</a></div>
-        </div>
-        <div class="plan pro">
+          <div class="btns"><a class="btn" data-link="indir" href="#indir">Ücretsiz dene</a></div>
+        </article>
+        <article class="plan2 pro">
+          <span class="halka" aria-hidden="true"></span>
+          <span class="onerilen">Önerilen</span>
           <h3>Forevermore Pro</h3>
-          <div class="sure" data-sure role="group" aria-label="Süre">
-            <button type="button" data-ay="1" data-per="/ 1 ay" aria-pressed="true">1 ay</button>
-            <button type="button" data-ay="3" data-per="/ 3 ay" aria-pressed="false">3 ay</button>
-            <button type="button" data-ay="12" data-per="/ 12 ay" aria-pressed="false">12 ay</button>
+          <p class="sure-etiket" id="sure-etiket">Kaç aylık kod?</p>
+          <div class="sure" data-sure role="group" aria-labelledby="sure-etiket">
+            <button type="button" data-ay="1" aria-pressed="true">1 ay</button>
+            <button type="button" data-ay="3" aria-pressed="false">3 ay</button>
+            <button type="button" data-ay="12" aria-pressed="false">12 ay</button>
           </div>
-          <p class="price"><span data-fiyat>yakında</span> <small data-per>/ 1 ay</small></p>
-          <p class="tl" data-tl></p>
+          <p class="price"><span data-aylik>$2</span><small>/ ay</small><span class="tasarruf" data-tasarruf hidden></span></p>
+          <p class="fatura" data-fatura aria-live="polite">1 ay için tek seferde $2 (~₺100) ödenir. Otomatik yenilenmez.</p>
           <ul>
-            <li>Sınırsız ayar değişikliği</li>
-            <li>Hazır profiller ve oyun profilleri</li>
-            <li>Oyun açılınca ayarlar uygulamayı açmadan uygulanır</li>
-            <li>Discord'da Pro Üye rolü ve Premium destek kanalı</li>
-            <li>1 bilgisayar; süre bitince ücretsiz sürüme döner</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Ücretsiz sürümdeki her şey</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Sınırsız ayar değişikliği</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Hazır profiller ve oyun profilleri</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Oyun açılınca ayarlar uygulamayı açmadan uygulanır</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>Discord'da Pro Üye rolü ve Premium destek kanalı</li>
+            <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg>1 bilgisayar; süre bitince ücretsiz sürüme döner</li>
           </ul>
-          <div class="btns"><a class="btn primary" data-link="satinal" href="#fiyat">Pro'yu al</a><a class="btn" data-link="discord" href="#fiyat">Discord'da kodu al</a></div>
-        </div>
+          <div class="btns"><a class="btn primary buyuk" data-link="satinal" href="#fiyat">Pro'yu al <span data-al-tutar>($2)</span></a><a class="btn buyuk" data-link="discord" href="#fiyat">Discord'da kodu al</a></div>
+        </article>
       </div>
-      <p class="sub" style="font-size:14px;margin:14px 0 0">Ödemeler Buy Me a Coffee (Stripe) altyapısı üzerinden ABD Doları ($) olarak tahsil edilir; belirtilen TL tutarları bilgilendirme amaçlı yaklaşık karşılıklardır. Kartınızdan çekilecek kesin TL tutarı, ödemeyi yaptığınız andaki bankanızın döviz kuru ve varsa banka komisyonuna göre belirlenir.</p>
-      <h3 style="margin-top:36px;font-family:var(--display)">Kod nasıl alınır?</h3>
+      <p class="kucuk">Ödemeler Buy Me a Coffee (Stripe) altyapısı üzerinden ABD Doları ($) olarak tahsil edilir; belirtilen TL tutarları bilgilendirme amaçlı yaklaşık karşılıklardır. Kartınızdan çekilecek kesin TL tutarı, ödemeyi yaptığınız andaki bankanızın döviz kuru ve varsa banka komisyonuna göre belirlenir.</p>
+      <h3 class="alt-baslik">Kod nasıl alınır?</h3>
       <ol class="sira">
         <li><div><b>Bilgisayar kodunu kopyala</b><span>Uygulamada Lisans &gt; Bilgisayar kodunu kopyala.</span></div></li>
         <li><div><b>Öde</b><span>Buy Me a Coffee'de seçtiğin sürenin tutarını (2, 5 veya 16 $) tam olarak gir ve nota Discord adını yaz. Ödemeyi Buy Me a Coffee (Stripe) alır.</span></div></li>
@@ -238,9 +349,11 @@
     </div>
   </section>
 
-  <section id="indir" data-tint="green">
+  <section id="indir" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>~38 MB</b>kurulum yok</span><span class="kenar sag" aria-hidden="true"><i></i><b>0 bayt</b>telemetri</span>
     <div class="wrap">
-      <h2 class="baslik">İndir</h2>
+      <h2 class="baslik" data-kelime>İndir</h2>
+      <p class="kisaca"><b>Kısaca</b>Zip'i aç, Forevermore.exe'yi çalıştır; kurulum yok. Yalnızca bu siteden indir.</p>
       <div class="indir">
         <div class="kutu">
           <h3>Forevermore.zip</h3>
@@ -261,9 +374,11 @@
     </div>
   </section>
 
-  <section id="sss" data-tint="violet">
+  <section id="sss" class="" data-tint="violet">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>1 tık</b>geri alma</span><span class="kenar sag" aria-hidden="true"><i></i><b>2 uyarı</b>riskli ayarda</span>
     <div class="wrap">
-      <h2 class="baslik">Sık sorulanlar</h2>
+      <h2 class="baslik" data-kelime>Sık sorulanlar</h2>
+      <p class="kisaca"><b>Kısaca</b>Değişiklikler geri alınır. Pro kodu bir bilgisayara bağlıdır; süre bitince uygulama ücretsiz sürüme döner.</p>
       <details><summary>Bilgisayarıma zarar verir mi?</summary>
         <p>Riskli işaretli ayarlar iki ayrı uyarıyla sorulur ve her değişiklik geri alınabilir: <a href="#geri-alma">Her değişiklikte olan</a>.</p></details>
       <details><summary>Pro'yu kaç bilgisayarda kullanabilirim?</summary>
@@ -277,6 +392,18 @@
       <details id="antivirus"><summary>Antivirüs, VirusTotal veya SmartScreen uyarı verdi.</summary>
         <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bazı zararlı yazılımlar da aynı yöntemi kullandığı için bu paketler küçük antivirüslerde sık yanlış alarm verir. 2.1.0 paketini <a data-vt href="#sss">VirusTotal</a>'da taranan 66 antivirüs motorunun hiçbiri işaretlemedi (0/66, Ekim 2026). Sonuç sürümler arasında değişebilir.</p>
         <p>SmartScreen'in "bilinmeyen yayımcı" uyarısı, programın henüz ücretli bir kod imzalama sertifikası olmamasından kaynaklanır. Hiçbir yöntem bir masaüstü programının değiştirilmesini tamamen engelleyemez; imza ve SHA-256, değiştirilmiş bir kopyayı fark etmeni sağlar. <a href="#dogrula">Nasıl doğrulanır</a></p></details>
+    </div>
+  </section>
+
+  <section class="son">
+    <canvas aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h2 data-kelime>Placeboyu bırak, ölçtüğünü uygula.</h2>
+      <p>Ücretsiz sürümle tara, karşılaştır, geri al. Profiller ve oyunlar için hazır olduğunda Pro bir kod uzağında.</p>
+      <div class="actions">
+        <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Ücretsiz dene</a>
+        <a class="btn buyuk hayalet" href="#fiyat"><svg class="ikon" aria-hidden="true"><use href="#i-yildiz"/></svg>Pro'yu gör</a>
+      </div>
     </div>
   </section>
 </main>

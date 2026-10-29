@@ -280,6 +280,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--mute
 footer .wrap { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
 footer .wrap nav { margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap; }
 footer a { color: var(--muted); }
+footer .wrap > span { min-width: 0; overflow-wrap: anywhere; }   /* uzun e-posta dar ekranda taşmasın */
 
 /* ---------------------------------------------------------------- dar ekran */
 @media (max-width: 860px) {
@@ -302,49 +303,149 @@ footer a { color: var(--muted); }
   .degisiklikler .deger { text-align: left; }
 }
 
-/* Okuma modu (disleksi / DEHB). Eski sürüm yalnızca gövde yazısını Verdana yapıyordu: başlık, düğme ve veriler başka yazı tipinde kalıyor,
-   küçük yazılar küçük kalıyor, renkli bölüm zeminleri ve animasyonlar sürüyordu. Şimdi: TEK yazı tipi (Verdana), en küçük yazı 16 px,
-   sola yaslı kısa satırlar, geniş satır aralığı, sade zemin, hareket yok (BDA ve WCAG 1.4.12 metin aralığı önerileri). */
-html[data-okunabilir] { --display: Verdana, Tahoma, Geneva, sans-serif; --mono: Verdana, Tahoma, Geneva, sans-serif; }
-html[data-okunabilir] body, html[data-okunabilir] button, html[data-okunabilir] input, html[data-okunabilir] summary {
-  font-family: Verdana, Tahoma, Geneva, sans-serif; font-style: normal; }
-html[data-okunabilir] body { font-size: 17px; line-height: 1.8; letter-spacing: .02em; word-spacing: .08em; text-align: left; }
-html[data-okunabilir] p, html[data-okunabilir] li, html[data-okunabilir] td, html[data-okunabilir] details { text-align: left; }
-html[data-okunabilir] h1, html[data-okunabilir] h2, html[data-okunabilir] h3, html[data-okunabilir] .hero h1, html[data-okunabilir] section h2.baslik {
-  letter-spacing: 0; line-height: 1.3; font-weight: 700; text-transform: none; }
-html[data-okunabilir] .hero h1 { font-size: clamp(2rem, 5vw, 3rem); max-width: 22ch; }
-html[data-okunabilir] .sub, html[data-okunabilir] .alt, html[data-okunabilir] .tablo-not, html[data-okunabilir] .kunye-not,
-html[data-okunabilir] .kunye-satir, html[data-okunabilir] .oyun-sonuc, html[data-okunabilir] .tanim li, html[data-okunabilir] .liste,
-html[data-okunabilir] .plan ul, html[data-okunabilir] .plan .tl, html[data-okunabilir] .kutu p, html[data-okunabilir] .sonuc p,
-html[data-okunabilir] details p, html[data-okunabilir] .sira span, html[data-okunabilir] .makine, html[data-okunabilir] .durum-satir,
-html[data-okunabilir] .bulgu p, html[data-okunabilir] .doc li, html[data-okunabilir] .doc p, html[data-okunabilir] footer,
-html[data-okunabilir] nav.links a, html[data-okunabilir] .textlink, html[data-okunabilir] .btn, html[data-okunabilir] .chip,
-html[data-okunabilir] .rozet, html[data-okunabilir] .a11y, html[data-okunabilir] .icindekiler, html[data-okunabilir] .kontrol label,
-html[data-okunabilir] .dagilim-liste { font-size: 16px; }
-html[data-okunabilir] .sub, html[data-okunabilir] .kutu p, html[data-okunabilir] .doc p, html[data-okunabilir] .doc li,
-html[data-okunabilir] .alt, html[data-okunabilir] details p, html[data-okunabilir] .liste, html[data-okunabilir] .oyun-sonuc { max-width: 62ch; }
-html[data-okunabilir] p { margin-block: 0 1em; }
-html[data-okunabilir] .pencere-bar, html[data-okunabilir] .pencere-bar span, html[data-okunabilir] .ornek, html[data-okunabilir] small,
-html[data-okunabilir] p.sub, html[data-okunabilir] td.ad small { font-size: 16px !important; }   /* satır içi 14 px'i de ezer */
-html[data-okunabilir] code { font-size: 1em; }
-/* sade zemin: renkli bölüm zeminleri, kart renkleri ve gölgeler yok; renk yalnızca durum (etiket, odak) için kalır */
-html[data-okunabilir] section[data-tint] { background: var(--bg); border-top: 1px solid var(--border); }
-html[data-okunabilir] section[data-tint] h2.baslik { border-left: 0; padding-left: 0; }
-html[data-okunabilir] .kutu[class*="k-"], html[data-okunabilir] .plan.pro { background: var(--surface); border-top-width: 1px; }
-html[data-okunabilir] .plan.pro .price { color: var(--text); }
-html[data-okunabilir] .pencere { box-shadow: none; }
-html[data-okunabilir] .sahne h2 { border-left: 0; padding-left: 0; }
-/* geniş yazı tipi taşmasın: şerit ve sekmeler alta sarılır */
-html[data-okunabilir] nav.links { gap: 10px 18px; }
-html[data-okunabilir] header.top .wrap { height: auto; padding-block: 10px; flex-wrap: wrap; }
-html[data-okunabilir] .pencere-govde { grid-template-columns: 230px minmax(0, 1fr); }
-html[data-okunabilir] [role="tab"], html[data-okunabilir] .btn { white-space: normal; }
-html[data-okunabilir] .tanim li { grid-template-columns: minmax(150px, 220px) 48px 1fr; }
+/* Okuma modu (disleksi / DEHB). Ayarlar erisim.js'de: yazı tipi (Lexend varsayılan: tüm Türkçe harfler var; Atkinson Hyperlegible'da İ ve ₺ yok; OpenDyslexic),
+   boyut, okuma çizgisi; tercih localStorage'da. Kurallar: tek okunaklı yazı tipi, büyük yazı, geniş harf/kelime/satır aralığı
+   (WCAG 1.4.12), sola yaslı ve ≤ 65 karakterlik satırlar, italik ve tamamı büyük harf yok, kırık beyaz / yumuşak koyu tek zemin,
+   hareket ve süs yok. Yazı tipleri fonts/ altında (SIL OFL 1.1); yalnızca okuma modunda indirilir. */
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-ext-400-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-ext-700-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Lexend"; font-weight: 400; font-display: swap; src: url(fonts/lexend-latin-400-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Lexend"; font-weight: 400; font-display: swap; src: url(fonts/lexend-latin-ext-400-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Lexend"; font-weight: 700; font-display: swap; src: url(fonts/lexend-latin-700-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Lexend"; font-weight: 700; font-display: swap; src: url(fonts/lexend-latin-ext-700-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "OpenDyslexic"; font-weight: 400; font-display: swap; src: url(fonts/opendyslexic-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "OpenDyslexic"; font-weight: 700; font-display: swap; src: url(fonts/opendyslexic-latin-700-normal.woff2) format("woff2"); }
+
+html[data-okunabilir] {
+  --ok-font: "Lexend", Verdana, Tahoma, sans-serif; --ok-boyut: 20px;
+  --bg: #f5f1e8; --surface: #fbf8f2; --surface-2: #efe9dd; --edge: #d8cfbd; --border: #d8cfbd;
+  --text: #25272c; --muted: #474b54; --green: #0b6b50; --green-dark: #0b6b50; --on-green: #ffffff; --teal: #0b6b50;
+  --accent: #4b3fb8; --amber: #7a5200; --on-amber: #ffffff; --stutter: #b3332a; --warn: #8a5a00; --bad: #b3332a;
+  --display: var(--ok-font); --mono: var(--ok-font); color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-okunabilir] { --bg: #1d2026; --surface: #252930; --surface-2: #2b3038; --edge: #3d434e; --border: #3d434e;
+    --text: #e6e1d7; --muted: #c2bdb2; --green: #66d4b0; --green-dark: #66d4b0; --on-green: #10291f; --teal: #66d4b0;
+    --accent: #b0a6ff; --amber: #e8bb66; --on-amber: #2a1d00; --stutter: #f08a80; --warn: #e8bb66; --bad: #f08a80; color-scheme: dark; }
+}
+html[data-okunabilir][data-ok-font="atkinson"] { --ok-font: "Atkinson Hyperlegible", Verdana, Tahoma, sans-serif; }
+html[data-okunabilir][data-ok-font="opendyslexic"] { --ok-font: "OpenDyslexic", Verdana, Tahoma, sans-serif; }
+html[data-okunabilir][data-ok-boyut="18"] { --ok-boyut: 18px; } html[data-okunabilir][data-ok-boyut="22"] { --ok-boyut: 22px; }
+html[data-okunabilir][data-ok-boyut="24"] { --ok-boyut: 24px; } html[data-okunabilir][data-ok-boyut="26"] { --ok-boyut: 26px; }
+
+/* tek yazı tipi, büyük yazı, geniş aralık, sola yaslı, italik / büyük harf yok */
+html[data-okunabilir] body { background: var(--bg); color: var(--text); font-family: var(--ok-font); font-size: var(--ok-boyut);
+  line-height: 1.8; letter-spacing: .035em; word-spacing: .14em; overflow-wrap: break-word; }
+html[data-okunabilir] body * { font-family: var(--ok-font) !important; font-style: normal !important; text-transform: none !important;
+  text-align: left; hyphens: none; }
+html[data-okunabilir] body :is(p, li, a, button, summary, label, td, th, small, span, em, code, input, select, dt, dd, .rozet, .chip) { font-size: inherit !important; }
+html[data-okunabilir] :is(h1, h2, h3) { line-height: 1.3 !important; letter-spacing: .01em !important; font-weight: 700 !important; text-wrap: pretty; margin-top: 0; }
+html[data-okunabilir] h1 { font-size: 1.9em !important; max-width: 24ch !important; }
+html[data-okunabilir] h2 { font-size: 1.5em !important; max-width: 30ch; }
+html[data-okunabilir] h3 { font-size: 1.15em !important; }
+html[data-okunabilir] :is(b, strong) { font-weight: 700; }
+html[data-okunabilir] :is(p, li, dd, summary, details, .sub, .lead, .alt, .not) { max-width: 65ch !important; }
+html[data-okunabilir] p { margin: 0 0 1.1em; }
+html[data-okunabilir] .wrap { max-width: 980px; }
+html[data-okunabilir] section, html[data-okunabilir] .hero2, html[data-okunabilir] .fark, html[data-okunabilir] .fiyat2, html[data-okunabilir] .son { padding-block: 56px; }
+/* düz, tek sütun akış: göz bir şeyden ötekine atlamasın */
+html[data-okunabilir] :is(.iki, .uclu, .indir, .plans2, .belge) { grid-template-columns: 1fr !important; }
+html[data-okunabilir] .olculer { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr)); }
+html[data-okunabilir] .sure { grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5em), 1fr)); max-width: none; }
+html[data-okunabilir] :is(.chip, .rozet, .serit li, .pro-etiket, .tasarruf, .onerilen, nav.links a) { white-space: normal !important; }
+html[data-okunabilir] :is(.kutu, .plan2, .olcu, li, .kisaca, .oyun-kart) { min-width: 0; }
+/* dar ekranda tek uzun kelime (ör. BATTLEGROUNDS) düğmeyi taşırmasın */
+html[data-okunabilir] :is(.btn, .chip, button, .rozet, .plan2 li) { overflow-wrap: anywhere; min-width: 0; max-width: 100%; }
+html[data-okunabilir] .dagilim-liste li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+html[data-okunabilir] .sira li > div { min-width: 0; overflow-wrap: anywhere; }
+html[data-okunabilir] .oyun-kart > * { min-width: 0; overflow-wrap: anywhere; }
+html[data-okunabilir] .pencere-govde { grid-template-columns: 1fr; }
+html[data-okunabilir] [role="tablist"] { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--border); }
+html[data-okunabilir] .icindekiler { position: static; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+html[data-okunabilir] .hero2 { min-height: 0; }
+html[data-okunabilir] .hud { position: static; width: auto; max-width: 30em; margin-top: 24px; }
+html[data-okunabilir] .son .actions, html[data-okunabilir] .son h2, html[data-okunabilir] .son p { justify-content: flex-start; margin-inline: 0; }
+html[data-okunabilir] .plan2.pro { order: 0; }
+html[data-okunabilir] .plan2 .price { font-size: 1.9em !important; }
+html[data-okunabilir] .plan2 .price small, html[data-okunabilir] .olcu b small { font-size: .5em !important; }
+html[data-okunabilir] :is(.btn, [role="tab"], .a11y, .sure button, .ab button) { white-space: normal; height: auto; min-height: 48px; line-height: 1.35; }
+html[data-okunabilir] .tanim li { grid-template-columns: 1fr auto; }
+html[data-okunabilir] .tanim li > span:last-child { grid-column: 1 / -1; }
+html[data-okunabilir] .kunye-satir { grid-template-columns: 1fr; }
 html[data-okunabilir] td.ad, html[data-okunabilir] td.neden { min-width: 0; }
-@media (max-width: 860px) { html[data-okunabilir] .pencere-govde { grid-template-columns: 1fr; } }
-/* hareket yok */
+html[data-okunabilir] header.top { position: static; }
+html[data-okunabilir] header.top .wrap { height: auto; padding-block: 10px; flex-wrap: wrap; }
+html[data-okunabilir] nav.links { gap: 8px 18px; }
+/* süs yok: zemin tek renk, kartlar yalnızca ince çerçeve; tuval, parlama, şerit hareketi kapalı */
+html[data-okunabilir] :is(.kutu, .plan2, .plan2.pro, .pencere, .olcu, .kontrol, details, .hud, .grafik, .pro-ipucu, .sonuc, .bulgu, .kunye-kart) {
+  background: var(--surface); box-shadow: none !important; }
+html[data-okunabilir] :is(section, .hero2, .serit) { background: var(--bg); border-color: var(--border); }
+html[data-okunabilir] :is(.kutu, .bulgu, .kunye-kart, details, .uyari, .oyun-sonuc) { border: 1px solid var(--border) !important; }
+html[data-okunabilir] :is(.son canvas, .grafik, .plan2 .halka) { display: none !important; }
+/* sahte öğeler :is() içinde geçersiz sayılıp atlanıyordu: ayrı yazılır */
+html[data-okunabilir] .hero2::before, html[data-okunabilir] .parla::after, html[data-okunabilir] .cizik::after { display: none !important; }
+/* önce/sonra grafiği arka plan değil, metnin altında durağan bir blok; ayırıcı yine sürüklenir ve ok tuşlarıyla kayar */
+html[data-okunabilir] .hero-iz { position: relative; z-index: 0; isolation: isolate; inset: auto; order: 2; height: 240px; margin: 8px clamp(16px, 4vw, 40px) 8px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg); overflow: hidden; }
+html[data-okunabilir] .ayirici { top: 50%; box-shadow: none; }
+/* kenar süsleri kapanır; oyun kapakları gösterilmez (ve yüklenmez), oyunlar yalnızca adla */
+html[data-okunabilir] body::before, html[data-okunabilir] body::after { display: none !important; }
+html[data-okunabilir] :is(.noktalar, .kenar, .oyun-serit .kapak-yer) { display: none !important; }
+html[data-okunabilir] .oyun-serit li { width: auto; min-height: 0; border-radius: 999px; }
+html[data-okunabilir] .oyun-serit li .ad { padding: 4px 12px; font-size: inherit; font-weight: 400; min-height: 0; }
+html[data-okunabilir] .cizik { text-decoration: line-through; text-decoration-thickness: .08em; color: inherit; }
+html[data-okunabilir] .plan2.pro { border: 2px solid var(--amber); }
+html[data-okunabilir] :is(.btn, .tasarruf, .onerilen) { box-shadow: none !important; }
+html[data-okunabilir] .serit-iz { animation: none !important; transform: none !important; width: auto !important; display: block; }
+html[data-okunabilir] .serit ul { flex-wrap: wrap; min-width: 0; row-gap: 10px; justify-content: flex-start; }
+html[data-okunabilir] .oyun-serit { -webkit-mask: none; mask: none; }
+html[data-okunabilir] .serit ul[aria-hidden] { display: none; }
+html[data-okunabilir] .dagilim i { opacity: 1 !important; transform: none !important; }
 html[data-okunabilir] *, html[data-okunabilir] *::before, html[data-okunabilir] *::after {
   animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+/* belirgin odak */
+html[data-okunabilir] :focus-visible { outline: 3px solid var(--accent) !important; outline-offset: 3px; border-radius: 6px; }
+
+/* DEHB yardımcıları: kısa özet, ilerleme çubuğu, okuma çizgisi (yalnızca okuma modunda görünür) */
+.kisaca { display: none; }
+html[data-okunabilir] .kisaca { display: block; max-width: 65ch; margin: 0 0 1.4em; padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+html[data-okunabilir] .kisaca b { display: block; margin-bottom: 2px; }
+.ok-ilerleme { display: none; }
+html[data-okunabilir] .ok-ilerleme { display: block; position: fixed; inset: 0 0 auto 0; height: 6px; z-index: 60; background: var(--border); pointer-events: none; }
+.ok-ilerleme i { display: block; height: 100%; background: var(--green); transform-origin: left; transform: scaleX(0); }
+.ok-cizgi { display: none; }
+html[data-okunabilir][data-ok-cizgi] .ok-cizgi { display: block; position: fixed; left: 0; right: 0; top: 0; height: calc(var(--ok-boyut) * 2.6); z-index: 55; pointer-events: none;
+  border-block: 2px solid var(--accent); box-shadow: 0 0 0 100vmax rgb(20 22 28 / .32); }
+
+/* başlıktaki okuma düğmeleri ve ayar paneli (her iki modda) */
+.okuma { position: relative; display: inline-flex; gap: 6px; align-items: center; }
+.a11y { display: inline-flex; align-items: center; gap: 7px; }
+.a11y .ikon { width: 1.05em; height: 1.05em; }
+.ok-ayar[hidden] { display: none; }
+.ok-panel { position: absolute; right: 0; top: calc(100% + 10px); z-index: 70; width: min(340px, calc(100vw - 32px)); padding: 18px; border: 1px solid var(--edge);
+  border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: 0 18px 50px -12px rgb(0 0 0 / .45); }
+.ok-panel[hidden] { display: none; }
+.ok-panel fieldset { border: 0; padding: 0; margin: 0 0 16px; }
+.ok-panel legend { font-weight: 700; margin-bottom: 8px; padding: 0; }
+.ok-secenek { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 6px; cursor: pointer; }
+.ok-not { color: var(--muted); font-size: .85em; line-height: 1.35; }
+.ok-secenek:has(input:checked) { border-color: var(--green); background: color-mix(in srgb, var(--green) 12%, var(--surface)); }
+.ok-secenek input { accent-color: var(--green); width: 18px; height: 18px; margin: 0; }
+.ok-boyut { display: flex; align-items: center; gap: 10px; }
+.ok-boyut button { min-width: 48px; min-height: 44px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.ok-boyut button:disabled { opacity: .45; cursor: default; }
+.ok-boyut output { min-width: 4.5em; text-align: center; font-weight: 700; }
+.ok-panel .ok-kapat { width: 100%; }
+@media (max-width: 640px) { .ok-panel { position: fixed; left: 16px; right: 16px; top: 72px; width: auto; } }
 
 /* hareket ve karşıtlık tercihleri */
 @media (prefers-reduced-motion: reduce) {
@@ -352,6 +453,9 @@ html[data-okunabilir] *, html[data-okunabilir] *::before, html[data-okunabilir] 
 }
 @media (prefers-contrast: more) {
   :root { --border: #6b7a9c; --muted: #c8d0e2; }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: light) {
+  :root { --border: #7a869c; --muted: #333d50; }   /* açık temada açık gri yazı beyaz zemine düşüyordu */
 }
 .kutu.tam { grid-column: 1 / -1; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

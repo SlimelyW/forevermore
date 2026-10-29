@@ -180,6 +180,35 @@ window.FM_VERI = {
    "Elden Ring",
    "Deadlock"
   ],
+  "steam": {
+   "ARC Raiders": 1808500,
+   "Counter-Strike 2": 730,
+   "Destiny 2": 1085660,
+   "Marvel Rivals": 2767030,
+   "Once Human": 2139460,
+   "Overwatch 2": 2357570,
+   "PUBG: BATTLEGROUNDS": 578080,
+   "Rocket League": 252950,
+   "THE FINALS": 2073850,
+   "The First Descendant": 2074920,
+   "Tom Clancy's Rainbow Six Siege": 359550,
+   "Warframe": 230410,
+   "Apex Legends": 1172470,
+   "Cyberpunk 2077": 1091500,
+   "Grand Theft Auto V": 271590,
+   "Call of Duty: Warzone": 1962663,
+   "Dota 2": 570,
+   "Rust": 252490,
+   "Elden Ring": 1245620,
+   "Deadlock": 1422450
+  },
+  "kapak": {
+   "League of Legends": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
+   "Valorant": "https://store-images.s-microsoft.com/image/apps.46961.13898029070941789.b9070612-bb75-4081-8f05-4acaf8e47425.7e5dd477-7b17-4a3f-b59f-14c8d26413ca?q=85&w=368&h=207",
+   "Teamfight Tactics": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/50/85/e7/5085e741-2ff0-d8aa-0d1b-3b93407f31d8/TFT_ST1826_ASO_ScreenshotUpdates_01_2208x1242_UPDATED_v001_SCha.png/406x228bb.jpg",
+   "Fortnite": "https://store-images.s-microsoft.com/image/apps.60143.70702278257994163.6d75301b-59c3-4a73-b70c-5901ae9cbb44.b4128829-0f4a-4974-8765-24aa73a79dc8?q=85&w=368&h=207",
+   "Minecraft": "https://store-images.s-microsoft.com/image/apps.964.13850085746326678.06e2dc5c-7997-46e9-a8e6-0e48b57cb13b.caac2a25-0ba1-480f-a6a3-87b84e4affcb?q=85&w=368&h=207"
+  },
   "olcum": {
    "aciklama": "Ayarları uygulamadan önce bir 'Önce', uyguladıktan (ve gerekiyorsa yeniden başlattıktan) sonra bir 'Sonra' ölçümü alın; uygulama ikisini karşılaştırır. Sonuçlar yalnızca bu bilgisayarda saklanır.",
    "durustluk": "Dürüst uyarı: Tek ölçüm kesin kanıt değildir. Sonuçlar arka plan işlemlerine, sıcaklığa ve sahneye göre değişir. Aynı koşullarda (aynı sahne, aynı süre, aynı açık programlar) her biri için en az 3 ölçüm alıp ortalamalarına bakın. Küçük farklar (%3'ün altı) çoğu zaman ölçüm gürültüsüdür."
@@ -370,6 +399,35 @@ window.FM_VERI = {
    "Elden Ring",
    "Deadlock"
   ],
+  "steam": {
+   "ARC Raiders": 1808500,
+   "Counter-Strike 2": 730,
+   "Destiny 2": 1085660,
+   "Marvel Rivals": 2767030,
+   "Once Human": 2139460,
+   "Overwatch 2": 2357570,
+   "PUBG: BATTLEGROUNDS": 578080,
+   "Rocket League": 252950,
+   "THE FINALS": 2073850,
+   "The First Descendant": 2074920,
+   "Tom Clancy's Rainbow Six Siege": 359550,
+   "Warframe": 230410,
+   "Apex Legends": 1172470,
+   "Cyberpunk 2077": 1091500,
+   "Grand Theft Auto V": 271590,
+   "Call of Duty: Warzone": 1962663,
+   "Dota 2": 570,
+   "Rust": 252490,
+   "Elden Ring": 1245620,
+   "Deadlock": 1422450
+  },
+  "kapak": {
+   "League of Legends": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
+   "Valorant": "https://store-images.s-microsoft.com/image/apps.46961.13898029070941789.b9070612-bb75-4081-8f05-4acaf8e47425.7e5dd477-7b17-4a3f-b59f-14c8d26413ca?q=85&w=368&h=207",
+   "Teamfight Tactics": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/50/85/e7/5085e741-2ff0-d8aa-0d1b-3b93407f31d8/TFT_ST1826_ASO_ScreenshotUpdates_01_2208x1242_UPDATED_v001_SCha.png/406x228bb.jpg",
+   "Fortnite": "https://store-images.s-microsoft.com/image/apps.60143.70702278257994163.6d75301b-59c3-4a73-b70c-5901ae9cbb44.b4128829-0f4a-4974-8765-24aa73a79dc8?q=85&w=368&h=207",
+   "Minecraft": "https://store-images.s-microsoft.com/image/apps.964.13850085746326678.06e2dc5c-7997-46e9-a8e6-0e48b57cb13b.caac2a25-0ba1-480f-a6a3-87b84e4affcb?q=85&w=368&h=207"
+  },
   "olcum": {
    "aciklama": "Take a 'Before' measurement before applying settings and an 'After' measurement after applying them (and restarting if needed); the app compares the two. Results are stored on this computer only.",
    "durustluk": "Honest warning: a single measurement is not proof. Results vary with background activity, temperature and the scene. Under the same conditions (same scene, same duration, same open programs), take at least 3 measurements each and compare the averages. Small differences (below 3%) are often measurement noise."
