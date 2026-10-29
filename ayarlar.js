@@ -12,7 +12,9 @@ window.FOREVERMORE = {
   github: "https://github.com/SlimelyW/forevermore/releases",
   // Bağış sayfası
   bagis: "https://buymeacoffee.com/forevermore",
-  // Pro kodu fiyatları, ekranda olduğu gibi yazılır. Kod otomatik yenilenmez; süre dolunca yeni kod alınır.
+  // Pro kodu fiyatları. Biçim TAM OLARAK "$<USD> (~₺<TL>)", ör. "$16 (~₺800)": site aylık fiyatı, toplamı, tasarrufu ve
+  // düğmedeki tutarı bundan hesaplar; başka biçim sitede "yakında" görünür (tests/test_site_fiyat.py denetler).
+  // Kod otomatik yenilenmez; süre dolunca yeni kod alınır.
   fiyat1: "$2 (~₺100)",
   fiyat3: "$5 (~₺250)",
   fiyat12: "$16 (~₺800)",
