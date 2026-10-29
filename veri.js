@@ -3,10 +3,10 @@ window.FM_VERI = {
  "tr": {
   "n": {
    "toplam": 154,
-   "gercek": 56,
+   "gercek": 55,
    "kismen": 31,
    "durumsal": 16,
-   "tartisma": 11,
+   "tartisma": 12,
    "placebo": 29,
    "zararli": 11
   },
@@ -103,6 +103,83 @@ window.FM_VERI = {
     "ad": "Game DVR / arka plan kaydını kapatma (Game Bar'ı silmeden)"
    }
   ],
+  "kunye": [
+   {
+    "id": "DISP-001",
+    "ad": "Monitör yenileme hızını en yüksek desteklenen değere ayarla",
+    "durum": "gercek",
+    "etki": "yüksek",
+    "risk": "güvenli",
+    "neden": "Yenileme hızı ekran gecikmesini ve hareket netliğini doğrudan belirler."
+   },
+   {
+    "id": "SYS-007",
+    "ad": "Arka plan uygulamaları (Store/UWP uygulamaları)",
+    "durum": "kismen",
+    "etki": "çok düşük",
+    "risk": "güvenli",
+    "neden": "Mekanizma gerçek ama oyunculara etkisi sınırlı; çoğu arka plan yükü masaüstü programlarından gelir."
+   },
+   {
+    "id": "DISP-005",
+    "ad": "Multiplane Overlay (MPO) devre dışı bırakma",
+    "durum": "durumsal",
+    "etki": "donanıma bağlı",
+    "risk": "dikkatli",
+    "neden": "Belirli bir hata sınıfı için resmi geçici çözümdür, genel performans ayarı değildir. Windows 11 24H2'de bu anahtar tek başına etkisiz kalabilir."
+   },
+   {
+    "id": "DISP-004",
+    "ad": "Tam ekran optimizasyonlarını (FSO) devre dışı bırakma",
+    "durum": "tartisma",
+    "etki": "belirsiz",
+    "risk": "güvenli",
+    "neden": "Mekanizma gerçektir; fayda oyuna ve sürücüye bağlıdır. Yaygın 'her oyunda kapat' tavsiyesi kanıtlanmamıştır."
+   },
+   {
+    "id": "SYS-004",
+    "ad": "Telemetri: Bağlı Kullanıcı Deneyimleri ve Telemetri (DiagTrack)",
+    "durum": "placebo",
+    "etki": "yok",
+    "risk": "güvenli",
+    "neden": "Gizlilik için gerçek, FPS için placebo. 'Telemetriyi kapat FPS artar' iddiası kanıtsızdır."
+   },
+   {
+    "id": "PLC-002",
+    "ad": "Registry temizleyiciler",
+    "durum": "zararli",
+    "etki": "yok",
+    "risk": "riskli",
+    "neden": "Microsoft'un resmi destek politikası registry temizleyicileri desteklemez ve risklerine dikkat çeker."
+   }
+  ],
+  "oyunlar": [
+   "ARC Raiders",
+   "Counter-Strike 2",
+   "Destiny 2",
+   "Marvel Rivals",
+   "Once Human",
+   "Overwatch 2",
+   "PUBG: BATTLEGROUNDS",
+   "Rocket League",
+   "THE FINALS",
+   "The First Descendant",
+   "Tom Clancy's Rainbow Six Siege",
+   "Warframe",
+   "League of Legends",
+   "Valorant",
+   "Teamfight Tactics",
+   "Fortnite",
+   "Apex Legends",
+   "Minecraft",
+   "Cyberpunk 2077",
+   "Grand Theft Auto V",
+   "Call of Duty: Warzone",
+   "Dota 2",
+   "Rust",
+   "Elden Ring",
+   "Deadlock"
+  ],
   "olcum": {
    "aciklama": "Ayarları uygulamadan önce bir 'Önce', uyguladıktan (ve gerekiyorsa yeniden başlattıktan) sonra bir 'Sonra' ölçümü alın; uygulama ikisini karşılaştırır. Sonuçlar yalnızca bu bilgisayarda saklanır.",
    "durustluk": "Dürüst uyarı: Tek ölçüm kesin kanıt değildir. Sonuçlar arka plan işlemlerine, sıcaklığa ve sahneye göre değişir. Aynı koşullarda (aynı sahne, aynı süre, aynı açık programlar) her biri için en az 3 ölçüm alıp ortalamalarına bakın. Küçük farklar (%3'ün altı) çoğu zaman ölçüm gürültüsüdür."
@@ -116,10 +193,10 @@ window.FM_VERI = {
  "en": {
   "n": {
    "toplam": 154,
-   "gercek": 56,
+   "gercek": 55,
    "kismen": 31,
    "durumsal": 16,
-   "tartisma": 11,
+   "tartisma": 12,
    "placebo": 29,
    "zararli": 11
   },
@@ -215,6 +292,83 @@ window.FM_VERI = {
     "id": "PERF-002",
     "ad": "Turn off Game DVR / background recording (without removing Game Bar)"
    }
+  ],
+  "kunye": [
+   {
+    "id": "DISP-001",
+    "ad": "Set the monitor refresh rate to the highest supported value",
+    "durum": "gercek",
+    "etki": "high",
+    "risk": "güvenli",
+    "neden": "The refresh rate directly determines display latency and motion clarity."
+   },
+   {
+    "id": "SYS-007",
+    "ad": "Background apps (Store/UWP apps)",
+    "durum": "kismen",
+    "etki": "very low",
+    "risk": "güvenli",
+    "neden": "The mechanism is real but the effect for gamers is limited; most background load comes from desktop programs."
+   },
+   {
+    "id": "DISP-005",
+    "ad": "Disable Multiplane Overlay (MPO)",
+    "durum": "durumsal",
+    "etki": "hardware-dependent",
+    "risk": "dikkatli",
+    "neden": "An official workaround for a specific class of bugs, not a general performance setting. On Windows 11 24H2 this key alone may have no effect."
+   },
+   {
+    "id": "DISP-004",
+    "ad": "Disable fullscreen optimizations (FSO)",
+    "durum": "tartisma",
+    "etki": "uncertain",
+    "risk": "güvenli",
+    "neden": "The mechanism is real; the benefit depends on the game and driver. The common advice 'turn it off in every game' is not proven."
+   },
+   {
+    "id": "SYS-004",
+    "ad": "Telemetry: Connected User Experiences and Telemetry (DiagTrack)",
+    "durum": "placebo",
+    "etki": "none",
+    "risk": "güvenli",
+    "neden": "Real for privacy, placebo for FPS. The claim 'disable telemetry and FPS goes up' has no evidence."
+   },
+   {
+    "id": "PLC-002",
+    "ad": "Registry cleaners",
+    "durum": "zararli",
+    "etki": "none",
+    "risk": "riskli",
+    "neden": "Microsoft's official support policy does not support registry cleaners and points out their risks."
+   }
+  ],
+  "oyunlar": [
+   "ARC Raiders",
+   "Counter-Strike 2",
+   "Destiny 2",
+   "Marvel Rivals",
+   "Once Human",
+   "Overwatch 2",
+   "PUBG: BATTLEGROUNDS",
+   "Rocket League",
+   "THE FINALS",
+   "The First Descendant",
+   "Tom Clancy's Rainbow Six Siege",
+   "Warframe",
+   "League of Legends",
+   "Valorant",
+   "Teamfight Tactics",
+   "Fortnite",
+   "Apex Legends",
+   "Minecraft",
+   "Cyberpunk 2077",
+   "Grand Theft Auto V",
+   "Call of Duty: Warzone",
+   "Dota 2",
+   "Rust",
+   "Elden Ring",
+   "Deadlock"
   ],
   "olcum": {
    "aciklama": "Take a 'Before' measurement before applying settings and an 'After' measurement after applying them (and restarting if needed); the app compares the two. Results are stored on this computer only.",

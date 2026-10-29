@@ -1,5 +1,5 @@
-/* Demo penceresi (tahmin, tarama, geri alma), kanıt tablosu süzgeci ve fiyat süresi.
-   Veri: veri.js (tools/site_veri.py, uygulamanın kendi dosyalarından). Betik yoksa tablo ve fiyatlar düz okunur. */
+/* Demo penceresi (tarama, künye, geri alma, tahmin), oyun denetimi ve fiyat süresi.
+   Veri: veri.js (tools/site_veri.py, uygulamanın kendi dosyalarından). Betik yoksa fiyatlar düz okunur. */
 (function () {
   var lang = document.documentElement.lang === "en" ? "en" : "tr";
   var V = window.FM_VERI && window.FM_VERI[lang];
@@ -8,23 +8,33 @@
   var U = {
     tr: {
       step: "{k} / {n}", real: "Doğru.", wrong: "Forevermore'da etiketi:", next: "Sonraki", last: "Sonucu gör",
-      score: "{n} / {t} doğru", scoreNote: "Etiketlerin hepsi, gerekçeleriyle aşağıdaki tabloda.", table: "Tabloya git", again: "Tekrar oyna",
+      score: "{n} / {t} doğru", scoreNote: "Etiketlerin anlamı aşağıda; her ayarın gerekçesi uygulamada.", table: "Etiketlere bak", again: "Tekrar oyna",
       scan: "Taramayı başlat", scanning: "Taranıyor…", rescan: "Yeniden tara", fix: "Çöz", fixed: "Çözüldü (örnek)",
       steps: ["Donanım okunuyor", "Ekran ve RAM okunuyor", "Başlangıç uygulamaları sayılıyor", "Bulgular sıralanıyor"],
       done: "{n} bulgu", machine: ["İşlemci", "Bellek", "Ekran kartı", "Monitör"],
       undoAll: "Hepsini geri al", redo: "Yeniden uygula", backup: "Yedek alındı", restore: "Geri yükleme noktası", reverted: "Geri alındı",
       changed: { "DISP-001": ["60 Hz", "144 Hz"], "SYS-006": ["14 uygulama", "6 uygulama"], "PERF-002": ["Kayıt açık", "Kayıt kapalı"] },
-      shown: "{n} / {t} ayar"
+      kEtki: "Performans etkisi", kRisk: "Risk", kNeden: "Gerekçe", kGeri: "Geri alma",
+      kGeriMetin: "Değiştirilmeden önce yedeklenir; Değişiklikler sayfasından tek tıkla eski hâline döner.",
+      kKaynak: "Kaynaklar ve ölçüm notları uygulamada, ayarın (i) penceresinde.",
+      oBos: "Bir oyun adı yaz ya da listeden seç.",
+      oVar: "{ad} için oyun içi ayar rehberi var. Sistem ayarları da geçerli.",
+      oYok: "{ad} listede yok. Sistem ayarları bu oyunda da geçerli; oyun bir mağazadan kuruluysa Oyunlar sayfası bulur. Oyun içi rehber yalnızca listedeki oyunlar için var."
     },
     en: {
       step: "{k} / {n}", real: "Correct.", wrong: "Forevermore labels it:", next: "Next", last: "See result",
-      score: "{n} / {t} correct", scoreNote: "Every label, with its reason, is in the table below.", table: "Go to the table", again: "Play again",
+      score: "{n} / {t} correct", scoreNote: "The labels are explained below; each setting's reason is in the app.", table: "See the labels", again: "Play again",
       scan: "Start scan", scanning: "Scanning…", rescan: "Scan again", fix: "Fix", fixed: "Fixed (sample)",
       steps: ["Reading hardware", "Reading display and RAM", "Counting startup apps", "Sorting findings"],
       done: "{n} findings", machine: ["CPU", "Memory", "Graphics", "Monitor"],
       undoAll: "Undo all", redo: "Apply again", backup: "Backup taken", restore: "Restore point", reverted: "Reverted",
       changed: { "DISP-001": ["60 Hz", "144 Hz"], "SYS-006": ["14 apps", "6 apps"], "PERF-002": ["Recording on", "Recording off"] },
-      shown: "{n} / {t} settings"
+      kEtki: "Performance impact", kRisk: "Risk", kNeden: "Reason", kGeri: "Undo",
+      kGeriMetin: "Backed up before it changes; one click on the Changes page restores the original.",
+      kKaynak: "Sources and measurement notes are in the setting's (i) window in the app.",
+      oBos: "Type a game name or pick one from the list.",
+      oVar: "There is an in-game setting guide for {ad}. System settings apply too.",
+      oYok: "{ad} is not on the list. System settings apply in this game as well; if it is installed through a store, the Games page finds it. In-game guides exist only for the listed games."
     }
   }[lang];
   function fill(s, o) { return s.replace(/\{(\w+)\}/g, function (m, k) { return o[k] != null ? o[k] : m; }); }
@@ -74,7 +84,7 @@
         box.appendChild(el("p", "skor", fill(U.score, { n: score, t: items.length })));
         box.appendChild(el("p", "alt", U.scoreNote));
         var row = el("div", "secenekler");
-        var go = el("a", "btn primary", U.table); go.href = "#tablo";
+        var go = el("a", "btn primary", U.table); go.href = "#etiketler";
         var again = el("button", "btn", U.again); again.type = "button";
         again.onclick = function () { items.sort(function () { return Math.random() - 0.5; }); index = 0; score = 0; marks = []; show(); };
         row.appendChild(go); row.appendChild(again); box.appendChild(row);
@@ -169,25 +179,51 @@
     render();
   })();
 
-  /* ------------------------------------------------------------ kanıt tablosu süzgeci */
-  var table = document.querySelector("[data-tablo]");
-  if (table) (function () {
-    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr")), q = table.querySelector("input[type=search]"),
-        chips = Array.prototype.slice.call(table.querySelectorAll(".filtre")), out = table.querySelector("[data-say]"), f = "all";
-    function apply() {
-      var term = q.value.trim().toLowerCase(), n = 0;
-      rows.forEach(function (r) {
-        var ok = (f === "all" || r.dataset.d === f) && (!term || r.textContent.toLowerCase().indexOf(term) >= 0);
-        r.hidden = !ok; if (ok) n++;
-      });
-      out.textContent = fill(U.shown, { n: n, t: rows.length });
+  /* ------------------------------------------------------------ ayar künyesi */
+  var kunye = document.querySelector("[data-kunye]");
+  if (kunye) (function () {
+    var chips = el("div", "zincir"), card = el("div", "kunye-kart");
+    chips.setAttribute("role", "group");
+    kunye.appendChild(chips); kunye.appendChild(card);
+    function row(k, v) { var r = el("div", "kunye-satir"); r.appendChild(el("b", null, k)); r.appendChild(el("span", null, v)); return r; }
+    function show(item, btn) {
+      Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute("aria-pressed", c === btn ? "true" : "false"); });
+      card.className = "kunye-kart giris r-" + item.durum;
+      card.innerHTML = "";
+      var head = el("div", "kunye-bas");
+      head.appendChild(el("h3", null, item.ad)); head.appendChild(el("code", null, item.id)); head.appendChild(badge(item.durum));
+      card.appendChild(head);
+      card.appendChild(row(U.kEtki, item.etki)); card.appendChild(row(U.kRisk, item.risk));
+      card.appendChild(row(U.kNeden, item.neden)); card.appendChild(row(U.kGeri, U.kGeriMetin));
+      card.appendChild(el("p", "kunye-not", U.kKaynak));
     }
-    chips.forEach(function (c) {
-      c.addEventListener("click", function () {
-        f = c.dataset.f; chips.forEach(function (o) { o.setAttribute("aria-pressed", o === c ? "true" : "false"); }); apply();
-      });
+    V.kunye.forEach(function (item, i) {
+      var b = el("button", "chip filtre", item.ad.length > 34 ? item.ad.slice(0, 32).trim() + "…" : item.ad); b.type = "button";
+      b.style.setProperty("--rc", "var(--v-" + item.durum + ")");
+      b.addEventListener("click", function () { show(item, b); });
+      chips.appendChild(b);
+      if (i === 0) show(item, b);
     });
-    q.addEventListener("input", apply); apply();
+  })();
+
+  /* ------------------------------------------------------------ oyun denetimi */
+  var oyun = document.querySelector("[data-oyun]");
+  if (oyun) (function () {
+    var input = oyun.querySelector("input"), chips = oyun.querySelector(".oyun-chipler"), out = oyun.querySelector(".oyun-sonuc");
+    function norm(x) { return x.toLowerCase().replace(/[^a-z0-9ğüşıöç]+/g, ""); }
+    function check() {
+      var raw = input.value.trim();
+      if (!raw) { out.textContent = U.oBos; out.className = "oyun-sonuc"; return; }
+      var hit = V.oyunlar.filter(function (g) { return norm(g).indexOf(norm(raw)) >= 0 || norm(raw).indexOf(norm(g)) >= 0; })[0];
+      out.textContent = fill(hit ? U.oVar : U.oYok, { ad: hit || raw });
+      out.className = "oyun-sonuc " + (hit ? "var" : "yok");
+    }
+    V.oyunlar.forEach(function (g) {
+      var b = el("button", "chip filtre", g); b.type = "button";
+      b.addEventListener("click", function () { input.value = g; check(); });
+      chips.appendChild(b);
+    });
+    input.addEventListener("input", check); check();
   })();
 
   /* ------------------------------------------------------------ fiyat süresi */
