@@ -1,4 +1,4 @@
-# Yeni GitHub sürümü yayımlanınca Discord duyuru kanallarına (TR ve EN) mesaj atar.
+# Yeni GitHub sürümü yayımlanınca Discord duyuru kanallarına (TR ve EN) tek mesaj atar: sürüm başlığı + indirme bağlantısı + yama notları.
 # Gerekli depo gizlileri: DISCORD_WEBHOOK_TR, DISCORD_WEBHOOK_EN (yoksa o dil atlanır). Uygulama Discord'a bağlanmaz.
 name: Discord duyurusu
 on:
@@ -26,16 +26,17 @@ jobs:
           tr, en = (body[:m.start()], body[m.start():]) if m else (body, body)
           def clip(t):
               t = re.sub(r"^##\s*(Türkçe|English)\s*$", "", t, flags=re.M | re.I).strip()
-              return t if len(t) <= 3500 else t[:3500].rsplit("\n", 1)[0] + "\n…"
-          def post(hook, title, text, label):
+              return t if len(t) <= 3300 else t[:3300].rsplit("\n", 1)[0] + "\n…"
+          def post(hook, title, head, text, label):
               if not hook:
                   print("atlandı:", label); return
               data = {"username": "Forevermore", "allowed_mentions": {"parse": []},
-                      "embeds": [{"title": title, "url": os.environ["URL"], "description": clip(text), "color": 0x2ECC71}]}
+                      "embeds": [{"title": title, "url": os.environ["URL"], "description": head + clip(text), "color": 0x2ECC71}]}
               req = urllib.request.Request(hook, json.dumps(data).encode(), {"Content-Type": "application/json", "User-Agent": "forevermore-release"})
               urllib.request.urlopen(req, timeout=30).read()
               print("gönderildi:", label)
           tag = os.environ["TAG"]
-          post(os.environ["HOOK_TR"], f"Forevermore {tag} yayında: yeni sürümü indirin", tr, "TR")
-          post(os.environ["HOOK_EN"], f"Forevermore {tag} is out: download the new version", en, "EN")
+          site = "https://slimelyw.github.io/forevermore/"
+          post(os.environ["HOOK_TR"], f"Forevermore {tag} yayında", f"**İndir:** {site}\n\n**Yama notları**\n", tr, "TR")
+          post(os.environ["HOOK_EN"], f"Forevermore {tag} is out", f"**Download:** {site}\n\n**Patch notes**\n", en, "EN")
           PY
