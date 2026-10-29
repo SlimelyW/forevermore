@@ -4,18 +4,20 @@ window.FOREVERMORE = {
   // GitHub Releases'taki zip (sürüm yükseltilse de değişmeyen bağlantı):
   // "https://github.com/KULLANICI_ADI/forevermore/releases/latest/download/Forevermore.zip"
   indir: "https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip",
-  // Lemon Squeezy satın alma bağlantısı: "https://MAGAZA.lemonsqueezy.com/buy/..."
-  satinal: "",
-  // Aboneliği yönet (müşteri portalı): "https://MAGAZA.lemonsqueezy.com/billing"
-  portal: "https://forevermore.lemonsqueezy.com/billing",
+  // Satın alma sayfası (Buy Me a Coffee): ödeme burada yapılır, kod Discord ticket ile teslim edilir.
+  satinal: "https://buymeacoffee.com/forevermore",
+  // Discord sunucusu davet bağlantısı (kod teslimi için ticket): "https://discord.gg/..." Boşsa "Yakında".
+  discord: "https://discord.gg/eyQBGyQkVG",
   // Tüm sürümler ve sürüm notları (GitHub Releases)
   github: "https://github.com/SlimelyW/forevermore/releases",
   // Bağış sayfası
   bagis: "https://buymeacoffee.com/forevermore",
-  // Aylık fiyat, ekranda olduğu gibi yazılır (ör. "$4.99"). Boşsa "Yakında".
-  fiyat: "₺250",
+  // Pro kodu fiyatları, ekranda olduğu gibi yazılır. Kod otomatik yenilenmez; süre dolunca yeni kod alınır.
+  fiyat1: "$2 (~₺100)",
+  fiyat3: "$5 (~₺250)",
+  fiyat12: "$16 (~₺800)",
   // Paket doğrulama bilgileri (derle.bat çıktısı)
-  sha256: "98FAE42651A4A68571F01D4F5BEF7A0E905CAB99BA0F30C764188B2EA6F219E0",
+  sha256: "6D7293040328E5F16D9775D53C8C7185796C1F9009D3BC574E0FE56EF473E4AA",
   parmakIzi: "5FE5-D786-0B89-A56E",
 };
 

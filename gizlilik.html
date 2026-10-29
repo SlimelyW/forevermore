@@ -16,73 +16,101 @@
 </header>
 <main class="doc">
   <h1>Gizlilik politikası</h1>
-  <p class="updated">Son güncelleme: 24 Ekim 2026</p>
+  <p class="updated">Son güncelleme: 29 Ekim 2026</p>
 
   <h2>Kısaca</h2>
   <p>Forevermore telemetri toplamaz, reklam göstermez, kullanım verisi göndermez. Tarama sonuçları, ayarlar, yedekler ve
     günlükler yalnızca bilgisayarınızda (<code>%LOCALAPPDATA%\Forevermore</code>) durur.</p>
 
-  <h2>Uygulamanın gönderdiği tek veri: Pro lisans doğrulaması</h2>
-  <p>Ücretsiz sürüm internete bağlanmaz. Pro lisansını etkinleştirdiğinizde, günde bir kez doğrulanırken ve "Bu
-    bilgisayardan kaldır" dediğinizde uygulama Lemon Squeezy'nin lisans sunucusuna (api.lemonsqueezy.com) yalnızca şunları
-    gönderir:</p>
-  <ul>
-    <li>lisans anahtarınız,</li>
-    <li>etkinleştirme kimliği (Lemon Squeezy'nin verdiği rastgele bir kimlik),</li>
-    <li>bilgisayarın anonim kimliği: Windows kurulum kimliğinin uygulamaya özel, geri çevrilemez özeti
-      (bilgisayar adı, kullanıcı adı veya donanım listesi gönderilmez).</li>
-  </ul>
-  <p>Bu bilgiler aboneliği tek bir bilgisayarla sınırlamak için kullanılır. Her internet isteğinde olduğu gibi lisans
-    sunucusu bağlantının IP adresini görür.</p>
+  <h2>Uygulama varsayılan olarak internete bağlanmaz</h2>
+  <p>Ücretsiz sürüm de Pro da varsayılan olarak internete bağlanmaz ve hiçbir veri göndermez. Tek istisna, sizin Ayarlar > Uygulama güncellemesi'nde açtığınız ya da düğmesine bastığınız güncelleme denetimidir: uygulama GitHub'ın herkese açık sürüm listesine (api.github.com) ve sürüm dosyasına bağlanır, hiçbir veri göndermez; ancak GitHub, her internet isteğinde olduğu gibi bağlantının IP adresini görür (GitHub yurt dışındadır). İndirilen güncelleme yapımcı imzasıyla doğrulanır, doğrulanamazsa kurulmaz. Pro kodu, bilgisayarınızda imza denetimiyle
+    doğrulanır. Kod, bilgisayarınızın uygulamaya özel bir özetine bağlanır; bu özet yalnızca kodu üretmemiz için
+    sizin bize ilettiğiniz "bilgisayar kodu"dur, uygulama onu hiçbir yere göndermez.</p>
 
-  <h2>Satın alma</h2>
-  <p>Ödemeler satış ortağımız (Merchant of Record) <a href="https://www.lemonsqueezy.com/privacy">Lemon Squeezy</a>
-    tarafından alınır. Ad, e-posta, fatura adresi ve ödeme bilgileri Lemon Squeezy'nin gizlilik politikasına göre işlenir;
-    kart bilgileriniz bize ulaşmaz. Biz yalnızca Lemon Squeezy panelinde siparişinizi, e-posta adresinizi ve lisans
-    durumunu görürüz ve bunları destek ile lisans yönetimi dışında kullanmayız.</p>
+  <h2>Satın alma ve kod teslimi: bizde ne kalır ve yurt dışı aktarım</h2>
+  <p>Veri sorumlusu sıfatıyla Kubilay Paşa Dinçsay ("Yapımcı"), yalnızca Pro kodu satın alma, teslimat ve destek
+    süreçlerinin yürütülmesi amacıyla sınırlı verilerinizi işler:</p>
+  <ul>
+    <li><b>Ödeme ve bildirim akışı (Buy Me a Coffee, Stripe ve Cloudflare):</b> Ödemeyi
+      <a href="https://buymeacoffee.com/privacy-policy">Buy Me a Coffee</a> (ödeme altyapısı Stripe) alır; ad, e-posta ve
+      ödeme bilgileri onların gizlilik politikasına göre işlenir, kart bilgileriniz bize ulaşmaz. Ödeme tamamlandığında
+      Buy Me a Coffee tarafından gönderilen bildirim (e-posta adresi, işlem tutarı ve ödeme notu), güvenli yönlendirme
+      amacıyla <b>Cloudflare Workers</b> altyapısından geçerek Yapımcının özel <b>Discord</b> bildirim kanalına düşer.
+      E-posta adresiniz ve notunuz Cloudflare Worker tarafından saklanmaz. Worker yalnızca mükerrer bildirimi ve
+      mükerrer kod üretimini önlemek için olay kimliğini, bekleyen ödemenin süresini (1, 3 veya 12 ay) ve üretilen kodun
+      kopyasını (en çok 400 gün) saklar.</li>
+    <li><b>Kod teslimi ve saklanan kayıtlar (Discord):</b> Pro kodunuzu Discord sunucumuzda açtığınız destek talebi
+      (ticket) üzerinden teslim ederiz. Biz yalnızca şunları tutarız: Discord kullanıcı adınız, ödeme bildirimi/notu,
+      ilettiğiniz bilgisayar kodu (Windows kurulum kimliğinin uygulamaya özel tek yönlü özeti; takma adlı veridir) ve
+      ürettiğimiz kodun kaydı (kod kimliği, süre, üretim tarihi).</li>
+    <li><b>Hukuki sebep ve saklama süresi:</b> Bu veriler, 6698 sayılı KVKK m.5/2-c (sözleşmenin kurulması ve ifası: kod
+      teslimi, donanım değişikliğinde kod yenileme) ve m.5/2-f (meşru menfaat: mükerrer işlem ve kötüye kullanım
+      denetimi) hukuki sebeplerine dayanılarak işlenir; satılmaz ve üçüncü kişilerle paylaşılmaz. Kayıtlar lisans
+      süreniz boyunca ve olası destek/uyuşmazlık süreçleri için yasal zamanaşımı süresince saklanır.</li>
+    <li><b>Yurt dışına veri aktarımı:</b> Süreçte kullanılan GitHub, Buy Me a Coffee, Stripe, Cloudflare ve Discord
+      sunucuları yurt dışında bulunmaktadır. Bu altyapılar üzerinden gerçekleşen veri aktarımı, KVKK m.9/6-b uyarınca
+      sizinle olan lisans sözleşmesinin ifası için zorunlu olması hukuki sebebine ve açık rızanıza dayanmaktadır.</li>
+  </ul>
 
   <h2>Bu site</h2>
   <p>Site çerez, analiz aracı veya dış yazı tipi kullanmaz. Siteyi barındıran hizmet (GitHub Pages) güvenlik amacıyla
     erişim kayıtları (ör. IP adresi) tutabilir; bu kayıtlar GitHub'ın gizlilik bildirimine tabidir.</p>
 
-  <h2>Haklarınız ve iletişim</h2>
-  <p>Hakkınızda tuttuğumuz bilgileri (sipariş ve lisans kaydı) öğrenmek, düzeltmek veya silinmesini istemek için Discord
-    üzerinden <b>smileyw</b> ile iletişime geçebilirsiniz. Lisans kaydını silmek aboneliğinizi sonlandırabilir.</p>
+  <h2>Haklarınız ve iletişim (KVKK m.11)</h2>
+  <p>KVKK'nın 11. maddesi kapsamında; hakkınızda tuttuğumuz bilgileri (ödeme notu, Discord destek talebi ve kod kaydı)
+    öğrenmek, düzeltilmesini veya silinmesini istemek ve diğer yasal haklarınızı kullanmak için Discord üzerinden
+    <b>smileyw</b> ile iletişime geçebilirsiniz. Kaydınızın silinmesini istemeniz mevcut çevrimdışı kodunuzu devre dışı
+    bırakmaz; ancak bilgisayar değişikliği gibi durumlarda kalan sürenizi doğrulamamızı ve yeni kod üretmemizi
+    imkânsız hale getirebilir.</p>
 
   <div class="lang-split" id="en">
     <h1>Privacy policy</h1>
-    <p class="updated">Last updated: 24 October 2026</p>
+    <p class="updated">Last updated: 29 October 2026</p>
 
     <h2>In short</h2>
     <p>Forevermore collects no telemetry, shows no ads and sends no usage data. Scan results, settings, backups and logs
       stay only on your computer (<code>%LOCALAPPDATA%\Forevermore</code>).</p>
 
-    <h2>The only data the app sends: Pro license check</h2>
-    <p>The free version does not connect to the internet. When you activate a Pro license, when it is verified once a day
-      and when you choose "Remove from this computer", the app sends only the following to Lemon Squeezy's license server
-      (api.lemonsqueezy.com):</p>
-    <ul>
-      <li>your license key,</li>
-      <li>the activation ID (a random ID issued by Lemon Squeezy),</li>
-      <li>an anonymous computer ID: an app-specific, irreversible hash of the Windows installation ID (no computer name,
-        user name or hardware list is sent).</li>
-    </ul>
-    <p>This is used to limit a subscription to one computer. As with any internet request, the license server sees the
-      connection's IP address.</p>
+    <h2>The app does not connect to the internet by default</h2>
+    <p>Neither the free version nor Pro connects to the internet or sends any data by default. The only exception is the update check you turn on in Settings > App updates or trigger with its button: the app contacts GitHub's public release list (api.github.com) and the release file and sends no data, but GitHub, as with any internet request, sees the connection's IP address (GitHub is located abroad). A downloaded update is verified by the publisher's signature and is not installed if that fails. The Pro code is verified on your
+      computer by its signature. The code is tied to an app-specific hash of your computer; that hash is only the
+      "computer code" you send us so we can make the code, and the app never sends it anywhere.</p>
 
-    <h2>Purchases</h2>
-    <p>Payments are taken by our reseller (Merchant of Record) <a href="https://www.lemonsqueezy.com/privacy">Lemon
-      Squeezy</a>. Your name, email, billing address and payment details are processed under Lemon Squeezy's privacy
-      policy; card details never reach us. We only see your order, email address and license status in the Lemon Squeezy
-      dashboard and use them only for support and license management.</p>
+    <h2>Purchases, code delivery and international transfers</h2>
+    <p>Acting as the data controller, Kubilay Paşa Dinçsay (the "Author") processes limited data strictly to handle Pro code
+      purchases, delivery and support:</p>
+    <ul>
+      <li><b>Payment and webhook flow (Buy Me a Coffee, Stripe, and Cloudflare):</b> Payment is processed by
+        <a href="https://buymeacoffee.com/privacy-policy">Buy Me a Coffee</a> (running on Stripe); your name, email and
+        payment details are handled under their privacy policy, and card details never reach us. When a payment is
+        completed, the webhook notification from Buy Me a Coffee (containing your email address, amount, and payment
+        note) passes through <b>Cloudflare Workers</b> to a private <b>Discord</b> channel accessible only to the Author.
+        Your email and note are not stored by the Cloudflare Worker. To prevent duplicate notifications and duplicate
+        code generation, the Worker stores only the event ID, the pending payment's duration (1, 3 or 12 months) and a
+        copy of the issued code (for up to 400 days).</li>
+      <li><b>Code delivery and retained records (Discord):</b> We deliver your Pro code through a support ticket on our
+        Discord server. We retain only: your Discord username, the payment notification/note, the computer code you sent
+        (an app-specific one-way hash of your Windows installation ID; pseudonymous data) and a record of the issued code
+        (code ID, duration, issue date).</li>
+      <li><b>Legal basis and retention:</b> This data is processed solely for the performance of our contract with you
+        (code delivery, replacement codes upon hardware changes) and legitimate interests (preventing abuse and duplicate
+        transactions) under applicable data protection law (including KVKK Art. 5/2-c and 5/2-f). We never sell or share
+        this data. Records are kept for the duration of your license and the applicable statutory limitation period for
+        support and dispute resolution.</li>
+      <li><b>Cross-border transfers:</b> GitHub, Buy Me a Coffee, Stripe, Cloudflare and Discord operate servers outside
+        of Türkiye. Data transfers through these services are carried out as strictly necessary for the performance of
+        the contract (under KVKK Art. 9/6-b) and based on your explicit consent.</li>
+    </ul>
 
     <h2>This website</h2>
     <p>This site uses no cookies, analytics or external fonts. The hosting service (GitHub Pages) may keep access logs
       (e.g. IP address) for security; these are covered by GitHub's privacy statement.</p>
 
     <h2>Your rights and contact</h2>
-    <p>To see, correct or delete the information we hold about you (order and license record), contact <b>smileyw</b> on
-      Discord. Deleting the license record may end your subscription.</p>
+    <p>Under applicable data protection laws (including KVKK Art. 11), you may contact <b>smileyw</b> on Discord to
+      access, correct or request the deletion of the information we hold about you (payment note, Discord ticket and code
+      record). Deleting your record will not disable a code you already have, but it may make it impossible to verify
+      your remaining time for support or replacement-code requests if you change computers.</p>
   </div>
 </main>
 <footer>

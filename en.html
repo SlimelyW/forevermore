@@ -3,21 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Forevermore — Windows optimization for gamers</title>
-  <meta name="description" content="Forevermore: a Windows settings app for gamers. Explains the settings that work, flags placebo and harmful tweaks, backs up every change and undoes it with one click.">
+  <title>Forevermore — Windows gaming optimization</title>
+  <meta name="description" content="Forevermore: a Windows settings app for gamers. All 154 settings carry an evidence label; placebo and harmful tweaks are separated and every change can be undone.">
   <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="style.css">
   <script src="ayarlar.js" defer></script>
+  <script src="veri.js" defer></script>
+  <script src="demo.js" defer></script>
+  <script src="erisim.js" defer></script>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="en.html"><img src="img/logo.png" alt="">Forevermore</a>
     <nav class="links">
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#download">Download</a>
-      <a href="#faq">FAQ</a>
+      <a href="#dene">Try it</a>
+      <a href="#kanit">Evidence</a>
+      <a href="#fiyat">Pricing</a>
+      <a href="#indir">Download</a>
+      <a href="#sss">FAQ</a>
+      <button class="a11y" type="button" data-a11y aria-pressed="false" title="Readable text: Verdana, wider letter spacing">Aa</button>
       <a class="lang" href="index.html" hreflang="tr">TR</a>
     </nav>
   </div>
@@ -25,136 +30,383 @@
 
 <main>
   <div class="wrap hero">
-    <img class="mark" src="img/logo.png" alt="Forevermore logo">
-    <h1>No placebo. <span>Settings that actually work.</span></h1>
-    <p class="lead">Forevermore is a Windows settings app for gamers. It scans your PC, explains what each setting does
-      with its pros and cons, and flags the placebo and harmful tweaks that circulate online. Every change is backed up
-      and can be undone with one click.</p>
+    <h1>Settings that actually work, not placebo.</h1>
+    <p class="lead">A Windows settings app for gamers. Each of the <b><!--n:toplam-->154<!--/n--> settings</b> in its catalog has an evidence label: <!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> harmful.</p>
     <div class="actions">
-      <a class="btn primary" data-link="indir" href="#download">Download free</a>
-      <a class="btn" data-link="satinal" href="#pricing">Get Pro</a>
+      <a class="btn primary" data-link="indir" href="#indir">Download free</a>
+      <a class="textlink" href="#fiyat">See Pro</a>
     </div>
-    <p class="note">Windows 10 / 11 · 64-bit · English and Turkish</p>
-    <div class="shot"><img src="img/ozet_en.png" alt="Forevermore system overview screen" width="1240" height="515"></div>
   </div>
 
-  <section id="features">
+  <div class="wrap demo" id="dene">
+    <div class="pencere">
+      <div class="pencere-bar"><img src="img/logo.png" alt=""><span>Forevermore</span><span class="ornek">Sample window, sample data</span></div>
+      <div class="pencere-govde">
+        <div role="tablist" aria-label="Demo" aria-orientation="vertical">
+          <button role="tab" id="t-tahmin" aria-controls="s-tahmin" aria-selected="true">Guess</button>
+          <button role="tab" id="t-tara" aria-controls="s-tara" aria-selected="false" tabindex="-1">Scan</button>
+          <button role="tab" id="t-geri" aria-controls="s-geri" aria-selected="false" tabindex="-1">Undo</button>
+        </div>
+
+        <div class="sahne" id="s-tahmin" role="tabpanel" aria-labelledby="t-tahmin">
+          <h2>Real or placebo?</h2>
+          <p class="alt">8 settings. Pick a label, then compare with Forevermore's own.</p>
+          <div data-quiz>
+            <noscript><p>This section needs JavaScript. Every label is in the <a href="#tablo">table</a> below.</p></noscript>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-tara" role="tabpanel" aria-labelledby="t-tara" hidden>
+          <h2>Scan a sample computer</h2>
+          <p class="alt"><!--v:tarama.okunur-->The scan only reads; it changes no settings and sends nothing over the internet.<!--/v--></p>
+          <div data-tarama>
+            <div class="makine">
+              <span>CPU <b>Core i5-12400</b></span>
+              <span>Memory <b>16 GB, single module</b></span>
+              <span>Graphics <b>RTX 3060</b></span>
+              <span>Monitor <b>supports 144 Hz</b></span>
+            </div>
+            <p><button class="btn primary start" type="button">Start scan</button></p>
+            <div class="cubuk" aria-hidden="true"><i></i></div>
+            <p class="durum-satir" aria-live="polite"></p>
+            <ul class="bulgular"></ul>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-geri" role="tabpanel" aria-labelledby="t-geri" hidden>
+          <h2>Changes</h2>
+          <p class="alt">Every setting the app changes can be returned to the state it was in when the app first touched it.</p>
+          <div data-geri>
+            <div class="zincir"></div>
+            <ul class="degisiklikler"></ul>
+            <p><button class="btn primary toggle" type="button">Undo all</button></p>
+            <p class="sr" data-live aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="kanit">
     <div class="wrap">
-      <h2>What it does</h2>
-      <p class="sub">Based on my own tests and measurements and on Microsoft, NVIDIA and AMD documentation. A tweak with
-        no proven effect is never sold as "more FPS".</p>
-      <div class="grid">
-        <div class="card"><h3>Scan and explain</h3><p>Scans your hardware and current settings read-only and explains in
-          plain words what each setting does and who should not touch it.</p></div>
-        <div class="card"><h3>Placebo and harmful tweaks</h3><p>Shows popular tweaks that do nothing or cause harm
-          ("lowers ping", "frees RAM") separately, and finds the ones already applied on your PC.</p></div>
-        <div class="card"><h3>Everything can be undone</h3><p>A backup and a restore point are made before any change.
-          Go back with one click on the Changes page.</p></div>
-        <div class="card"><h3>Graphics card settings</h3><p>Changes NVIDIA and AMD driver settings (latency, scaling,
-          G-SYNC) through the driver's own interface.</p></div>
-        <div class="card"><h3>Game profiles<span class="tag">PRO</span></h3><p>Per-game CPU priority, core selection and
-          muted notifications; applied when the game starts and undone when it closes.</p></div>
-        <div class="card"><h3>Before / After<span class="tag">PRO</span></h3><p>See the real effect with FPS, latency and
-          timer measurements before and after your changes.</p></div>
+      <h2 class="baslik">Evidence</h2>
+      <p class="sub">Labels rest on my own tests and measurements and on Microsoft, NVIDIA and AMD documentation. Each setting's sources are in its (i) window in the app.</p>
+      <div class="belge">
+        <nav class="icindekiler" aria-label="In this section">
+          <a href="#etiketler">Labels</a>
+          <a href="#tablo">All settings</a>
+          <a href="#geri-alma">Every change</a>
+          <a href="#sinirlar">Not offered</a>
+          <a href="#olcum">Before / After</a>
+        </nav>
+        <div class="belge-govde">
+          <section id="etiketler">
+            <h3>Labels</h3>
+            <div class="dagilim" role="img" aria-label="Label distribution">
+              <i style="flex:56;--rc:var(--v-gercek)"></i><i style="flex:31;--rc:var(--v-kismen)"></i><i style="flex:16;--rc:var(--v-durumsal)"></i><i style="flex:11;--rc:var(--v-tartisma)"></i><i style="flex:29;--rc:var(--v-placebo)"></i><i style="flex:11;--rc:var(--v-zararli)"></i>
+            </div>
+            <ul class="tanim">
+              <li><span class="rozet r-gercek">real</span><b><!--n:gercek-->56<!--/n--></b><span>mechanism is documented or measured</span></li>
+              <li><span class="rozet r-kismen">real in some cases</span><b><!--n:kismen-->31<!--/n--></b><span>makes a difference only under certain conditions</span></li>
+              <li><span class="rozet r-durumsal">hardware-dependent</span><b><!--n:durumsal-->16<!--/n--></b><span>effect varies with hardware or driver</span></li>
+              <li><span class="rozet r-tartisma">disputed</span><b><!--n:tartisma-->11<!--/n--></b><span>sources conflict or evidence is weak</span></li>
+              <li><span class="rozet r-placebo">placebo</span><b><!--n:placebo-->29<!--/n--></b><span>no measurable effect</span></li>
+              <li><span class="rozet r-zararli">harmful</span><b><!--n:zararli-->11<!--/n--></b><span>harms, according to measurements or vendor documentation</span></li>
+            </ul>
+          </section>
+
+          <section id="tablo" data-tablo>
+            <h3>All settings</h3>
+            <div class="arac">
+              <input type="search" placeholder="Search settings" aria-label="Search settings">
+              <button class="chip filtre" type="button" data-f="all" aria-pressed="true">All</button>
+              <button class="chip filtre" type="button" data-f="gercek" aria-pressed="false">real</button>
+              <button class="chip filtre" type="button" data-f="kismen" aria-pressed="false">in some cases</button>
+              <button class="chip filtre" type="button" data-f="durumsal" aria-pressed="false">hardware-dependent</button>
+              <button class="chip filtre" type="button" data-f="tartisma" aria-pressed="false">disputed</button>
+              <button class="chip filtre" type="button" data-f="placebo" aria-pressed="false">placebo</button>
+              <button class="chip filtre" type="button" data-f="zararli" aria-pressed="false">harmful</button>
+            </div>
+            <p class="tablo-not" data-say aria-live="polite"></p>
+            <div class="tablo-kap" tabindex="0" role="region" aria-label="Settings table">
+              <table>
+                <thead><tr><th>Setting</th><th>Evidence</th><th>Effect</th><th>Risk</th><th>Reason</th></tr></thead>
+                <tbody>
+<!--tablo-->
+<tr data-d="gercek"><td class="ad">Set the monitor refresh rate to the highest supported value<small>DISP-001</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">The refresh rate directly determines display latency and motion clarity.</td></tr>
+<tr data-d="gercek"><td class="ad">Variable refresh rate (VRR) / G-SYNC / FreeSync<small>DISP-002</small></td><td><span class="rozet r-gercek">real</span></td><td>medium</td><td>güvenli</td><td class="neden">Blur Busters measurements show that G-SYNC plus an FPS cap is the lowest-latency tear-free method.</td></tr>
+<tr data-d="gercek"><td class="ad">Optimizations for windowed games (Windows 11)<small>DISP-003</small></td><td><span class="rozet r-gercek">real</span></td><td>low</td><td>güvenli</td><td class="neden">A change with a known mechanism, based on Microsoft&#x27;s DXGI flip model documentation.</td></tr>
+<tr data-d="tartisma"><td class="ad">Disable fullscreen optimizations (FSO)<small>DISP-004</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>güvenli</td><td class="neden">The mechanism is real; the benefit depends on the game and driver. The common advice &#x27;turn it off in every game&#x27; is not proven.</td></tr>
+<tr data-d="durumsal"><td class="ad">Disable Multiplane Overlay (MPO)<small>DISP-005</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">An official workaround for a specific class of bugs, not a general performance setting. On Windows 11 24H2 this key alone may have no effect.</td></tr>
+<tr data-d="gercek"><td class="ad">Auto HDR and HDR<small>DISP-006</small></td><td><span class="rozet r-gercek">real</span></td><td>very low</td><td>güvenli</td><td class="neden">A visual feature, not a performance improvement.</td></tr>
+<tr data-d="gercek"><td class="ad">Dynamic refresh rate (DRR) – laptops<small>DISP-007</small></td><td><span class="rozet r-gercek">real</span></td><td>very low</td><td>güvenli</td><td class="neden">A trade-off between battery and smoothness.</td></tr>
+<tr data-d="kismen"><td class="ad">Scaling mode: GPU scaling or display scaling<small>DISP-008</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">An image/compatibility setting; there is no consistent evidence for the claim that &#x27;GPU scaling adds latency&#x27;.</td></tr>
+<tr data-d="durumsal"><td class="ad">Multiple monitors with different refresh rates and video on a second screen<small>DISP-009</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">There are many community reports; Microsoft improved mixed refresh rate support in later Windows 10 versions.</td></tr>
+<tr data-d="kismen"><td class="ad">Disable the Print Spooler service<small>SYS-001</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>dikkatli</td><td class="neden">A real benefit for security; placebo for performance.</td></tr>
+<tr data-d="tartisma"><td class="ad">SysMain (formerly Superfetch)<small>SYS-002</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Often recommended on r/lowendgaming; no benefit has been shown except with an HDD + low RAM.</td></tr>
+<tr data-d="placebo"><td class="ad">Windows Search indexing (WSearch)<small>SYS-003</small></td><td><span class="rozet r-placebo">placebo</span></td><td>very low</td><td>güvenli</td><td class="neden">Placebo for game FPS; noticeable only during the first indexing period and on very weak HDD systems.</td></tr>
+<tr data-d="placebo"><td class="ad">Telemetry: Connected User Experiences and Telemetry (DiagTrack)<small>SYS-004</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">Real for privacy, placebo for FPS. The claim &#x27;disable telemetry and FPS goes up&#x27; has no evidence.</td></tr>
+<tr data-d="placebo"><td class="ad">Xbox services (XblAuthManager, XblGameSave, XboxNetApiSvc, XboxGipSvc)<small>SYS-005</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Common in debloat lists; no performance benefit, but features are lost.</td></tr>
+<tr data-d="gercek"><td class="ad">Reduce startup apps<small>SYS-006</small></td><td><span class="rozet r-gercek">real</span></td><td>medium</td><td>güvenli</td><td class="neden">Programs running in the background consume real resources; one of the most consistent recommendations.</td></tr>
+<tr data-d="kismen"><td class="ad">Background apps (Store/UWP apps)<small>SYS-007</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">The mechanism is real but the effect for gamers is limited; most background load comes from desktop programs.</td></tr>
+<tr data-d="kismen"><td class="ad">Fast Startup (Hiberboot)<small>SYS-008</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for stability/compatibility; no effect on FPS.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off hibernation (hiberfil.sys)<small>SYS-009</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for disk space, placebo for performance. Its effect on game performance is not documented; the hiberfil.sys file takes disk space equal to a percentage of memory.</td></tr>
+<tr data-d="placebo"><td class="ad">Windows Error Reporting (WerSvc)<small>SYS-010</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">Common in performance lists, but the service does not run while idle.</td></tr>
+<tr data-d="kismen"><td class="ad">Widgets, Copilot and Recall (Windows 11)<small>SYS-011</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Real for RAM and privacy; low impact on FPS.</td></tr>
+<tr data-d="durumsal"><td class="ad">Pause OneDrive sync while gaming<small>SYS-012</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">No effect when nothing is syncing.</td></tr>
+<tr data-d="gercek"><td class="ad">Defender exclusions and Dev Drive (instead of turning off Defender)<small>SYS-013</small></td><td><span class="rozet r-gercek">real</span></td><td>low</td><td>dikkatli</td><td class="neden">Microsoft officially supports this approach with Dev Drive and performance mode.</td></tr>
+<tr data-d="gercek"><td class="ad">Windows Update active hours and pausing (instead of turning it off)<small>SYS-014</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">The safe alternative to turning Windows Update off completely (see PLC-024).</td></tr>
+<tr data-d="placebo"><td class="ad">Touch Keyboard and Handwriting Panel Service (TabletInputService)<small>SYS-015</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Common in old &#x27;disable services&#x27; lists; no measurable benefit.</td></tr>
+<tr data-d="gercek"><td class="ad">User Account Control (UAC) level<small>SYS-016</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>dikkatli</td><td class="neden">Not a performance setting; a convenience/security trade-off.</td></tr>
+<tr data-d="durumsal"><td class="ad">Turning off Windows Defender real-time protection<small>SYS-017</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>riskli</td><td class="neden">Real in file-heavy jobs but mostly unnoticeable in game; the security cost is high.</td></tr>
+<tr data-d="gercek"><td class="ad">Long file path support (lift the 260-character limit)<small>SYS-018</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">A setting documented by Microsoft (Maximum Path Length Limitation). Its effect depends on the program declaring long path support.</td></tr>
+<tr data-d="kismen"><td class="ad">Detailed blue screen (BSOD) information<small>SYS-019</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">The behavior is real, but in this app it rests on a single tool list (CTT WinUtil); there is no verified official documentation and it was not tested by causing a blue screen.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off publishing and uploading activity history<small>SYS-020</small></td><td><span class="rozet r-gercek">real</span></td><td>very low</td><td>güvenli</td><td class="neden">Microsoft-documented group policy settings (Publish/Upload User Activities); the mechanism is real and the performance effect is small.</td></tr>
+<tr data-d="kismen"><td class="ad">Block downloading device metadata from the internet<small>SYS-021</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">The setting is a real Windows policy; but the &#x27;prevents extra software installs&#x27; effect rests in this app on a single tool list (CTT WinUtil) and was not tested.</td></tr>
+<tr data-d="kismen"><td class="ad">Game Mode<small>PERF-001</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>güvenli</td><td class="neden">The mechanism is real; the effect is small and depends on the situation.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Game DVR / background recording (without removing Game Bar)<small>PERF-002</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Continuous recording consumes real resources. But only changing the GameDVR registry values gives no extra benefit when recording is already off.</td></tr>
+<tr data-d="gercek"><td class="ad">Memory Integrity (HVCI) / Core isolation<small>PERF-003</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>riskli</td><td class="neden">Microsoft&#x27;s official documentation acknowledges that HVCI and VMP can reduce gaming performance in some scenarios.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off Virtual Machine Platform (VMP) / Hyper-V<small>PERF-004</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>dikkatli</td><td class="neden">Mentioned in Microsoft&#x27;s gaming performance documentation; its effect on its own has not been fully separated. The measurements (2021) were mainly for VBS/HVCI; Virtual Machine Platform alone was not measured. Turning it off stops virtualization features such as WSL2.</td></tr>
+<tr data-d="kismen"><td class="ad">Visual effects: &#x27;Adjust for best performance&#x27;<small>PERF-005</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Real for perceived desktop speed, placebo for game FPS.</td></tr>
+<tr data-d="gercek"><td class="ad">Per-app GPU selection (laptops with hybrid graphics)<small>PERF-006</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">A documented mechanism on Optimus/hybrid graphics systems. On laptops with a MUX switch, &#x27;dGPU only&#x27; mode gives extra latency/FPS gains.</td></tr>
+<tr data-d="tartisma"><td class="ad">Turn off memory compression<small>PERF-007</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">The mechanism is real, but whether the effect is positive or negative depends on the amount of RAM.</td></tr>
+<tr data-d="durumsal"><td class="ad">Turn off Power Throttling (EcoQoS)<small>PERF-008</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A real mechanism, but the claim that it &#x27;increases FPS&#x27; targets the wrong thing.</td></tr>
+<tr data-d="tartisma"><td class="ad">Win32PrioritySeparation (foreground quantum priority)<small>PERF-009</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">A real scheduler setting, but on multi-core CPUs most game threads already find a core, so the effect is expected to be small.</td></tr>
+<tr data-d="durumsal"><td class="ad">Permanent &#x27;High&#x27; CPU priority for the game process (IFEO PerfOptions)<small>PERF-010</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">The mechanism is real and documented (IFEO); the benefit appears only when the CPU is not enough.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off in-game overlays (Discord, Steam, NVIDIA, Xbox, RGB software)<small>PERF-011</small></td><td><span class="rozet r-gercek">real</span></td><td>low</td><td>güvenli</td><td class="neden">Overlay-related stutter and crashes are a common troubleshooting step in communities and game support pages.</td></tr>
+<tr data-d="durumsal"><td class="ad">Hardware-accelerated GPU scheduling (HAGS)<small>GPU-001</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">An architectural change; the FPS effect is usually small, but features such as frame generation depend on it.</td></tr>
+<tr data-d="gercek"><td class="ad">Low Latency Mode<small>GPU-002</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">NVIDIA&#x27;s latency guide and independent measurements show lower latency in GPU-limited scenarios.</td></tr>
+<tr data-d="kismen"><td class="ad">Power management mode: Prefer maximum performance<small>GPU-003</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>güvenli</td><td class="neden">Also mentioned in NVIDIA&#x27;s latency guide; but the effect is limited to low GPU load scenarios. An independent comparison found small, inconsistent FPS changes and a clear rise in idle power draw; the authors advise keeping the default unless you have trouble reaching target clock speeds.</td></tr>
+<tr data-d="kismen"><td class="ad">Texture filtering – Quality: High performance<small>GPU-004</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">A real quality/performance trade-off, but the gain is very small.</td></tr>
+<tr data-d="kismen"><td class="ad">Shader cache size<small>GPU-005</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>güvenli</td><td class="neden">The mechanism is real; the benefit appears only when the default cache fills up.</td></tr>
+<tr data-d="gercek"><td class="ad">G-SYNC + V-Sync (in the driver) + FPS cap combination<small>GPU-006</small></td><td><span class="rozet r-gercek">real</span></td><td>medium</td><td>güvenli</td><td class="neden">Measured with a high-speed camera in the Blur Busters G-SYNC 101 series.</td></tr>
+<tr data-d="gercek"><td class="ad">Max frame rate (driver FPS limiter)<small>GPU-007</small></td><td><span class="rozet r-gercek">real</span></td><td>low</td><td>güvenli</td><td class="neden">Capping FPS lowers latency by draining the render queue when GPU-limited (NVIDIA and Blur Busters).</td></tr>
+<tr data-d="tartisma"><td class="ad">Threaded optimization<small>GPU-008</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>güvenli</td><td class="neden">The driver default already decides based on game profiles.</td></tr>
+<tr data-d="gercek"><td class="ad">Preferred refresh rate: Highest available<small>GPU-009</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A documented driver setting.</td></tr>
+<tr data-d="gercek"><td class="ad">NVIDIA Reflex (in-game) – On + Boost<small>GPU-010</small></td><td><span class="rozet r-gercek">real</span></td><td>medium</td><td>güvenli</td><td class="neden">NVIDIA and independent (LDAT) measurements confirm lower latency.</td></tr>
+<tr data-d="gercek"><td class="ad">Instant Replay and RTX Video Super Resolution<small>GPU-011</small></td><td><span class="rozet r-gercek">real</span></td><td>low</td><td>güvenli</td><td class="neden">Removes background workload; the effect is small.</td></tr>
+<tr data-d="gercek"><td class="ad">DLDSR / DSR and Image Scaling (NIS)<small>GPU-012</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">Render resolution is the biggest factor for FPS in GPU-limited games.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Anti-Lag / Anti-Lag 2<small>GPU-013</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">AMD&#x27;s documented latency reduction technology.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Chill<small>GPU-014</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Designed for power saving; it is not a performance feature.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Boost, Enhanced Sync and AFMF (driver frame generation)<small>GPU-015</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Real features, but a trade-off, not &#x27;free FPS&#x27;.</td></tr>
+<tr data-d="durumsal"><td class="ad">Disable ULPS (Ultra Low Power State)<small>GPU-016</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>none</td><td>dikkatli</td><td class="neden">A real fix for old multi-GPU problems; placebo as a general performance setting.</td></tr>
+<tr data-d="gercek"><td class="ad">Resizable BAR / Smart Access Memory<small>GPU-017</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">Documented by GPU manufacturers and confirmed by independent tests.</td></tr>
+<tr data-d="durumsal"><td class="ad">MSI (Message Signaled Interrupts) mode<small>GPU-018</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>uncertain</td><td>riskli</td><td class="neden">Microsoft describes MSI as a documented mechanism; a benefit is only expected on devices running line-based. On one test system, turning MSI on did not change frame times; the Windows 11 drivers there had already put the GPU, USB, NVMe and network devices in MSI/MSI-X mode.</td></tr>
+<tr data-d="kismen"><td class="ad">Clean driver install (DDU) and an up-to-date driver<small>GPU-019</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">An up-to-date driver gives a real benefit; the habit of &#x27;DDU on every update&#x27; is unnecessary. DDU is not a performance tool; it is a tool for cleaning up driver problems.</td></tr>
+<tr data-d="gercek"><td class="ad">G-SYNC scope: full screen only / full screen and windowed<small>GPU-020</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A setting documented in NVIDIA&#x27;s driver settings header (NvApiDriverSettings.h: VRR_MODE).</td></tr>
+<tr data-d="durumsal"><td class="ad">NVIDIA Image Scaling (NIS) quality upscaling<small>GPU-021</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">The setting is listed in NVIDIA Profile Inspector&#x27;s setting dictionary (0x10444444, &#x27;NVIDIA Image Scaling - Quality Upscaling&#x27;); it has no entry in the official header file. The app verified that the driver accepts the value; the effect in games was not measured.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off the NVIDIA app overlay<small>GPU-022</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>güvenli</td><td class="neden">The setting is listed in NVIDIA Profile Inspector&#x27;s setting dictionary (0x90DE9159, &#x27;Driver - NVIDIA App Overlay Shim Prohibition&#x27;); there is no official documentation. Writing needs administrator rights (the driver refused it without them); as administrator it was written, read back and reverted. That the overlay is really disabled and the FPS effect were not measured.</td></tr>
+<tr data-d="tartisma"><td class="ad">Turn off core parking (CPMINCORES)<small>CPU-001</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">It was a real problem in the Windows 7 era (especially AMD FX/early Ryzen); today the benefit is uncertain and it can be harmful on X3D. No difference is expected on single-CCD processors; on dual-CCD X3D parts it can hurt.</td></tr>
+<tr data-d="kismen"><td class="ad">Minimum processor state (PROCTHROTTLEMIN)<small>CPU-002</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">It mattered more on older CPUs (before Speed Shift). The mechanism is described in Microsoft&#x27;s server documentation (100 is suggested for very low latency); no measurement of its effect on game latency was found.</td></tr>
+<tr data-d="gercek"><td class="ad">Processor performance boost mode (PERFBOOSTMODE) – laptop heat control<small>CPU-003</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A documented power setting; common in laptop communities and the effect is measurable (temperature).</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Spectre/Meltdown software mitigations<small>CPU-004</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>riskli</td><td class="neden">The effect is real but the security cost is high; Microsoft documents it only for specific scenarios.</td></tr>
+<tr data-d="gercek"><td class="ad">AMD Ryzen X3D (dual CCD): Game Bar + AMD chipset driver + Balanced plan<small>CPU-005</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">AMD and independent reviews (Notebookcheck, TheFPSReview) confirm the dependency on Game Bar and the driver.</td></tr>
+<tr data-d="durumsal"><td class="ad">Windows 11 and E-core handling on Intel hybrid (P/E core) processors<small>CPU-006</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">Denuvo DRM and scheduling problems were real at the Alder Lake launch; they have been largely fixed with patches.</td></tr>
+<tr data-d="tartisma"><td class="ad">Turn off SMT / Hyper-Threading<small>CPU-007</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">A small benefit in specific game + high core count combinations, a loss in others.</td></tr>
+<tr data-d="tartisma"><td class="ad">Turn off C-States (BIOS)<small>CPU-008</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">Common in latency-obsessed communities (Blur Busters forums); a measurable gaming benefit is disputed.</td></tr>
+<tr data-d="tartisma"><td class="ad">Timer resolution tools and GlobalTimerResolutionRequests<small>CPU-009</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">Microsoft documents the behavior change; the existence of the registry value was observed by the community, and there is no official user documentation.</td></tr>
+<tr data-d="durumsal"><td class="ad">Core assignment with Process Lasso / CPU affinity<small>CPU-010</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">The tool is real; the general advice &#x27;set affinity in every game&#x27; is not. The gain is specific to the game and hardware: in one article (9950X3D, very low graphics settings) two games improved and one showed no difference; there is no general evidence.</td></tr>
+<tr data-d="kismen"><td class="ad">Power plan: High Performance / Ultimate Performance<small>PWR-001</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>low</td><td>güvenli</td><td class="neden">A real mechanism, but &#x27;Ultimate Performance&#x27; is designed for workstations and no meaningful difference from High Performance has been shown in games. In one measurement on a single PC with 4 games, only one game&#x27;s 1% low frame rate improved; the others showed either no difference or a slight dip.</td></tr>
+<tr data-d="gercek"><td class="ad">Windows 11 Power mode: Best performance (overlay)<small>PWR-002</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A documented power mode; one of the most important Windows settings for laptop performance.</td></tr>
+<tr data-d="kismen"><td class="ad">USB selective suspend<small>PWR-003</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">A real fix for disconnect/wake-up problems; not a performance setting. The mechanism is documented (delay while the device wakes up); the in-game effect has not been measured.</td></tr>
+<tr data-d="kismen"><td class="ad">PCI Express Link State Power Management (ASPM)<small>PWR-004</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Real for stability on specific systems; no effect on FPS.</td></tr>
+<tr data-d="kismen"><td class="ad">Device Manager: &#x27;Allow the computer to turn off this device to save power&#x27;<small>PWR-005</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Real for specific hardware problems.</td></tr>
+<tr data-d="gercek"><td class="ad">Laptop: OEM performance mode, gaming plugged in and the MUX switch<small>PWR-006</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">Laptop reviews consistently measure large differences between performance modes.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off hard disk after (HDD)<small>PWR-007</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">HDD spin-up time is a physical delay.</td></tr>
+<tr data-d="durumsal"><td class="ad">System cooling policy: Active<small>PWR-008</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Real on systems that use ACPI thermal zones; no effect on OEM-managed systems.</td></tr>
+<tr data-d="gercek"><td class="ad">Use wired Ethernet (instead of Wi-Fi)<small>NET-001</small></td><td><span class="rozet r-gercek">real</span></td><td>high</td><td>güvenli</td><td class="neden">Based on network physics; consistent advice across all sources.</td></tr>
+<tr data-d="kismen"><td class="ad">Wi-Fi adapter power saving: Maximum performance<small>NET-002</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Wireless power saving is a known source of latency; the effect depends on the card and driver.</td></tr>
+<tr data-d="gercek"><td class="ad">Stop Wi-Fi background scanning (WLAN AutoConfig)<small>NET-003</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>dikkatli</td><td class="neden">Background scanning causing latency spikes is a known behavior of wireless cards; regularly spaced ping spikes are a sign of this problem.</td></tr>
+<tr data-d="gercek"><td class="ad">Bufferbloat: SQM / smart queue (QoS) on the router<small>NET-004</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Not a Windows setting; but one of the few common methods that really delivers the ping improvement &#x27;network tweaks&#x27; promise.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Delivery Optimization peer-to-peer uploads<small>NET-005</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A documented Microsoft feature; the effect depends on connection capacity.</td></tr>
+<tr data-d="durumsal"><td class="ad">Turn off Nagle&#x27;s algorithm (TcpAckFrequency / TCPNoDelay)<small>NET-006</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">TcpAckFrequency is documented by Microsoft. Because most modern competitive games use UDP, the general claim that it &#x27;lowers ping&#x27; is wrong.</td></tr>
+<tr data-d="kismen"><td class="ad">Network card: Interrupt Moderation<small>NET-007</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">The mechanism is real (Microsoft NIC tuning guide); in practice placebo for game ping. In one measurement on a single card (Intel Gigabit CT, Windows 10 1909) there were ~2.65 million interrupts with moderation off against ~200 thousand with adaptive; the &#x27;medium&#x27; setting had the least impact on gaming and kept DPC latency low.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off Energy-Efficient Ethernet (EEE / Green Ethernet)<small>NET-008</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">A real fix for compatibility problems; not a general performance gain. Intel&#x27;s documentation only describes link-speed problems; the latency effect has not been measured.</td></tr>
+<tr data-d="placebo"><td class="ad">Receive Side Scaling (RSS) and offload settings<small>NET-009</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">The claim that disabling offload/RSS &#x27;lowers ping&#x27; has no evidence; Microsoft recommends the defaults.</td></tr>
+<tr data-d="gercek"><td class="ad">Polling rate (report rate) – reading and setting<small>INP-001</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">The report interval is a physical latency component. Stutter caused by high polling has also been acknowledged by Microsoft engineers, and background listeners were restricted in Windows 11.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Enhance Pointer Precision (mouse acceleration)<small>INP-002</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">The acceleration curve defined in Microsoft&#x27;s pointer ballistics documentation.</td></tr>
+<tr data-d="gercek"><td class="ad">Pointer speed 10/20 (6/11 in the old UI) – 1:1 mapping<small>INP-003</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">The Windows pointer multiplier is documented; 10 = 1.0 multiplier.</td></tr>
+<tr data-d="gercek"><td class="ad">In-game Raw Input option<small>INP-004</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">The Raw Input API is documented by Microsoft.</td></tr>
+<tr data-d="durumsal"><td class="ad">MarkC Mouse Fix (curve registry fix)<small>INP-005</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>none</td><td>güvenli</td><td class="neden">A real fix for specific old games; unnecessary for most users today.</td></tr>
+<tr data-d="kismen"><td class="ad">Keyboard repeat delay and repeat rate<small>INP-006</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for desktop comfort; the claim that it &#x27;reduces keyboard latency in games&#x27; is wrong. This is a usage preference; there is no evidence of a performance effect.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Sticky/Filter/Toggle Keys shortcuts<small>INP-007</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">A common and useful QoL setting.</td></tr>
+<tr data-d="gercek"><td class="ad">USB port choice and wireless receiver placement<small>INP-008</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Mouse manufacturers (Logitech, Razer, etc.) recommend keeping the receiver close and avoiding USB 3.0 interference; USB 3.0&#x27;s 2.4 GHz interference is documented by Intel.</td></tr>
+<tr data-d="gercek"><td class="ad">Reduce apps listening to raw input in the background (high polling stutter)<small>INP-009</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">Microsoft engineers&#x27; explanation was relayed on the Blur Busters forum. Which stable Windows 11 version the change shipped in could not be confirmed with official release notes in this research.</td></tr>
+<tr data-d="durumsal"><td class="ad">USB polling &#x27;overclock&#x27; with hidusbf<small>INP-010</small></td><td><span class="rozet r-durumsal">hardware-dependent</span></td><td>hardware-dependent</td><td>riskli</td><td class="neden">Shown to work on some old mice by community measurements; the security and compatibility cost is high.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off audio enhancements (system effects)<small>AUD-001</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">A real fix for problematic driver effects; no evidence for the claim that it &#x27;increases FPS&#x27;.</td></tr>
+<tr data-d="kismen"><td class="ad">Sample rate and bit depth (Default format)<small>AUD-002</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for rate matching and compatibility; the claim &#x27;higher sample rate = better footsteps&#x27; is placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Exclusive mode permissions<small>AUD-003</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">Documented Windows audio architecture behavior.</td></tr>
+<tr data-d="gercek"><td class="ad">Communications activity: &#x27;Do nothing&#x27; (turn off ducking)<small>AUD-004</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">Documented Windows stream attenuation behavior.</td></tr>
+<tr data-d="tartisma"><td class="ad">Spatial sound (Windows Sonic / Dolby Atmos for Headphones / DTS)<small>AUD-005</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>very low</td><td>güvenli</td><td class="neden">Positional perception varies by person and game. Windows documentation describes the options; the latency effect is not documented, and how it sounds is personal.</td></tr>
+<tr data-d="kismen"><td class="ad">Disable unused audio devices (NVIDIA/AMD HDMI Audio, etc.)<small>AUD-006</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for QoL; placebo for performance.</td></tr>
+<tr data-d="gercek"><td class="ad">Loudness Equalization<small>AUD-007</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">Dynamic range compression is a real effect; whether it is an advantage is a matter of preference.</td></tr>
+<tr data-d="gercek"><td class="ad">DPC latency diagnosis (LatencyMon) – crackling and stutter<small>AUD-008</small></td><td><span class="rozet r-gercek">real</span></td><td>hardware-dependent</td><td>güvenli</td><td class="neden">A measurement tool; this is where the &#x27;latency reduction&#x27; that tweak lists promise can actually be measured.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off the Hands-Free (HFP) profile on Bluetooth headphones<small>AUD-009</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">With classic Bluetooth, the A2DP (stereo) and HFP (microphone) profiles cannot both run at high quality at the same time; this limitation is smaller on new devices with LE Audio.</td></tr>
+<tr data-d="gercek"><td class="ad">Show file extensions<small>QOL-001</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">Security and ease of use.</td></tr>
+<tr data-d="gercek"><td class="ad">Classic right-click menu (Windows 11)<small>QOL-002</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">A common QoL change that works; not documented by Microsoft.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off web/Bing results in Start search<small>QOL-003</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">A documented Group Policy.</td></tr>
+<tr data-d="kismen"><td class="ad">Turn off transparency effects<small>QOL-004</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Real for the desktop on low-end hardware, placebo for games.</td></tr>
+<tr data-d="kismen"><td class="ad">Animation effects and menu show delay (MenuShowDelay)<small>QOL-005</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>none</td><td>güvenli</td><td class="neden">Real for perceived speed; placebo for system performance.</td></tr>
+<tr data-d="gercek"><td class="ad">Mute notifications while gaming (Do not disturb)<small>QOL-006</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">QoL.</td></tr>
+<tr data-d="gercek"><td class="ad">&#x27;End task&#x27; on the taskbar<small>QOL-007</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">An official Windows 11 feature.</td></tr>
+<tr data-d="gercek"><td class="ad">Turn off Start/lock screen suggestions and tips<small>QOL-008</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">QoL; no performance claim.</td></tr>
+<tr data-d="kismen"><td class="ad">Edge Startup Boost and running in the background<small>QOL-009</small></td><td><span class="rozet r-kismen">real in some cases</span></td><td>very low</td><td>güvenli</td><td class="neden">Documented Edge policies.</td></tr>
+<tr data-d="gercek"><td class="ad">Night light and Digital Vibrance<small>QOL-010</small></td><td><span class="rozet r-gercek">real</span></td><td>none</td><td>güvenli</td><td class="neden">A visual preference; the competitive advantage is subjective.</td></tr>
+<tr data-d="zararli"><td class="ad">RAM cleaners / &#x27;RAM freeing&#x27; apps<small>PLC-001</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>dikkatli</td><td class="neden">The Windows memory manager is already optimized; &#x27;cleaning&#x27; RAM destroys the cache.</td></tr>
+<tr data-d="zararli"><td class="ad">Registry cleaners<small>PLC-002</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>riskli</td><td class="neden">Microsoft&#x27;s official support policy does not support registry cleaners and points out their risks.</td></tr>
+<tr data-d="placebo"><td class="ad">Disable HPET / bcdedit useplatformclock<small>PLC-003</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Spread on YouTube in 2016-2018; the default settings are already optimized. Removing it gives a real benefit only on systems where useplatformclock=yes was forced.</td></tr>
+<tr data-d="placebo"><td class="ad">bcdedit: disabledynamictick / useplatformtick / tscsyncpolicy<small>PLC-004</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Microsoft documents these options for debugging/testing, not as performance settings.</td></tr>
+<tr data-d="zararli"><td class="ad">msconfig: &#x27;Number of processors&#x27; and &#x27;Maximum memory&#x27;<small>PLC-005</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>dikkatli</td><td class="neden">The &#x27;unlock all cores&#x27; myth; the setting is for limiting.</td></tr>
+<tr data-d="placebo"><td class="ad">SvcHostSplitThresholdInKB (reducing the number of svchost processes)<small>PLC-006</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Microsoft chose separate processes for reliability and security (Windows 10 1703).</td></tr>
+<tr data-d="placebo"><td class="ad">LargeSystemCache=1 and DisablePagingExecutive=1<small>PLC-007</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Left over from Windows XP-era tweak lists.</td></tr>
+<tr data-d="zararli"><td class="ad">Turn off the page file (pagefile)<small>PLC-008</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>riskli</td><td class="neden">Microsoft explains that the page file is needed for the commit limit and for dump files.</td></tr>
+<tr data-d="placebo"><td class="ad">Defragmenting an SSD / turning off &#x27;Optimize Drives&#x27;<small>PLC-009</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">Since Windows 8, Optimize Drives detects SSDs. Occasionally doing a real defrag on systems with volume shadow copy enabled is intentional.</td></tr>
+<tr data-d="placebo"><td class="ad">MMCSS: SystemResponsiveness=0<small>PLC-010</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">The advice &#x27;set it to 0&#x27; contradicts the official documentation: the value is rounded up to 10.</td></tr>
+<tr data-d="placebo"><td class="ad">NetworkThrottlingIndex=ffffffff<small>PLC-011</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">The claim that it &#x27;lowers ping&#x27; does not match the mechanism.</td></tr>
+<tr data-d="placebo"><td class="ad">MMCSS &#x27;Games&#x27; task profile (GPU Priority=8, Priority=6, Scheduling Category=High)<small>PLC-012</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">The mechanism is documented, but its target audience (games that use MMCSS) barely exists.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;The QoS packet scheduler reserves 20% of bandwidth&#x27; (NonBestEffortLimit=0)<small>PLC-013</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A misunderstanding left over from the Windows XP era.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Changing DNS lowers ping&#x27;<small>PLC-014</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A claim that contradicts how the network protocol works.</td></tr>
+<tr data-d="zararli"><td class="ad">Turn off IPv6 completely<small>PLC-015</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>dikkatli</td><td class="neden">Microsoft explicitly recommends not disabling IPv6.</td></tr>
+<tr data-d="zararli"><td class="ad">Turn off TCP receive window auto-tuning (autotuninglevel=disabled)<small>PLC-016</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>dikkatli</td><td class="neden">Microsoft recommends the default &#x27;normal&#x27; setting.</td></tr>
+<tr data-d="zararli"><td class="ad">Shrinking MouseDataQueueSize / KeyboardDataQueueSize<small>PLC-017</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>dikkatli</td><td class="neden">djdallmann&#x27;s GamingPCSetup research shows this value does not improve latency and that low values risk data loss.</td></tr>
+<tr data-d="zararli"><td class="ad">Running the game at &#x27;Realtime&#x27; priority; raising csrss/dwm priority<small>PLC-018</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>riskli</td><td class="neden">Microsoft documents that Realtime priority can block system threads.</td></tr>
+<tr data-d="placebo"><td class="ad">IRQ8Priority / IRQ priority registry values<small>PLC-019</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A myth circulating since the late 1990s.</td></tr>
+<tr data-d="zararli"><td class="ad">Turning off Windows Defender completely<small>PLC-020</small></td><td><span class="rozet r-zararli">harmful</span></td><td>very low</td><td>riskli</td><td class="neden">The in-game gain is within measurement error; the security cost is very high.</td></tr>
+<tr data-d="zararli"><td class="ad">Turning off Windows Update permanently<small>PLC-021</small></td><td><span class="rozet r-zararli">harmful</span></td><td>none</td><td>riskli</td><td class="neden">Active hours and pausing give the same benefit without the risk.</td></tr>
+<tr data-d="zararli"><td class="ad">Aggressive debloat scripts (removing Store, Xbox, Edge WebView2, Game Bar)<small>PLC-022</small></td><td><span class="rozet r-zararli">harmful</span></td><td>very low</td><td>riskli</td><td class="neden">Bulk removal carries a high risk of breakage for a small gain.</td></tr>
+<tr data-d="placebo"><td class="ad">Regularly deleting the Prefetch / Temp folders &#x27;increases FPS&#x27;<small>PLC-023</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">Meaningful for disk space, placebo for performance; counterproductive for Prefetch.</td></tr>
+<tr data-d="tartisma"><td class="ad">One-click &#x27;game booster&#x27; / FPS booster apps<small>PLC-024</small></td><td><span class="rozet r-tartisma">disputed</span></td><td>uncertain</td><td>dikkatli</td><td class="neden">They are only as effective as the real settings they contain; because everything is applied at once, cause and effect cannot be traced.</td></tr>
+<tr data-d="placebo"><td class="ad">Turning off NVIDIA telemetry/background services &#x27;increases FPS&#x27;<small>PLC-025</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">Understandable for privacy, placebo for performance. Not installing the telemetry components at all with NVCleanstall is a cleaner approach.</td></tr>
+<tr data-d="placebo"><td class="ad">Turning on Triple Buffering for DirectX games<small>PLC-026</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A setting wrongly applied to DirectX games.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;The Ultimate Performance plan multiplies FPS on laptops&#x27;<small>PLC-027</small></td><td><span class="rozet r-placebo">placebo</span></td><td>very low</td><td>güvenli</td><td class="neden">An exaggerated claim for laptops; for the desktop context see PWR-001.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Turn off Nagle and ping drops in every game&#x27;<small>PLC-028</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A situational setting presented as a universal benefit.</td></tr>
+<tr data-d="placebo"><td class="ad">Turning on ClearPageFileAtShutdown for &#x27;performance&#x27;<small>PLC-029</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A security setting mistaken for a performance setting.</td></tr>
+<tr data-d="placebo"><td class="ad">Turning off 8.3 short file names &#x27;speeds up games&#x27;<small>PLC-030</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>dikkatli</td><td class="neden">A file system setting spread as an FPS setting.</td></tr>
+<tr data-d="placebo"><td class="ad">Turning off file &#x27;last access time&#x27; updates (NtfsDisableLastAccessUpdate)<small>PLC-031</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">An old Windows-era disk setting repeated as a gaming setting.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Enlarging the disk cache&#x27; with IoPageLockLimit<small>PLC-032</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A value left over from XP-era tuning guides.</td></tr>
+<tr data-d="placebo"><td class="ad">Writing the CPU&#x27;s L2 cache size to SecondLevelDataCache<small>PLC-033</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A value that only meant something on very old processors.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Speeding up the network&#x27; with MaxUserPort / TcpTimedWaitDelay<small>PLC-034</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A server setting applied to a gaming PC.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Lowering ping&#x27; with DefaultTTL=64<small>PLC-035</small></td><td><span class="rozet r-placebo">placebo</span></td><td>none</td><td>güvenli</td><td class="neden">A packet lifetime limit mistaken for a latency setting.</td></tr>
+<!--/tablo-->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="geri-alma">
+            <h3>What happens on every change</h3>
+            <ol class="sira">
+              <li><div><b>Backup</b><span>The setting's original state is saved.</span></div></li>
+              <li><div><b>Restore point</b><span>Before the first change in a session, a Windows restore point is created (it can ask you first).</span></div></li>
+              <li><div><b>Apply</b><span>The setting is written. Risky settings ask twice, with two separate warnings.</span></div></li>
+              <li><div><b>Record</b><span>The change is listed on the Changes page.</span></div></li>
+              <li><div><b>Undo</b><span>On the Changes page, one click on "Restore" returns the setting to its original state. Undo is free in the free version too.</span></div></li>
+            </ol>
+          </section>
+
+          <section id="sinirlar">
+            <h3>Not offered</h3>
+            <ul class="liste">
+              <li><b>Turning off Windows Update completely.</b> <!--v:sinir.wu-->Turning Windows Update off completely (disabling its services) is deliberately not offered: it is hard to undo and Windows often turns it back on by itself.<!--/v--></li>
+              <li><b>Turning off UAC completely.</b> <!--v:sinir.uac-->Turning UAC fully off (EnableLUA=0) is intentionally not offered: it breaks Microsoft Store apps and runs every program as administrator.<!--/v--></li>
+              <li><b>Turning off Defender completely.</b> Only a real-time protection switch exists; it is on by default and turns off after a two-step warning.</li>
+              <li><b>Unproven promises.</b> A setting with no proven effect is never described as "raises FPS".</li>
+            </ul>
+            <p class="uyari"><!--v:sinir.anticheat-->In competitive games, anti-cheat systems (Vanguard, EAC, BattlEye, FACEIT, VAC) may block, or treat as grounds for a ban, tools that disable driver signature enforcement, inject into a game&#x27;s DLLs or modify the game process.<!--/v--></p>
+          </section>
+
+          <section id="olcum">
+            <h3>Before / After measurement</h3>
+            <p><!--v:olcum.aciklama-->Take a &#x27;Before&#x27; measurement before applying settings and an &#x27;After&#x27; measurement after applying them (and restarting if needed); the app compares the two. Results are stored on this computer only.<!--/v--></p>
+            <p class="uyari"><!--v:olcum.durustluk-->Honest warning: a single measurement is not proof. Results vary with background activity, temperature and the scene. Under the same conditions (same scene, same duration, same open programs), take at least 3 measurements each and compare the averages. Small differences (below 3%) are often measurement noise.<!--/v--></p>
+          </section>
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="fiyat">
     <div class="wrap">
-      <div class="gallery">
-        <figure><img src="img/oyunlar_en.png" alt="Games screen" loading="lazy" width="1240" height="820">
-          <figcaption>Per-game settings</figcaption></figure>
-        <figure><img src="img/placebo_en.png" alt="Placebo tweaks screen" loading="lazy" width="1240" height="820">
-          <figcaption>Placebo tweaks already applied on this PC</figcaption></figure>
-      </div>
-    </div>
-  </section>
-
-  <section id="pricing">
-    <div class="wrap">
-      <h2>Pricing</h2>
-      <p class="sub">Start with the free version. Pro is a monthly subscription; each subscription works on one computer
-        and can be cancelled at any time.</p>
+      <h2 class="baslik">Pricing</h2>
+      <p class="sub">No subscription, no automatic charges. Pro unlocks with a time-limited code tied to one computer and needs no internet.</p>
       <div class="plans">
         <div class="plan">
           <h3>Free</h3>
-          <div class="price">0 <small>/ forever</small></div>
+          <p class="price">0 <small>/ forever</small></p>
+          <p class="tl"></p>
           <ul>
             <li>Scan, PC Details and Report</li>
             <li>All setting explanations and guides</li>
-            <li>5 setting changes at a time</li>
-            <li>Undo is always free</li>
+            <li>Before / After measurement</li>
+            <li>Up to 15 changes at a time</li>
           </ul>
-          <a class="btn" data-link="indir" href="#download">Download free</a>
+          <div class="btns"><a class="btn" data-link="indir" href="#indir">Download free</a></div>
         </div>
         <div class="plan pro">
           <h3>Forevermore Pro</h3>
-          <div class="price"><span data-value="fiyat">coming soon</span> <small>/ month</small></div>
+          <div class="sure" data-sure role="group" aria-label="Duration">
+            <button type="button" data-ay="1" data-per="/ 1 month" aria-pressed="true">1 month</button>
+            <button type="button" data-ay="3" data-per="/ 3 months" aria-pressed="false">3 months</button>
+            <button type="button" data-ay="12" data-per="/ 12 months" aria-pressed="false">12 months</button>
+          </div>
+          <p class="price"><span data-fiyat>soon</span> <small data-per>/ 1 month</small></p>
+          <p class="tl" data-tl></p>
           <ul>
-            <li>Unlimited setting changes</li>
-            <li>Profiles (one-click setting bundles)</li>
-            <li>Game profiles with automatic apply</li>
-            <li>Before / After measurement</li>
-            <li>1 computer · cancel any time</li>
+            <li>Unlimited changes</li>
+            <li>Ready-made profiles and game profiles</li>
+            <li>Settings apply when a game starts, without opening the app</li>
+            <li>Pro Member role on Discord and a Premium support channel</li>
+            <li>1 computer; returns to the free version when time is up</li>
           </ul>
-          <a class="btn primary" data-link="satinal" href="#pricing">Get Pro</a>
+          <div class="btns"><a class="btn primary" data-link="satinal" href="#fiyat">Get Pro</a><a class="btn" data-link="discord" href="#fiyat">Get the code on Discord</a></div>
         </div>
       </div>
-      <p class="sub" style="margin-top:22px">Payment, invoices and taxes are handled by our reseller Lemon Squeezy.
-        Subscription: <a data-link="portal" href="#pricing">manage subscription</a> · <a href="iade.html#en">refund policy</a></p>
-      <p class="sub">If you like the project, you can support it on <a data-link="bagis" href="#pricing">Buy Me a
-        Coffee</a>.</p>
+      <h3 style="margin-top:36px;font-family:var(--display)">How to get a code</h3>
+      <ol class="sira">
+        <li><div><b>Copy your computer code</b><span>In the app: License &gt; Copy computer code.</span></div></li>
+        <li><div><b>Pay</b><span>On Buy Me a Coffee, enter the exact amount for your duration (2, 5 or 16 $) and write your Discord name in the note. Buy Me a Coffee (Stripe) takes the payment.</span></div></li>
+        <li><div><b>Open a ticket</b><span>Open a ticket on our Discord server and send your computer code. Once the payment shows up you get a code made for that computer. <a href="iade.html">Refund terms</a></span></div></li>
+      </ol>
     </div>
   </section>
 
-  <section id="download">
-    <div class="wrap verify">
-      <h2>Download</h2>
-      <p class="sub">Windows 10 / 11 (64-bit) · no installation needed · about 38 MB</p>
-      <div class="card">
-        <p style="margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap">
-          <a class="btn primary" data-link="indir" href="#download">Download Forevermore.zip</a>
-          <a class="btn" data-link="github" href="#download">All versions (GitHub)</a>
-        </p>
-        <p><b>Setup:</b> extract the zip to a folder and run <b>Forevermore.exe</b>. Files are hosted on GitHub; the
-          download button always gives the latest version.</p>
-        <p style="margin-top:8px; font-size:14px">ℹ️ On <a data-vt href="#faq">VirusTotal</a> only one of 64 antivirus
-          engines gives a false alarm; <a href="#antivirus">why?</a></p>
-      </div>
-      <details><summary>How do I know the file is genuine? (optional)</summary>
-        <p>Download Forevermore only from this site; copies from elsewhere may have been modified. Two easy ways:</p>
-        <p><b>1. In the app:</b> the About page must show a green "Original copy" and the signature fingerprint
-          <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code>. If someone modified the program, a red warning appears at the top.</p>
-        <p><b>2. On the downloaded zip (advanced):</b> type <code>Get-FileHash Forevermore.zip</code> in PowerShell; the
-          result must match: <code data-value="sha256">—</code></p>
-      </details>
-    </div>
-  </section>
-
-  <section id="faq">
+  <section id="indir">
     <div class="wrap">
-      <h2>FAQ</h2>
+      <h2 class="baslik">Download</h2>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Forevermore.zip</h3>
+          <p>Windows 10 / 11 (64-bit), no installation, about 38 MB. Unzip to a folder and run <b>Forevermore.exe</b>. The download button always serves the latest version.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary" data-link="indir" href="#indir">Download Forevermore.zip</a><a class="btn" data-link="github" href="#indir">All releases</a></p>
+        </div>
+        <div class="kutu" id="dogrula">
+          <h3>Check that it is genuine</h3>
+          <p>Download only from this site; copies from elsewhere may have been modified. Copies that claim to "unlock Pro for free" are an easy way to add malware to a program that changes settings.</p>
+          <p><b>In the app:</b> the Info page should show a green "Genuine copy" and the signature fingerprint <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code>.</p>
+          <p><b>The zip:</b> run <code>Get-FileHash Forevermore.zip</code> in PowerShell; the result must be <code data-value="sha256">—</code>. <a data-vt href="#sss">VirusTotal report</a></p>
+        </div>
+        <div class="kutu tam" id="gizlilik">
+          <h3>What is and is not sent</h3>
+          <p>By default Forevermore never connects to the internet, Pro included. There is no telemetry. The one exception is the update check you can switch on in Settings: it only reads GitHub's public release list and sends no data. The Pro code is verified on this computer, offline. Scan results, your settings list, hardware information, and your computer or user name go nowhere. <a href="gizlilik.html">Privacy policy</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sss">
+    <div class="wrap">
+      <h2 class="baslik">FAQ</h2>
       <details><summary>Can it harm my computer?</summary>
-        <p>A backup and a Windows restore point are made before any change; risky settings ask with two separate
-          warnings. You can undo everything with one click on the Changes page.</p></details>
-      <details><summary>Does it connect to the internet or collect data?</summary>
-        <p>No telemetry; scan results never leave your computer. Only when a Pro license is verified are the license key
-          and an anonymous computer ID sent. Details: <a href="gizlilik.html#en">Privacy</a>.</p></details>
-      <details><summary>On how many computers can I use Pro?</summary>
-        <p>Each subscription works on one computer. When you switch computers, choose License &gt; "Remove from this
-          computer" on the old one and enter the key on the new one.</p></details>
-      <details><summary>What happens when the subscription ends?</summary>
-        <p>The app goes back to the free version. Your changes stay in place and can be undone at any time.</p></details>
-      <details id="antivirus"><summary>My antivirus, VirusTotal or Windows SmartScreen shows a warning.</summary>
-        <p>Forevermore is written in Python and packaged with PyInstaller. Programs packaged this way often trigger false
-          alarms in smaller antivirus engines, because some malware uses the same packaging. As of October 2026, only one
-          of 64 engines on <a data-vt href="#faq">VirusTotal</a> (Zillya, "Trojan.Blank") flags it;
-          the other 63 engines find it clean.</p>
-        <p>Forevermore connects to the internet only to verify a Pro license and never reads passwords or browser data.
-          SmartScreen's "unknown publisher" warning is because the app does not have a paid code-signing certificate yet.
-          If the zip's SHA-256 and the signature fingerprint in the app match the values above, the file is exactly as
-          published here.</p></details>
+        <p>Settings marked risky ask twice, with two separate warnings, and every change can be undone: <a href="#geri-alma">What happens on every change</a>.</p></details>
+      <details><summary>How many computers can I use Pro on?</summary>
+        <p>Each code is tied to one computer. If you change computers, write to us on Discord; we issue a new code for the new computer for the remaining time.</p></details>
+      <details><summary>What happens when the code expires?</summary>
+        <p>The code does not renew and nothing is charged. The app returns to the free version. Your changes stay in place and can be undone at any time.</p></details>
+      <details><summary>Is the source code public?</summary>
+        <p>No, not at the moment. What you can check yourself instead: the <a href="#dogrula">signature fingerprint and SHA-256</a>, the absence of network connections (<a href="#gizlilik">privacy</a>) and the evidence table above.</p></details>
+      <details id="antivirus"><summary>My antivirus, VirusTotal or SmartScreen raised a warning.</summary>
+        <p>Forevermore is written in Python and packaged with PyInstaller. Some malware uses the same method, so such packages often trigger false alarms in small antivirus engines. As of October 2026 only one of 64 antivirus engines on <a data-vt href="#sss">VirusTotal</a> (Zillya, "Trojan.Blank") raises a warning; the other 63 find it clean.</p>
+        <p>SmartScreen's "unknown publisher" warning appears because the program does not yet have a paid code-signing certificate. No method can fully prevent a desktop program from being modified; the signature and SHA-256 let you notice a modified copy. <a href="#dogrula">How to verify</a></p></details>
     </div>
   </section>
 </main>
@@ -163,9 +415,9 @@
   <div class="wrap">
     <span>© <span data-year>2026</span> Kubilay Paşa · Contact: Discord <b>smileyw</b></span>
     <nav>
-      <a href="kosullar.html#en">Terms</a>
-      <a href="gizlilik.html#en">Privacy</a>
-      <a href="iade.html#en">Refunds</a>
+      <a href="kosullar.html">Terms of use</a>
+      <a href="gizlilik.html">Privacy</a>
+      <a href="iade.html">Refunds</a>
       <a data-link="bagis" href="#">Buy Me a Coffee</a>
       <a data-link="github" href="#">GitHub</a>
     </nav>

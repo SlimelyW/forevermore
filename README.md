@@ -40,16 +40,17 @@ istedim. Forevermore bir üniversite öğrencisinin hobi projesidir.
 - **Ekran kartı ayarları:** NVIDIA ve AMD sürücü ayarları (gecikme, ölçekleme, G-SYNC).
 - **Oyun profilleri** *(Pro)*: oyun başına işlemci önceliği, çekirdek seçimi, bildirimleri susturma; oyun açılınca
   otomatik uygulanır, kapanınca geri alınır.
-- **Önce / Sonra ölçümü** *(Pro)*: FPS, gecikme ve zamanlayıcı ölçümüyle gerçek etkiyi görme.
+- **Önce / Sonra ölçümü**: FPS, gecikme ve zamanlayıcı ölçümüyle gerçek etkiyi görme.
 - Türkçe ve İngilizce arayüz. Telemetri yok.
 
 | | Ücretsiz | Forevermore Pro |
 |---|---|---|
 | Tarama, açıklamalar, rehberler, rapor | ✓ | ✓ |
-| Ayar değişikliği | aynı anda 5 | sınırsız |
-| Hazır profiller, Oyunlar, Önce / Sonra | — | ✓ |
+| Ayar değişikliği | aynı anda 15 | sınırsız |
+| Önce / Sonra ölçümü | ✓ | ✓ |
+| Hazır profiller, Oyunlar | — | ✓ |
 | Geri alma | ✓ | ✓ |
-| Fiyat | ücretsiz | ₺250 / ay, 7 gün deneme, 1 bilgisayar |
+| Fiyat | ücretsiz | 1 ay $2 (~₺100), 3 ay $5 (~₺250), 12 ay $16 (~₺800); süreli kod, yenilenmez, 1 bilgisayar |
 
 ## Kurulum
 
@@ -76,7 +77,7 @@ Forevermore'u yalnızca bu depodan ya da web sitesinden indirin.
 ## Gizlilik
 
 Telemetri, reklam, analiz yok. Tarama sonuçları bilgisayarınızdan çıkmaz. Yalnızca Pro lisansı doğrulanırken lisans
-anahtarı ve bilgisayarın anonim kimliği ödeme ortağımız Lemon Squeezy'ye gönderilir.
+anahtarı ve bilgisayarın geri çevrilemez özeti HİÇBİR YERE gönderilmez (güncel model: çevrimdışı kod; aşağıdaki satır eski).
 Ayrıntı: [Gizlilik](https://slimelyw.github.io/forevermore/gizlilik.html).
 
 ## Lisans
@@ -98,17 +99,25 @@ pros and cons, and flags the placebo and harmful tweaks that circulate online ("
 is backed up and can be undone with one click. It is a university student's hobby project, based on my own tests,
 measurements and experience.
 
-- **Free:** scan, explanations, guides, report, 5 setting changes at a time, undo.
-- **Pro (₺250 / month, 7-day trial, 1 computer):** unlimited changes, profiles, per-game settings, Before / After measurement.
+- **Free:** scan, explanations, guides, report, Before / After measurement, 15 setting changes at a time, undo.
+- **Pro (₺150 / month, 7-day trial, 1 computer):** unlimited changes, profiles, per-game settings.
 - **Download:** [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) →
   extract → run **Forevermore.exe**.
 - **Genuine copy:** the About page says "Original copy" and shows the signature fingerprint `5FE5-D786-0B89-A56E`.
 - **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; for 2.0.0 only one of
   64 engines on [VirusTotal](https://www.virustotal.com/gui/file/98fae42651a4a68571f01d4f5bef7a0e905cab99ba0f30c764188b2ea6f219e0)
   (Zillya) flags it.
-- **Privacy:** no telemetry; only the license key and an anonymous computer ID are sent when a Pro license is verified.
+- **Privacy:** no telemetry; only the license key and an irreversible hash of the computer ID are sent when a Pro license is verified.
   [Privacy policy](https://slimelyw.github.io/forevermore/gizlilik.html#en)
 - **License:** © 2026 Kubilay Paşa. All rights reserved. This repository contains only the website and the download;
   the source code is not public. [Terms](https://slimelyw.github.io/forevermore/kosullar.html#en)
 
 Contact: Discord **smileyw** · Support the project: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
+
+## Site yapısı (29 Ekim 2026 yeniden tasarım)
+- `index.html` (TR) ve `en.html` (EN): aynı iskelet. Kanıt tablosu ve sayaçlar `<!--tablo-->`, `<!--n:...-->`, `<!--v:...-->` işaretleriyle
+  `py -3.12 tools\site_veri.py` tarafından uygulamanın kendi dosyalarından (data/tweaks_app.json, lang/*.json) doldurulur; elle değiştirmeyin.
+  Katalog ya da çeviri değişince bu aracı yeniden çalıştırın (`veri.js` de buradan üretilir).
+- `demo.js`: tahmin oyunu, örnek tarama, geri alma demosu, tablo süzgeci, fiyat süresi. `erisim.js`: yalnızca "Aa" düğmesi.
+- Demo örnek veriyle çalışır ve ziyaretçinin bilgisayarını taramaz; bunu sayfada da yazıyor.
+- Metin kuralları: docs/TASARIM_ESASLARI.md bölüm 11 (slogan ve tekrar yasağı). `img/*_tr.png` eski arayüz görüntüleridir, sayfada kullanılmıyor.
