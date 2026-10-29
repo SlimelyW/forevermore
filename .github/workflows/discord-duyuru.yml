@@ -1,0 +1,41 @@
+# Yeni GitHub sürümü yayımlanınca Discord duyuru kanallarına (TR ve EN) mesaj atar.
+# Gerekli depo gizlileri: DISCORD_WEBHOOK_TR, DISCORD_WEBHOOK_EN (yoksa o dil atlanır). Uygulama Discord'a bağlanmaz.
+name: Discord duyurusu
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  # Actions sekmesinden elle deneme ("Run workflow")
+jobs:
+  duyur:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mesajları gönder
+        env:
+          TAG: ${{ github.event.release.tag_name || 'deneme' }}
+          URL: ${{ github.event.release.html_url || format('https://github.com/{0}/releases', github.repository) }}
+          BODY: ${{ github.event.release.body || 'Bu bir deneme mesajıdır. This is a test message.' }}
+          HOOK_TR: ${{ secrets.DISCORD_WEBHOOK_TR }}
+          HOOK_EN: ${{ secrets.DISCORD_WEBHOOK_EN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          body = os.environ["BODY"]
+          # Sürüm notu iki blok: "## Türkçe" ve "## English"
+          m = re.search(r"^##\s*English\b", body, re.M | re.I)
+          tr, en = (body[:m.start()], body[m.start():]) if m else (body, body)
+          def clip(t):
+              t = re.sub(r"^##\s*(Türkçe|English)\s*$", "", t, flags=re.M | re.I).strip()
+              return t if len(t) <= 3500 else t[:3500].rsplit("\n", 1)[0] + "\n…"
+          def post(hook, title, text, label):
+              if not hook:
+                  print("atlandı:", label); return
+              data = {"username": "Forevermore", "allowed_mentions": {"parse": []},
+                      "embeds": [{"title": title, "url": os.environ["URL"], "description": clip(text), "color": 0x2ECC71}]}
+              req = urllib.request.Request(hook, json.dumps(data).encode(), {"Content-Type": "application/json", "User-Agent": "forevermore-release"})
+              urllib.request.urlopen(req, timeout=30).read()
+              print("gönderildi:", label)
+          tag = os.environ["TAG"]
+          post(os.environ["HOOK_TR"], f"Forevermore {tag} yayında: yeni sürümü indirin", tr, "TR")
+          post(os.environ["HOOK_EN"], f"Forevermore {tag} is out: download the new version", en, "EN")
+          PY
