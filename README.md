@@ -39,14 +39,18 @@ istedim. Forevermore bir üniversite öğrencisinin hobi projesidir.
 - **Her şey geri alınabilir:** değişiklikten önce yedek ve geri yükleme noktası; Değişiklikler sayfasından tek tıkla geri alma.
 - **Ekran kartı ayarları:** NVIDIA ve AMD sürücü ayarları (gecikme, ölçekleme, G-SYNC).
 - **Oyun profilleri** *(Pro)*: oyun başına işlemci önceliği, çekirdek seçimi, bildirimleri susturma; oyun açılınca
-  otomatik uygulanır, kapanınca geri alınır.
+  otomatik uygulanır, kapanınca geri alınır. Oyun içi ayarlar kartı: her oyunda aranacak ayarlar, kanıt rozetiyle.
+- **Tek tuş Boost:** Oyun Modu'nu açar, Game DVR arka plan kaydını kapatır, listendeki programları onayınla kapatır; geri alınabilir.
+  Bellek boşaltma, pano silme ve servis durdurma bilerek yok.
+- **Uygulama kaldırıcı:** programın kendi kaldırıcısını açar, adı birebir eşleşen kalıntıları yedekleyerek kaldırır (geri yüklenebilir).
+- **Ekran yerleşimi:** çoklu monitörleri sürükleyip bırakarak yerleştirme.
 - **Önce / Sonra ölçümü**: FPS, gecikme ve zamanlayıcı ölçümüyle gerçek etkiyi görme.
 - Türkçe ve İngilizce arayüz. Telemetri yok.
 
 | | Ücretsiz | Forevermore Pro |
 |---|---|---|
 | Tarama, açıklamalar, rehberler, rapor | ✓ | ✓ |
-| Ayar değişikliği | aynı anda 15 | sınırsız |
+| Ayar değişikliği | aynı anda 10 (referansla +10) | sınırsız |
 | Önce / Sonra ölçümü | ✓ | ✓ |
 | Hazır profiller, Oyunlar | — | ✓ |
 | Geri alma | ✓ | ✓ |
@@ -57,7 +61,8 @@ istedim. Forevermore bir üniversite öğrencisinin hobi projesidir.
 1. [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) dosyasını indirin.
 2. Bir klasöre açın ve **Forevermore.exe**'yi çalıştırın. Ayar değiştirmek için yönetici izni ister; "Hayır" derseniz
    salt okunur modda açılır.
-3. Pro için: uygulamada **Lisans** sayfasına anahtarınızı girin.
+3. Pro için: uygulamada **Lisans** sayfasından bilgisayar kodunuzu kopyalayın, Discord'da ticket açıp kodunuzu alın ve aynı sayfaya girin
+   (ayrıntı: web sitesi, "Kod nasıl alınır?").
 
 Kaldırmak için: Ekstra ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
 
@@ -69,15 +74,17 @@ Forevermore'u yalnızca bu depodan ya da web sitesinden indirin.
 - Her sürümün zip SHA-256 değeri [Releases](https://github.com/SlimelyW/forevermore/releases) sayfasında yazar.
 
 > **Antivirüs uyarısı hakkında:** Forevermore Python ile yazılıp PyInstaller ile paketlenir; bu yöntemle paketlenen
-> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.0.0 sürümünde
-> [VirusTotal](https://www.virustotal.com/gui/file/98fae42651a4a68571f01d4f5bef7a0e905cab99ba0f30c764188b2ea6f219e0)'da
-> 64 motordan yalnızca biri (Zillya, "Trojan.Blank") uyarı veriyor. SmartScreen'in "bilinmeyen yayımcı" uyarısı kod
-> imzalama sertifikası olmamasından kaynaklanır. Yukarıdaki değerler tutuyorsa dosya yayımlandığı gibidir.
+> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.1.0 paketini
+> [VirusTotal](https://www.virustotal.com/gui/file/b0f6ac7fc962ae47eea6ed8f82ecad22aac2c99270ee760d4192f16061720694)'da
+> taranan 66 motorun hiçbiri işaretlemedi (0/66, Ekim 2026); sonuç sürümler arasında değişebilir. SmartScreen'in
+> "bilinmeyen yayımcı" uyarısı kod imzalama sertifikası olmamasından kaynaklanır. Yukarıdaki değerler tutuyorsa dosya
+> yayımlandığı gibidir.
 
 ## Gizlilik
 
-Telemetri, reklam, analiz yok. Tarama sonuçları bilgisayarınızdan çıkmaz. Yalnızca Pro lisansı doğrulanırken lisans
-anahtarı ve bilgisayarın geri çevrilemez özeti HİÇBİR YERE gönderilmez (güncel model: çevrimdışı kod; aşağıdaki satır eski).
+Telemetri, reklam, analiz yok. Tarama sonuçları bilgisayarınızdan çıkmaz. Forevermore varsayılan olarak internete hiç
+bağlanmaz; Pro kodu bilgisayarda, internetsiz doğrulanır. Tek istisna, Ayarlar'dan sizin açtığınız güncelleme denetimidir:
+yalnızca GitHub'ın herkese açık sürüm listesine bağlanır ve veri göndermez.
 Ayrıntı: [Gizlilik](https://slimelyw.github.io/forevermore/gizlilik.html).
 
 ## Lisans
@@ -86,7 +93,7 @@ Ayrıntı: [Gizlilik](https://slimelyw.github.io/forevermore/gizlilik.html).
 kaynak kodu açık değildir.** Forevermore kişisel kullanım için sunulur; satılamaz, değiştirilip dağıtılamaz, başka bir
 ad veya yapımcı adıyla sunulamaz. Tam metin: [Kullanım koşulları](https://slimelyw.github.io/forevermore/kosullar.html).
 
-İletişim: Discord **smileyw** · Destek olmak için: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
+İletişim: Discord **smileyw** · e-posta **forevermore.destek@protonmail.com** · Destek olmak için: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
 
 ---
 
@@ -99,25 +106,26 @@ pros and cons, and flags the placebo and harmful tweaks that circulate online ("
 is backed up and can be undone with one click. It is a university student's hobby project, based on my own tests,
 measurements and experience.
 
-- **Free:** scan, explanations, guides, report, Before / After measurement, 15 setting changes at a time, undo.
-- **Pro (₺150 / month, 7-day trial, 1 computer):** unlimited changes, profiles, per-game settings.
+- **Free:** scan, explanations, guides, report, Before / After measurement, 10 setting changes at a time (+10 with a referral), undo.
+- **Pro (1 month $2, 3 months $5, 12 months $16; a time-limited code, does not renew, 1 computer):** unlimited changes, profiles, per-game settings.
 - **Download:** [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) →
   extract → run **Forevermore.exe**.
 - **Genuine copy:** the About page says "Original copy" and shows the signature fingerprint `5FE5-D786-0B89-A56E`.
-- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; for 2.0.0 only one of
-  64 engines on [VirusTotal](https://www.virustotal.com/gui/file/98fae42651a4a68571f01d4f5bef7a0e905cab99ba0f30c764188b2ea6f219e0)
-  (Zillya) flags it.
-- **Privacy:** no telemetry; only the license key and an irreversible hash of the computer ID are sent when a Pro license is verified.
+- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; none of the 66 engines on
+  [VirusTotal](https://www.virustotal.com/gui/file/b0f6ac7fc962ae47eea6ed8f82ecad22aac2c99270ee760d4192f16061720694)
+  flagged the 2.1.0 package (0/66, October 2026); results can change between versions.
+- **Privacy:** no telemetry; the app does not connect to the internet by default, and Pro codes are verified offline on your computer.
   [Privacy policy](https://slimelyw.github.io/forevermore/gizlilik.html#en)
 - **License:** © 2026 Kubilay Paşa. All rights reserved. This repository contains only the website and the download;
   the source code is not public. [Terms](https://slimelyw.github.io/forevermore/kosullar.html#en)
 
-Contact: Discord **smileyw** · Support the project: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
+Contact: Discord **smileyw** · email **forevermore.destek@protonmail.com** · Support the project: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
 
-## Site yapısı (29 Ekim 2026 yeniden tasarım)
-- `index.html` (TR) ve `en.html` (EN): aynı iskelet. Kanıt tablosu ve sayaçlar `<!--tablo-->`, `<!--n:...-->`, `<!--v:...-->` işaretleriyle
+## Site yapısı (30 Ekim 2026)
+- `index.html` (TR) ve `en.html` (EN): aynı iskelet. Sayaçlar ve bazı metinler `<!--n:...-->`, `<!--v:...-->` işaretleriyle
   `py -3.12 tools\site_veri.py` tarafından uygulamanın kendi dosyalarından (data/tweaks_app.json, lang/*.json) doldurulur; elle değiştirmeyin.
   Katalog ya da çeviri değişince bu aracı yeniden çalıştırın (`veri.js` de buradan üretilir).
-- `demo.js`: tahmin oyunu, örnek tarama, geri alma demosu, tablo süzgeci, fiyat süresi. `erisim.js`: yalnızca "Aa" düğmesi.
+- `demo.js`: örnek tarama, ayar künyesi, geri alma, tahmin oyunu, oyun denetimi, fiyat süresi. `erisim.js`: Okuma modu düğmesi.
+- `erisilebilirlik.html`: erişilebilirlik bildirgesi (TR + EN).
 - Demo örnek veriyle çalışır ve ziyaretçinin bilgisayarını taramaz; bunu sayfada da yazıyor.
 - Metin kuralları: docs/TASARIM_ESASLARI.md bölüm 11 (slogan ve tekrar yasağı). `img/*_tr.png` eski arayüz görüntüleridir, sayfada kullanılmıyor.
