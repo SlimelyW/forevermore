@@ -4,20 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Forevermore — Windows oyun optimizasyonu</title>
-  <meta name="description" content="Forevermore: oyuncular için Windows ayar uygulaması. İşe yarayan ayarları açıklar, placebo ve zararlı ayarları ayırır, her değişikliği yedekleyip tek tıkla geri alır.">
+  <meta name="description" content="Forevermore: oyuncular için Windows ayar uygulaması. 154 ayarın her birinin kanıt durumu yazılı; placebo ve zararlı ayarlar ayrılır, her değişiklik geri alınır.">
   <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="style.css">
   <script src="ayarlar.js" defer></script>
+  <script src="veri.js" defer></script>
+  <script src="demo.js" defer></script>
+  <script src="erisim.js" defer></script>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="index.html"><img src="img/logo.png" alt="">Forevermore</a>
     <nav class="links">
-      <a href="#ozellikler">Özellikler</a>
+      <a href="#dene">Dene</a>
+      <a href="#kanit">Kanıtlar</a>
       <a href="#fiyat">Fiyat</a>
       <a href="#indir">İndir</a>
       <a href="#sss">SSS</a>
+      <button class="a11y" type="button" data-a11y aria-pressed="false" title="Okunabilir yazı: Verdana, büyük harf aralığı">Aa</button>
       <a class="lang" href="en.html" hreflang="en">EN</a>
     </nav>
   </div>
@@ -25,136 +30,383 @@
 
 <main>
   <div class="wrap hero">
-    <img class="mark" src="img/logo.png" alt="Forevermore logosu">
-    <h1>Placebo değil, <span>gerçekten işe yarayan</span> ayarlar.</h1>
-    <p class="lead">Forevermore, oyuncular için bir Windows ayar uygulamasıdır. Bilgisayarınızı tarar, her ayarın ne
-      yaptığını artısı ve eksisiyle anlatır, internette dolaşan placebo ve zararlı ayarları ayrıca işaretler.
-      Her değişiklik yedeklenir ve tek tıkla geri alınır.</p>
+    <h1>Placebo değil, gerçekten işe yarayan ayarlar.</h1>
+    <p class="lead">Windows için oyuncu ayar uygulaması. Kataloğundaki <b><!--n:toplam-->154<!--/n--> ayarın</b> her birine kanıt durumu yazılmış: <!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı.</p>
     <div class="actions">
       <a class="btn primary" data-link="indir" href="#indir">Ücretsiz indir</a>
-      <a class="btn" data-link="satinal" href="#fiyat">Pro'yu al</a>
+      <a class="textlink" href="#fiyat">Pro'yu gör</a>
     </div>
-    <p class="note">Windows 10 / 11 · 64 bit · Türkçe ve İngilizce</p>
-    <div class="shot"><img src="img/ozet_tr.png" alt="Forevermore sistem özeti ekranı" width="1240" height="515"></div>
   </div>
 
-  <section id="ozellikler">
-    <div class="wrap">
-      <h2>Neler yapar?</h2>
-      <p class="sub">Kendi testlerime, ölçümlerime ve Microsoft, NVIDIA, AMD belgelerine dayanır. Etkisi kanıtlanmamış
-        bir ayara "FPS artırır" denmez.</p>
-      <div class="grid">
-        <div class="card"><h3>Tarama ve açıklama</h3><p>Donanımınızı ve mevcut ayarları salt okuyarak tarar; her ayarın
-          ne yaptığını, kimlerin dokunmaması gerektiğini sade dille yazar.</p></div>
-        <div class="card"><h3>Placebo ve zararlı ayarlar</h3><p>"Ping düşürür", "RAM boşaltır" gibi yaygın ama işe
-          yaramayan ya da zarar veren ayarları ayrı gösterir; bilgisayarınızda uygulanmış olanları bulur.</p></div>
-        <div class="card"><h3>Her şey geri alınabilir</h3><p>Değişiklikten önce yedek ve geri yükleme noktası alınır.
-          Değişiklikler sayfasından tek tıkla eski hâline dönersiniz.</p></div>
-        <div class="card"><h3>Ekran kartı ayarları</h3><p>NVIDIA ve AMD sürücü ayarlarını (gecikme, ölçekleme, G-SYNC)
-          sürücünün kendi arayüzüyle değiştirir.</p></div>
-        <div class="card"><h3>Oyun profilleri<span class="tag">PRO</span></h3><p>Oyun başına işlemci önceliği, çekirdek
-          seçimi, bildirimleri susturma; oyun açılınca otomatik uygulanır, kapanınca geri alınır.</p></div>
-        <div class="card"><h3>Önce / Sonra ölçümü<span class="tag">PRO</span></h3><p>Ayarlardan önce ve sonra FPS,
-          gecikme ve zamanlayıcı ölçümüyle gerçek etkiyi görürsünüz.</p></div>
+  <div class="wrap demo" id="dene">
+    <div class="pencere">
+      <div class="pencere-bar"><img src="img/logo.png" alt=""><span>Forevermore</span><span class="ornek">Örnek pencere, örnek veri</span></div>
+      <div class="pencere-govde">
+        <div role="tablist" aria-label="Demo" aria-orientation="vertical">
+          <button role="tab" id="t-tahmin" aria-controls="s-tahmin" aria-selected="true">Tahmin et</button>
+          <button role="tab" id="t-tara" aria-controls="s-tara" aria-selected="false" tabindex="-1">Tara</button>
+          <button role="tab" id="t-geri" aria-controls="s-geri" aria-selected="false" tabindex="-1">Geri al</button>
+        </div>
+
+        <div class="sahne" id="s-tahmin" role="tabpanel" aria-labelledby="t-tahmin">
+          <h2>Gerçek mi, placebo mu?</h2>
+          <p class="alt">8 ayar. Etiketi seç, Forevermore'un kendi etiketiyle karşılaştır.</p>
+          <div data-quiz>
+            <noscript><p>Bu bölüm betik gerektirir. Tüm etiketler aşağıdaki <a href="#tablo">tabloda</a>.</p></noscript>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-tara" role="tabpanel" aria-labelledby="t-tara" hidden>
+          <h2>Örnek bir bilgisayarı tara</h2>
+          <p class="alt"><!--v:tarama.okunur-->Tarama yalnızca okur; hiçbir ayarı değiştirmez ve internete hiçbir şey göndermez.<!--/v--></p>
+          <div data-tarama>
+            <div class="makine">
+              <span>İşlemci <b>Core i5-12400</b></span>
+              <span>Bellek <b>16 GB, tek modül</b></span>
+              <span>Ekran kartı <b>RTX 3060</b></span>
+              <span>Monitör <b>144 Hz destekli</b></span>
+            </div>
+            <p><button class="btn primary start" type="button">Taramayı başlat</button></p>
+            <div class="cubuk" aria-hidden="true"><i></i></div>
+            <p class="durum-satir" aria-live="polite"></p>
+            <ul class="bulgular"></ul>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-geri" role="tabpanel" aria-labelledby="t-geri" hidden>
+          <h2>Değişiklikler</h2>
+          <p class="alt">Uygulamanın değiştirdiği her ayar, ilk dokunduğu andaki hâline döndürülebilir.</p>
+          <div data-geri>
+            <div class="zincir"></div>
+            <ul class="degisiklikler"></ul>
+            <p><button class="btn primary toggle" type="button">Hepsini geri al</button></p>
+            <p class="sr" data-live aria-live="polite"></p>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section>
+  <section id="kanit">
     <div class="wrap">
-      <div class="gallery">
-        <figure><img src="img/oyunlar_tr.png" alt="Oyunlar ekranı" loading="lazy" width="1240" height="820">
-          <figcaption>Oyun başına ayarlar</figcaption></figure>
-        <figure><img src="img/placebo_tr.png" alt="Placebo ayarlar ekranı" loading="lazy" width="1240" height="820">
-          <figcaption>Bu bilgisayarda uygulanmış placebo ayarlar</figcaption></figure>
+      <h2 class="baslik">Kanıtlar</h2>
+      <p class="sub">Etiketler kendi testlerime, ölçümlerime ve Microsoft, NVIDIA, AMD belgelerine dayanır. Her ayarın kaynakları uygulamada (i) penceresinde.</p>
+      <div class="belge">
+        <nav class="icindekiler" aria-label="Bu bölümde">
+          <a href="#etiketler">Etiketler</a>
+          <a href="#tablo">Tüm ayarlar</a>
+          <a href="#geri-alma">Her değişiklikte</a>
+          <a href="#sinirlar">Sunulmayanlar</a>
+          <a href="#olcum">Önce / Sonra</a>
+        </nav>
+        <div class="belge-govde">
+          <section id="etiketler">
+            <h3>Etiketler</h3>
+            <div class="dagilim" role="img" aria-label="Etiket dağılımı">
+              <i style="flex:56;--rc:var(--v-gercek)"></i><i style="flex:31;--rc:var(--v-kismen)"></i><i style="flex:16;--rc:var(--v-durumsal)"></i><i style="flex:11;--rc:var(--v-tartisma)"></i><i style="flex:29;--rc:var(--v-placebo)"></i><i style="flex:11;--rc:var(--v-zararli)"></i>
+            </div>
+            <ul class="tanim">
+              <li><span class="rozet r-gercek">gerçek</span><b><!--n:gercek-->56<!--/n--></b><span>mekanizması belgeli veya ölçülmüş</span></li>
+              <li><span class="rozet r-kismen">bazı durumlarda gerçek</span><b><!--n:kismen-->31<!--/n--></b><span>yalnızca belirli koşulda fark yaratır</span></li>
+              <li><span class="rozet r-durumsal">donanıma bağlı</span><b><!--n:durumsal-->16<!--/n--></b><span>etkisi donanıma veya sürücüye göre değişir</span></li>
+              <li><span class="rozet r-tartisma">tartışmalı</span><b><!--n:tartisma-->11<!--/n--></b><span>kaynaklar çelişiyor ya da kanıt zayıf</span></li>
+              <li><span class="rozet r-placebo">placebo</span><b><!--n:placebo-->29<!--/n--></b><span>ölçülebilir etkisi yok</span></li>
+              <li><span class="rozet r-zararli">zararlı</span><b><!--n:zararli-->11<!--/n--></b><span>ölçümlere veya üretici belgelerine göre zarar verir</span></li>
+            </ul>
+          </section>
+
+          <section id="tablo" data-tablo>
+            <h3>Tüm ayarlar</h3>
+            <div class="arac">
+              <input type="search" placeholder="Ayar ara" aria-label="Ayar ara">
+              <button class="chip filtre" type="button" data-f="all" aria-pressed="true">Hepsi</button>
+              <button class="chip filtre" type="button" data-f="gercek" aria-pressed="false">gerçek</button>
+              <button class="chip filtre" type="button" data-f="kismen" aria-pressed="false">bazı durumlarda</button>
+              <button class="chip filtre" type="button" data-f="durumsal" aria-pressed="false">donanıma bağlı</button>
+              <button class="chip filtre" type="button" data-f="tartisma" aria-pressed="false">tartışmalı</button>
+              <button class="chip filtre" type="button" data-f="placebo" aria-pressed="false">placebo</button>
+              <button class="chip filtre" type="button" data-f="zararli" aria-pressed="false">zararlı</button>
+            </div>
+            <p class="tablo-not" data-say aria-live="polite"></p>
+            <div class="tablo-kap" tabindex="0" role="region" aria-label="Ayar tablosu">
+              <table>
+                <thead><tr><th>Ayar</th><th>Kanıt durumu</th><th>Etki</th><th>Risk</th><th>Gerekçe</th></tr></thead>
+                <tbody>
+<!--tablo-->
+<tr data-d="gercek"><td class="ad">Monitör yenileme hızını en yüksek desteklenen değere ayarla<small>DISP-001</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">Yenileme hızı ekran gecikmesini ve hareket netliğini doğrudan belirler.</td></tr>
+<tr data-d="gercek"><td class="ad">Değişken yenileme hızı (VRR) / G-SYNC / FreeSync<small>DISP-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>orta</td><td>güvenli</td><td class="neden">Blur Busters ölçümleri G-SYNC + FPS sınırı kombinasyonunun en düşük gecikmeli yırtılmasız yöntem olduğunu gösterir.</td></tr>
+<tr data-d="gercek"><td class="ad">Pencereli oyunlar için optimizasyonlar (Windows 11)<small>DISP-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Microsoft&#x27;un DXGI flip model dokümantasyonuna dayanan, mekanizması belli bir değişiklik.</td></tr>
+<tr data-d="tartisma"><td class="ad">Tam ekran optimizasyonlarını (FSO) devre dışı bırakma<small>DISP-004</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>güvenli</td><td class="neden">Mekanizma gerçektir; fayda oyuna ve sürücüye bağlıdır. Yaygın &#x27;her oyunda kapat&#x27; tavsiyesi kanıtlanmamıştır.</td></tr>
+<tr data-d="durumsal"><td class="ad">Multiplane Overlay (MPO) devre dışı bırakma<small>DISP-005</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">Belirli bir hata sınıfı için resmi geçici çözümdür, genel performans ayarı değildir. Windows 11 24H2&#x27;de bu anahtar tek başına etkisiz kalabilir.</td></tr>
+<tr data-d="gercek"><td class="ad">Auto HDR ve HDR<small>DISP-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Görsel bir özelliktir; performans iyileştirmesi değildir.</td></tr>
+<tr data-d="gercek"><td class="ad">Dinamik yenileme hızı (DRR) – laptoplar<small>DISP-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Pil ile akıcılık arasında takas.</td></tr>
+<tr data-d="kismen"><td class="ad">Ölçekleme modu: GPU ölçekleme mi monitör ölçekleme mi<small>DISP-008</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Görüntü/uyumluluk ayarıdır; &#x27;GPU ölçekleme gecikme ekler&#x27; iddiası için tutarlı kanıt yoktur.</td></tr>
+<tr data-d="durumsal"><td class="ad">Farklı yenileme hızlı çoklu monitör ve ikinci ekranda video<small>DISP-009</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Topluluk raporları çoktur; Microsoft karma yenileme hızı desteğini Windows 10&#x27;un sonraki sürümlerinde iyileştirmiştir.</td></tr>
+<tr data-d="kismen"><td class="ad">Yazdırma Biriktiricisi (Print Spooler) servisini devre dışı bırakma<small>SYS-001</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>dikkatli</td><td class="neden">Güvenlik açısından gerçek fayda; performans açısından placebo.</td></tr>
+<tr data-d="tartisma"><td class="ad">SysMain (eski adıyla Superfetch)<small>SYS-002</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">r/lowendgaming&#x27;de sık önerilir; HDD + düşük RAM dışında faydası gösterilmemiştir.</td></tr>
+<tr data-d="placebo"><td class="ad">Windows Search dizin oluşturma (WSearch)<small>SYS-003</small></td><td><span class="rozet r-placebo">placebo</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Oyun FPS&#x27;i için placebo; yalnızca ilk dizinleme dönemi ve çok zayıf HDD sistemlerinde hissedilir.</td></tr>
+<tr data-d="placebo"><td class="ad">Telemetri: Bağlı Kullanıcı Deneyimleri ve Telemetri (DiagTrack)<small>SYS-004</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Gizlilik için gerçek, FPS için placebo. &#x27;Telemetriyi kapat FPS artar&#x27; iddiası kanıtsızdır.</td></tr>
+<tr data-d="placebo"><td class="ad">Xbox servisleri (XblAuthManager, XblGameSave, XboxNetApiSvc, XboxGipSvc)<small>SYS-005</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Debloat listelerinde yaygın; performans faydası yok, işlev kaybı var.</td></tr>
+<tr data-d="gercek"><td class="ad">Başlangıç uygulamalarını azaltma<small>SYS-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>orta</td><td>güvenli</td><td class="neden">Arka planda çalışan programlar gerçek kaynak tüketir; en tutarlı tavsiyelerden biridir.</td></tr>
+<tr data-d="kismen"><td class="ad">Arka plan uygulamaları (Store/UWP uygulamaları)<small>SYS-007</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Mekanizma gerçek ama oyunculara etkisi sınırlı; çoğu arka plan yükü masaüstü programlarından gelir.</td></tr>
+<tr data-d="kismen"><td class="ad">Hızlı Başlatma (Fast Startup / Hiberboot)<small>SYS-008</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Kararlılık/uyumluluk için gerçek; FPS için etkisiz.</td></tr>
+<tr data-d="kismen"><td class="ad">Hazırda bekletmeyi kapatma (hiberfil.sys)<small>SYS-009</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Disk alanı için gerçek, performans için placebo. Oyun performansına etkisi belgelenmemiştir; hiberfil.sys dosyası belleğin belirli bir yüzdesi kadar disk alanı kaplar.</td></tr>
+<tr data-d="placebo"><td class="ad">Windows Hata Bildirimi (WerSvc)<small>SYS-010</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Performans listelerinde yaygın ama boşta çalışmayan bir servis.</td></tr>
+<tr data-d="kismen"><td class="ad">Widget&#x27;lar, Copilot ve Recall (Windows 11)<small>SYS-011</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">RAM ve gizlilik için gerçek; FPS için düşük etki.</td></tr>
+<tr data-d="durumsal"><td class="ad">OneDrive eşitlemesini oyun sırasında duraklatma<small>SYS-012</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Eşitleme yokken etkisiz.</td></tr>
+<tr data-d="gercek"><td class="ad">Defender dışlamaları ve Dev Drive (Defender&#x27;ı kapatmak yerine)<small>SYS-013</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>düşük</td><td>dikkatli</td><td class="neden">Microsoft Dev Drive ve performans modu ile bu yaklaşımı resmi olarak destekler.</td></tr>
+<tr data-d="gercek"><td class="ad">Windows Update etkin saatleri ve duraklatma (kapatma yerine)<small>SYS-014</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Windows Update&#x27;i tamamen kapatmanın güvenli alternatifidir (bkz. PLC-024).</td></tr>
+<tr data-d="placebo"><td class="ad">Dokunmatik Klavye ve El Yazısı Paneli Servisi (TabletInputService)<small>SYS-015</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Eski &#x27;servis kapatma&#x27; listelerinde yaygın; ölçülebilir faydası yok.</td></tr>
+<tr data-d="gercek"><td class="ad">Kullanıcı Hesabı Denetimi (UAC) seviyesi<small>SYS-016</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>dikkatli</td><td class="neden">Performans ayarı değil, kolaylık/güvenlik dengesi.</td></tr>
+<tr data-d="durumsal"><td class="ad">Windows Defender gerçek zamanlı korumasını kapatma<small>SYS-017</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>riskli</td><td class="neden">Dosya yoğun işlerde gerçek ama oyun içinde çoğunlukla fark edilmez; güvenlik maliyeti yüksektir.</td></tr>
+<tr data-d="gercek"><td class="ad">Uzun dosya yolu desteği (260 karakter sınırını kaldır)<small>SYS-018</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Microsoft&#x27;un belgelediği ayar (Maximum Path Length Limitation). Etkisi, programın uzun yol desteğini bildirmesine bağlıdır.</td></tr>
+<tr data-d="kismen"><td class="ad">Ayrıntılı mavi ekran (BSOD) bilgisi<small>SYS-019</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Davranış gerçek, ama bu uygulamada yalnızca tek bir araç listesine (CTT WinUtil) dayanıyor; resmi belgesi doğrulanmadı ve mavi ekran oluşturarak denenmedi.</td></tr>
+<tr data-d="gercek"><td class="ad">Etkinlik geçmişini yayınlama ve yüklemeyi kapat<small>SYS-020</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Microsoft&#x27;un belgelenmiş grup ilkesi ayarları (Publish/Upload User Activities); mekanizma gerçek, performans etkisi küçüktür.</td></tr>
+<tr data-d="kismen"><td class="ad">Aygıt meta verisini internetten indirmeyi engelle<small>SYS-021</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Ayar gerçek bir Windows ilkesidir; ama &#x27;ek yazılım kurulumunu engeller&#x27; etkisi bu uygulamada yalnızca tek bir araç listesine (CTT WinUtil) dayanıyor ve denenmedi.</td></tr>
+<tr data-d="kismen"><td class="ad">Oyun Modu (Game Mode)<small>PERF-001</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Mekanizma gerçek, etkisi küçük ve duruma bağlı.</td></tr>
+<tr data-d="gercek"><td class="ad">Game DVR / arka plan kaydını kapatma (Game Bar&#x27;ı silmeden)<small>PERF-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Sürekli kayıt gerçek kaynak tüketir. Ancak yalnızca GameDVR registry değerlerini değiştirmek, kayıt kapalıyken ek fayda sağlamaz.</td></tr>
+<tr data-d="gercek"><td class="ad">Bellek Bütünlüğü (HVCI) / Çekirdek yalıtımı<small>PERF-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>riskli</td><td class="neden">Microsoft&#x27;un resmi dokümanı HVCI ve VMP&#x27;nin bazı senaryolarda oyun performansını düşürebileceğini kabul eder.</td></tr>
+<tr data-d="kismen"><td class="ad">Sanal Makine Platformu (VMP) / Hyper-V&#x27;yi kapatma<small>PERF-004</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>dikkatli</td><td class="neden">Microsoft&#x27;un oyun performansı dokümanında yer alır; tek başına etkisi tam ayrıştırılmamıştır. Ölçümler (2021) esas olarak VBS/HVCI için yapılmıştır, Sanal Makine Platformu tek başına ölçülmemiştir. Kapatınca WSL2 gibi sanallaştırma özellikleri çalışmaz.</td></tr>
+<tr data-d="kismen"><td class="ad">Görsel efektler: &#x27;En iyi performans için ayarla&#x27;<small>PERF-005</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Masaüstü algılanan hız için gerçek, oyun FPS&#x27;i için placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Uygulama başına GPU seçimi (hibrit grafikli laptoplar)<small>PERF-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">Optimus/hibrit grafik sistemlerinde belgelenmiş mekanizma. MUX anahtarı olan laptoplarda &#x27;yalnızca dGPU&#x27; modu ek gecikme/FPS kazancı sağlar.</td></tr>
+<tr data-d="tartisma"><td class="ad">Bellek sıkıştırmayı kapatma (Memory Compression)<small>PERF-007</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Mekanizma gerçek ama yön (olumlu/olumsuz) sistemin RAM miktarına bağlı.</td></tr>
+<tr data-d="durumsal"><td class="ad">Güç azaltma (Power Throttling / EcoQoS) kapatma<small>PERF-008</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Gerçek mekanizma, ama &#x27;FPS artırır&#x27; iddiası yanlış hedef.</td></tr>
+<tr data-d="tartisma"><td class="ad">Win32PrioritySeparation (ön plan zaman dilimi önceliği)<small>PERF-009</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Gerçek bir zamanlayıcı ayarı, ama çok çekirdekli CPU&#x27;larda çoğu oyun iş parçacığı zaten çekirdek bulduğundan etkinin küçük olması beklenir.</td></tr>
+<tr data-d="durumsal"><td class="ad">Oyun sürecine kalıcı &#x27;Yüksek&#x27; CPU önceliği (IFEO PerfOptions)<small>PERF-010</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">Mekanizma gerçek ve belgelenmiş (IFEO); fayda yalnızca CPU yetersiz kaldığında.</td></tr>
+<tr data-d="gercek"><td class="ad">Oyun içi overlay&#x27;leri kapatma (Discord, Steam, NVIDIA, Xbox, RGB yazılımları)<small>PERF-011</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Overlay kaynaklı takılma ve çökmeler topluluklarda ve oyun destek sayfalarında yaygın sorun giderme adımıdır.</td></tr>
+<tr data-d="durumsal"><td class="ad">Donanım hızlandırmalı GPU zamanlaması (HAGS)<small>GPU-001</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Mimari bir değişiklik; FPS etkisi genelde küçük, ancak kare üretimi gibi özellikler buna bağlıdır.</td></tr>
+<tr data-d="gercek"><td class="ad">Düşük Gecikme Modu (Low Latency Mode)<small>GPU-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">NVIDIA&#x27;nın gecikme rehberi ve bağımsız ölçümler GPU sınırlı senaryoda gecikme düşüşü gösterir.</td></tr>
+<tr data-d="kismen"><td class="ad">Güç yönetimi modu: Maksimum performansı tercih et<small>GPU-003</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">NVIDIA&#x27;nın gecikme rehberinde de geçer; ancak etkisi düşük GPU yükü senaryolarıyla sınırlıdır. Bağımsız bir karşılaştırmada FPS değişimleri küçük ve tutarsız çıktı, boşta güç tüketimi belirgin arttı; yazarlar, hedef frekanslara ulaşma sorunu yoksa varsayılan ayarı bırakmayı öneriyor.</td></tr>
+<tr data-d="kismen"><td class="ad">Doku filtreleme – Kalite: Yüksek performans<small>GPU-004</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Gerçek bir kalite/performans takası, ancak getirisi çok küçük.</td></tr>
+<tr data-d="kismen"><td class="ad">Gölgelendirici (Shader) önbellek boyutu<small>GPU-005</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Mekanizma gerçek; fayda yalnızca varsayılan önbellek dolduğunda ortaya çıkar.</td></tr>
+<tr data-d="gercek"><td class="ad">G-SYNC + V-Sync (sürücüde) + FPS sınırı kombinasyonu<small>GPU-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>orta</td><td>güvenli</td><td class="neden">Blur Busters G-SYNC 101 serisinde yüksek hızlı kamera ile ölçülmüştür.</td></tr>
+<tr data-d="gercek"><td class="ad">Maksimum kare hızı (sürücü FPS sınırlayıcı)<small>GPU-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">FPS sınırlama, GPU sınırlı durumda render kuyruğunu boşaltarak gecikmeyi düşürür (NVIDIA ve Blur Busters).</td></tr>
+<tr data-d="tartisma"><td class="ad">İş parçacıklı optimizasyon (Threaded Optimization)<small>GPU-008</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>güvenli</td><td class="neden">Sürücü varsayılanı zaten oyun profillerine göre karar verir.</td></tr>
+<tr data-d="gercek"><td class="ad">Tercih edilen yenileme hızı: Mevcut en yüksek<small>GPU-009</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Belgelenmiş sürücü ayarı.</td></tr>
+<tr data-d="gercek"><td class="ad">NVIDIA Reflex (oyun içi) – Açık + Boost<small>GPU-010</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>orta</td><td>güvenli</td><td class="neden">NVIDIA ve bağımsız (LDAT ile) ölçümler gecikme düşüşünü doğrular.</td></tr>
+<tr data-d="gercek"><td class="ad">Anlık Tekrar (Instant Replay) ve RTX Video Süper Çözünürlük<small>GPU-011</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Arka plan iş yükünü kaldırır; etkisi küçük.</td></tr>
+<tr data-d="gercek"><td class="ad">DLDSR / DSR ve Görüntü Ölçekleme (NIS)<small>GPU-012</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">Render çözünürlüğü, GPU sınırlı oyunlarda FPS&#x27;in en büyük belirleyicisidir.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Anti-Lag / Anti-Lag 2<small>GPU-013</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">AMD&#x27;nin belgelenmiş gecikme azaltma teknolojisi.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Chill<small>GPU-014</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Güç tasarrufu için tasarlanmış; performans artırma özelliği değildir.</td></tr>
+<tr data-d="gercek"><td class="ad">Radeon Boost, Enhanced Sync ve AFMF (sürücü kare üretimi)<small>GPU-015</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Gerçek özellikler, ancak &#x27;bedava FPS&#x27; değil, takas.</td></tr>
+<tr data-d="durumsal"><td class="ad">ULPS (Ultra Low Power State) devre dışı bırakma<small>GPU-016</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">Eski çoklu GPU sorunları için gerçek çözüm; genel performans ayarı olarak placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Resizable BAR / Smart Access Memory<small>GPU-017</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">GPU üreticileri tarafından belgelenmiş ve bağımsız testlerle doğrulanmış.</td></tr>
+<tr data-d="durumsal"><td class="ad">MSI (Message Signaled Interrupts) modu<small>GPU-018</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>belirsiz</td><td>riskli</td><td class="neden">Microsoft MSI&#x27;yı belgelenmiş bir mekanizma olarak tanımlar; fayda yalnızca line-based çalışan cihazlarda beklenir. Tek bir test sisteminde MSI açmak kare sürelerini değiştirmedi; aynı sistemde Windows 11 sürücüleri GPU, USB, NVMe ve ağ aygıtlarını zaten MSI/MSI-X moduna almıştı.</td></tr>
+<tr data-d="kismen"><td class="ad">Temiz sürücü kurulumu (DDU) ve güncel sürücü<small>GPU-019</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Güncel sürücü gerçek fayda sağlar; &#x27;her güncellemede DDU&#x27; alışkanlığı gereksizdir. DDU bir performans aracı değil, sürücü sorunlarını temizleme aracıdır.</td></tr>
+<tr data-d="gercek"><td class="ad">G-SYNC kapsamı: yalnızca tam ekran / tam ekran ve pencere<small>GPU-020</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">NVIDIA&#x27;nın sürücü ayarları başlığında belgelenmiş ayar (NvApiDriverSettings.h: VRR_MODE).</td></tr>
+<tr data-d="durumsal"><td class="ad">NVIDIA Görüntü Ölçekleme (NIS) kalite yükseltmesi<small>GPU-021</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Ayar NVIDIA Profile Inspector&#x27;ın ayar sözlüğünde (0x10444444, &#x27;NVIDIA Image Scaling - Quality Upscaling&#x27;) kayıtlı; resmi başlık dosyasında belgesi yok. Sürücünün değeri kabul ettiği uygulamada doğrulandı, oyundaki etkisi ölçülmedi.</td></tr>
+<tr data-d="kismen"><td class="ad">NVIDIA Uygulaması katmanını (overlay) kapat<small>GPU-022</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Ayar NVIDIA Profile Inspector&#x27;ın ayar sözlüğünde (0x90DE9159, &#x27;Driver - NVIDIA App Overlay Shim Prohibition&#x27;) kayıtlı; resmi belgesi yok. Yazma yönetici hakkı gerektirir (yönetici olmadan sürücü reddetti); yönetici olarak yazıldı, geri okundu ve geri alındı. Katmanın gerçekten devre dışı kaldığı ve FPS etkisi ölçülmedi.</td></tr>
+<tr data-d="tartisma"><td class="ad">Çekirdek park etmeyi kapatma (Core Parking – CPMINCORES)<small>CPU-001</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Windows 7 döneminde (özellikle AMD FX/erken Ryzen) gerçek sorundu; günümüzde fayda belirsiz, X3D&#x27;de zararlı olabilir. Tek CCD&#x27;li işlemcilerde fark beklenmez; çift CCD&#x27;li X3D&#x27;lerde zarar verebilir.</td></tr>
+<tr data-d="kismen"><td class="ad">Minimum işlemci durumu (PROCTHROTTLEMIN)<small>CPU-002</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Eski CPU&#x27;larda (Speed Shift öncesi) daha anlamlıydı. Mekanizma Microsoft&#x27;un sunucu belgesinde anlatılır (çok düşük gecikme için 100 önerilir); oyun gecikmesi üzerine ölçüm bulunamadı.</td></tr>
+<tr data-d="gercek"><td class="ad">İşlemci performans artırma modu (PERFBOOSTMODE) – laptop ısı kontrolü<small>CPU-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Belgelenmiş güç ayarı; laptop topluluklarında yaygın ve etkisi ölçülebilir (sıcaklık).</td></tr>
+<tr data-d="gercek"><td class="ad">Spectre/Meltdown yazılım azaltmalarını kapatma<small>CPU-004</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>riskli</td><td class="neden">Etkisi gerçek ama güvenlik maliyeti yüksek; Microsoft yalnızca belirli senaryolar için belgeler.</td></tr>
+<tr data-d="gercek"><td class="ad">AMD Ryzen X3D (çift CCD): Game Bar + AMD yonga seti sürücüsü + Dengeli plan<small>CPU-005</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">AMD ve bağımsız incelemeler (Notebookcheck, TheFPSReview) Game Bar ve sürücü bağımlılığını doğrular.</td></tr>
+<tr data-d="durumsal"><td class="ad">Intel hibrit (P/E çekirdek) işlemcilerde Windows 11 ve E-çekirdek yönetimi<small>CPU-006</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">Alder Lake çıkışında Denuvo DRM ve zamanlama sorunları gerçekti; büyük ölçüde yamalarla giderildi.</td></tr>
+<tr data-d="tartisma"><td class="ad">SMT / Hyper-Threading kapatma<small>CPU-007</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Belirli oyun + yüksek çekirdek sayısı kombinasyonlarında küçük fayda, diğerlerinde kayıp.</td></tr>
+<tr data-d="tartisma"><td class="ad">C-State&#x27;leri kapatma (BIOS)<small>CPU-008</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Gecikme takıntılı topluluklarda (Blur Busters forumları) yaygın; ölçülebilir oyun faydası tartışmalı.</td></tr>
+<tr data-d="tartisma"><td class="ad">Zamanlayıcı çözünürlüğü (timer resolution) araçları ve GlobalTimerResolutionRequests<small>CPU-009</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">Microsoft davranış değişikliğini belgeler; registry değerinin varlığı topluluk tarafından gözlemlenmiştir, resmi kullanıcı dokümanı yoktur.</td></tr>
+<tr data-d="durumsal"><td class="ad">Process Lasso / CPU affinity ile çekirdek atama<small>CPU-010</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">Araç gerçek; &#x27;her oyunda affinity ayarla&#x27; genel tavsiyesi değil. Kazanç oyuna ve donanıma özgüdür: tek bir makalede (9950X3D, çok düşük grafik ayarı) iki oyunda artış, bir oyunda fark yoktu; genel bir kanıt yoktur.</td></tr>
+<tr data-d="kismen"><td class="ad">Güç planı: Yüksek Performans / Nihai Performans<small>PWR-001</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>düşük</td><td>güvenli</td><td class="neden">Gerçek mekanizma, ama &#x27;Nihai Performans&#x27; iş istasyonları için tasarlanmıştır ve oyunlarda Yüksek Performans&#x27;tan anlamlı farkı gösterilmemiştir. Tek bir bilgisayarda 4 oyunla yapılan bir ölçümde yalnızca bir oyunda %1 düşük kare hızı arttı; diğerlerinde fark ya yoktu ya da küçük bir düşüş vardı.</td></tr>
+<tr data-d="gercek"><td class="ad">Windows 11 Güç modu: En iyi performans (overlay)<small>PWR-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Belgelenmiş güç modu; laptop performansında en önemli Windows ayarlarından biri.</td></tr>
+<tr data-d="kismen"><td class="ad">USB seçici askıya alma (USB selective suspend)<small>PWR-003</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Kopma/uyanma sorunları için gerçek çözüm; performans ayarı değil. Mekanizma belgelidir (aygıt uyanırken gecikme); oyun içi etkisi ölçülmemiştir.</td></tr>
+<tr data-d="kismen"><td class="ad">PCI Express Bağlantı Durumu Güç Yönetimi (ASPM)<small>PWR-004</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Kararlılık için belirli sistemlerde gerçek; FPS için etkisiz.</td></tr>
+<tr data-d="kismen"><td class="ad">Cihaz Yöneticisi: &#x27;Güç tasarrufu için bilgisayarın bu cihazı kapatmasına izin ver&#x27;<small>PWR-005</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Belirli donanım sorunları için gerçek.</td></tr>
+<tr data-d="gercek"><td class="ad">Laptop: OEM performans modu, prizde oynama ve MUX anahtarı<small>PWR-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">Laptop incelemeleri performans modları arasında büyük farkları tutarlı biçimde ölçer.</td></tr>
+<tr data-d="gercek"><td class="ad">Sabit diski kapatma süresi (HDD)<small>PWR-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">HDD dönüş başlatma süresi fiziksel bir gecikmedir.</td></tr>
+<tr data-d="durumsal"><td class="ad">Sistem soğutma ilkesi: Etkin<small>PWR-008</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">ACPI termal bölgelerini kullanan sistemlerde gerçek; OEM yönetimli sistemlerde etkisiz.</td></tr>
+<tr data-d="gercek"><td class="ad">Kablolu Ethernet kullanımı (Wi-Fi yerine)<small>NET-001</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yüksek</td><td>güvenli</td><td class="neden">Ağ fiziğine dayanır; tüm kaynaklarda tutarlı tavsiye.</td></tr>
+<tr data-d="kismen"><td class="ad">Wi-Fi bağdaştırıcısı güç tasarrufu: Maksimum performans<small>NET-002</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Kablosuz güç tasarrufu bilinen bir gecikme kaynağıdır; etki karta ve sürücüye bağlıdır.</td></tr>
+<tr data-d="gercek"><td class="ad">Wi-Fi arka plan taramasını durdurma (WLAN AutoConfig)<small>NET-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>dikkatli</td><td class="neden">Arka plan taramasının gecikme sıçramalarına yol açması kablosuz kartlarda bilinen bir davranıştır; düzenli aralıklı ping sıçraması bu sorunun işaretidir.</td></tr>
+<tr data-d="gercek"><td class="ad">Bufferbloat: yönlendiricide SQM / akıllı kuyruk (QoS)<small>NET-004</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Windows ayarı değil; ancak &#x27;ağ tweak&#x27;lerinin vaat ettiği ping iyileşmesini gerçekten sağlayan tek yaygın yöntemlerden biri.</td></tr>
+<tr data-d="gercek"><td class="ad">Teslim İyileştirme (Delivery Optimization) eşler arası yüklemeyi kapatma<small>NET-005</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Belgelenmiş Microsoft özelliği; etkisi bağlantı kapasitesine bağlı.</td></tr>
+<tr data-d="durumsal"><td class="ad">Nagle algoritmasını kapatma (TcpAckFrequency / TCPNoDelay)<small>NET-006</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">TcpAckFrequency Microsoft tarafından belgelenmiştir. Modern rekabetçi oyunların çoğu UDP kullandığı için genel &#x27;ping düşürür&#x27; iddiası yanlıştır.</td></tr>
+<tr data-d="kismen"><td class="ad">Ağ kartı: Kesme denetimi (Interrupt Moderation)<small>NET-007</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Mekanizma gerçek (Microsoft NIC ayarlama rehberi), oyun pingi açısından pratikte placebo. Tek bir kartta (Intel Gigabit CT, Windows 10 1909) yapılan ölçümde kesme denetimi kapalıyken ~2,65 milyon kesme, uyarlanabilirde ~200 bin çıktı; &#x27;orta&#x27; ayar oyunda en az etkiyi yaptı ve DPC gecikmesini düşük tuttu.</td></tr>
+<tr data-d="kismen"><td class="ad">Enerji Verimli Ethernet (EEE / Green Ethernet) kapatma<small>NET-008</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Uyumluluk sorunları için gerçek çözüm; genel performans kazancı değil. Intel belgeleri yalnızca bağlantı hızı sorunlarını anlatır; gecikme etkisi ölçülmemiştir.</td></tr>
+<tr data-d="placebo"><td class="ad">Receive Side Scaling (RSS) ve yük boşaltma (offload) ayarları<small>NET-009</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Offload/RSS kapatmak &#x27;ping düşürür&#x27; iddiası kanıtsızdır; Microsoft varsayılanları önerir.</td></tr>
+<tr data-d="gercek"><td class="ad">Polling rate (rapor hızı) – okuma ve ayarlama<small>INP-001</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Rapor aralığı fiziksel bir gecikme bileşenidir. Yüksek polling kaynaklı takılmalar Microsoft mühendisleri tarafından da kabul edilmiş ve Windows 11&#x27;de arka plan dinleyicileri kısıtlanmıştır.</td></tr>
+<tr data-d="gercek"><td class="ad">İşaretçi duyarlığını artır (Enhance Pointer Precision / fare ivmesi) kapatma<small>INP-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Microsoft&#x27;un işaretçi balistiği dokümanında tanımlı ivme eğrisi.</td></tr>
+<tr data-d="gercek"><td class="ad">İşaretçi hızı 10/20 (eski arayüzde 6/11) – 1:1 eşleme<small>INP-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Windows işaretçi çarpanı belgelenmiştir; 10 = 1.0 çarpan.</td></tr>
+<tr data-d="gercek"><td class="ad">Oyun içi Raw Input seçeneği<small>INP-004</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Raw Input API&#x27;si Microsoft tarafından belgelenmiştir.</td></tr>
+<tr data-d="durumsal"><td class="ad">MarkC Mouse Fix (eğri registry düzeltmesi)<small>INP-005</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>yok</td><td>güvenli</td><td class="neden">Belirli eski oyunlar için gerçek çözüm; günümüzde çoğu kullanıcı için gereksiz.</td></tr>
+<tr data-d="kismen"><td class="ad">Klavye tekrar gecikmesi ve tekrar hızı<small>INP-006</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Masaüstü konforu için gerçek; &#x27;oyunda klavye gecikmesini azaltır&#x27; iddiası yanlış. Bu bir kullanım tercihidir; performans etkisi için kanıt yoktur.</td></tr>
+<tr data-d="gercek"><td class="ad">Yapışkan/Filtre/Geçiş tuşları kısayollarını kapatma<small>INP-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Yaygın ve faydalı QoL ayarı.</td></tr>
+<tr data-d="gercek"><td class="ad">USB bağlantı noktası seçimi ve kablosuz alıcı konumu<small>INP-008</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Fare üreticileri (Logitech, Razer vb.) alıcıyı yakın tutmayı ve USB 3.0 parazitinden kaçınmayı önerir; USB 3.0&#x27;ın 2.4 GHz paraziti Intel tarafından belgelenmiştir.</td></tr>
+<tr data-d="gercek"><td class="ad">Arka planda raw input dinleyen uygulamaları azaltma (yüksek polling takılması)<small>INP-009</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Microsoft mühendislerinin açıklaması Blur Busters forumunda aktarılmıştır. Değişikliğin hangi kararlı Windows 11 sürümüne geçtiği bu çalışmada resmi sürüm notlarıyla doğrulanamadı.</td></tr>
+<tr data-d="durumsal"><td class="ad">hidusbf ile USB polling &#x27;overclock&#x27;<small>INP-010</small></td><td><span class="rozet r-durumsal">donanıma bağlı</span></td><td>donanıma bağlı</td><td>riskli</td><td class="neden">Bazı eski farelerde çalıştığı topluluk ölçümleriyle gösterilmiştir; güvenlik ve uyumluluk maliyeti yüksektir.</td></tr>
+<tr data-d="kismen"><td class="ad">Ses geliştirmelerini (Audio Enhancements / sistem efektleri) kapatma<small>AUD-001</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Sorunlu sürücü efektleri için gerçek çözüm; &#x27;FPS artırır&#x27; iddiası için kanıt yok.</td></tr>
+<tr data-d="kismen"><td class="ad">Örnekleme hızı ve bit derinliği (Varsayılan biçim)<small>AUD-002</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Hız eşleştirme ve uyumluluk için gerçek; &#x27;yüksek örnekleme hızı = daha iyi ayak sesi&#x27; iddiası placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Özel mod (Exclusive mode) izinleri<small>AUD-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Belgelenmiş Windows ses mimarisi davranışı.</td></tr>
+<tr data-d="gercek"><td class="ad">İletişim etkinliği: &#x27;Hiçbir şey yapma&#x27; (ses kısma/ducking kapatma)<small>AUD-004</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Belgelenmiş Windows akış zayıflatma (stream attenuation) davranışı.</td></tr>
+<tr data-d="tartisma"><td class="ad">Uzamsal ses (Windows Sonic / Dolby Atmos for Headphones / DTS)<small>AUD-005</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Konum algısı kişiye ve oyuna göre değişir. Windows belgeleri seçenekleri tanımlar; gecikme etkisi belgelenmemiştir, ses hissi kişiseldir.</td></tr>
+<tr data-d="kismen"><td class="ad">Kullanılmayan ses cihazlarını devre dışı bırakma (NVIDIA/AMD HDMI Audio vb.)<small>AUD-006</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">QoL için gerçek; performans için placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Ses yüksekliği eşitleme (Loudness Equalization)<small>AUD-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Dinamik aralık sıkıştırma gerçek bir etki; avantaj olup olmadığı tercih meselesi.</td></tr>
+<tr data-d="gercek"><td class="ad">DPC gecikmesi teşhisi (LatencyMon) – çıtırtı ve takılmalar<small>AUD-008</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>donanıma bağlı</td><td>güvenli</td><td class="neden">Ölçüm aracıdır; tweak listelerinin vaat ettiği &#x27;gecikme düşüşü&#x27;nün gerçekten ölçülebildiği yer burasıdır.</td></tr>
+<tr data-d="gercek"><td class="ad">Bluetooth kulaklıkta Eller Serbest (HFP) profilini kapatma<small>AUD-009</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Klasik Bluetooth&#x27;ta A2DP (stereo) ve HFP (mikrofon) profilleri aynı anda yüksek kalitede çalışamaz; LE Audio destekli yeni cihazlarda bu sınırlama azalır.</td></tr>
+<tr data-d="gercek"><td class="ad">Dosya uzantılarını göster<small>QOL-001</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Güvenlik ve kullanım kolaylığı.</td></tr>
+<tr data-d="gercek"><td class="ad">Klasik sağ tık menüsü (Windows 11)<small>QOL-002</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Yaygın ve çalışan QoL değişikliği; Microsoft tarafından belgelenmemiştir.</td></tr>
+<tr data-d="gercek"><td class="ad">Başlat aramasında web/Bing sonuçlarını kapatma<small>QOL-003</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Belgelenmiş Grup İlkesi.</td></tr>
+<tr data-d="kismen"><td class="ad">Şeffaflık efektlerini kapatma<small>QOL-004</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Düşük donanımda masaüstü için gerçek, oyun için placebo.</td></tr>
+<tr data-d="kismen"><td class="ad">Animasyon efektleri ve menü gösterme gecikmesi (MenuShowDelay)<small>QOL-005</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Algılanan hız için gerçek; sistem performansı için placebo.</td></tr>
+<tr data-d="gercek"><td class="ad">Oyun sırasında bildirimleri susturma (Rahatsız Etmeyin)<small>QOL-006</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">QoL.</td></tr>
+<tr data-d="gercek"><td class="ad">Görev çubuğunda &#x27;Görevi sonlandır&#x27;<small>QOL-007</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Resmi Windows 11 özelliği.</td></tr>
+<tr data-d="gercek"><td class="ad">Başlat/kilit ekranı önerileri ve ipuçlarını kapatma<small>QOL-008</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">QoL; performans iddiası yok.</td></tr>
+<tr data-d="kismen"><td class="ad">Edge Başlangıç Artırması ve arka planda çalışma<small>QOL-009</small></td><td><span class="rozet r-kismen">bazı durumlarda gerçek</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Belgelenmiş Edge ilkeleri.</td></tr>
+<tr data-d="gercek"><td class="ad">Gece ışığı ve dijital canlılık (Digital Vibrance)<small>QOL-010</small></td><td><span class="rozet r-gercek">gerçek</span></td><td>yok</td><td>güvenli</td><td class="neden">Görsel tercih; rekabet avantajı öznel.</td></tr>
+<tr data-d="zararli"><td class="ad">RAM temizleyiciler / &#x27;RAM boşaltıcı&#x27; uygulamalar<small>PLC-001</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">Windows bellek yöneticisi zaten optimize edilmiştir; RAM &#x27;temizlemek&#x27; önbelleği yok eder.</td></tr>
+<tr data-d="zararli"><td class="ad">Registry temizleyiciler<small>PLC-002</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>riskli</td><td class="neden">Microsoft&#x27;un resmi destek politikası registry temizleyicileri desteklemez ve risklerine dikkat çeker.</td></tr>
+<tr data-d="placebo"><td class="ad">HPET kapatma / bcdedit useplatformclock<small>PLC-003</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">2016-2018 döneminde YouTube&#x27;da yayıldı; varsayılan ayarlarda zaten optimize durumdadır. Yalnızca useplatformclock=yes zorlanmış sistemlerde kaldırmak gerçek fayda sağlar.</td></tr>
+<tr data-d="placebo"><td class="ad">bcdedit: disabledynamictick / useplatformtick / tscsyncpolicy<small>PLC-004</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Microsoft bu seçenekleri hata ayıklama/test için belgeler; performans ayarı olarak değil.</td></tr>
+<tr data-d="zararli"><td class="ad">msconfig: &#x27;İşlemci sayısı&#x27; ve &#x27;Maksimum bellek&#x27;<small>PLC-005</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">&#x27;Tüm çekirdekleri aç&#x27; efsanesi; ayar sınırlama içindir.</td></tr>
+<tr data-d="placebo"><td class="ad">SvcHostSplitThresholdInKB (svchost süreç sayısını azaltma)<small>PLC-006</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Microsoft ayrı süreçleri güvenilirlik ve güvenlik için tercih etmiştir (Windows 10 1703).</td></tr>
+<tr data-d="placebo"><td class="ad">LargeSystemCache=1 ve DisablePagingExecutive=1<small>PLC-007</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Windows XP dönemi tweak listelerinden kalma.</td></tr>
+<tr data-d="zararli"><td class="ad">Sayfa dosyasını (pagefile) kapatma<small>PLC-008</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>riskli</td><td class="neden">Microsoft sayfa dosyasının commit limiti ve döküm dosyaları için gerekli olduğunu açıklar.</td></tr>
+<tr data-d="placebo"><td class="ad">SSD&#x27;yi birleştirme / &#x27;Sürücüleri iyileştir&#x27;i kapatma<small>PLC-009</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Windows 8&#x27;den beri Sürücüleri İyileştir SSD&#x27;yi algılar. Birim gölge kopyası açık sistemlerde nadiren gerçek birleştirme yapması kasıtlıdır.</td></tr>
+<tr data-d="placebo"><td class="ad">MMCSS: SystemResponsiveness=0<small>PLC-010</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">&#x27;0 yap&#x27; tavsiyesi resmi dokümanla çelişir: değer 10&#x27;a yuvarlanır.</td></tr>
+<tr data-d="placebo"><td class="ad">NetworkThrottlingIndex=ffffffff<small>PLC-011</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">&#x27;Ping düşürür&#x27; iddiası mekanizmayla uyumsuz.</td></tr>
+<tr data-d="placebo"><td class="ad">MMCSS &#x27;Games&#x27; görev profili (GPU Priority=8, Priority=6, Scheduling Category=High)<small>PLC-012</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Mekanizma belgelenmiş ama hedef kitlesi (MMCSS kullanan oyunlar) neredeyse yok.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;QoS paket zamanlayıcısı bant genişliğinin %20&#x27;sini ayırır&#x27; (NonBestEffortLimit=0)<small>PLC-013</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Windows XP döneminden kalma bir yanlış anlama.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;DNS değiştirmek ping&#x27;i düşürür&#x27;<small>PLC-014</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Ağ protokolü mantığıyla çelişen bir iddia.</td></tr>
+<tr data-d="zararli"><td class="ad">IPv6&#x27;yı tamamen kapatma<small>PLC-015</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">Microsoft IPv6&#x27;yı devre dışı bırakmamayı açıkça önerir.</td></tr>
+<tr data-d="zararli"><td class="ad">TCP alma penceresi otomatik ayarlamasını kapatma (autotuninglevel=disabled)<small>PLC-016</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">Microsoft varsayılan &#x27;normal&#x27; ayarını önerir.</td></tr>
+<tr data-d="zararli"><td class="ad">MouseDataQueueSize / KeyboardDataQueueSize küçültme<small>PLC-017</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>dikkatli</td><td class="neden">djdallmann GamingPCSetup araştırması bu değerin gecikmeyi iyileştirmediğini ve düşük değerlerde veri kaybı riskini gösterir.</td></tr>
+<tr data-d="zararli"><td class="ad">Oyunu &#x27;Gerçek Zamanlı&#x27; (Realtime) öncelikte çalıştırmak; csrss/dwm önceliğini yükseltmek<small>PLC-018</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>riskli</td><td class="neden">Microsoft Realtime önceliğin sistem iş parçacıklarını engelleyebileceğini belgeler.</td></tr>
+<tr data-d="placebo"><td class="ad">IRQ8Priority / IRQ önceliği registry değerleri<small>PLC-019</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">1990&#x27;ların sonundan beri dolaşan bir efsane.</td></tr>
+<tr data-d="zararli"><td class="ad">Windows Defender&#x27;ı tamamen kapatmak<small>PLC-020</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>çok düşük</td><td>riskli</td><td class="neden">Oyun içi kazanç ölçüm hatası düzeyinde; güvenlik maliyeti çok yüksek.</td></tr>
+<tr data-d="zararli"><td class="ad">Windows Update&#x27;i kalıcı olarak kapatmak<small>PLC-021</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>yok</td><td>riskli</td><td class="neden">Etkin saatler ve duraklatma aynı faydayı risksiz sağlar.</td></tr>
+<tr data-d="zararli"><td class="ad">Agresif debloat scriptleri (Store, Xbox, Edge WebView2, Game Bar kaldırma)<small>PLC-022</small></td><td><span class="rozet r-zararli">zararlı</span></td><td>çok düşük</td><td>riskli</td><td class="neden">Toplu kaldırma, küçük kazanç karşılığında yüksek bozulma riski taşır.</td></tr>
+<tr data-d="placebo"><td class="ad">Prefetch / Temp klasörlerini düzenli silmek &#x27;FPS artırır&#x27;<small>PLC-023</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Disk alanı için anlamlı, performans için placebo; Prefetch&#x27;te ters etki.</td></tr>
+<tr data-d="tartisma"><td class="ad">Tek tıkla &#x27;oyun hızlandırıcı&#x27; / FPS booster uygulamaları<small>PLC-024</small></td><td><span class="rozet r-tartisma">tartışmalı</span></td><td>belirsiz</td><td>dikkatli</td><td class="neden">İçerdikleri gerçek ayarlar kadar etkilidir; toplu uygulama nedeniyle neden-sonuç izlenemez.</td></tr>
+<tr data-d="placebo"><td class="ad">NVIDIA telemetri/arka plan servislerini kapatmak &#x27;FPS artırır&#x27;<small>PLC-025</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Gizlilik için anlaşılır, performans için placebo. NVCleanstall ile kurulumda telemetri bileşenlerini hiç kurmamak daha temiz bir yoldur.</td></tr>
+<tr data-d="placebo"><td class="ad">Üçlü arabelleklemeyi (Triple Buffering) DirectX oyunlar için açmak<small>PLC-026</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">DirectX oyunları için yanlış uygulanan bir ayar.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Ultimate Performance planı laptopta FPS&#x27;i katlar&#x27;<small>PLC-027</small></td><td><span class="rozet r-placebo">placebo</span></td><td>çok düşük</td><td>güvenli</td><td class="neden">Laptop özelinde abartılmış bir iddia; masaüstü bağlamı için bkz. PWR-001.</td></tr>
+<tr data-d="placebo"><td class="ad">&#x27;Nagle&#x27;ı kapat, her oyunda ping düşer&#x27;<small>PLC-028</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Durumsal bir ayarın evrensel fayda olarak sunulması.</td></tr>
+<tr data-d="placebo"><td class="ad">ClearPageFileAtShutdown&#x27;ı &#x27;performans&#x27; için açmak<small>PLC-029</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Güvenlik ayarının performans ayarı sanılması.</td></tr>
+<tr data-d="placebo"><td class="ad">8.3 kısa dosya adlarını kapatmak &#x27;oyunları hızlandırır&#x27;<small>PLC-030</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>dikkatli</td><td class="neden">Dosya sistemi ayarının FPS ayarı olarak yayılması.</td></tr>
+<tr data-d="placebo"><td class="ad">Dosya &#x27;son erişim zamanı&#x27; güncellemesini kapatmak (NtfsDisableLastAccessUpdate)<small>PLC-031</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Eski Windows dönemi disk ayarının oyun ayarı olarak tekrarlanması.</td></tr>
+<tr data-d="placebo"><td class="ad">IoPageLockLimit ile &#x27;disk önbelleğini büyütmek&#x27;<small>PLC-032</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">XP dönemi ince ayar rehberlerinden kalan bir değer.</td></tr>
+<tr data-d="placebo"><td class="ad">SecondLevelDataCache&#x27;e işlemcinin L2 önbelleğini yazmak<small>PLC-033</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Yalnızca çok eski işlemcilerde anlamı olan bir değer.</td></tr>
+<tr data-d="placebo"><td class="ad">MaxUserPort / TcpTimedWaitDelay ile &#x27;ağ bağlantısını hızlandırmak&#x27;<small>PLC-034</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Sunucu ayarının oyuncu bilgisayarına uygulanması.</td></tr>
+<tr data-d="placebo"><td class="ad">DefaultTTL=64 ile &#x27;ping düşürmek&#x27;<small>PLC-035</small></td><td><span class="rozet r-placebo">placebo</span></td><td>yok</td><td>güvenli</td><td class="neden">Paket ömrü sınırının gecikme ayarı sanılması.</td></tr>
+<!--/tablo-->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="geri-alma">
+            <h3>Her değişiklikte olan</h3>
+            <ol class="sira">
+              <li><div><b>Yedek</b><span>Değiştirilecek ayarın ilk hâli kaydedilir.</span></div></li>
+              <li><div><b>Geri yükleme noktası</b><span>Oturumdaki ilk değişiklikten önce Windows geri yükleme noktası oluşturulur; istersen önce sorar.</span></div></li>
+              <li><div><b>Uygulama</b><span>Ayar yazılır. Riskli ayarlar iki ayrı uyarıyla sorulur.</span></div></li>
+              <li><div><b>Kayıt</b><span>Değişiklik, Değişiklikler sayfasına yazılır.</span></div></li>
+              <li><div><b>Geri alma</b><span>Değişiklikler sayfasında "Eski haline getir" ayarı tek tıkla ilk hâline döndürür. Ücretsiz sürümde de serbesttir.</span></div></li>
+            </ol>
+          </section>
+
+          <section id="sinirlar">
+            <h3>Sunulmayanlar</h3>
+            <ul class="liste">
+              <li><b>Windows Update'i tamamen kapatmak.</b> <!--v:sinir.wu-->Windows Update&#x27;i tamamen kapatmak (servisleri devre dışı bırakmak) bilerek sunulmaz: geri dönüşü zordur ve Windows bunu çoğu zaman kendisi geri açar.<!--/v--></li>
+              <li><b>UAC'yi tamamen kapatmak.</b> <!--v:sinir.uac-->UAC&#x27;yi tamamen kapatmak (EnableLUA=0) bilerek sunulmaz: Microsoft Store uygulamalarını bozar ve tüm programlar yönetici olarak çalışır.<!--/v--></li>
+              <li><b>Defender'ı tamamen kapatmak.</b> Yalnızca gerçek zamanlı koruma anahtarı var; varsayılan açıktır ve iki aşamalı uyarıyla kapanır.</li>
+              <li><b>Kanıtsız vaat.</b> Etkisi kanıtlanmamış bir ayara "FPS artırır" denmez.</li>
+            </ul>
+            <p class="uyari"><!--v:sinir.anticheat-->Rekabetçi oyunlarda anti-cheat sistemleri (Vanguard, EAC, BattlEye, FACEIT, VAC) sürücü imza zorlamasını kapatan, oyun DLL&#x27;ine enjekte eden veya oyun sürecini değiştiren araçları engelleyebilir ya da ban sebebi sayabilir.<!--/v--></p>
+          </section>
+
+          <section id="olcum">
+            <h3>Önce / Sonra ölçümü</h3>
+            <p><!--v:olcum.aciklama-->Ayarları uygulamadan önce bir &#x27;Önce&#x27;, uyguladıktan (ve gerekiyorsa yeniden başlattıktan) sonra bir &#x27;Sonra&#x27; ölçümü alın; uygulama ikisini karşılaştırır. Sonuçlar yalnızca bu bilgisayarda saklanır.<!--/v--></p>
+            <p class="uyari"><!--v:olcum.durustluk-->Dürüst uyarı: Tek ölçüm kesin kanıt değildir. Sonuçlar arka plan işlemlerine, sıcaklığa ve sahneye göre değişir. Aynı koşullarda (aynı sahne, aynı süre, aynı açık programlar) her biri için en az 3 ölçüm alıp ortalamalarına bakın. Küçük farklar (%3&#x27;ün altı) çoğu zaman ölçüm gürültüsüdür.<!--/v--></p>
+          </section>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="fiyat">
     <div class="wrap">
-      <h2>Fiyat</h2>
-      <p class="sub">Ücretsiz sürümle başlayın. Pro aylık aboneliktir, her abonelik bir bilgisayarda çalışır ve
-        istediğiniz zaman iptal edilir.</p>
+      <h2 class="baslik">Fiyat</h2>
+      <p class="sub">Abonelik yok, otomatik tahsilat yok. Pro, bir bilgisayara bağlı süreli bir kodla açılır ve internet gerektirmez.</p>
       <div class="plans">
         <div class="plan">
           <h3>Ücretsiz</h3>
-          <div class="price">0 <small>/ süresiz</small></div>
+          <p class="price">0 <small>/ süresiz</small></p>
+          <p class="tl"></p>
           <ul>
             <li>Tarama, PC Detayları ve Rapor</li>
             <li>Tüm ayar açıklamaları ve rehberler</li>
-            <li>Aynı anda 5 ayar değişikliği</li>
-            <li>Geri alma her zaman serbest</li>
+            <li>Önce / Sonra ölçümü</li>
+            <li>Aynı anda 15 ayar değişikliği</li>
           </ul>
-          <a class="btn" data-link="indir" href="#indir">Ücretsiz indir</a>
+          <div class="btns"><a class="btn" data-link="indir" href="#indir">Ücretsiz indir</a></div>
         </div>
         <div class="plan pro">
           <h3>Forevermore Pro</h3>
-          <div class="price"><span data-value="fiyat">yakında</span> <small>/ ay</small></div>
+          <div class="sure" data-sure role="group" aria-label="Süre">
+            <button type="button" data-ay="1" data-per="/ 1 ay" aria-pressed="true">1 ay</button>
+            <button type="button" data-ay="3" data-per="/ 3 ay" aria-pressed="false">3 ay</button>
+            <button type="button" data-ay="12" data-per="/ 12 ay" aria-pressed="false">12 ay</button>
+          </div>
+          <p class="price"><span data-fiyat>yakında</span> <small data-per>/ 1 ay</small></p>
+          <p class="tl" data-tl></p>
           <ul>
             <li>Sınırsız ayar değişikliği</li>
-            <li>Hazır profiller (tek tıkla ayar paketleri)</li>
-            <li>Oyun profilleri ve otomatik uygulama</li>
-            <li>Önce / Sonra ölçümü</li>
-            <li>1 bilgisayar · istediğiniz zaman iptal</li>
+            <li>Hazır profiller ve oyun profilleri</li>
+            <li>Oyun açılınca ayarlar uygulamayı açmadan uygulanır</li>
+            <li>Discord'da Pro Üye rolü ve Premium destek kanalı</li>
+            <li>1 bilgisayar; süre bitince ücretsiz sürüme döner</li>
           </ul>
-          <a class="btn primary" data-link="satinal" href="#fiyat">Pro'yu al</a>
+          <div class="btns"><a class="btn primary" data-link="satinal" href="#fiyat">Pro'yu al</a><a class="btn" data-link="discord" href="#fiyat">Discord'da kodu al</a></div>
         </div>
       </div>
-      <p class="sub" style="margin-top:22px">Ödeme, fatura ve vergiler satış ortağımız Lemon Squeezy tarafından işlenir.
-        Abonelik: <a data-link="portal" href="#fiyat">aboneliği yönet</a> · <a href="iade.html">iade koşulları</a></p>
-      <p class="sub">Projeyi beğendiyseniz <a data-link="bagis" href="#fiyat">Buy Me a Coffee</a> üzerinden destek
-        olabilirsiniz.</p>
+      <h3 style="margin-top:36px;font-family:var(--display)">Kod nasıl alınır?</h3>
+      <ol class="sira">
+        <li><div><b>Bilgisayar kodunu kopyala</b><span>Uygulamada Lisans &gt; Bilgisayar kodunu kopyala.</span></div></li>
+        <li><div><b>Öde</b><span>Buy Me a Coffee'de seçtiğin sürenin tutarını (2, 5 veya 16 $) tam olarak gir ve nota Discord adını yaz. Ödemeyi Buy Me a Coffee (Stripe) alır.</span></div></li>
+        <li><div><b>Ticket aç</b><span>Discord sunucumuzda ticket açıp bilgisayar kodunu yaz. Ödeme görününce o bilgisayara özel kodu alırsın. <a href="iade.html">İade koşulları</a></span></div></li>
+      </ol>
     </div>
   </section>
 
   <section id="indir">
-    <div class="wrap verify">
-      <h2>İndir</h2>
-      <p class="sub">Windows 10 / 11 (64 bit) · kurulum gerektirmez · yaklaşık 38 MB</p>
-      <div class="card">
-        <p style="margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap">
-          <a class="btn primary" data-link="indir" href="#indir">Forevermore.zip indir</a>
-          <a class="btn" data-link="github" href="#indir">Tüm sürümler (GitHub)</a>
-        </p>
-        <p><b>Kurulum:</b> zip'i bir klasöre açın ve <b>Forevermore.exe</b>'yi çalıştırın. Dosyalar GitHub'da
-          barındırılır; indirme düğmesi her zaman en son sürümü verir.</p>
-        <p style="margin-top:8px; font-size:14px">ℹ️ <a data-vt href="#sss">VirusTotal</a>'da 64 antivirüsten yalnızca
-          biri yanlış alarm veriyor; <a href="#antivirus">neden?</a></p>
+    <div class="wrap">
+      <h2 class="baslik">İndir</h2>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Forevermore.zip</h3>
+          <p>Windows 10 / 11 (64 bit), kurulum gerektirmez, yaklaşık 38 MB. Zip'i bir klasöre aç ve <b>Forevermore.exe</b>'yi çalıştır. İndirme düğmesi her zaman en son sürümü verir.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary" data-link="indir" href="#indir">Forevermore.zip indir</a><a class="btn" data-link="github" href="#indir">Tüm sürümler</a></p>
+        </div>
+        <div class="kutu" id="dogrula">
+          <h3>Orijinal olduğunu doğrula</h3>
+          <p>Yalnızca bu siteden indir; başka yerden gelen kopyalar değiştirilmiş olabilir. "Pro'yu bedava açıyor" diyen kopyalar, ayar yapan bir programa zararlı yazılım eklemenin kolay yoludur.</p>
+          <p><b>Uygulamada:</b> Bilgi sayfasında yeşil "Orijinal kopya" ve parmak izi <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code> görünmeli.</p>
+          <p><b>Zip'te:</b> PowerShell'de <code>Get-FileHash Forevermore.zip</code>; çıkan değer <code data-value="sha256">—</code> olmalı. <a data-vt href="#sss">VirusTotal raporu</a></p>
+        </div>
+        <div class="kutu tam" id="gizlilik">
+          <h3>Ne gönderilir, ne gönderilmez</h3>
+          <p>Forevermore varsayılan olarak internete hiç bağlanmaz; Pro dahil. Telemetri yoktur. Tek istisna, Ayarlar'dan senin açtığın güncelleme denetimidir: yalnızca GitHub'ın herkese açık sürüm listesine bağlanır ve veri göndermez. Pro kodu bu bilgisayarda, internetsiz doğrulanır. Tarama sonuçları, ayar listesi, donanım bilgisi, bilgisayar ve kullanıcı adı hiçbir yere gitmez. <a href="gizlilik.html">Gizlilik metni</a></p>
+        </div>
       </div>
-      <details><summary>Dosyanın orijinal olduğunu nasıl anlarım? (isteğe bağlı)</summary>
-        <p>Forevermore'u yalnızca bu siteden indirin; başka yerden gelen kopyalar değiştirilmiş olabilir. İki kolay yol:</p>
-        <p><b>1. Uygulamada:</b> Bilgi sayfası yeşil "Orijinal kopya" yazmalı ve imza parmak izi
-          <code data-value="parmakIzi">5FE5-D786-0B89-A56E</code> olmalı. Biri programı değiştirdiyse üstte kırmızı uyarı çıkar.</p>
-        <p><b>2. İndirdiğiniz zip'te (ileri düzey):</b> PowerShell'de <code>Get-FileHash Forevermore.zip</code> yazın;
-          çıkan değer şununla aynı olmalı: <code data-value="sha256">—</code></p>
-      </details>
     </div>
   </section>
 
   <section id="sss">
     <div class="wrap">
-      <h2>Sık sorulanlar</h2>
+      <h2 class="baslik">Sık sorulanlar</h2>
       <details><summary>Bilgisayarıma zarar verir mi?</summary>
-        <p>Her değişiklikten önce yedek ve Windows geri yükleme noktası alınır; riskli ayarlar iki ayrı uyarıyla sorulur.
-          Değişiklikler sayfasından her şeyi tek tıkla geri alabilirsiniz.</p></details>
-      <details><summary>İnternete bağlanır mı, veri toplar mı?</summary>
-        <p>Telemetri yoktur; tarama sonuçları bilgisayarınızdan çıkmaz. Yalnızca Pro lisansı doğrulanırken lisans anahtarı
-          ve bilgisayarın anonim kimliği gönderilir. Ayrıntı: <a href="gizlilik.html">Gizlilik</a>.</p></details>
+        <p>Riskli işaretli ayarlar iki ayrı uyarıyla sorulur ve her değişiklik geri alınabilir: <a href="#geri-alma">Her değişiklikte olan</a>.</p></details>
       <details><summary>Pro'yu kaç bilgisayarda kullanabilirim?</summary>
-        <p>Her abonelik bir bilgisayarda çalışır. Bilgisayar değiştirirken eski bilgisayarda Lisans &gt; "Bu bilgisayardan
-          kaldır" deyip yenisinde anahtarı girmeniz yeterli.</p></details>
-      <details><summary>Abonelik bitince ne olur?</summary>
-        <p>Uygulama ücretsiz sürüme döner. Yaptığınız değişiklikler yerinde kalır ve istediğiniz zaman geri alınabilir.</p></details>
-      <details id="antivirus"><summary>Antivirüs, VirusTotal veya Windows SmartScreen uyarı verdi.</summary>
-        <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bu yöntemle paketlenen programlar, bazı zararlı
-          yazılımlar da aynı yöntemi kullandığı için küçük antivirüslerde sık sık yanlış alarm verir. Ekim 2026 itibarıyla
-          <a data-vt href="#sss">VirusTotal</a>'da 64 antivirüsten yalnızca biri (Zillya, "Trojan.Blank") uyarı veriyor;
-          diğer 63 motor temiz buluyor.</p>
-        <p>Forevermore internete yalnızca Pro lisansını doğrulamak için bağlanır, şifre veya tarayıcı verisi okumaz.
-          SmartScreen'in "bilinmeyen yayımcı" uyarısı ise programın henüz ücretli bir kod imzalama sertifikası
-          olmamasından kaynaklanır. Dosyanın SHA-256 özeti ve uygulamadaki imza parmak izi yukarıdakilerle aynıysa
-          dosya bu siteden çıktığı gibidir.</p></details>
+        <p>Her kod bir bilgisayara bağlıdır. Bilgisayar değiştirirsen Discord'dan yaz; kalan süre için yeni bilgisayarına özel yeni kod veririz.</p></details>
+      <details><summary>Kodun süresi bitince ne olur?</summary>
+        <p>Kod otomatik yenilenmez, ücret çekilmez. Uygulama ücretsiz sürüme döner. Yaptığın değişiklikler yerinde kalır ve istediğin zaman geri alınabilir.</p></details>
+      <details><summary>Kaynak kod herkese açık mı?</summary>
+        <p>Hayır, şu an değil. Bunun yerine kendi başına kontrol edebileceğin şeyler var: <a href="#dogrula">imza parmak izi ve SHA-256</a>, ağ bağlantısının olmaması (<a href="#gizlilik">gizlilik</a>) ve yukarıdaki kanıt tablosu.</p></details>
+      <details id="antivirus"><summary>Antivirüs, VirusTotal veya SmartScreen uyarı verdi.</summary>
+        <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bazı zararlı yazılımlar da aynı yöntemi kullandığı için bu paketler küçük antivirüslerde sık yanlış alarm verir. Ekim 2026 itibarıyla <a data-vt href="#sss">VirusTotal</a>'da 64 antivirüsten yalnızca biri (Zillya, "Trojan.Blank") uyarı veriyor; diğer 63'ü temiz buluyor.</p>
+        <p>SmartScreen'in "bilinmeyen yayımcı" uyarısı, programın henüz ücretli bir kod imzalama sertifikası olmamasından kaynaklanır. Hiçbir yöntem bir masaüstü programının değiştirilmesini tamamen engelleyemez; imza ve SHA-256, değiştirilmiş bir kopyayı fark etmeni sağlar. <a href="#dogrula">Nasıl doğrulanır</a></p></details>
     </div>
   </section>
 </main>
