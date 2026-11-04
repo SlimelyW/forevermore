@@ -26,7 +26,7 @@ class TestAbout(unittest.TestCase):
         self.assertEqual(data["yapimci"], "Kubilay Paşa")
         self.assertEqual([s["deger"] for s in data["satirlar"]], ["[kaldirildi]", "[kaldirildi]"])
         self.assertEqual([b["url"] for b in data["baglantilar"]],
-                         ["https://slimelyw.github.io/forevermore/", "https://[kaldirildi]"])
+                         ["https://forevermore.pages.dev/", "https://[kaldirildi]"])
         self.assertEqual(data["bagis_url"], "https://buymeacoffee.com/forevermore")  # tek, küçük bağlantı (Bilgi sayfası)
         self.assertEqual([b["url"] for b in data["faydali"]],       # faydalı bağlantılar Oyunlar sayfasına taşındı
                          ["https://howmanyfps.com/games", "https://beforeiplay.com/wiki/Main_Page"])
