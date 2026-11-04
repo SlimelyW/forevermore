@@ -1,99 +1,106 @@
-<p align="center">
-  <img src="img/logo.png" alt="Forevermore" width="160">
-</p>
+# Forevermore
 
-<h1 align="center">Forevermore</h1>
+Oyuncular için Windows 10/11 ayar uygulaması: bilgisayarınızı tarar, her ayarın ne yaptığını artıları ve eksileriyle
+anlatır, işe yaramayan (placebo) ve zararlı ayarları ayırır, uyguladığınız her değişikliği yedekleyip tek tıkla geri
+alınabilir yapar. **Ücretsiz ve açık kaynaktır (MIT); Pro, hesap, reklam ve telemetri yoktur.**
 
-<p align="center">
-  <b>Placebo değil, gerçekten işe yarayan Windows ayarları.</b><br>
-  <i>No placebo. Windows settings that actually work.</i>
-</p>
+*English: a Windows 10/11 settings app for gamers. It scans your PC, explains every setting with evidence labels,
+separates placebo from real tweaks, and backs up each change so it can be undone with one click. Free and open source
+(MIT); no accounts, no telemetry. See the [English section](#english) below.*
 
-<p align="center">
-  <a href="https://slimelyw.github.io/forevermore/">Web sitesi</a> ·
-  <a href="https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip">İndir (Windows)</a> ·
-  <a href="https://buymeacoffee.com/forevermore">Buy Me a Coffee</a> ·
-  <a href="#english">English</a>
-</p>
+<!-- Ekran görüntüsü: docs/img/ozet.png dosyasını ekleyip aşağıdaki satırı açın.
+![Forevermore özet ekranı](docs/img/ozet.png)
+-->
+> **Ekran görüntüsü buraya gelecek.**
 
----
+## Ne yapar
 
-## Forevermore nedir?
+- **Tarama ve PC Detayları:** donanımı, sürücüleri, güç planını, ekranı, fare/klavyeyi ve Windows durumunu okur (salt okunur).
+- **~150 ayar, her birinde kanıt etiketi:** gerçek, kısmen, duruma bağlı, tartışmalı, placebo ya da zararlı; kaynak ve
+  ölçüm notlarıyla. Riskli ayarlar iki ayrı uyarıyla sorulur.
+- **Her değişiklik geri alınabilir:** değişiklikten önce yedek ve (gerekirse) sistem geri yükleme noktası; Değişiklikler
+  sayfasından tek tıkla geri alma.
+- **Ekran kartı ayarları:** NVIDIA (NVAPI) ve AMD (ADLX) sürücü ayarları, ölçekleme, G-SYNC / FreeSync.
+- **Oyunlar:** oyun başına işlemci önceliği ve çekirdek seçimi, oyun açılınca otomatik uygulama, kapanınca geri alma;
+  oyun içi ayar rehberleri. Anti-cheat süreçlerine dokunulmaz.
+- **Hazır profiller, tek tuş Boost, uygulama kaldırıcı, ekran yerleşimi, Önce / Sonra ölçümü** (PresentMon ile FPS ve kare süresi).
+- Türkçe ve İngilizce arayüz.
 
-Forevermore, oyuncular için bir Windows 10 / 11 ayar uygulamasıdır. Bilgisayarınızı tarar, her ayarın ne yaptığını
-artısı ve eksisiyle sade bir dille anlatır; internette dolaşan "FPS artırır", "ping düşürür" gibi placebo ve zararlı
-ayarları ayrıca işaretler. Her değişiklik yedeklenir ve tek tıkla geri alınır.
+Tüm özellikler herkese açıktır; kilitli bölüm yoktur.
 
-Uzun zamandır bilgisayar ve optimizasyon işleriyle hobi olarak ilgileniyorum. İnternette çok fazla yanıltıcı ayar ve
-asılsız optimizasyon olduğu için kendi testlerime, ölçümlerime ve deneyimlerime dayanan, basit bir uygulama yapmak
-istedim. Forevermore bir üniversite öğrencisinin hobi projesidir.
+## Önemli: sistem ayarlarını değiştirir
 
-![Sistem özeti](img/ozet_tr.png)
+Forevermore **kayıt defterini, servisleri, önyükleme ayarlarını ve sürücü ayarlarını değiştirebilir**. Bunu yapmadan önce:
 
-## Özellikler
-
-- **Tarama ve açıklama:** donanımı ve mevcut ayarları salt okuyarak tarar; her ayarın ne yaptığını, kimlerin
-  dokunmaması gerektiğini yazar.
-- **Placebo ve zararlı ayarlar:** işe yaramayan ya da zarar veren yaygın ayarları ayrı gösterir, bilgisayarınızda
-  uygulanmış olanları bulur.
-- **Her şey geri alınabilir:** değişiklikten önce yedek ve geri yükleme noktası; Değişiklikler sayfasından tek tıkla geri alma.
-- **Ekran kartı ayarları:** NVIDIA ve AMD sürücü ayarları (gecikme, ölçekleme, G-SYNC).
-- **Oyun profilleri** *(Pro)*: oyun başına işlemci önceliği, çekirdek seçimi, bildirimleri susturma; oyun açılınca
-  otomatik uygulanır, kapanınca geri alınır. Oyun içi ayarlar kartı: her oyunda aranacak ayarlar, kanıt rozetiyle.
-- **Tek tuş Boost:** Oyun Modu'nu açar, Game DVR arka plan kaydını kapatır, listendeki programları onayınla kapatır; geri alınabilir.
-  Bellek boşaltma, pano silme ve servis durdurma bilerek yok.
-- **Uygulama kaldırıcı:** programın kendi kaldırıcısını açar, adı birebir eşleşen kalıntıları yedekleyerek kaldırır (geri yüklenebilir).
-- **Ekran yerleşimi:** çoklu monitörleri sürükleyip bırakarak yerleştirme.
-- **Önce / Sonra ölçümü**: FPS, gecikme ve zamanlayıcı ölçümüyle gerçek etkiyi görme.
-- Türkçe ve İngilizce arayüz. Telemetri yok.
-
-| | Ücretsiz | Forevermore Pro |
-|---|---|---|
-| Tarama, açıklamalar, rehberler, rapor | ✓ | ✓ |
-| Ayar değişikliği | aynı anda 10 (referansla +10) | sınırsız |
-| Önce / Sonra ölçümü | ✓ | ✓ |
-| Hazır profiller, Oyunlar | — | ✓ |
-| Geri alma | ✓ | ✓ |
-| Fiyat | ücretsiz | 1 ay $2 (~₺100), 3 ay $5 (~₺250), 12 ay $16 (~₺800); süreli kod, yenilenmez, 1 bilgisayar |
+- İlk değişiklikte **sistem geri yükleme noktası** almayı dener (Windows'ta Sistem Koruması kapalıysa açmayı önerir) ve
+  değiştirdiği her değeri **yedekler**; Değişiklikler sayfasından geri alabilirsiniz.
+- Ayar değiştirmek için **yönetici izni** ister. Vermezseniz salt okunur modda açılır (tarama ve rehberler çalışır).
+  `--onizleme` ile hiçbir şey değiştirmeden deneyebilirsiniz.
+- Bazı ayarlar güvenliği azaltır (ör. Spectre/Meltdown azaltımları) ya da yeniden başlatma gerektirir; bunlar uygulamada
+  açıkça uyarılır. Neyi onayladığınızı okuyun. Yazılım **garantisiz, "olduğu gibi"** sunulur (bkz. [LICENSE](LICENSE)).
+- Windows Defender'ı tamamen kapatma, anti-cheat'e müdahale ve "bellek temizleyici" gibi zararlı/placebo işlemler yoktur.
 
 ## Kurulum
 
-1. [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) dosyasını indirin.
-2. Bir klasöre açın ve **Forevermore.exe**'yi çalıştırın. Ayar değiştirmek için yönetici izni ister; "Hayır" derseniz
-   salt okunur modda açılır.
-3. Pro için: uygulamada **Lisans** sayfasından bilgisayar kodunuzu kopyalayın, Discord'da ticket açıp kodunuzu alın ve aynı sayfaya girin
-   (ayrıntı: web sitesi, "Kod nasıl alınır?").
+1. [Releases](https://github.com/SlimelyW/forevermore/releases/latest) sayfasından `Forevermore.zip` dosyasını indirin.
+2. Bir klasöre açın (klasörü olduğu gibi tutun; `_internal` programın parçasıdır) ve **Forevermore.exe**'yi çalıştırın.
+3. Kaldırmak için önce uygulamada Ekstra ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
 
-Kaldırmak için: Ekstra ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
+Zip'in SHA-256 değeri Releases sayfasında yazar (`Get-FileHash Forevermore.zip`). Python + PyInstaller ile paketlenen
+programlar küçük antivirüslerde yanlış alarm verebilir; kod açık olduğu için isterseniz kendiniz derleyebilirsiniz.
 
-## Orijinal kopya mı?
+## Kaynaktan çalıştırma ve derleme
 
-Forevermore'u yalnızca bu depodan ya da web sitesinden indirin.
+Gereksinim: Windows 10/11, Python 3.12.
 
-- Uygulamanın **Bilgi** sayfası "Orijinal kopya" yazmalı ve imza parmak izi şu olmalı: `5FE5-D786-0B89-A56E`
-- Her sürümün zip SHA-256 değeri [Releases](https://github.com/SlimelyW/forevermore/releases) sayfasında yazar.
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
 
-> **Antivirüs uyarısı hakkında:** Forevermore Python ile yazılıp PyInstaller ile paketlenir; bu yöntemle paketlenen
-> programlar küçük antivirüslerde sık sık yanlış alarm verir. 2.1.2 paketini
-> [VirusTotal](https://www.virustotal.com/gui/file/53f2075f758366a285729fd4cc6c541797618b8f93a92d96903154a45e6e454d)'da
-> taranan 67 motorun hiçbiri işaretlemedi (0/67, Ekim 2026); sonuç sürümler arasında değişebilir. SmartScreen'in
-> "bilinmeyen yayımcı" uyarısı kod imzalama sertifikası olmamasından kaynaklanır. Yukarıdaki değerler tutuyorsa dosya
-> yayımlandığı gibidir.
+.venv\Scripts\python -m app                 # çalıştır (ayar yazmak için yönetici izni ister)
+.venv\Scripts\python -m app --onizleme      # hiçbir ayarı değiştirmeden dene
+.venv\Scripts\python -m app --kontrol       # pencere açmadan paket öz denetimi
+```
+
+Testler (pencere açmaz, gerçek sistem ayarı yazmaz):
+
+```powershell
+$env:QT_QPA_PLATFORM = "offscreen"
+.venv\Scripts\python -m unittest discover -s tests -t .
+```
+
+Paket derleme (`dist\Forevermore\` klasörü ve `dist\Forevermore.zip`):
+
+```powershell
+.\derle.bat
+```
+
+`derle.bat` ayrı bir derleme ortamı kurar (`requirements-derleme.txt`: PyInstaller), veriyi yeniden üretir, testleri
+çalıştırır, derler ve paket kontrolü yapar. `tools\PresentMon-*.exe` varsa pakete eklenir (Önce / Sonra ölçümü için).
+Resmî paketin güncelleme imzası yapımcının özel anahtarıyla atılır ve anahtar depoda yoktur; kendi derlemeniz imzasız
+olur ve resmî güncelleme kanalıyla karışmaz.
+
+Klasör yapısı: `app/core` (ayarlar, yollar, dil), `app/engine` (motor, yedek, işleyiciler, katalog), `app/scan`
+(salt okunur tarama), `app/ui` (Qt arayüzü), `app/games`, `app/measure`; `data/` (ayar kataloğu), `lang/` (çeviriler),
+`tests/`, `tools/`, `site/` (tanıtım sitesi), `docs/`.
 
 ## Gizlilik
 
-Telemetri, reklam, analiz yok. Tarama sonuçları bilgisayarınızdan çıkmaz. Forevermore varsayılan olarak internete hiç
-bağlanmaz; Pro kodu bilgisayarda, internetsiz doğrulanır. Tek istisna, Ayarlar'dan sizin açtığınız güncelleme denetimidir:
-yalnızca GitHub'ın herkese açık sürüm listesine bağlanır ve veri göndermez.
-Ayrıntı: [Gizlilik](https://slimelyw.github.io/forevermore/gizlilik.html).
+Telemetri, reklam, analiz yok. Tarama sonuçları, ayarlar, yedekler ve günlükler yalnızca bilgisayarınızda
+(`%LOCALAPPDATA%\Forevermore`) kalır. Uygulama varsayılan olarak internete hiç bağlanmaz; tek istisna, Ayarlar'dan sizin
+açtığınız güncelleme denetimidir (yalnızca GitHub, veri göndermez, indirilen paketin imzası doğrulanır).
+
+## Katkı, güvenlik, destek
+
+- Katkı vermek için [CONTRIBUTING.md](CONTRIBUTING.md)
+- Güvenlik açığı bildirmek için [SECURITY.md](SECURITY.md) (açığı herkese açık konu olarak açmayın)
+- Üçüncü taraf bileşenler: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)
+- Beğendiyseniz gönüllü olarak [bir kahve ısmarlayabilirsiniz](https://buymeacoffee.com/forevermore); zorunlu değildir,
+  uygulama hiçbir yerde sormaz.
 
 ## Lisans
 
-© 2026 Kubilay Paşa. Tüm hakları saklıdır. **Bu depo yalnızca web sitesini ve indirme dosyasını içerir; uygulamanın
-kaynak kodu açık değildir.** Forevermore kişisel kullanım için sunulur; satılamaz, değiştirilip dağıtılamaz, başka bir
-ad veya yapımcı adıyla sunulamaz. Tam metin: [Kullanım koşulları](https://slimelyw.github.io/forevermore/kosullar.html).
-
-İletişim: Discord **[kaldirildi]** · e-posta **[kaldirildi]** · Destek olmak için: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
+[MIT](LICENSE) © 2026 Kubilay Paşa. Üçüncü taraf bileşenler kendi lisanslarına tabidir.
 
 ---
 
@@ -101,31 +108,20 @@ ad veya yapımcı adıyla sunulamaz. Tam metin: [Kullanım koşulları](https://
 
 ## English
 
-Forevermore is a Windows 10 / 11 settings app for gamers. It scans your PC, explains what each setting does with its
-pros and cons, and flags the placebo and harmful tweaks that circulate online ("more FPS", "lower ping"). Every change
-is backed up and can be undone with one click. It is a university student's hobby project, based on my own tests,
-measurements and experience.
+Forevermore is a free, open-source (MIT) Windows 10/11 settings app for gamers. It scans your PC, explains what each
+setting does with its pros and cons and an evidence label (real / partial / situational / debated / placebo / harmful),
+and backs up every change so it can be undone with one click. There is no Pro tier, no account and no telemetry; the app
+connects to the internet only for the update check you can turn on in Settings (GitHub only, sends nothing).
 
-- **Free:** scan, explanations, guides, report, Before / After measurement, 10 setting changes at a time (+10 with a referral), undo.
-- **Pro (1 month $2, 3 months $5, 12 months $16; a time-limited code, does not renew, 1 computer):** unlimited changes, profiles, per-game settings.
-- **Download:** [Forevermore.zip](https://github.com/SlimelyW/forevermore/releases/latest/download/Forevermore.zip) →
-  extract → run **Forevermore.exe**.
-- **Genuine copy:** the About page says "Original copy" and shows the signature fingerprint `5FE5-D786-0B89-A56E`.
-- **Antivirus warnings:** PyInstaller-packaged apps often get false alarms from smaller engines; none of the 67 engines on
-  [VirusTotal](https://www.virustotal.com/gui/file/53f2075f758366a285729fd4cc6c541797618b8f93a92d96903154a45e6e454d)
-  flagged the 2.1.2 package (0/67, October 2026); results can change between versions.
-- **Privacy:** no telemetry; the app does not connect to the internet by default, and Pro codes are verified offline on your computer.
-  [Privacy policy](https://slimelyw.github.io/forevermore/gizlilik.html#en)
-- **License:** © 2026 Kubilay Paşa. All rights reserved. This repository contains only the website and the download;
-  the source code is not public. [Terms](https://slimelyw.github.io/forevermore/kosullar.html#en)
+**Warning: it changes system settings** (registry, services, boot options, GPU driver settings). It tries to create a
+system restore point before the first change, backs up every value it writes, and asks for administrator rights only to
+apply changes (without them it opens read-only; `--onizleme` tries everything without changing anything). Some settings
+reduce security or need a restart and say so before you confirm. The software is provided "as is", without warranty.
 
-Contact: Discord **[kaldirildi]** · email **[kaldirildi]** · Support the project: [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore)
-
-## Site yapısı (30 Ekim 2026)
-- `index.html` (TR) ve `en.html` (EN): aynı iskelet. Sayaçlar ve bazı metinler `<!--n:...-->`, `<!--v:...-->` işaretleriyle
-  `py -3.12 tools\site_veri.py` tarafından uygulamanın kendi dosyalarından (data/tweaks_app.json, lang/*.json) doldurulur; elle değiştirmeyin.
-  Katalog ya da çeviri değişince bu aracı yeniden çalıştırın (`veri.js` de buradan üretilir).
-- `demo.js`: örnek tarama, ayar künyesi, geri alma, tahmin oyunu, oyun denetimi, fiyat süresi. `erisim.js`: Okuma modu düğmesi.
-- `erisilebilirlik.html`: erişilebilirlik bildirgesi (TR + EN).
-- Demo örnek veriyle çalışır ve ziyaretçinin bilgisayarını taramaz; bunu sayfada da yazıyor.
-- Metin kuralları: docs/TASARIM_ESASLARI.md bölüm 11 (slogan ve tekrar yasağı). `img/*_tr.png` eski arayüz görüntüleridir, sayfada kullanılmıyor.
+- **Install:** download `Forevermore.zip` from [Releases](https://github.com/SlimelyW/forevermore/releases/latest), extract it, run `Forevermore.exe`.
+- **Run from source:** Python 3.12, `py -3.12 -m venv .venv`, `.venv\Scripts\python -m pip install -r requirements.txt`, `.venv\Scripts\python -m app`.
+- **Tests:** `$env:QT_QPA_PLATFORM="offscreen"; .venv\Scripts\python -m unittest discover -s tests -t .`
+- **Build a package:** `derle.bat` (PyInstaller; unsigned unless you hold the maintainer's update-signing key).
+- **Contribute / report a vulnerability:** [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md).
+- **Support (optional):** [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore).
+- **License:** [MIT](LICENSE); third-party components in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).

@@ -1,0 +1,5 @@
+# Arayüz: Qt for Python (PySide6). Lisans: LGPLv3 (kapalı kaynak/ticari dağıtım serbest;
+# koşullar: lisans metni ve Qt kaynak kodu bilgisi programla birlikte verilmeli, Qt kitaplıkları
+# ayrı dosyalar olarak dağıtılmalı -> bu yüzden derleme "klasör" hâlinde yapılır).
+# Ayrıntı: THIRD-PARTY-NOTICES.txt
+PySide6-Essentials==6.12.0

@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forevermore — Windows oyun optimizasyonu</title>
+  <meta name="description" content="Forevermore: oyuncular için Windows ayar uygulaması. 154 ayarın her birinin kanıt durumu yazılı; placebo ve zararlı ayarlar ayrılır, her değişiklik geri alınır.">
+  <script>/* okuma tercihi ilk çizimden önce (erisim.js) */try{var d=document.documentElement,s=localStorage;if(s.getItem("forevermore-okunabilir")==="1")d.setAttribute("data-okunabilir","");d.setAttribute("data-ok-font",s.getItem("forevermore-ok-font")||"lexend");d.setAttribute("data-ok-boyut",s.getItem("forevermore-ok-boyut")||"20");if(s.getItem("forevermore-ok-cizgi")==="1")d.setAttribute("data-ok-cizgi","")}catch(e){}</script>
+  <link rel="icon" href="img/logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="landing.css">
+  <script src="ayarlar.js" defer></script>
+  <script src="veri.js" defer></script>
+  <script src="demo.js" defer></script>
+  <script src="erisim.js" defer></script>
+  <script src="landing.js" defer></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-kilit" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-tik" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></symbol>
+  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+</svg>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="img/logo.png" alt="">Forevermore</a>
+    <nav class="links">
+      <a href="#dene">Dene</a>
+      <a href="#oyunlar">Oyunlar</a>
+      <a href="#kanit">Kanıtlar</a>
+      <a href="#indir">İndir</a>
+      <a href="#sss">SSS</a>
+      <button class="a11y" type="button" data-a11y aria-pressed="false" title="Disleksi ve DEHB için: Verdana yazı, geniş satır aralığı">Okuma modu</button>
+      <a class="lang" href="en.html" hreflang="en">EN</a>
+      <a class="btn primary nav-cta" data-link="indir" href="#indir">Ücretsiz dene</a>
+    </nav>
+  </div>
+</header>
+
+<div class="noktalar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<main>
+  <div class="hero2">
+    <div class="hero-iz">
+      <canvas aria-hidden="true"></canvas>
+      <div class="ayirici" role="slider" tabindex="0" aria-label="Önce / sonra karşılaştırması" aria-valuemin="5" aria-valuemax="95" aria-valuenow="60" hidden>
+        <span class="yan once" aria-hidden="true">Önce</span><span class="tutamac" aria-hidden="true"><svg class="ikon" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></span><span class="yan sonra" aria-hidden="true">Sonra</span>
+        <span class="ayirici-ipucu" aria-hidden="true">Sürükle: önce / sonra</span>
+      </div>
+    </div>
+    <div class="wrap">
+    <h1><span class="satir"><span class="cizik">Placebo</span> değil,</span> <span class="satir">gerçekten işe yarayan ayarlar.</span></h1>
+    <p class="lead">Windows için oyuncu ayar uygulaması. <b><!--n:toplam-->154<!--/n--> ayarın</b> her birine kanıt etiketi yazdık: placeboyu ayıklar, zararlıyı işaretler, her değişikliği tek tıkla geri alır.</p>
+    <div class="actions">
+      <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Ücretsiz dene</a>
+    </div>
+    <p class="not">Windows 10 ve 11. Kurulum, hesap veya kart gerekmez; yaklaşık 38 MB.</p>
+    <aside class="hud" aria-label="Örnek kare süresi">
+      <div class="hud-ust"><span>Kare süresi</span><span class="hud-ornek">örnek veri</span></div>
+      <div class="hud-deger">
+        <div class="once"><small>Önce</small><b data-say data-ondalik="1">16,7</b> <span>ms</span></div>
+        <div class="sonra"><small>Sonra</small><b data-say data-ondalik="1">6,9</b> <span>ms</span></div>
+      </div>
+      <p>144 Hz monitör Windows'ta 60 Hz'de kalmışsa: tek ayar, kare başına 9,8 ms daha kısa bekleme.</p>
+    </aside>
+    <ul class="sayaclar">
+      <li class="sayac"><b data-say><!--n:toplam-->154<!--/n--></b><span>ayar tek tek incelendi</span></li>
+      <li class="sayac placebo"><b data-say><!--n:placebo-->29<!--/n--></b><span>placebo ayıklandı</span></li>
+      <li class="sayac zararli"><b data-say><!--n:zararli-->11<!--/n--></b><span>zararlı ayar işaretlendi</span></li>
+      <li class="sayac sifir"><b>0</b><span>bayt telemetri</span></li>
+    </ul>
+    <div class="hero-etiket">
+      <div class="dagilim" role="img" aria-label="Katalogdaki etiket dağılımı"><i style="flex:55;--rc:var(--v-gercek)"></i><i style="flex:31;--rc:var(--v-kismen)"></i><i style="flex:16;--rc:var(--v-durumsal)"></i><i style="flex:12;--rc:var(--v-tartisma)"></i><i style="flex:29;--rc:var(--v-placebo)"></i><i style="flex:11;--rc:var(--v-zararli)"></i></div>
+      <ul class="dagilim-liste">
+        <li><span class="rozet r-gercek">gerçek</span> <b><!--n:gercek-->55<!--/n--></b></li>
+        <li><span class="rozet r-kismen">bazı durumlarda gerçek</span> <b><!--n:kismen-->31<!--/n--></b></li>
+        <li><span class="rozet r-durumsal">donanıma bağlı</span> <b><!--n:durumsal-->16<!--/n--></b></li>
+        <li><span class="rozet r-tartisma">tartışmalı</span> <b><!--n:tartisma-->12<!--/n--></b></li>
+        <li><span class="rozet r-placebo">placebo</span> <b><!--n:placebo-->29<!--/n--></b></li>
+        <li><span class="rozet r-zararli">zararlı</span> <b><!--n:zararli-->11<!--/n--></b></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  <div class="serit" role="group" aria-label="Forevermore'da neler var">
+    <div class="serit-iz">
+      <ul>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Önerilenleri tek tıkla uygula</b>, önce önizleme gösterir</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Her değişiklik yedeklenir</b>, tek tıkla geri alınır</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Geri yükleme noktası</b> ilk değişiklikten önce</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Önce/Sonra ölçümü</b>: ortalama FPS, %1 low, kare süresi</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> ayar</b>, her biri kanıt etiketli</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı</b> ayrıca işaretli</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Kurulum yok</b>, yaklaşık 38 MB</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Telemetri yok</b>, internetsiz çalışır</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>NVIDIA ve AMD</b> sürücü ayarları tek yerde</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Anti-cheat süreçlerine</b> dokunmaz</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Açık kaynak</b>, MIT lisansı</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Ctrl+K</b> ile ayar arama</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Önerilenleri tek tıkla uygula</b>, önce önizleme gösterir</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Her değişiklik yedeklenir</b>, tek tıkla geri alınır</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Geri yükleme noktası</b> ilk değişiklikten önce</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Önce/Sonra ölçümü</b>: ortalama FPS, %1 low, kare süresi</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> ayar</b>, her biri kanıt etiketli</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> zararlı</b> ayrıca işaretli</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Kurulum yok</b>, yaklaşık 38 MB</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Telemetri yok</b>, internetsiz çalışır</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>NVIDIA ve AMD</b> sürücü ayarları tek yerde</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Anti-cheat süreçlerine</b> dokunmaz</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Açık kaynak</b>, MIT lisansı</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Ctrl+K</b> ile ayar arama</li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="fark" class="fark" data-durum="sonra">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>16,7 → 6,9 ms</b>kare süresi, örnek</span><span class="kenar sag" aria-hidden="true"><i></i><b>60 → 144 Hz</b>ekran yenileme</span>
+    <div class="wrap">
+      <div class="ust">
+        <div>
+          <h2 class="baslik" data-kelime>Aynı bilgisayar, üç ayar sonra.</h2>
+      <p class="kisaca"><b>Kısaca</b>Örnek bilgisayarda üç ayar düzeltildi. Sayılar örnek; kendi bilgisayarının sayılarını uygulama ücretsiz ölçer.</p>
+          <p class="sub">Demodaki örnek bilgisayar: 144 Hz monitörü Windows'ta 60 Hz'de kalmış, açılışta 14 uygulama başlıyor, arka planda oyun kaydı açık. Forevermore bu üçünü tarayıp bulur, sen onaylarsın.</p>
+        </div>
+        <div class="ab" role="group" aria-label="Görünüm">
+          <button type="button" data-ab="once" aria-pressed="false">Önce</button>
+          <button type="button" data-ab="sonra" aria-pressed="true">Sonra</button>
+        </div>
+      </div>
+      <div class="grafik"><canvas aria-hidden="true"></canvas><span class="etiket">Kare süresi, ms (örnek veri; düşük ve düz olan iyi)</span></div>
+      <div class="olculer" aria-live="polite">
+        <div class="olcu" data-once="60" data-sonra="144"><b><span class="v">144</span><small>kare/sn</small></b><span>Ekrana ulaşan en çok kare</span><em>Önce: 60. Ekran yenileme hızı.</em></div>
+        <div class="olcu" data-once="16,7" data-sonra="6,9"><b><span class="v">6,9</span><small>ms</small></b><span>Kare gösterim aralığı</span><em>Önce: 16,7 ms. Aynı ayarın sonucu.</em></div>
+        <div class="olcu" data-once="14" data-sonra="6"><b><span class="v">6</span><small>uygulama</small></b><span>Açılışta başlayan</span><em>Önce: 14. Başlangıç uygulamaları.</em></div>
+        <div class="olcu" data-once="Açık" data-sonra="Kapalı"><b><span class="v">Kapalı</span></b><span>Arka planda oyun kaydı</span><em>Önce: açık. Game DVR.</em></div>
+      </div>
+      <p class="dipnot">Sayılar örnek bilgisayara aittir ve ayarın kendisinden hesaplanır (1000 ÷ 144 = 6,9 ms); FPS artışı vaadi değildir. Kendi bilgisayarının sayılarını uygulamadaki Önce/Sonra ölçümü verir, ücretsiz.</p>
+    </div>
+  </section>
+
+  <div class="wrap demo" id="dene">
+    <div class="pencere">
+      <div class="pencere-bar"><img src="img/logo.png" alt=""><span>Forevermore</span><span class="ornek">Örnek pencere, örnek veri</span></div>
+      <div class="pencere-govde">
+        <div role="tablist" aria-label="Demo" aria-orientation="vertical">
+          <button role="tab" id="t-tara" aria-controls="s-tara" aria-selected="true">Tara</button>
+          <button role="tab" id="t-kunye" aria-controls="s-kunye" aria-selected="false" tabindex="-1">Künye</button>
+          <button role="tab" id="t-geri" aria-controls="s-geri" aria-selected="false" tabindex="-1">Geri al</button>
+          <button role="tab" id="t-tahmin" aria-controls="s-tahmin" aria-selected="false" tabindex="-1">Tahmin et</button>
+        </div>
+
+        <div class="sahne" id="s-tara" role="tabpanel" aria-labelledby="t-tara">
+          <h2>Örnek bir bilgisayarı tara</h2>
+          <p class="alt"><!--v:tarama.okunur-->Tarama yalnızca okur; hiçbir ayarı değiştirmez ve internete hiçbir şey göndermez.<!--/v--></p>
+          <div data-tarama>
+            <div class="makine">
+              <span>İşlemci <b>Core i5-12400</b></span>
+              <span>Bellek <b>16 GB, tek modül</b></span>
+              <span>Ekran kartı <b>RTX 3060</b></span>
+              <span>Monitör <b>144 Hz destekli</b></span>
+            </div>
+            <p><button class="btn primary start" type="button">Taramayı başlat</button></p>
+            <div class="cubuk" aria-hidden="true"><i></i></div>
+            <p class="durum-satir" aria-live="polite"></p>
+            <ul class="bulgular"></ul>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-kunye" role="tabpanel" aria-labelledby="t-kunye" hidden>
+          <h2>Bir ayarın künyesi</h2>
+          <p class="alt">Uygulamada her ayar böyle bir kartla gelir. Birini seç.</p>
+          <div data-kunye><noscript><p>Bu bölüm betik gerektirir. Etiketlerin anlamı aşağıdaki Etiketler bölümünde.</p></noscript></div>
+        </div>
+
+        <div class="sahne" id="s-geri" role="tabpanel" aria-labelledby="t-geri" hidden>
+          <h2>Değişiklikler</h2>
+          <p class="alt">Uygulamanın değiştirdiği her ayar, ilk dokunduğu andaki hâline döndürülebilir.</p>
+          <div data-geri>
+            <div class="zincir"></div>
+            <ul class="degisiklikler"></ul>
+            <p><button class="btn primary toggle" type="button">Hepsini geri al</button></p>
+            <p class="sr" data-live aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-tahmin" role="tabpanel" aria-labelledby="t-tahmin" hidden>
+          <h2>Gerçek mi, placebo mu?</h2>
+          <p class="alt">8 ayar. Etiketi seç, Forevermore'un kendi etiketiyle karşılaştır.</p>
+          <div data-quiz>
+            <noscript><p>Bu bölüm betik gerektirir. Etiketlerin anlamı <a href="#etiketler">Etiketler</a> bölümünde.</p></noscript>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="oyunlar" class="" data-tint="sky">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>25 oyun</b>kaynaklı rehber</span><span class="kenar sag" aria-hidden="true"><i></i><b>8 mağaza</b>oyun taraması</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Her oyunda çalışır mı?</h2>
+      <p class="kisaca"><b>Kısaca</b>Sistem ayarları her oyunda geçerli. 25 oyun için oyun içi ayar rehberi var.</p>
+      <p class="sub">İki ayrı katman var; ikisi farklı kapsamda çalışır.</p>
+      <div class="oyun-kart"><p class="oyun-sayi"><b data-say data-oyun-sayi>25</b><span>oyun için kaynaklı oyun içi ayar rehberi hazır</span></p><div class="serit oyun-serit" role="group" aria-label="Rehberi olan oyunlar"><div class="serit-iz" data-oyun-serit></div></div>
+      <p class="oyun-not">Oyun adları ve görseller ilgili sahiplerine aittir. Görseller Steam'den ve yayıncıların resmî mağaza sunucularından yüklenir.</p></div>
+      <div class="iki">
+        <div class="kutu k-green"><h3>Sistem ayarları: bilgisayardaki her oyun</h3><p>Ekran yenileme hızı, güç planı, fare, ağ ve Windows oyun ayarları Windows geneline yazılır. Hangi oyunu açarsan aç geçerlidir; oyunun listede olması gerekmez.</p></div>
+        <div class="kutu k-sky"><h3>Oyuna özel ayarlar: bulunan her oyun</h3><p>Oyunlar sayfası Steam, Epic, GOG, Xbox, Riot, Battle.net, EA, Ubisoft ve Games klasörlerindeki oyunları bulur ve her biri için ayrı ayar kaydeder. Oyun içi ayar rehberi, kaynaklarıyla birlikte 25 oyun için hazır. Anti-cheat süreçlerine dokunulmaz.</p></div>
+      </div>
+      <div class="kontrol" data-oyun>
+        <label for="oyun-ad">Oyununu yaz</label>
+        <input id="oyun-ad" type="text" autocomplete="off" placeholder="ör. Valorant">
+        <div class="oyun-chipler" role="group" aria-label="Veya listeden seç"></div>
+        <p class="oyun-sonuc" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kanit" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b><!--n:toplam-->154<!--/n--> ayar</b>kanıt etiketli</span><span class="kenar sag" aria-hidden="true"><i></i><b><!--n:placebo-->29<!--/n--> placebo</b>ayrıca işaretli</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Kanıtlar</h2>
+      <p class="kisaca"><b>Kısaca</b>Her ayarın kanıt etiketi var: gerçek, placebo, zararlı ve diğerleri. Her değişiklik yedeklenir ve geri alınabilir.</p>
+      <p class="sub">Etiketler kendi testlerime, ölçümlerime ve Microsoft, NVIDIA, AMD belgelerine dayanır. Her ayarın kaynakları uygulamada (i) penceresinde.</p>
+      <div class="belge">
+        <nav class="icindekiler" aria-label="Bu bölümde">
+          <a href="#etiketler">Etiketler</a>
+          <a href="#geri-alma">Her değişiklikte</a>
+          <a href="#sinirlar">Sunulmayanlar</a>
+          <a href="#olcum">Önce / Sonra</a>
+        </nav>
+        <div class="belge-govde">
+          <section id="etiketler">
+            <h3>Etiketler</h3>
+            <ul class="tanim">
+              <li><span class="rozet r-gercek">gerçek</span><b><!--n:gercek-->55<!--/n--></b><span>mekanizması belgeli veya ölçülmüş</span></li>
+              <li><span class="rozet r-kismen">bazı durumlarda gerçek</span><b><!--n:kismen-->31<!--/n--></b><span>yalnızca belirli koşulda fark yaratır</span></li>
+              <li><span class="rozet r-durumsal">donanıma bağlı</span><b><!--n:durumsal-->16<!--/n--></b><span>etkisi donanıma veya sürücüye göre değişir</span></li>
+              <li><span class="rozet r-tartisma">tartışmalı</span><b><!--n:tartisma-->12<!--/n--></b><span>kaynaklar çelişiyor ya da kanıt zayıf</span></li>
+              <li><span class="rozet r-placebo">placebo</span><b><!--n:placebo-->29<!--/n--></b><span>ölçülebilir etkisi yok</span></li>
+              <li><span class="rozet r-zararli">zararlı</span><b><!--n:zararli-->11<!--/n--></b><span>ölçümlere veya üretici belgelerine göre zarar verir</span></li>
+            </ul>
+          </section>
+
+          <section id="geri-alma">
+            <h3>Her değişiklikte olan</h3>
+            <ol class="sira">
+              <li><div><b>Yedek</b><span>Değiştirilecek ayarın ilk hâli kaydedilir.</span></div></li>
+              <li><div><b>Geri yükleme noktası</b><span>Oturumdaki ilk değişiklikten önce Windows geri yükleme noktası oluşturulur; istersen önce sorar.</span></div></li>
+              <li><div><b>Uygulama</b><span>Ayar yazılır. Riskli ayarlar iki ayrı uyarıyla sorulur.</span></div></li>
+              <li><div><b>Kayıt</b><span>Değişiklik, Değişiklikler sayfasına yazılır.</span></div></li>
+              <li><div><b>Geri alma</b><span>Değişiklikler sayfasında "Eski haline getir" ayarı tek tıkla ilk hâline döndürür. Ücretsiz sürümde de serbesttir.</span></div></li>
+            </ol>
+          </section>
+
+          <section id="sinirlar">
+            <h3>Sunulmayanlar</h3>
+            <ul class="liste">
+              <li><b>Windows Update'i tamamen kapatmak.</b> <!--v:sinir.wu-->Windows Update&#x27;i tamamen kapatmak (servisleri devre dışı bırakmak) bilerek sunulmaz: geri dönüşü zordur ve Windows bunu çoğu zaman kendisi geri açar.<!--/v--></li>
+              <li><b>UAC'yi tamamen kapatmak.</b> <!--v:sinir.uac-->UAC&#x27;yi tamamen kapatmak (EnableLUA=0) bilerek sunulmaz: Microsoft Store uygulamalarını bozar ve tüm programlar yönetici olarak çalışır.<!--/v--></li>
+              <li><b>Defender'ı tamamen kapatmak.</b> Yalnızca gerçek zamanlı koruma anahtarı var; varsayılan açıktır ve iki aşamalı uyarıyla kapanır.</li>
+              <li><b>Kanıtsız vaat.</b> Etkisi kanıtlanmamış bir ayara "FPS artırır" denmez.</li>
+            </ul>
+            <p class="uyari"><!--v:sinir.anticheat-->Rekabetçi oyunlarda anti-cheat sistemleri (Vanguard, EAC, BattlEye, FACEIT, VAC) sürücü imza zorlamasını kapatan, oyun DLL&#x27;ine enjekte eden veya oyun sürecini değiştiren araçları engelleyebilir ya da ban sebebi sayabilir.<!--/v--></p>
+          </section>
+
+          <section id="olcum">
+            <h3>Önce / Sonra ölçümü</h3>
+            <p><!--v:olcum.aciklama-->Ayarları uygulamadan önce bir &#x27;Önce&#x27;, uyguladıktan (ve gerekiyorsa yeniden başlattıktan) sonra bir &#x27;Sonra&#x27; ölçümü alın; uygulama ikisini karşılaştırır. Sonuçlar yalnızca bu bilgisayarda saklanır.<!--/v--></p>
+            <p class="uyari"><!--v:olcum.durustluk-->Dürüst uyarı: Tek ölçüm kesin kanıt değildir. Sonuçlar arka plan işlemlerine, sıcaklığa ve sahneye göre değişir. Aynı koşullarda (aynı sahne, aynı süre, aynı açık programlar) her biri için en az 3 ölçüm alıp ortalamalarına bakın. Küçük farklar (%3&#x27;ün altı) çoğu zaman ölçüm gürültüsüdür.<!--/v--></p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="erisim" class="" data-tint="rose">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>3 yazı tipi</b>okuma modu</span><span class="kenar sag" aria-hidden="true"><i></i><b>18–26 px</b>ayarlanabilir</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Dikkat ve okuma için tasarlandı</h2>
+      <p class="kisaca"><b>Kısaca</b>Okuma modu, sakin hareket ve tek tıkla sıradaki adım.</p>
+      <p class="sub">Uzun bir ayar listesi herkes için yorucu olabilir. Forevermore'u disleksi ve DEHB'li kullanıcıları düşünerek kurduk; aşağıdakiler gerçekten var.</p>
+      <div class="uclu">
+        <div class="kutu k-rose"><h3>Tek tıkla sıradaki adım</h3><p>Özet sayfası "Sıradaki en iyi hamle" kartını tek başına gösterir; listeyi taramak gerekmez. Toplu uygulama önce önizleme gösterir.</p></div>
+        <div class="kutu k-amber"><h3>Okunabilir yazı</h3><p>Bu sitede üstteki Okuma modu: Lexend, Atkinson Hyperlegible veya OpenDyslexic, ayarlanabilir boyut, okuma çizgisi ve her bölümde kısa özet. Uygulamada Ayarlar &gt; Erişilebilirlik (Verdana, geniş satır aralığı).</p></div>
+        <div class="kutu k-violet"><h3>Sakin hareket</h3><p>Hareketi azalt ayarı anında etkili olur; yüksek karşıtlık seçeneği ve Ctrl+K ile arama var.</p></div>
+      </div>
+      <p><a class="btn" href="erisilebilirlik.html">Erişilebilirlik bildirgesi</a></p>
+    </div>
+  </section>
+
+  <section id="ucretsiz" class="" data-tint="amber">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Ücretsiz ve açık kaynak.</h2>
+      <p class="kisaca"><b>Kısaca</b>Tüm ayarlar herkese açık. Hesap, kart, kilitli özellik yok. Kaynak kod MIT lisansıyla GitHub'da.</p>
+      <p class="sub">Beğendiysen bir kahve ısmarlayabilirsin; zorunlu değil, uygulama hiçbir yerde sormaz.</p>
+      <div class="btns" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" data-link="github" href="#ucretsiz">Kaynak kod ve sürümler (GitHub)</a><a class="btn" data-link="bagis" href="#ucretsiz">Bir kahve ısmarla</a></div>
+    </div>
+  </section>
+
+  <section id="indir" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>~38 MB</b>kurulum yok</span><span class="kenar sag" aria-hidden="true"><i></i><b>0 bayt</b>telemetri</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>İndir</h2>
+      <p class="kisaca"><b>Kısaca</b>Zip'i aç, Forevermore.exe'yi çalıştır; kurulum yok. Yalnızca bu siteden indir.</p>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Forevermore.zip</h3>
+          <p>Windows 10 / 11 (64 bit), kurulum gerektirmez, yaklaşık 38 MB. Zip'i bir klasöre aç ve <b>Forevermore.exe</b>'yi çalıştır. İndirme düğmesi her zaman en son sürümü verir.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary" data-link="indir" href="#indir">Forevermore.zip indir</a><a class="btn" data-link="github" href="#indir">Tüm sürümler</a></p>
+        </div>
+        <div class="kutu" id="dogrula">
+          <h3>İndirmeni doğrula</h3>
+          <p>Resmî zip'i yalnızca bu siteden ya da GitHub Sürümler sayfasından indir. Kaynak kod açık olduğu için başkaları da derleyip dağıtabilir; onların kopyalarına bu site sorumlu değildir.</p>
+          <p><b>Zip'te:</b> PowerShell'de <code>Get-FileHash Forevermore.zip</code>; çıkan değer <code data-value="sha256">—</code> olmalı. <a data-vt href="#sss">VirusTotal raporu</a></p>
+        </div>
+        <div class="kutu tam" id="gizlilik">
+          <h3>Ne gönderilir, ne gönderilmez</h3>
+          <p>Forevermore varsayılan olarak internete hiç bağlanmaz; Telemetri yoktur. Tek istisna, Ayarlar'dan senin açtığın güncelleme denetimidir: yalnızca GitHub'ın herkese açık sürüm listesine bağlanır ve veri göndermez. Tarama sonuçları, ayar listesi, donanım bilgisi, bilgisayar ve kullanıcı adı hiçbir yere gitmez. <a href="gizlilik.html">Gizlilik metni</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sss" class="" data-tint="violet">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>1 tık</b>geri alma</span><span class="kenar sag" aria-hidden="true"><i></i><b>2 uyarı</b>riskli ayarda</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Sık sorulanlar</h2>
+      <p class="kisaca"><b>Kısaca</b>Değişiklikler geri alınır. Uygulama ücretsiz ve açık kaynaktır.</p>
+      <details><summary>Bilgisayarıma zarar verir mi?</summary>
+        <p>Riskli işaretli ayarlar iki ayrı uyarıyla sorulur ve her değişiklik geri alınabilir: <a href="#geri-alma">Her değişiklikte olan</a>.</p></details>
+      <details><summary>Kaynak kod herkese açık mı?</summary>
+        <p>Evet. Kod MIT lisansıyla <a data-link="github" href="#sss">GitHub</a>'da; okuyabilir, derleyebilir, değiştirebilir ve katkı verebilirsin.</p></details>
+      <details id="antivirus"><summary>Antivirüs, VirusTotal veya SmartScreen uyarı verdi.</summary>
+        <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bazı zararlı yazılımlar da aynı yöntemi kullandığı için bu paketler küçük antivirüslerde sık yanlış alarm verir. 2.1.2 paketini <a data-vt href="#sss">VirusTotal</a>'da taranan 67 antivirüs motorunun hiçbiri işaretlemedi (0/67, Ekim 2026). Sonuç sürümler arasında değişebilir.</p>
+        <p>SmartScreen'in "bilinmeyen yayımcı" uyarısı, programın henüz ücretli bir kod imzalama sertifikası olmamasından kaynaklanır. Hiçbir yöntem bir masaüstü programının değiştirilmesini tamamen engelleyemez; imza ve SHA-256, değiştirilmiş bir kopyayı fark etmeni sağlar. <a href="#dogrula">Nasıl doğrulanır</a></p></details>
+    </div>
+  </section>
+
+  <section class="son">
+    <canvas aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h2 data-kelime>Placeboyu bırak, ölçtüğünü uygula.</h2>
+      <p>Tara, karşılaştır, geri al. Hepsi ücretsiz ve açık kaynak.</p>
+      <div class="actions">
+        <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Ücretsiz dene</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span data-year>2026</span> Kubilay Paşa · İletişim: Discord <b>[kaldirildi]</b> · e-posta <b>[kaldirildi]</b></span>
+    <nav>
+      <a href="kosullar.html">Lisans (MIT)</a>
+      <a href="gizlilik.html">Gizlilik</a>
+      <a href="erisilebilirlik.html">Erişilebilirlik</a>
+      <a data-link="bagis" href="#">Buy Me a Coffee</a>
+      <a data-link="github" href="#">GitHub</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

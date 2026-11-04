@@ -1,0 +1,9 @@
+This application modifies Windows settings. What each setting does, its pros and cons, and who should leave it alone are clearly explained in the app; backups and a system restore point are created before changes are made.
+
+Changing system and hardware settings in the app may cause system instability depending on your device's current software/hardware configuration. To the maximum extent permitted by law, and without prejudice to Article 115 of the Turkish Code of Obligations, you continue by accepting the consequences of the changes you make on your own system and the responsibility for backing it up.
+
+Forevermore © 2026 Kubilay Paşa is free and open source under the MIT license (the LICENSE file): the software is provided "as is", without warranty of any kind. Third-party component licenses are in THIRD-PARTY-NOTICES.txt. The app sends no telemetry; it connects to GitHub only if you turn on the optional update check.
+
+You must accept this notice to continue. If you decline, the application will close.
+
+This is a translation of the Turkish original. If the two texts differ, the Turkish text prevails.

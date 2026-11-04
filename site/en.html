@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forevermore — Windows gaming optimization</title>
+  <meta name="description" content="Forevermore: a Windows settings app for gamers. All 154 settings carry an evidence label; placebo and harmful tweaks are separated and every change can be undone.">
+  <script>/* okuma tercihi ilk çizimden önce (erisim.js) */try{var d=document.documentElement,s=localStorage;if(s.getItem("forevermore-okunabilir")==="1")d.setAttribute("data-okunabilir","");d.setAttribute("data-ok-font",s.getItem("forevermore-ok-font")||"lexend");d.setAttribute("data-ok-boyut",s.getItem("forevermore-ok-boyut")||"20");if(s.getItem("forevermore-ok-cizgi")==="1")d.setAttribute("data-ok-cizgi","")}catch(e){}</script>
+  <link rel="icon" href="img/logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="landing.css">
+  <script src="ayarlar.js" defer></script>
+  <script src="veri.js" defer></script>
+  <script src="demo.js" defer></script>
+  <script src="erisim.js" defer></script>
+  <script src="landing.js" defer></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-kilit" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-tik" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></symbol>
+  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+</svg>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="en.html"><img src="img/logo.png" alt="">Forevermore</a>
+    <nav class="links">
+      <a href="#dene">Try it</a>
+      <a href="#oyunlar">Games</a>
+      <a href="#kanit">Evidence</a>
+      <a href="#indir">Download</a>
+      <a href="#sss">FAQ</a>
+      <button class="a11y" type="button" data-a11y aria-pressed="false" title="For dyslexia and ADHD: Verdana type, wider line spacing">Reading mode</button>
+      <a class="lang" href="index.html" hreflang="tr">TR</a>
+      <a class="btn primary nav-cta" data-link="indir" href="#indir">Try free</a>
+    </nav>
+  </div>
+</header>
+
+<div class="noktalar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<main>
+  <div class="hero2">
+    <div class="hero-iz">
+      <canvas aria-hidden="true"></canvas>
+      <div class="ayirici" role="slider" tabindex="0" aria-label="Before / after comparison" aria-valuemin="5" aria-valuemax="95" aria-valuenow="60" hidden>
+        <span class="yan once" aria-hidden="true">Before</span><span class="tutamac" aria-hidden="true"><svg class="ikon" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></span><span class="yan sonra" aria-hidden="true">After</span>
+        <span class="ayirici-ipucu" aria-hidden="true">Drag: before / after</span>
+      </div>
+    </div>
+    <div class="wrap">
+    <h1><span class="satir">Not <span class="cizik">placebo.</span></span> <span class="satir">Settings that actually work.</span></h1>
+    <p class="lead">A Windows settings app for gamers. Every one of its <b><!--n:toplam-->154<!--/n--> settings</b> carries an evidence label: it weeds out placebo, flags what is harmful and undoes any change in one click.</p>
+    <div class="actions">
+      <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Try it free</a>
+    </div>
+    <p class="not">Windows 10 and 11. No install, account or card needed; about 38 MB.</p>
+    <aside class="hud" aria-label="Sample frame time">
+      <div class="hud-ust"><span>Frame time</span><span class="hud-ornek">sample data</span></div>
+      <div class="hud-deger">
+        <div class="once"><small>Before</small><b data-say data-ondalik="1">16.7</b> <span>ms</span></div>
+        <div class="sonra"><small>After</small><b data-say data-ondalik="1">6.9</b> <span>ms</span></div>
+      </div>
+      <p>A 144 Hz monitor stuck at 60 Hz in Windows: one setting, 9.8 ms less waiting per frame.</p>
+    </aside>
+    <ul class="sayaclar">
+      <li class="sayac"><b data-say><!--n:toplam-->154<!--/n--></b><span>settings reviewed one by one</span></li>
+      <li class="sayac placebo"><b data-say><!--n:placebo-->29<!--/n--></b><span>placebo tweaks weeded out</span></li>
+      <li class="sayac zararli"><b data-say><!--n:zararli-->11<!--/n--></b><span>harmful settings flagged</span></li>
+      <li class="sayac sifir"><b>0</b><span>bytes of telemetry</span></li>
+    </ul>
+    <div class="hero-etiket">
+      <div class="dagilim" role="img" aria-label="Evidence label distribution in the catalog"><i style="flex:55;--rc:var(--v-gercek)"></i><i style="flex:31;--rc:var(--v-kismen)"></i><i style="flex:16;--rc:var(--v-durumsal)"></i><i style="flex:12;--rc:var(--v-tartisma)"></i><i style="flex:29;--rc:var(--v-placebo)"></i><i style="flex:11;--rc:var(--v-zararli)"></i></div>
+      <ul class="dagilim-liste">
+        <li><span class="rozet r-gercek">real</span> <b><!--n:gercek-->55<!--/n--></b></li>
+        <li><span class="rozet r-kismen">sometimes real</span> <b><!--n:kismen-->31<!--/n--></b></li>
+        <li><span class="rozet r-durumsal">hardware-dependent</span> <b><!--n:durumsal-->16<!--/n--></b></li>
+        <li><span class="rozet r-tartisma">disputed</span> <b><!--n:tartisma-->12<!--/n--></b></li>
+        <li><span class="rozet r-placebo">placebo</span> <b><!--n:placebo-->29<!--/n--></b></li>
+        <li><span class="rozet r-zararli">harmful</span> <b><!--n:zararli-->11<!--/n--></b></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  <div class="serit" role="group" aria-label="What Forevermore has">
+    <div class="serit-iz">
+      <ul>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Apply recommended settings in one click</b>, with a preview first</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Every change is backed up</b>, undone in one click</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>A restore point</b> before the first change</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Before/After measurement</b>: average FPS, 1% low, frame time</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> settings</b>, each with an evidence label</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> harmful</b> flagged separately</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>No install</b>, about 38 MB</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>No telemetry</b>, works offline</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>NVIDIA and AMD</b> driver settings in one place</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Anti-cheat processes</b> are never touched</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Open source</b>, MIT license</li>
+        <li><svg class="ikon" aria-hidden="true"><use href="#i-tik"/></svg><b>Ctrl+K</b> to search settings</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Apply recommended settings in one click</b>, with a preview first</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Every change is backed up</b>, undone in one click</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>A restore point</b> before the first change</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Before/After measurement</b>: average FPS, 1% low, frame time</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:toplam-->154<!--/n--> settings</b>, each with an evidence label</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b><!--n:placebo-->29<!--/n--> placebo, <!--n:zararli-->11<!--/n--> harmful</b> flagged separately</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>No install</b>, about 38 MB</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>No telemetry</b>, works offline</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>NVIDIA and AMD</b> driver settings in one place</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Anti-cheat processes</b> are never touched</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Open source</b>, MIT license</li>
+        <li><svg class="ikon"><use href="#i-tik"/></svg><b>Ctrl+K</b> to search settings</li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="fark" class="fark" data-durum="sonra">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>16.7 → 6.9 ms</b>frame time, sample</span><span class="kenar sag" aria-hidden="true"><i></i><b>60 → 144 Hz</b>refresh rate</span>
+    <div class="wrap">
+      <div class="ust">
+        <div>
+          <h2 class="baslik" data-kelime>Same PC, three settings later.</h2>
+      <p class="kisaca"><b>In short</b>Three settings were fixed on a sample computer. The numbers are samples; the app measures your own computer for free.</p>
+          <p class="sub">The sample computer from the demo: its 144 Hz monitor is stuck at 60 Hz in Windows, 14 apps launch at startup and background game recording is on. Forevermore finds all three in a scan; you approve the fix.</p>
+        </div>
+        <div class="ab" role="group" aria-label="View">
+          <button type="button" data-ab="once" aria-pressed="false">Before</button>
+          <button type="button" data-ab="sonra" aria-pressed="true">After</button>
+        </div>
+      </div>
+      <div class="grafik"><canvas aria-hidden="true"></canvas><span class="etiket">Frame time, ms (sample data; low and flat is good)</span></div>
+      <div class="olculer" aria-live="polite">
+        <div class="olcu" data-once="60" data-sonra="144"><b><span class="v">144</span><small>fps</small></b><span>Most frames reaching the screen</span><em>Before: 60. Display refresh rate.</em></div>
+        <div class="olcu" data-once="16.7" data-sonra="6.9"><b><span class="v">6.9</span><small>ms</small></b><span>Frame display interval</span><em>Before: 16.7 ms. Same setting.</em></div>
+        <div class="olcu" data-once="14" data-sonra="6"><b><span class="v">6</span><small>apps</small></b><span>Launching at startup</span><em>Before: 14. Startup apps.</em></div>
+        <div class="olcu" data-once="On" data-sonra="Off"><b><span class="v">Off</span></b><span>Background game recording</span><em>Before: on. Game DVR.</em></div>
+      </div>
+      <p class="dipnot">The numbers belong to the sample computer and follow from the setting itself (1000 ÷ 144 = 6.9 ms); they are not an FPS-gain promise. The app's Before/After measurement gives you your own computer's numbers, for free.</p>
+    </div>
+  </section>
+
+  <div class="wrap demo" id="dene">
+    <div class="pencere">
+      <div class="pencere-bar"><img src="img/logo.png" alt=""><span>Forevermore</span><span class="ornek">Sample window, sample data</span></div>
+      <div class="pencere-govde">
+        <div role="tablist" aria-label="Demo" aria-orientation="vertical">
+          <button role="tab" id="t-tara" aria-controls="s-tara" aria-selected="true">Scan</button>
+          <button role="tab" id="t-kunye" aria-controls="s-kunye" aria-selected="false" tabindex="-1">Evidence card</button>
+          <button role="tab" id="t-geri" aria-controls="s-geri" aria-selected="false" tabindex="-1">Undo</button>
+          <button role="tab" id="t-tahmin" aria-controls="s-tahmin" aria-selected="false" tabindex="-1">Guess</button>
+        </div>
+
+        <div class="sahne" id="s-tara" role="tabpanel" aria-labelledby="t-tara">
+          <h2>Scan a sample computer</h2>
+          <p class="alt"><!--v:tarama.okunur-->The scan only reads; it changes no settings and sends nothing over the internet.<!--/v--></p>
+          <div data-tarama>
+            <div class="makine">
+              <span>CPU <b>Core i5-12400</b></span>
+              <span>Memory <b>16 GB, single module</b></span>
+              <span>Graphics <b>RTX 3060</b></span>
+              <span>Monitor <b>supports 144 Hz</b></span>
+            </div>
+            <p><button class="btn primary start" type="button">Start scan</button></p>
+            <div class="cubuk" aria-hidden="true"><i></i></div>
+            <p class="durum-satir" aria-live="polite"></p>
+            <ul class="bulgular"></ul>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-kunye" role="tabpanel" aria-labelledby="t-kunye" hidden>
+          <h2>A setting's evidence card</h2>
+          <p class="alt">Every setting in the app comes with a card like this. Pick one.</p>
+          <div data-kunye><noscript><p>This section needs JavaScript. The labels are explained in the Labels section below.</p></noscript></div>
+        </div>
+
+        <div class="sahne" id="s-geri" role="tabpanel" aria-labelledby="t-geri" hidden>
+          <h2>Changes</h2>
+          <p class="alt">Every setting the app changes can be returned to the state it was in when the app first touched it.</p>
+          <div data-geri>
+            <div class="zincir"></div>
+            <ul class="degisiklikler"></ul>
+            <p><button class="btn primary toggle" type="button">Undo all</button></p>
+            <p class="sr" data-live aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="sahne" id="s-tahmin" role="tabpanel" aria-labelledby="t-tahmin" hidden>
+          <h2>Real or placebo?</h2>
+          <p class="alt">8 settings. Pick a label, then compare with Forevermore's own.</p>
+          <div data-quiz>
+            <noscript><p>This section needs JavaScript. The labels are explained in the <a href="#etiketler">Labels</a> section.</p></noscript>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="oyunlar" class="" data-tint="sky">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>25 games</b>sourced guides</span><span class="kenar sag" aria-hidden="true"><i></i><b>8 stores</b>game scan</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Does it work in every game?</h2>
+      <p class="kisaca"><b>In short</b>System settings apply in every game. 25 games have an in-game setting guide.</p>
+      <p class="sub">There are two layers, with different reach.</p>
+      <div class="oyun-kart"><p class="oyun-sayi"><b data-say data-oyun-sayi>25</b><span>games with sourced in-game setting guides</span></p><div class="serit oyun-serit" role="group" aria-label="Games with a guide"><div class="serit-iz" data-oyun-serit></div></div>
+      <p class="oyun-not">Game names and images belong to their respective owners. Images load from Steam and the publishers' official store servers.</p></div>
+      <div class="iki">
+        <div class="kutu k-green"><h3>System settings: every game on your PC</h3><p>Refresh rate, power plan, mouse, network and Windows gaming settings are written to Windows itself. They apply whichever game you launch; the game does not need to be on a list.</p></div>
+        <div class="kutu k-sky"><h3>Per-game settings: every game it finds</h3><p>The Games page finds games in Steam, Epic, GOG, Xbox, Riot, Battle.net, EA, Ubisoft and Games folders and saves separate settings for each. In-game setting guides, with sources, are ready for 25 games. Anti-cheat processes are never touched.</p></div>
+      </div>
+      <div class="kontrol" data-oyun>
+        <label for="oyun-ad">Type your game</label>
+        <input id="oyun-ad" type="text" autocomplete="off" placeholder="e.g. Valorant">
+        <div class="oyun-chipler" role="group" aria-label="Or pick from the list"></div>
+        <p class="oyun-sonuc" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kanit" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b><!--n:toplam-->154<!--/n--> settings</b>evidence-labelled</span><span class="kenar sag" aria-hidden="true"><i></i><b><!--n:placebo-->29<!--/n--> placebo</b>flagged separately</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Evidence</h2>
+      <p class="kisaca"><b>In short</b>Every setting has an evidence label: real, placebo, harmful and others. Every change is backed up and can be undone.</p>
+      <p class="sub">Labels rest on my own tests and measurements and on Microsoft, NVIDIA and AMD documentation. Each setting's sources are in its (i) window in the app.</p>
+      <div class="belge">
+        <nav class="icindekiler" aria-label="In this section">
+          <a href="#etiketler">Labels</a>
+          <a href="#geri-alma">Every change</a>
+          <a href="#sinirlar">Not offered</a>
+          <a href="#olcum">Before / After</a>
+        </nav>
+        <div class="belge-govde">
+          <section id="etiketler">
+            <h3>Labels</h3>
+            <ul class="tanim">
+              <li><span class="rozet r-gercek">real</span><b><!--n:gercek-->55<!--/n--></b><span>mechanism is documented or measured</span></li>
+              <li><span class="rozet r-kismen">real in some cases</span><b><!--n:kismen-->31<!--/n--></b><span>makes a difference only under certain conditions</span></li>
+              <li><span class="rozet r-durumsal">hardware-dependent</span><b><!--n:durumsal-->16<!--/n--></b><span>effect varies with hardware or driver</span></li>
+              <li><span class="rozet r-tartisma">disputed</span><b><!--n:tartisma-->12<!--/n--></b><span>sources conflict or evidence is weak</span></li>
+              <li><span class="rozet r-placebo">placebo</span><b><!--n:placebo-->29<!--/n--></b><span>no measurable effect</span></li>
+              <li><span class="rozet r-zararli">harmful</span><b><!--n:zararli-->11<!--/n--></b><span>harms, according to measurements or vendor documentation</span></li>
+            </ul>
+          </section>
+
+          <section id="geri-alma">
+            <h3>What happens on every change</h3>
+            <ol class="sira">
+              <li><div><b>Backup</b><span>The setting's original state is saved.</span></div></li>
+              <li><div><b>Restore point</b><span>Before the first change in a session, a Windows restore point is created (it can ask you first).</span></div></li>
+              <li><div><b>Apply</b><span>The setting is written. Risky settings ask twice, with two separate warnings.</span></div></li>
+              <li><div><b>Record</b><span>The change is listed on the Changes page.</span></div></li>
+              <li><div><b>Undo</b><span>On the Changes page, one click on "Restore" returns the setting to its original state. Undo is free in the free version too.</span></div></li>
+            </ol>
+          </section>
+
+          <section id="sinirlar">
+            <h3>Not offered</h3>
+            <ul class="liste">
+              <li><b>Turning off Windows Update completely.</b> <!--v:sinir.wu-->Turning Windows Update off completely (disabling its services) is deliberately not offered: it is hard to undo and Windows often turns it back on by itself.<!--/v--></li>
+              <li><b>Turning off UAC completely.</b> <!--v:sinir.uac-->Turning UAC fully off (EnableLUA=0) is intentionally not offered: it breaks Microsoft Store apps and runs every program as administrator.<!--/v--></li>
+              <li><b>Turning off Defender completely.</b> Only a real-time protection switch exists; it is on by default and turns off after a two-step warning.</li>
+              <li><b>Unproven promises.</b> A setting with no proven effect is never described as "raises FPS".</li>
+            </ul>
+            <p class="uyari"><!--v:sinir.anticheat-->In competitive games, anti-cheat systems (Vanguard, EAC, BattlEye, FACEIT, VAC) may block, or treat as grounds for a ban, tools that disable driver signature enforcement, inject into a game&#x27;s DLLs or modify the game process.<!--/v--></p>
+          </section>
+
+          <section id="olcum">
+            <h3>Before / After measurement</h3>
+            <p><!--v:olcum.aciklama-->Take a &#x27;Before&#x27; measurement before applying settings and an &#x27;After&#x27; measurement after applying them (and restarting if needed); the app compares the two. Results are stored on this computer only.<!--/v--></p>
+            <p class="uyari"><!--v:olcum.durustluk-->Honest warning: a single measurement is not proof. Results vary with background activity, temperature and the scene. Under the same conditions (same scene, same duration, same open programs), take at least 3 measurements each and compare the averages. Small differences (below 3%) are often measurement noise.<!--/v--></p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="erisim" class="" data-tint="rose">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>3 typefaces</b>reading mode</span><span class="kenar sag" aria-hidden="true"><i></i><b>18–26 px</b>adjustable</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Built for attention and reading</h2>
+      <p class="kisaca"><b>In short</b>Reading mode, calm motion and a one-click next step.</p>
+      <p class="sub">A long settings list is tiring for anyone. We built Forevermore with users with dyslexia and ADHD in mind; everything below actually exists.</p>
+      <div class="uclu">
+        <div class="kutu k-rose"><h3>One click to the next step</h3><p>The Overview page shows a single "Next best move" card, so you don't scan a list. Bulk apply shows a preview first.</p></div>
+        <div class="kutu k-amber"><h3>Readable type</h3><p>On this site, Reading mode at the top: Lexend, Atkinson Hyperlegible or OpenDyslexic, adjustable size, a reading line and a short summary in each section. In the app: Settings &gt; Accessibility (Verdana, wider line spacing).</p></div>
+        <div class="kutu k-violet"><h3>Calm motion</h3><p>The reduce-motion setting takes effect immediately; there is a high-contrast option and Ctrl+K search.</p></div>
+      </div>
+      <p><a class="btn" href="erisilebilirlik.html#en">Accessibility statement</a></p>
+    </div>
+  </section>
+
+  <section id="ucretsiz" class="" data-tint="amber">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Free and open source.</h2>
+      <p class="kisaca"><b>In short</b>Every setting is open to everyone. No account, no card, no locked features. The source is on GitHub under the MIT license.</p>
+      <p class="sub">If you like it you can buy me a coffee; it is optional and the app never asks.</p>
+      <div class="btns" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" data-link="github" href="#ucretsiz">Source code and releases (GitHub)</a><a class="btn" data-link="bagis" href="#ucretsiz">Buy me a coffee</a></div>
+    </div>
+  </section>
+
+  <section id="indir" class="" data-tint="green">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>~38 MB</b>no install</span><span class="kenar sag" aria-hidden="true"><i></i><b>0 bytes</b>telemetry</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Download</h2>
+      <p class="kisaca"><b>In short</b>Unzip it and run Forevermore.exe; no install. Only download it from this site.</p>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Forevermore.zip</h3>
+          <p>Windows 10 / 11 (64-bit), no installation, about 38 MB. Unzip to a folder and run <b>Forevermore.exe</b>. The download button always serves the latest version.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary" data-link="indir" href="#indir">Download Forevermore.zip</a><a class="btn" data-link="github" href="#indir">All releases</a></p>
+        </div>
+        <div class="kutu" id="dogrula">
+          <h3>Check your download</h3>
+          <p>Download the official zip only from this site or the GitHub Releases page. The source is open, so others can build and distribute it too; this site is not responsible for their copies.</p>
+          <p><b>In the zip:</b> in PowerShell, <code>Get-FileHash Forevermore.zip</code>; the value should be <code data-value="sha256">—</code>. <a data-vt href="#sss">VirusTotal report</a></p>
+        </div>
+        <div class="kutu tam" id="gizlilik">
+          <h3>What is and is not sent</h3>
+          <p>By default Forevermore never connects to the internet. There is no telemetry. The one exception is the update check you can switch on in Settings: it only reads GitHub's public release list and sends no data. Scan results, your settings list, hardware information, and your computer or user name go nowhere. <a href="gizlilik.html">Privacy policy</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sss" class="" data-tint="violet">
+    <span class="kenar sol" aria-hidden="true"><i></i><b>1 click</b>to undo</span><span class="kenar sag" aria-hidden="true"><i></i><b>2 warnings</b>on risky settings</span>
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>FAQ</h2>
+      <p class="kisaca"><b>In short</b>Changes can be undone. The app is free and open source.</p>
+      <details><summary>Can it harm my computer?</summary>
+        <p>Settings marked risky ask twice, with two separate warnings, and every change can be undone: <a href="#geri-alma">What happens on every change</a>.</p></details>
+      <details><summary>Is the source code public?</summary>
+        <p>Yes. It is on <a data-link="github" href="#sss">GitHub</a> under the MIT license; you can read, build, modify and contribute.</p></details>
+      <details id="antivirus"><summary>My antivirus, VirusTotal or SmartScreen raised a warning.</summary>
+        <p>Forevermore is written in Python and packaged with PyInstaller. Some malware uses the same method, so such packages often trigger false alarms in small antivirus engines. None of the 67 antivirus engines on <a data-vt href="#sss">VirusTotal</a> flagged the 2.1.2 package (0/67, October 2026). Results can change between versions.</p>
+        <p>SmartScreen's "unknown publisher" warning appears because the program does not yet have a paid code-signing certificate. No method can fully prevent a desktop program from being modified; the signature and SHA-256 let you notice a modified copy. <a href="#dogrula">How to verify</a></p></details>
+    </div>
+  </section>
+
+  <section class="son">
+    <canvas aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h2 data-kelime>Drop the placebo. Apply what you measure.</h2>
+      <p>Scan, compare and undo. All of it free and open source.</p>
+      <div class="actions">
+        <a class="btn primary buyuk parla" data-link="indir" href="#indir"><svg class="ikon" aria-hidden="true"><use href="#i-indir"/></svg>Try it free</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span data-year>2026</span> Kubilay Paşa · Contact: Discord <b>[kaldirildi]</b> · email <b>[kaldirildi]</b></span>
+    <nav>
+      <a href="kosullar.html">License (MIT)</a>
+      <a href="gizlilik.html">Privacy</a>
+      <a href="erisilebilirlik.html#en">Accessibility</a>
+      <a data-link="bagis" href="#">Buy Me a Coffee</a>
+      <a data-link="github" href="#">GitHub</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
