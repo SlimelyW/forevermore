@@ -37,11 +37,11 @@ Kaynak: araştırma ajanının birincil kaynak taraması (Microsoft Learn, satı
 | `-ExecutionPolicy Bypass` | **Kaldırıldı** (`-Command` için etkisiz olduğu ölçüldü). Güncelleme betiği `RemoteSigned`. |
 | `-EncodedCommand`, Base64, `iex` | Yok (test: `tests/test_gizlilik.py` TestAntivirusTriggers). |
 | Gizli pencere | Alt süreçler `CREATE_NO_WINDOW` ile; `-WindowStyle Hidden` güncelleme betiğinden kaldırıldı. Kalan tek yer: Store geri yükleme (`wsreset -i`, kullanıcı başlatır). |
-| PowerShell süreç sayısı | Açılışta 35 → 29 (eşzamanlı aynı sorgular tek süreç). Kalanlar: tarama (8), ayar durumları (~20). Sonraki adım: durum okumalarını tek PowerShell oturumunda toplamak veya kayıt defteri/WMI ile yerel okumak (BACKLOG'a). |
+| PowerShell süreç sayısı | Açılışta 35 → 29 (eşzamanlı aynı sorgular tek süreç). Kalanlar: tarama (8), ayar durumları (~20). Sonraki adım: durum okumalarını tek PowerShell oturumunda toplamak veya kayıt defteri/WMI ile yerel okumak (yapılacaklar). |
 | Dosya indirip çalıştırma | Yalnızca uygulama güncellemesi: varsayılan KAPALI, yalnızca GitHub, imza doğrulamalı (`app/core/guncelleme.py`). Gerekçeli; kalır. |
 | Kendini değiştirme | Aynı güncelleme: imzalı yeni klasörle değiştirme. Gerekçeli. |
 | Kayıt defteriyle kalıcılık | Yok. "Windows'la başlat" isteğe bağlı zamanlanmış görev (`app/core/autostart.py`); varsayılan kapalı. |
-| Defender ayarları | SYS-017 gerçek zamanlı koruma anahtarı (kullanıcı isteğiyle eklendi, CLAUDE.md). **En güçlü ML tetikleyicisi adayı** (`Set-MpPreference -DisableRealtimeMonitoring` metni pakette). Kaldırmak/rehber kartına çevirmek Kubilay'ın kararı. |
+| Defender ayarları | SYS-017 gerçek zamanlı koruma anahtarı (kullanıcı isteğiyle eklendi). **En güçlü ML tetikleyicisi adayı** (`Set-MpPreference -DisableRealtimeMonitoring` metni pakette). Kaldırmak/rehber kartına çevirmek Kubilay'ın kararı. |
 | Sürüm bilgisi + manifest | `build/surum_bilgisi.txt` ve `build/forevermore.spec` var; bu oturumda `build/` okuma izni olmadığı için **denetlenemedi**. |
 | Tekrarlanabilir derleme | `PYTHONHASHSEED=0` + `SOURCE_DATE_EPOCH` (son commit) `derle.ps1`'de; paket sürümleri `==` ile sabit. Aynı çıktı DENENMEDİ (iki derleme karşılaştırılmadı). |
 
@@ -79,7 +79,7 @@ Her yayın için bir satır ekleyin (derle.ps1 sonunda SHA256 yazılır; `.exe` 
 
 | Sürüm | Tarih | Zip SHA256 | Forevermore.exe SHA256 | Authenticode | Defender VM (W10 / W11) | VirusTotal | MS gönderim no / sonuç |
 |---|---|---|---|---|---|---|---|
-| 2.1.2 | 30.10.2026 | 53F2075F…454D (HANDOFF) | — | yok | denenmedi | 0/67 | — |
+| 2.1.2 | 30.10.2026 | 53F2075F…454D | — | yok | denenmedi | 0/67 | — |
 | | | | | | | | |
 
 Kutular: ☐ Authenticode + zaman damgası geçerli (`Get-AuthenticodeSignature` = Valid) ☐ paket imzası "orijinal" (`--kontrol`)

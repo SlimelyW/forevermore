@@ -106,5 +106,5 @@ Windows simge yazı tipi (Segoe Fluent Icons / Segoe MDL2 Assets) programa göm�
 Windows'un kendi yüklü yazı tipi kullanılır. NirSoft araçları kullanılmaz; ses biçimi
 Windows'un kendi COM arabirimleriyle değiştirilir.
 
-Açık nokta / Open item: Qt'nin LGPLv3 lisans metni bu dosyada yalnızca adresle verilir. Pakete tam metnin (lgpl-3.0.txt)
-eklenmesi LGPL'nin "lisans metnini ilet" koşulunu en açık biçimde karşılar; derleme betiği şimdilik eklemiyor.
+LGPLv3 tam metni pakette ve depoda: licenses/LGPL-3.0.txt (derle.ps1 pakete kopyalar).
+The full LGPLv3 text ships in the package and the repo: licenses/LGPL-3.0.txt.

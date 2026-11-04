@@ -76,6 +76,7 @@ if ($TekDosya) {
 } else {
     foreach ($f in 'LICENSE', 'THIRD-PARTY-NOTICES.txt') { Copy-Item $f 'dist\Forevermore\' -Force }
     Copy-Item 'docs\OKUBENI.txt' 'dist\Forevermore\' -Force
+    Copy-Item 'licenses\LGPL-3.0.txt' 'dist\Forevermore\' -Force
     # PresentMon (MIT, Intel): tools klasörüne konduysa programın yanına kopyalanır.
     $pm = Get-ChildItem 'tools\PresentMon*.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($pm) {

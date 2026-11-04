@@ -32,6 +32,8 @@ Signature fingerprint: `5FE5-D786-0B89-A56E`
 
 # 2.2.0 (31 Ekim 2026)
 
+> **Not:** Bu sürümlerde Pro vardı; 2.3.0'da kalktı (Forevermore artık ücretsiz ve açık kaynak, MIT).
+
 ## Türkçe
 
 **Sürüm: 2.2.0 (etiket v2.2.0).** SHA-256 (Forevermore.zip): `8C74918C5738328CD5A9C4D6047BFEC13E143B26D04F99F8C53D3FA6B3860209`
@@ -82,6 +84,8 @@ Signature fingerprint: `5FE5-D786-0B89-A56E`
 
 # 2.1.2 (30 Ekim 2026)
 
+> **Not:** Bu sürümlerde Pro vardı; 2.3.0'da kalktı (Forevermore artık ücretsiz ve açık kaynak, MIT).
+
 ## Türkçe
 
 **Sürüm: 2.1.2 (etiket v2.1.2).** SHA-256 (Forevermore.zip): `53F2075F758366A285729FD4CC6C541797618B8F93A92D96903154A45E6E454D`
@@ -121,6 +125,8 @@ Signature fingerprint (next to "Original copy" on the About page): `5FE5-D786-0B
 ---
 
 # 2.1.1 (30 Ekim 2026)
+
+> **Not:** Bu sürümlerde Pro vardı; 2.3.0'da kalktı (Forevermore artık ücretsiz ve açık kaynak, MIT).
 
 ## Türkçe
 
@@ -175,6 +181,8 @@ Signature fingerprint (next to "Original copy" on the About page): `5FE5-D786-0B
 ---
 
 # 2.1.0 (30 Ekim 2026)
+
+> **Not:** Bu sürümlerde Pro vardı; 2.3.0'da kalktı (Forevermore artık ücretsiz ve açık kaynak, MIT).
 
 ## Türkçe
 
