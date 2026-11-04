@@ -1741,8 +1741,7 @@ class TestUserInterface(unittest.TestCase):
         about = self.window.pages["bilgi"]
         text = labels(about)
         self.assertIn("Kubilay Paşa", text)
-        self.assertIn("[kaldirildi]", text)
-        self.assertLess(text.index("Kubilay Paşa"), text.index("[kaldirildi]"))
+        self.assertNotIn("[kaldirildi]", text)
         settings.set("tepsiye_kucult", True)
         self.window.update_tray()
         if self.window.tray is not None:  # bazı test ortamlarında sistem tepsisi yok

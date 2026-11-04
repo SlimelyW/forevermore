@@ -9,7 +9,6 @@ izniyle çalıştığı için güvenlik açıkları ciddiye alınır.
 
 1. GitHub'da bu deponun **Security > Report a vulnerability** (özel güvenlik bildirimi) bağlantısını kullanın:
    <https://github.com/SlimelyW/forevermore/security/advisories/new>
-2. Ya da e-posta: **[kaldirildi]** (konu: `Forevermore güvenlik`).
 
 Bildirimde şunları yazın: etkilenen sürüm, açığın ne olduğu, nasıl yeniden üretileceği (adımlar ya da küçük bir örnek),
 etkisi (ör. yetki yükseltme, yedek/geri almanın atlatılması, imzasız güncellemenin kabulü) ve varsa önerdiğiniz düzeltme.

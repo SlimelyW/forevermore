@@ -96,7 +96,7 @@ yayıncının sunucusundan çalışma anında alır.
 
 12) Ayar fikirleri ve kaynaklar: ayar kataloğu (data/) kayıt defteri adı, hizmet adı gibi olgulardan ve Microsoft ile
     donanım üreticilerinin belgelerinden derlenmiştir; başka projelerin kodu ya da metni kopyalanmamıştır (taranan
-    kaynaklar: docs/C1_KAYNAK_TARAMA.md, docs/C3_KAYNAK_LISANS.md). Uygulamada gösterilen dış bağlantılar yalnızca
+    kaynaklar: docs/C1_KAYNAK_TARAMA.md). Uygulamada gösterilen dış bağlantılar yalnızca
     adrestir; sitelerin içeriği kopyalanmaz.
 
 13) Ed25519 (app/core/ed25519.py): RFC 8032 tanımına göre bu projede yazılmış saf Python uygulaması; üçüncü taraf

@@ -16,7 +16,7 @@ Kaldırma: Önce uygulamada Ekstra ayarlar > "Kaldırmaya hazırla" ile yapılan
 sonra bu klasörü silin.
 
 Lisans: LICENSE (MIT; ücretsiz ve açık kaynak, garanti yok). Üçüncü taraf bileşenler: THIRD-PARTY-NOTICES.txt.
-Kaynak kod: https://github.com/SlimelyW/forevermore  İletişim: [kaldirildi]
+Kaynak kod: https://github.com/SlimelyW/forevermore  Geri bildirim: GitHub'da Issues
 
 ENGLISH
 -------
@@ -31,4 +31,4 @@ it opens read-only (scan and guides only). Keep the folder as it is (_internal i
 Uninstall: first undo the changes with Extra settings > "Prepare for uninstall", then delete this folder.
 
 License: LICENSE (MIT; free and open source, no warranty). Third-party components: THIRD-PARTY-NOTICES.txt.
-Source: https://github.com/SlimelyW/forevermore  Contact: [kaldirildi]
+Source: https://github.com/SlimelyW/forevermore  Feedback: GitHub Issues

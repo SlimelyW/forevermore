@@ -24,9 +24,9 @@ class TestAbout(unittest.TestCase):
     def test_name_then_discord_and_single_donation_setting(self):
         data = json.loads((paths.data_dir() / "hakkinda.json").read_text(encoding="utf-8"))
         self.assertEqual(data["yapimci"], "Kubilay Paşa")
-        self.assertEqual([s["deger"] for s in data["satirlar"]], ["[kaldirildi]", "[kaldirildi]"])
+        self.assertEqual([s["deger"] for s in data["satirlar"]], [])
         self.assertEqual([b["url"] for b in data["baglantilar"]],
-                         ["https://forevermore.pages.dev/", "https://[kaldirildi]"])
+                         ["https://forevermore.pages.dev/"])
         self.assertEqual(data["bagis_url"], "https://buymeacoffee.com/forevermore")  # tek, küçük bağlantı (Bilgi sayfası)
         self.assertEqual([b["url"] for b in data["faydali"]],       # faydalı bağlantılar Oyunlar sayfasına taşındı
                          ["https://howmanyfps.com/games", "https://beforeiplay.com/wiki/Main_Page"])
