@@ -2,8 +2,8 @@
 # Sürüm yükseltirken hem filevers/prodvers hem de metinleri güncelle (app/__init__.py ile aynı olsun).
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(2, 3, 0, 0),
-    prodvers=(2, 3, 0, 0),
+    filevers=(2, 3, 1, 0),
+    prodvers=(2, 3, 1, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -16,11 +16,11 @@ VSVersionInfo(
       StringTable('041F04B0', [
         StringStruct('CompanyName', 'Kubilay Paşa'),
         StringStruct('FileDescription', 'Forevermore - Windows tarama ve ayar aracı'),
-        StringStruct('FileVersion', '2.3.0.0'),
+        StringStruct('FileVersion', '2.3.1.0'),
         StringStruct('InternalName', 'Forevermore'),
         StringStruct('OriginalFilename', 'Forevermore.exe'),
         StringStruct('ProductName', 'Forevermore'),
-        StringStruct('ProductVersion', '2.3.0.0'),
+        StringStruct('ProductVersion', '2.3.1.0'),
         StringStruct('LegalCopyright', '© 2026 Kubilay Paşa. MIT Lisansı.'),
         StringStruct('LegalTrademarks', 'Forevermore - yalnızca resmî kaynaktan dağıtılır')
       ])

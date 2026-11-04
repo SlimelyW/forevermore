@@ -2,11 +2,39 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.3.1 (5 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.3.1 (etiket v2.3.1).** SHA-256 (Forevermore.zip): `5A0E839CB27E5F64F21A0EA9A2658251D27FE7528E00A3A5C761AF136F7F71E7`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+
+> **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
+> SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
+
+### Yeni neler var
+- `.exe` dosya özelliklerinde sürüm artık doğru görünüyor (2.3.1); 2.3.0'da 2.2.0 görünüyordu.
+- Qt'nin LGPLv3 lisans metni (`LGPL-3.0.txt`) pakete eklendi.
+- Başka işlev değişikliği yok.
+
+## English
+
+**Version: 2.3.1 (tag v2.3.1).** SHA-256 (Forevermore.zip): `5A0E839CB27E5F64F21A0EA9A2658251D27FE7528E00A3A5C761AF136F7F71E7`
+Signature fingerprint: `5FE5-D786-0B89-A56E`
+
+> **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
+> Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
+
+### What's new
+- The version shown in the `.exe` file properties is now correct (2.3.1); 2.3.0 showed 2.2.0.
+- The full LGPLv3 text for Qt (`LGPL-3.0.txt`) is now included in the package.
+- No other functional changes.
+
 # 2.3.0 (4 Kasım 2026)
 
 ## Türkçe
 
-**Sürüm: 2.3.0 (etiket v2.3.0).** SHA-256 (Forevermore.zip): `55771B128C3FB5D48CC584AE1E5FF8470C74E24597D959737F64E2E30BD4C20F`
+**Sürüm: 2.3.0 (etiket v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
 İmza parmak izi: `5FE5-D786-0B89-A56E`
 
 > **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
@@ -19,7 +47,7 @@ GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapı
 
 ## English
 
-**Version: 2.3.0 (tag v2.3.0).** SHA-256 (Forevermore.zip): `55771B128C3FB5D48CC584AE1E5FF8470C74E24597D959737F64E2E30BD4C20F`
+**Version: 2.3.0 (tag v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
 Signature fingerprint: `5FE5-D786-0B89-A56E`
 
 > **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
