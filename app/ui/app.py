@@ -22,7 +22,7 @@ from ctypes import wintypes
 from PySide6.QtCore import QEvent, QProcess, QRectF, Qt, QTimer
 from PySide6.QtGui import QAction, QColor, QFont, QGuiApplication, QIcon, QKeySequence, QPainter, QPen, QPixmap, QShortcut
 from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QFrame, QHBoxLayout, QLabel, QLineEdit,
-                               QListWidget, QMainWindow, QMenu, QPlainTextEdit, QScrollArea, QStackedWidget,
+                               QListWidget, QMainWindow, QMenu, QPlainTextEdit, QPushButton, QScrollArea, QStackedWidget,
                                QSystemTrayIcon, QVBoxLayout, QWidget)
 
 from app.core import admin, consent, guncelleme, i18n, log, paths, settings, tek_ornek
@@ -36,7 +36,7 @@ from app.ui.page_kaldirici import UninstallerPage
 from app.ui.page_category import CategoryPage, ManualPage
 from app.ui.page_other import ChangesPage, ProfilesPage, ReportPage
 from app.ui.page_details import PcDetailsPage
-from app.ui.page_settings import AboutPage, SettingsPage
+from app.ui.page_settings import AboutPage, SettingsPage, about_data, donate_url_ok
 from app.games.profiles import GameStore
 from app.games.runtime import GameSession, GameWatcher, ProcessOps
 from app.ui.page_games import GamesPage
@@ -270,6 +270,13 @@ class MainWindow(QMainWindow):
         lay.insertSpacing(3, 8)
         QShortcut(QKeySequence("Ctrl+K"), self, self.search_box.focus)
         lay.addStretch(1)
+        url = about_data()["bagis_url"]
+        if donate_url_ok(url):  # kaydırma alanının dışında: menü uzasa da hep görünür; sessiz, açılır pencere yok
+            donate = QPushButton(t("ui.menu.bagis"))
+            donate.setObjectName("DonateBtn")
+            donate.setCursor(Qt.CursorShape.PointingHandCursor)
+            donate.clicked.connect(lambda _=False: os.startfile(url))  # noqa: S606
+            holder.addWidget(donate)
         return bar
 
     def _page(self, key):

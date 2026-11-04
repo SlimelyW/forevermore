@@ -177,6 +177,8 @@ def stylesheet(p=None):
     #NavGroup {{ color: {p['muted']}; font-size: 10px; font-weight: 700; padding: 0 0 2px 6px; }}
     #NavMore {{ color: {p['muted']}; font-size: 12px; padding: 4px 0 0 36px; }}
     #NavMore:hover {{ color: {p['accent']}; }}
+    #DonateBtn {{ margin: 6px 10px 12px 10px; padding: 9px 12px; background: {p['accent_soft']}; color: {p['accent']}; border: 1px solid {p['accent']}; border-radius: {r['md']}px; font-weight: 600; }}
+    #DonateBtn:hover {{ background: {p['accent']}; color: {p['bg']}; }}
     #Card {{ background: {p['card']}; border: 1px solid {p['border']}; border-top-color: {p['edge']}; border-radius: {r['lg']}px; }}
     #List {{ background: {p['card']}; border: 1px solid {p['border']}; border-top-color: {p['edge']}; border-radius: {r['lg']}px; }}
     #Card[inlist="true"] {{ background: transparent; border: none; border-radius: {r['md']}px; }}

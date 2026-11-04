@@ -506,6 +506,7 @@
   "ui.bos": "free",
   "ui.menu.pc_detay": "PC Details",
   "ui.menu.bilgi": "About",
+  "ui.menu.bagis": "Donate if you like it",
   "ui.menu.elle": "Manual steps",
   "ui.elle.aciklama": "Settings the app cannot change itself, grouped by reason. Each card explains the steps; where available, 'Open setting' opens the related Windows page.",
   "ui.elle.neden.bios": "Done in the BIOS / UEFI",

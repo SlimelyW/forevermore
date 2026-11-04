@@ -17,10 +17,8 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-kilit" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
   <symbol id="i-tik" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></symbol>
-  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
 </svg>
 <header class="top">
   <div class="wrap">
@@ -30,6 +28,8 @@
       <a href="#oyunlar">Games</a>
       <a href="#kanit">Evidence</a>
       <a href="#indir">Download</a>
+      <a href="#destek">Support</a>
+      <a href="#uyari">Warning?</a>
       <a href="#sss">FAQ</a>
       <button class="a11y" type="button" data-a11y aria-pressed="false" title="For dyslexia and ADHD: Verdana type, wider line spacing">Reading mode</button>
       <a class="lang" href="index.html" hreflang="tr">TR</a>
@@ -324,6 +324,43 @@
     </div>
   </section>
 
+  <section id="destek" class="" data-tint="green">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Like it? Support it</h2>
+      <p class="kisaca"><b>In short</b>Forevermore is free and will stay free. If it helped you, buy me a coffee so I can keep building it.</p>
+      <div class="indir">
+        <div class="kutu tam">
+          <h3>Buy me a coffee</h3>
+          <p>No ads, no locked features, no account; donating is entirely voluntary. Support goes to test hardware, researching new settings and time. Everything works the same if you don't donate.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary buyuk" data-link="bagis" href="#destek">Donate if you like it</a><a class="btn" data-link="github" href="#destek">Star it on GitHub</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="uyari" class="" data-tint="amber">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Why does it show a warning?</h2>
+      <p class="kisaca"><b>In short</b>It changes system settings and its code is not signed yet, so Windows may warn you. That is expected, and you have ways to check it yourself.</p>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Why it happens</h3>
+          <p>Forevermore changes system settings (the registry, services, power plan and so on), so some antivirus programs may treat it as suspicious. It also has no code-signing certificate yet, which is why SmartScreen says "unknown publisher". Because it is written in Python and packaged with PyInstaller, small antivirus engines also raise false alarms.</p>
+          <p>Being open source does not remove the warning on its own: Windows does not read the code, it looks at the signature and reputation. Open source lets you check for yourself instead of trusting the warning or us.</p>
+        </div>
+        <div class="kutu">
+          <h3>Check it yourself</h3>
+          <ul>
+            <li>The source is on <a data-link="github" href="#uyari">GitHub</a>; read it, or build it yourself.</li>
+            <li>The zip's SHA-256 is listed on the release page; compare it with <code>Get-FileHash Forevermore.zip</code> in PowerShell.</li>
+            <li>None of the 67 engines on VirusTotal flagged the 2.1.2 package (0/67, October 2026; it can change between versions). <a data-vt href="#uyari">Open the report</a></li>
+          </ul>
+          <p>Download the official zip only from this site or the GitHub Releases page.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="sss" class="" data-tint="violet">
     <span class="kenar sol" aria-hidden="true"><i></i><b>1 click</b>to undo</span><span class="kenar sag" aria-hidden="true"><i></i><b>2 warnings</b>on risky settings</span>
     <div class="wrap">
@@ -333,9 +370,6 @@
         <p>Settings marked risky ask twice, with two separate warnings, and every change can be undone: <a href="#geri-alma">What happens on every change</a>.</p></details>
       <details><summary>Is the source code public?</summary>
         <p>Yes. It is on <a data-link="github" href="#sss">GitHub</a> under the MIT license; you can read, build, modify and contribute.</p></details>
-      <details id="antivirus"><summary>My antivirus, VirusTotal or SmartScreen raised a warning.</summary>
-        <p>Forevermore is written in Python and packaged with PyInstaller. Some malware uses the same method, so such packages often trigger false alarms in small antivirus engines. None of the 67 antivirus engines on <a data-vt href="#sss">VirusTotal</a> flagged the 2.1.2 package (0/67, October 2026). Results can change between versions.</p>
-        <p>SmartScreen's "unknown publisher" warning appears because the program does not yet have a paid code-signing certificate. No method can fully prevent a desktop program from being modified; the signature and SHA-256 let you notice a modified copy. <a href="#dogrula">How to verify</a></p></details>
     </div>
   </section>
 

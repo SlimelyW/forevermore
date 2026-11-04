@@ -80,19 +80,8 @@ Her yayın için bir satır ekleyin (derle.ps1 sonunda SHA256 yazılır; `.exe` 
 | Sürüm | Tarih | Zip SHA256 | Forevermore.exe SHA256 | Authenticode | Defender VM (W10 / W11) | VirusTotal | MS gönderim no / sonuç |
 |---|---|---|---|---|---|---|---|
 | 2.1.2 | 30.10.2026 | 53F2075F…454D (HANDOFF) | — | yok | denenmedi | 0/67 | — |
-| 2.2.0-beta.2 | 04.11.2026 | 6AB2CDE9…FC450F | B36C2434…5D207A | yok | denenmedi | yüklenmedi | — |
 | | | | | | | | |
 
 Kutular: ☐ Authenticode + zaman damgası geçerli (`Get-AuthenticodeSignature` = Valid) ☐ paket imzası "orijinal" (`--kontrol`)
 ☐ W10 VM taraması ☐ W11 VM taraması ☐ çalıştırma anında tespit yok ☐ VirusTotal (dış servise yükleme: Kubilay onayıyla)
 ☐ tespit varsa MS gönderimi yapıldı ve numarası yazıldı.
-
-### Her sürüm için kısa kontrol (Microsoft yanlış pozitif gönderimi)
-Gönderim sayfası: https://www.microsoft.com/en-us/wdsi/filesubmission (Microsoft hesabı gerekir; gönderimi sürüm sahibi kendisi yapar).
-Yeni sürümde SHA-256 DEĞİŞİR; önceki sürümün "temiz" sonucu yenisini kapsamaz.
-1. ☐ Derle, `Get-FileHash dist\Forevermore.zip` ve `dist\Forevermore\Forevermore.exe` özetlerini yukarıdaki tabloya yaz.
-2. ☐ Sürümü GitHub'a koymadan önce temiz Windows'ta indir/aç; Defender'ın tespit edip etmediğine bak.
-3. ☐ Tespit varsa: gönderim sayfasında "Software developer" seç, dosya = zip (ya da exe), tespit adı = Defender'ın gösterdiği ad, "Incorrectly detected as malware" işaretle, GitHub sürüm bağlantısını ve kaynak deposunu açıklamaya yaz.
-4. ☐ Dönen gönderim numarasını ve sonucu (yeniden değerlendirme tarihi) tablonun son sütununa yaz; sonuç gelince aynı satırı güncelle.
-5. ☐ Sonraki sürümde aynı adımlar; tablodaki eski satırları SİLME (hangi sürümün ne zaman temize çıktığı kaydı kalır).
-

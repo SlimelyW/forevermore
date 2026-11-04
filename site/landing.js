@@ -11,7 +11,7 @@
   function calm() { return mq.matches || root.hasAttribute("data-okunabilir"); }
   var EASE = "cubic-bezier(.16, 1, .3, 1)";
   function each(sel, fn, scope) { Array.prototype.forEach.call((scope || document).querySelectorAll(sel), fn); }
-  if (!calm()) root.classList.add("js");   // CSS çizgi, kutu süzülmesi ve Pro çerçevesi bu sınıfla başlar
+  if (!calm()) root.classList.add("js");   // CSS çizgi ve kutu süzülmesi bu sınıfla başlar
 
   function fmt(n, d) { return n.toLocaleString(locale, { minimumFractionDigits: d, maximumFractionDigits: d }); }
   function onView(el, fn, margin) {

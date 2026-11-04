@@ -506,6 +506,7 @@
   "ui.bos": "boş",
   "ui.menu.pc_detay": "PC Detayları",
   "ui.menu.bilgi": "Bilgi",
+  "ui.menu.bagis": "Beğendiysen bağış yap",
   "ui.menu.elle": "Elle yapılacaklar",
   "ui.elle.aciklama": "Uygulamanın kendisinin yapamadığı ayarlar, nedenine göre. Her kartta nasıl yapılacağı adım adım yazar; varsa 'Ayarı aç' düğmesi ilgili Windows sayfasını açar.",
   "ui.elle.neden.bios": "BIOS / UEFI'de yapılır",
