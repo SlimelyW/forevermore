@@ -1,0 +1,110 @@
+Forevermore - Üçüncü taraf bileşenler ve lisansları / Third-party notices
+=========================================================================
+
+Forevermore kendi kodu MIT lisansıyla yayımlanır (LICENSE). Bu dosya, programla birlikte dağıtılan ya da
+programın kullandığı üçüncü taraf bileşenleri, lisanslarını ve MIT ile uyumluluğunu listeler. Sürümler derleme
+ortamındaki "pip list" çıktısıyla doğrulanmalıdır.
+
+Forevermore's own code is released under the MIT license (LICENSE). This file lists third-party components that
+are shipped with, or used by, the program, their licenses, and whether they are compatible with MIT.
+
+ÖZET / SUMMARY
+--------------
+Pakete giren (dağıtılan) bileşenler: Python (PSF), Qt / PySide6 (LGPLv3), PyInstaller önyükleyicisi (GPLv2+ ve
+önyükleyici istisnası), Intel PresentMon (MIT). Tanıtım sitesinde: Atkinson Hyperlegible, Lexend, OpenDyslexic
+yazı tipleri (SIL OFL 1.1). Hiçbiri MIT ile çelişmez:
+- MIT, MIT/BSD/PSF/OFL bileşenleriyle doğrudan uyumludur (bildirim ve lisans metni korunur).
+- LGPLv3 (Qt/PySide6): program Qt'yi değiştirmeden, ayrı DLL/PYD dosyaları olarak bağlar (derleme "klasör" biçimindedir,
+  tek dosya değil); kullanıcı bunları uyumlu sürümlerle değiştirebilir. Böylece Forevermore'un kendi kodu MIT kalabilir.
+  LGPLv3 metni ve Qt kaynak kodu adresleri aşağıdadır.
+- PyInstaller: GPLv2+ "bootloader exception" ile paketlenen programın lisansını kısıtlamaz; derleme aracıdır.
+- Yazı tipleri yalnızca web sitesindedir; OFL, yazı tiplerinin yazılımla birlikte dağıtılmasına izin verir
+  (lisans metinleri site/fonts/ altındadır).
+Depoda telifli oyun kapağı, mağaza görseli ya da marka logosu yoktur; site bunları ziyaretçinin tarayıcısı üzerinden
+yayıncının sunucusundan çalışma anında alır.
+
+1) Python 3.12 - Python Software Foundation License (PSF-2.0, MIT ile uyumlu)
+   https://docs.python.org/3/license.html
+
+2) Qt for Python (PySide6-Essentials 6.12.0, shiboken6 6.12.0) ve Qt 6
+   Lisans: GNU Lesser General Public License v3 (LGPLv3)
+   Lisans metni: https://www.gnu.org/licenses/lgpl-3.0.html
+   Kaynak kodu: https://code.qt.io/cgit/pyside/pyside-setup.git/ ve https://code.qt.io/
+   Qt kitaplıkları bu programın klasöründe ayrı dosyalar (DLL) olarak bulunur;
+   kullanıcı bunları LGPLv3'ün izin verdiği şekilde uyumlu sürümlerle değiştirebilir.
+   PySide6 ve Qt üzerinde değişiklik yapılmamıştır.
+
+3) PyInstaller 6.22.3 (programı paketlemek için)
+   Lisans: GPLv2 veya sonrası + "bootloader exception". Bu istisna, PyInstaller ile
+   paketlenen programların başka bir lisansla (MIT dahil) dağıtılmasına izin verir.
+   https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt
+
+4) Tcl/Tk - kullanılmıyor (arayüz Qt'ye taşındı).
+
+5) NVIDIA NVAPI - programa GÖMÜLMEZ. nvapi64.dll NVIDIA sürücüsüyle gelir. Programda
+   yalnızca NVIDIA'nın resmi deposundaki başlık dosyalarından alınan sabit sayılar
+   (fonksiyon ve ayar kimlikleri, yapı düzeni) bulunur.
+   Lisans: MIT - https://github.com/NVIDIA/nvapi
+
+6) NVIDIA Profile Inspector - programa GÖMÜLMEZ. Kullanıcı isterse tools klasörüne
+   kendisi koyar; yalnızca NVAPI'ye erişilemediğinde yedek yöntem olarak çalıştırılır.
+   Lisans: MIT - https://github.com/Orbmu2k/nvidiaProfileInspector
+
+7) Intel PresentMon (oyun FPS ölçümü) - depoda tools\PresentMon-2.6.0-x64.exe olarak bulunur ve derlemede programın
+   yanına kopyalanır; uygulama onu ayrı bir program olarak çalıştırır.
+   Lisans: MIT - Copyright (C) 2017-2024 Intel Corporation
+   https://github.com/GameTechDev/PresentMon (LICENSE.txt)
+   PresentMon'un kendi üçüncü taraf bileşenleri (THIRD_PARTY.txt): AMD ADL arabirimi (MIT),
+   NVIDIA NVAPI arabirimi (MIT benzeri), Chromium Embedded Framework (BSD benzeri; yalnızca
+   grafik arayüzlü Capture uygulamasında), Microsoft DirectX hata kitaplığı (MIT),
+   backward-cpp (MIT). Hiçbiri GPL/LGPL değildir.
+
+   MIT lisans metni (PresentMon):
+   Permission is hereby granted, free of charge, to any person obtaining a copy of this
+   software and associated documentation files (the "Software"), to deal in the Software
+   without restriction, including without limitation the rights to use, copy, modify, merge,
+   publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+   to whom the Software is furnished to do so, subject to the following conditions:
+   The above copyright notice and this permission notice shall be included in all copies or
+   substantial portions of the Software.
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+   FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+8) AMD ADLX (Radeon sürücü ayarları ve ekran ölçeklemesi) - programa GÖMÜLMEZ. amdadlx64.dll
+   AMD Software sürücüsüyle gelir. Programda yalnızca AMD'nin resmi deposundaki C başlık
+   dosyalarından alınan arabirim sıraları ve sabitler bulunur.
+   Lisans: MIT - https://github.com/GPUOpen-LibrariesAndSDKs/ADLX
+
+9) Display Driver Uninstaller (DDU, Wagnardsoft) - programa GÖMÜLMEZ ve programla birlikte
+   DAĞITILMAZ. Ücretsiz yazılımdır; kullanıcı resmi sayfadan indirip tools\DDU klasörüne
+   koyar, uygulama yalnızca açar. Dağıtım koşulları üreticinin sayfasındadır:
+   https://www.wagnardsoft.com/display-driver-uninstaller-DDU-
+
+10) NVCleanstall (TechPowerUp) - programa GÖMÜLMEZ ve programla birlikte DAĞITILMAZ. Ücretsiz
+   yazılımdır; kullanıcı resmi sayfadan indirip tools\NVCleanstall klasörüne koyar, uygulama
+   yalnızca açar. https://www.techpowerup.com/download/techpowerup-nvcleanstall/
+
+11) Web sitesi yazı tipleri (yalnızca site/fonts/; uygulamaya girmez) - SIL Open Font License 1.1
+    - Atkinson Hyperlegible: Copyright 2020 Braille Institute of America, Inc.
+    - Lexend: Copyright 2019 The Lexend Project Authors (https://github.com/googlefonts/lexend)
+    - OpenDyslexic: Copyright (c) 2019-07-29, Abbie Gonzalez (https://abbiecod.es), Reserved Font Name OpenDyslexic
+    Tam lisans metinleri: site/fonts/LICENSE-*.txt
+
+12) Ayar fikirleri ve kaynaklar: ayar kataloğu (data/) kayıt defteri adı, hizmet adı gibi olgulardan ve Microsoft ile
+    donanım üreticilerinin belgelerinden derlenmiştir; başka projelerin kodu ya da metni kopyalanmamıştır (taranan
+    kaynaklar: docs/C1_KAYNAK_TARAMA.md, docs/C3_KAYNAK_LISANS.md). Uygulamada gösterilen dış bağlantılar yalnızca
+    adrestir; sitelerin içeriği kopyalanmaz.
+
+13) Ed25519 (app/core/ed25519.py): RFC 8032 tanımına göre bu projede yazılmış saf Python uygulaması; üçüncü taraf
+    kodu içermez. Yalnızca güncelleme paketinin imzasını doğrulamak içindir.
+
+Windows simge yazı tipi (Segoe Fluent Icons / Segoe MDL2 Assets) programa gömülmez;
+Windows'un kendi yüklü yazı tipi kullanılır. NirSoft araçları kullanılmaz; ses biçimi
+Windows'un kendi COM arabirimleriyle değiştirilir.
+
+Açık nokta / Open item: Qt'nin LGPLv3 lisans metni bu dosyada yalnızca adresle verilir. Pakete tam metnin (lgpl-3.0.txt)
+eklenmesi LGPL'nin "lisans metnini ilet" koşulunu en açık biçimde karşılar; derleme betiği şimdilik eklemiyor.

@@ -1,0 +1,40 @@
+{
+  "_aciklama": "Bilgi sayfasının 'Yapımcı' kartında gösterilir: 'yapimci' ad, 'satirlar' iletişim (Kopyala), 'baglantilar' resmî adresler (Kopyala + Aç, yalnızca https). 'faydali' dış bağlantıları Oyunlar sayfasındaki 'Faydalı bağlantılar' kartında gösterilir. Yeni satır eklemek için listeye bir öğe yazmak yeterlidir; kod değişmez. 'katkida_bulunanlar' doluysa 'Katkıda bulunanlar' kartında listelenir. Uygulamanın amacı ve tanıtım metni lang/*.json'daki ui.bilgi.amac ve ui.bilgi.hikaye anahtarlarındadır. 'bagis_url' (yalnızca https://buymeacoffee.com/...) doluysa Bilgi sayfasında küçük bir 'Beğendiysen bir kahve ısmarla' bağlantısı görünür; boşsa görünmez.",
+  "yapimci": "Kubilay Paşa",
+  "satirlar": [
+    {
+      "etiket": "Discord",
+      "deger": "[kaldirildi]"
+    },
+    {
+      "etiket": "E-posta / Email",
+      "deger": "[kaldirildi]"
+    }
+  ],
+  "baglantilar": [
+    {
+      "etiket": "Web",
+      "deger": "slimelyw.github.io/forevermore",
+      "url": "https://slimelyw.github.io/forevermore/"
+    },
+    {
+      "etiket": "Discord",
+      "deger": "[kaldirildi]",
+      "url": "https://[kaldirildi]"
+    }
+  ],
+  "bagis_url": "https://buymeacoffee.com/forevermore",
+  "katkida_bulunanlar": [],
+  "faydali": [
+    {
+      "etiket": "Faydalı: FPS tahmini / FPS estimates",
+      "deger": "howmanyfps.com/games",
+      "url": "https://howmanyfps.com/games"
+    },
+    {
+      "etiket": "Faydalı: oyun ipuçları / game tips",
+      "deger": "beforeiplay.com",
+      "url": "https://beforeiplay.com/wiki/Main_Page"
+    }
+  ]
+}

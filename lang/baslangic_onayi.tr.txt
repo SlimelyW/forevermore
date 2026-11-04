@@ -1,0 +1,7 @@
+Bu uygulama Windows ayarlarını değiştirir. Her ayarın ne yaptığı, artıları, eksileri ve kimlerin dokunmaması gerektiği uygulamada açıkça yazar; değişikliklerden önce yedek ve sistem geri yükleme noktası alınır.
+
+Uygulama içerisindeki sistem ve donanım ayarlarının değiştirilmesi, cihazınızın mevcut yazılım/donanım yapılandırmasına bağlı olarak sistem kararsızlıklarına yol açabilir. Kanunların izin verdiği azami ölçüde ve TBK m.115 hükümleri saklı kalmak kaydıyla, kullanıcı kendi sisteminde yaptığı değişikliklerin sonuçlarını ve yedekleme sorumluluğunu kabul ederek devam eder.
+
+Forevermore © 2026 Kubilay Paşa, MIT lisansıyla ücretsiz ve açık kaynak olarak sunulur (LICENSE dosyası): yazılım "olduğu gibi", hiçbir garanti olmadan verilir. Üçüncü taraf bileşenlerin lisansları THIRD-PARTY-NOTICES.txt dosyasındadır. Uygulama telemetri göndermez; yalnızca siz isteğe bağlı güncelleme denetimini açarsanız GitHub'a bağlanır.
+
+Devam etmek için bu ön bilgilendirmeyi kabul etmeniz gerekir. Kabul etmezseniz uygulama kapanır.

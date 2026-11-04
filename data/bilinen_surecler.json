@@ -1,0 +1,22 @@
+{
+  "_aciklama": [
+    "Tarama, çalışan süreçleri bu listeyle karşılaştırıp 'arka planda çalışan ve oyun sırasında gerekmeyebilecek' uygulamaları gösterir.",
+    "Ad karşılaştırması büyük/küçük harf duyarsızdır ve .exe uzantısı olmadan yazılır. Sonunda * olan adlar ön ek olarak eşleşir.",
+    "Bu liste FPS etkisi iddiası taşımaz; yalnızca kullanıcıya 'bunlar açık, gerekmiyorsa kapatabilirsin' bilgisi verir.",
+    "Kategori açıklamaları lang/tr.json içinde 'surec_kategori.<kategori>' anahtarlarındadır."
+  ],
+  "kategoriler": {
+    "rgb": ["icue", "armourycrate*", "armourysocketserver", "lightingservice", "lghub", "lghub_agent", "lghub_updater",
+            "razer synapse*", "razercentralservice", "rzsdkservice", "signalrgb", "openrgb", "nzxt cam", "steelseriesgg*",
+            "msi.centralserver", "msi_central*", "aurasync*", "corsair.service", "wallpaper32", "wallpaper64"],
+    "kayit_overlay": ["obs64", "obs32", "nvidia overlay", "nvidia share", "medal", "outplayed*", "overwolf",
+                      "radeonsoftware", "amdrsserv", "xboxgamebar*", "gamebar", "gamebarftserver"],
+    "iletisim": ["discord", "teams", "ms-teams", "slack", "skype", "whatsapp", "telegram", "zoom", "signal"],
+    "bulut": ["onedrive", "dropbox", "googledrivefs", "icloudservices", "iclouddrive", "megasync", "yandexdisk*"],
+    "baslatici": ["steam", "steamwebhelper", "epicgameslauncher", "battle.net", "eadesktop", "ealauncher", "upc",
+                  "ubisoftconnect", "riotclientservices", "galaxyclient", "launcher", "rockstarservice", "playnite*"],
+    "tarayici": ["chrome", "msedge", "firefox", "opera", "opera_gx*", "brave", "vivaldi", "yandex"],
+    "guncelleyici": ["adobearm", "adobeupdateservice", "googleupdate", "jusched", "ccxprocess", "creative cloud*",
+                     "adobe desktop service", "acrotray"]
+  }
+}

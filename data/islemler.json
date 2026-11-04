@@ -1,0 +1,2389 @@
+{
+  "_aciklama": [
+    "Bu dosya ELLE düzenlenir. tweaks.json'daki serbest metinli ayarların uygulamanın anlayacağı kesin karşılıklarını içerir.",
+    "tools/convert_tweaks.py bu dosyayı tweaks.json ile birleştirip data/tweaks_app.json dosyasını üretir. Uygulama yalnızca tweaks_app.json'u okur.",
+    "Bir ayarın SWITCH olması için burada 'islem' tanımı olmalıdır. Tanım yoksa ayar en fazla REHBER olur.",
+    "risk='riskli', placebo veya zararlı ayarlar burada islem tanımlansa bile ASLA switch olmaz (dönüştürücü engeller).",
+    "Şemanın açıklaması: docs/islem_semasi.md"
+  ],
+  "surum": "1.0.0",
+  "ayarlar": {
+    "GPU-020": {"liste_yoneticisi": "nvidia", "sinif": "REHBER", "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.", "nvidia": {"ayar": "0x1194F158", "secenekler": [{"deger": 0, "etiket": "Kapalı"}, {"deger": 1, "etiket": "Yalnızca tam ekran (varsayılan)", "varsayilan": true}, {"deger": 2, "etiket": "Tam ekran ve pencere"}], "onerilen": 2}, "uyumluluk": {"gpu": ["NVIDIA"]}, "notlar": ["G-SYNC'in kendisi monitör için NVIDIA Denetim Masası > G-SYNC'i ayarla bölümünden açılır; bu ayar yalnızca hangi pencere modlarında çalışacağını seçer."]},
+    "GPU-021": {"liste_yoneticisi": "nvidia", "sinif": "REHBER", "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.", "nvidia": {"ayar": "0x10444444", "secenekler": [{"deger": 0, "etiket": "Kapalı (varsayılan)", "varsayilan": true}, {"deger": 1, "etiket": "Açık"}], "onerilen": 0}, "uyumluluk": {"gpu": ["NVIDIA"]}, "notlar": ["Oyun içinde çalışması için NVIDIA Uygulaması'ndaki Görüntü Ölçekleme de açık olmalıdır; kalite yükseltmenin gerçek etkisi bu uygulamada ölçülmedi."]},
+    "GPU-022": {"liste_yoneticisi": "nvidia", "sinif": "REHBER", "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.", "nvidia": {"ayar": "0x90DE9159", "secenekler": [{"deger": 0, "etiket": "Katmana izin ver (varsayılan)", "varsayilan": true}, {"deger": 1, "etiket": "Katmanı yasakla"}], "onerilen": 0}, "uyumluluk": {"gpu": ["NVIDIA"]}, "notlar": ["Anlık Tekrar ve oyun içi NVIDIA paneli bu ayar açıkken çalışmaz."]},
+    "INP-009": {"elle_nedeni": "teshis"},
+    "AUD-008": {"elle_nedeni": "teshis"},
+    "INP-008": {"elle_nedeni": "donanim"},
+    "INP-001": {"elle_nedeni": "donanim"},
+    "GPU-019": {"liste_yoneticisi": "surucu_araclari", "sinif": "REHBER", "sinif_nedeni": "Araçlar tools klasöründen açılır; Güvenli Mod uygulamadan açılıp kapatılır.", "notlar": ["DDU ve NVCleanstall programa gömülmez: resmi sayfalarından indirip tools klasörüne koyun. İkisinin de güvenilir bir komut satırı kullanımı olmadığı için uygulama yalnızca aracı açar; adımları aracın içinde siz yaparsınız.", "Her sürücü güncellemesinde DDU gerekmez; marka değişiminde veya bozuk kurulumda kullanın."]},
+    "GPU-015": {"liste_yoneticisi": "amd", "sinif": "REHBER", "sinif_nedeni": "AMD sürücü ayarı: ADLX ile uygulamadan açılıp kapatılır.", "amd": {"ozellikler": ["boost", "enhanced_sync"]}, "uyumluluk": {"gpu": ["AMD"]}, "notlar": ["AFMF (sürücü kare üretimi) ve oyun başına ayarlar AMD Software'den yapılır."]},
+    "GPU-014": {"liste_yoneticisi": "amd", "sinif": "REHBER", "sinif_nedeni": "AMD sürücü ayarı: ADLX ile uygulamadan açılıp kapatılır.", "amd": {"ozellikler": ["chill"]}, "uyumluluk": {"gpu": ["AMD"]}, "notlar": ["Burada yalnızca açılıp kapatılır; en düşük / en yüksek FPS değerleri AMD Software'den ayarlanır."]},
+    "GPU-013": {"liste_yoneticisi": "amd", "sinif": "REHBER", "sinif_nedeni": "AMD sürücü ayarı: ADLX ile uygulamadan açılıp kapatılır.", "amd": {"ozellikler": ["anti_lag"]}, "uyumluluk": {"gpu": ["AMD"]}, "notlar": ["Buradaki ayar sürücüdeki genel Anti-Lag'dir. Oyun Anti-Lag 2 destekliyorsa onu oyun içinden açın."]},
+    "GPU-012": {"elle_nedeni": "surucu"},
+    "GPU-011": {"elle_nedeni": "surucu"},
+    "PERF-011": {"elle_nedeni": "oyun_ici"},
+    "INP-004": {"elle_nedeni": "oyun_ici"},
+    "GPU-010": {"elle_nedeni": "oyun_ici"},
+    "NET-004": {"elle_nedeni": "ag"},
+    "NET-001": {"elle_nedeni": "ag"},
+    "CPU-007": {"elle_nedeni": "bios", "kaynaklar_ek": ["https://www.techspot.com/review/1882-ryzen-9-smt-on-vs-off/", "https://anandtech.com/show/16261/investigating-performance-of-multithreading-on-zen-3-and-amd-ryzen-5000/5", "https://www.notebookcheck.net/AMD-Ryzen-9-3900X-gaming-benchmarks-reveal-turning-off-SMT-narrows-the-performance-gap-with-the-Core-i9-9900K-only-in-select-titles.428628.0.html"]},
+    "SYS-012": {"uyumluluk": {"kosullar": [{"ad": "onedrive_kurulu"}]}, "elle_nedeni": "uretici"},
+    "DISP-001": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {"ad": "ekranlar"},
+        "adimlar": [
+          {"tur": "yerlesik", "eylem": "ekran_yenileme", "parametreler": {"aygit": "{{ekran_aygiti}}"},
+           "acik": "en_yuksek", "kapali": null}
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display-advanced"}},
+      "notlar": [
+        "Her monitör, şu anki çözünürlükte desteklediği en yüksek yenileme hızına alınır; çözünürlük değişmez.",
+        "Kapatmak yalnızca uygulamanın yaptığı değişikliği geri alır (önceki Hz değerine döner)."
+      ]
+    },
+    "DISP-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry_bayrak",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\DirectX\\UserGpuPreferences",
+            "ad": "DirectXUserGlobalSettings",
+            "anahtar": "VRROptimizeEnable",
+            "acik": "1",
+            "kapali": "0",
+            "yoksa": "0"
+          }
+        ]
+      },
+      "uyumluluk": {"gpu": null},
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display-advancedgraphics"}},
+      "notlar": [
+        "Bu düğme yalnızca Windows'un VRR anahtarını açar. G-SYNC/FreeSync için monitörün kendi menüsünde ve ekran kartı sürücüsünde de açık olmalıdır."
+      ],
+      "belirsizlik": "DirectXUserGlobalSettings değeri 'Ad=Değer;' biçiminde birden çok ayar içerir; motor diğer ayarlara dokunmadan yalnızca VRROptimizeEnable kısmını değiştirmelidir. VRR destekli monitör olup olmadığı Windows'tan güvenilir okunamaz."
+    },
+    "DISP-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry_bayrak",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\DirectX\\UserGpuPreferences",
+            "ad": "DirectXUserGlobalSettings",
+            "anahtar": "SwapEffectUpgradeEnable",
+            "acik": "1",
+            "kapali": "0",
+            "yoksa": "0"
+          }
+        ]
+      },
+      "uyumluluk": {"gpu": null},
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display-advancedgraphics"}},
+      "belirsizlik": "Değer hiç yazılmamışsa bazı 24H2 sistemlerinde Windows bunu varsayılan olarak açık kabul ediyor olabilir; uygulama bu durumda 'kapalı' gösterir. Ayarlar > Ekran > Grafik ile karşılaştırarak doğrula."
+    },
+    "DISP-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "System\\GameConfigStore",
+            "ad": "GameDVR_FSEBehaviorMode",
+            "veri_turu": "REG_DWORD",
+            "acik": 2,
+            "kapali": 0,
+            "yoksa": 0
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "System\\GameConfigStore",
+            "ad": "GameDVR_HonorUserFSEBehaviorMode",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ]
+      },
+      "notlar": [
+        "Tüm oyunlar için tam ekran optimizasyonlarını kapatır. Oyun başına ayar Oyunlar menüsüne gelecek.",
+        "Etkisi oyuna göre değişir; bazı oyunlarda fark olmaz. Oyunu yeniden başlatınca geçerli olur."
+      ]
+    },
+    "DISP-005": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows\\Dwm",
+            "ad": "OverlayTestMode",
+            "veri_turu": "REG_DWORD",
+            "acik": 5,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}, "gpu": ["NVIDIA", "AMD"]},
+      "notlar": ["Yalnızca titreme, siyah ekran yanıp sönmesi veya ikinci ekranda takılma gibi bir sorun yaşıyorsanız açın."]
+    },
+    "DISP-006": {"uyumluluk": {"gpu": null}, "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display"}}, "elle_nedeni": "windows"},
+    "DISP-007": {"rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display-advanced"}}, "elle_nedeni": "windows"},
+    "DISP-008": {"uyumluluk": {"gpu": null}, "elle_nedeni": "surucu"},
+    "DISP-009": {"uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}, "kosullar": [{"ad": "coklu_monitor"}]}, "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display"}}, "elle_nedeni": "teshis"},
+    "SYS-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "Spooler",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Automatic", "calisiyor": true}
+          }
+        ]
+      }
+    },
+    "SYS-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "SysMain",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Automatic", "calisiyor": true}
+          }
+        ]
+      }
+    },
+    "SYS-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "WSearch",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "AutomaticDelayed", "calisiyor": true}
+          }
+        ]
+      },
+      "notlar": ["Başlat menüsünde ve Dosya Gezgini'nde arama yavaşlar; Outlook gibi programların araması etkilenir."]
+    },
+    "SYS-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "DiagTrack",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Automatic", "calisiyor": true}
+          }
+        ]
+      }
+    },
+    "SYS-005": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "XblAuthManager",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null},
+            "yoksa_atla": true
+          },
+          {
+            "tur": "servis",
+            "ad": "XblGameSave",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null},
+            "yoksa_atla": true
+          },
+          {
+            "tur": "servis",
+            "ad": "XboxNetApiSvc",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null},
+            "yoksa_atla": true
+          },
+          {
+            "tur": "servis",
+            "ad": "XboxGipSvc",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null},
+            "yoksa_atla": true
+          }
+        ]
+      },
+      "notlar": ["Xbox uygulaması, Game Pass oyunları, bulut kayıtları ve Xbox kumandası (XboxGipSvc) çalışmayabilir."]
+    },
+    "SYS-006": {
+      "sinif": "REHBER",
+      "liste_yoneticisi": "baslangic",
+      "sinif_nedeni": "Uygulamanın kendi başlangıç ve servis yöneticisinden tek tek yapılır.",
+      "rehber": {
+        "ac": {
+          "tur": "ms-settings",
+          "hedef": "ms-settings:startupapps"
+        }
+      }
+    },
+    "SYS-007": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+            "ad": "LetAppsRunInBackground",
+            "veri_turu": "REG_DWORD",
+            "acik": 2,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "notlar": [
+        "Bu bir sistem ilkesidir: Store uygulamalarının (ör. Telefon Bağlantısı, Posta) arka planda bildirim alması durabilir."
+      ]
+    },
+    "SYS-008": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power",
+            "ad": "HiberbootEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      }
+    },
+    "SYS-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [{"tur": "yerlesik", "eylem": "hazirda_bekletme", "parametreler": {}, "acik": false, "kapali": true}]
+      },
+      "uyumluluk": {"form": {"masaustu": "goster", "laptop": "uyar"}},
+      "notlar": ["Hazırda bekletme kapanınca Hızlı Başlatma da kendiliğinden devre dışı kalır."]
+    },
+    "SYS-010": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "WerSvc",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null}
+          }
+        ]
+      }
+    },
+    "SYS-011": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Dsh",
+            "ad": "AllowNewsAndInterests",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "uyumluluk": {"windows": {"surumler": ["11"], "min_build": {"11": null}}},
+      "notlar": ["Bu düğme yalnızca Widget'ları kapatır. Copilot: Ayarlar > Uygulamalar'dan kaldırılabilir veya görev çubuğundan gizlenebilir. Recall (yalnızca Copilot+ PC) Windows özelliği olarak ayrıca kapatılır."],
+      "belirsizlik": "Kısmi otomasyon: yalnızca Widget ilkesi switch yapıldı. Recall (DISM özelliği, yalnızca Copilot+ PC) ve Copilot (uygulama kaldırma) rehber olarak kaldı."
+    },
+    "SYS-013": {"sinif": "REHBER", "sinif_nedeni": "Dışlanacak oyun klasörünü kullanıcının seçmesi gerekir ('D:\\Oyunlar' yalnızca örnek). Yanlış klasör dışlamak güvenlik açığı yaratır. v2'de klasör seçiciyle switch yapılabilir.", "rehber": {"ac": {"tur": "uri", "hedef": "windowsdefender://threatsettings", "dogrulanmadi": true}}, "elle_nedeni": "kullanici"},
+    "SYS-014": {"rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:windowsupdate-options"}}, "liste_yoneticisi": "windows_update"},
+    "SYS-016": {"sinif": "REHBER", "sinif_nedeni": "Dört seviyeli seçim; Sistem menüsündeki UAC kartıyla yapılır.", "rehber": {"ac": {"tur": "program", "hedef": "UserAccountControlSettings.exe"}}, "liste_yoneticisi": "uac"},
+    "SYS-018": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SYSTEM\\CurrentControlSet\\Control\\FileSystem", "ad": "LongPathsEnabled", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}]}, "notlar": ["Uzun yol desteği yalnızca bunu bildiren programlarda (manifest) geçerlidir; ayar yeniden başlatmadan sonra tam etkili olur."]},
+    "SYS-019": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SYSTEM\\CurrentControlSet\\Control\\CrashControl", "ad": "DisplayParameters", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}, {"tur": "registry", "kok": "HKLM", "yol": "SYSTEM\\CurrentControlSet\\Control\\CrashControl", "ad": "DisableEmoticon", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}]}, "notlar": ["Yalnızca mavi ekranda görünür; bu uygulamada mavi ekran oluşturularak denenmedi."]},
+    "SYS-020": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "ad": "PublishUserActivities", "veri_turu": "REG_DWORD", "acik": 0, "kapali": null, "yoksa": null}, {"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "ad": "UploadUserActivities", "veri_turu": "REG_DWORD", "acik": 0, "kapali": null, "yoksa": null}]}, "notlar": ["Bu bir sistem ilkesidir; Zaman çizelgesinde cihazlar arası etkinlik devamı çalışmaz. Pano geçmişi etkilenmez."]},
+    "SYS-021": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata", "ad": "PreventDeviceMetadataFromNetwork", "veri_turu": "REG_DWORD", "acik": 1, "kapali": null, "yoksa": null}]}, "notlar": ["Bu bir sistem ilkesidir; aygıt simgeleri ve bazı aygıt yazılımları internetten otomatik gelmez."]},
+    "SYS-017": {"sinif": "REHBER", "sinif_nedeni": "Kullanıcı isteğiyle; iki aşamalı uyarıyla Defender kartından yapılır, Kurcalama korumasını kullanıcı kendisi kapatır.", "rehber": {"ac": {"tur": "uri", "hedef": "windowsdefender://threatsettings"}}, "liste_yoneticisi": "defender"},
+    "SYS-015": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "TabletInputService",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null}
+          }
+        ]
+      },
+      "notlar": ["Dokunmatik klavye, el yazısı ve bazı dillerde emoji/IME paneli çalışmayabilir."]
+    },
+    "PERF-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\GameBar",
+            "ad": "AutoGameModeEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 1
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:gaming-gamemode"}}
+    },
+    "PERF-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "System\\GameConfigStore",
+            "ad": "GameDVR_Enabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+            "ad": "AppCaptureEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:gaming-gamedvr", "dogrulanmadi": true}},
+      "belirsizlik": "Veritabanındaki isteğe bağlı sistem çapı ilke (HKLM AllowGameDVR=0) switch'e dahil edilmedi; yalnızca kullanıcı ayarları değiştirilir. AppCaptureEnabled değeri hiç yazılmamışsa açık kabul edildi."
+    },
+    "PERF-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity",
+            "ad": "Enabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": null
+          }
+        ]
+      },
+      "notlar": [
+        "Bilgisayar yeniden başlatılınca etkili olur. Kuruluş ilkesi veya UEFI kilidi varsa Windows bu ayarı geri açabilir."
+      ]
+    },
+    "PERF-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "windows_ozelligi",
+            "parametreler": {"ozellikler": ["VirtualMachinePlatform", "Microsoft-Hyper-V-All"]},
+            "acik": "Disabled",
+            "kapali": "Enabled"
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "bcdedit",
+            "parametreler": {"eleman": "hypervisorlaunchtype"},
+            "acik": "off",
+            "kapali": "auto",
+            "yoksa": "auto"
+          }
+        ]
+      },
+      "uyumluluk": {
+        "kosullar": [
+          {
+            "ad": "windows_ozelligi_mevcut",
+            "parametreler": {"ozellikler": ["VirtualMachinePlatform", "Microsoft-Hyper-V-All"]}
+          }
+        ]
+      },
+      "notlar": [
+        "WSL2, Docker, Android alt sistemi ve sanal makine programları bu özelliklere ihtiyaç duyar.",
+        "Bellek bütünlüğü (HVCI) ve bazı oyun koruma sistemleri hipervizör gerektirebilir.",
+        "Durumu okumak ve değiştirmek birkaç saniye ile birkaç dakika sürebilir.",
+        "Önyükleme ayarı (bcdedit) değiştirir. BitLocker kullanıyorsanız, değişiklikten sonra kurtarma anahtarı istenebilir; anahtarınızın elinizde olduğundan emin olun (emin değilim, test edilecek)."
+      ],
+      "belirsizlik": "Windows Home sürümünde Microsoft-Hyper-V-All yoktur; motor yalnızca sistemde bulunan özellikleri işlemelidir. Bellek Bütünlüğü (HVCI) açıksa hipervizör yine çalışır, kazanç daha da azalır."
+    },
+    "PERF-005": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "pencere_animasyonu"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "denetim_animasyonu"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "menu_animasyonu"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "ipucu_animasyonu"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "secim_solmasi"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "imlec_golgesi"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "pencere_golgesi"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "acilir_kutu_animasyonu"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "liste_kaydirma"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "gorsel_efekt",
+            "parametreler": {
+              "ad": "surukerken_icerik"
+            },
+            "acik": false,
+            "kapali": true
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+            "ad": "TaskbarAnimations",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+            "ad": "ListviewAlphaSelect",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+            "ad": "ListviewShadow",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\DWM",
+            "ad": "EnableAeroPeek",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+            "ad": "VisualFXSetting",
+            "veri_turu": "REG_DWORD",
+            "acik": 3,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ],
+        "sonrasinda": [
+          "gezgin_yeniden_baslat_oner"
+        ]
+      },
+      "rehber": {
+        "ac": {
+          "tur": "program",
+          "hedef": "SystemPropertiesPerformance.exe"
+        }
+      },
+      "notlar": [
+        "'En iyi performans' ile aynı efektleri kapatır; ekran yazı tipi kenar yumuşatma ve küçük resimler AÇIK bırakılır.",
+        "Görev çubuğu animasyonları için Gezgin'in yeniden başlatılması gerekebilir."
+      ]
+    },
+    "PERF-006": {
+      "sinif": "REHBER",
+      "sinif_nedeni": "Oyun başına yapılır: Oyunlar menüsüne taşındı.",
+      "uyumluluk": {
+        "form": {
+          "masaustu": "goster",
+          "laptop": "goster"
+        },
+        "kosullar": [
+          {
+            "ad": "hibrit_gpu"
+          }
+        ]
+      },
+      "rehber": {
+        "ac": {
+          "tur": "ms-settings",
+          "hedef": "ms-settings:display-advancedgraphics"
+        }
+      },
+      "liste_yoneticisi": "oyunlar"
+    },
+    "PERF-007": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [{"tur": "yerlesik", "eylem": "bellek_sikistirma", "parametreler": {}, "acik": false, "kapali": true}]
+      },
+      "notlar": ["16 GB'tan az RAM'iniz varsa kapatmak takılmaları artırabilir."]
+    },
+    "PERF-008": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling",
+            "ad": "PowerThrottlingOff",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}}
+    },
+    "PERF-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+            "ad": "Win32PrioritySeparation",
+            "veri_turu": "REG_DWORD",
+            "acik": 38,
+            "kapali": 2,
+            "yoksa": 2
+          }
+        ]
+      }
+    },
+    "PERF-010": {
+      "sinif": "REHBER",
+      "sinif_nedeni": "Oyun başına yapılır: Oyunlar menüsüne taşındı.",
+      "liste_yoneticisi": "oyunlar"
+    },
+    "GPU-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers",
+            "ad": "HwSchMode",
+            "veri_turu": "REG_DWORD",
+            "acik": 2,
+            "kapali": 1,
+            "yoksa": null
+          }
+        ]
+      },
+      "uyumluluk": {"gpu": null},
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:display-advancedgraphics"}},
+      "belirsizlik": "Ekran kartı veya sürücü HAGS'ı desteklemiyorsa değer yazılır ama etkisi olmaz. Değer hiç yoksa uygulama 'kapalı' gösterir; Ayarlar > Ekran > Grafik'teki durumla karşılaştır."
+    },
+    "CPU-010": {
+      "liste_yoneticisi": "oyunlar",
+      "sinif": "REHBER",
+      "sinif_nedeni": "Oyun başına yapılır: Oyunlar menüsüne taşındı."
+    },
+    "GPU-009": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x0064B541",
+        "secenekler": [
+          {
+            "deger": 0,
+            "etiket": "Uygulama denetimli (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 1,
+            "etiket": "Mevcut en yüksek"
+          }
+        ],
+        "onerilen": 1
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      }
+    },
+    "GPU-008": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x20C1221E",
+        "secenekler": [
+          {
+            "deger": null,
+            "etiket": "Otomatik (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 1,
+            "etiket": "Açık"
+          },
+          {
+            "deger": 2,
+            "etiket": "Kapalı"
+          }
+        ],
+        "onerilen": null
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      }
+    },
+    "GPU-005": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x00AC8497",
+        "secenekler": [
+          {
+            "deger": null,
+            "etiket": "Sürücü varsayılanı",
+            "varsayilan": true
+          },
+          {
+            "deger": 4294967295,
+            "etiket": "Sınırsız"
+          }
+        ],
+        "onerilen": 4294967295
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      },
+      "notlar": [
+        "Yalnızca 'Sürücü varsayılanı' ve 'Sınırsız' sunulur: diğer boyutların birimi NVIDIA belgelerinde yazmıyor."
+      ]
+    },
+    "GPU-004": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x00CE2691",
+        "secenekler": [
+          {
+            "deger": 4294967286,
+            "etiket": "Yüksek kalite"
+          },
+          {
+            "deger": 0,
+            "etiket": "Kalite (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 10,
+            "etiket": "Performans"
+          },
+          {
+            "deger": 20,
+            "etiket": "Yüksek performans"
+          }
+        ],
+        "onerilen": 20
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      }
+    },
+    "GPU-002": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x007BA09E",
+        "secenekler": [
+          {
+            "deger": 0,
+            "etiket": "Kapalı (uygulama belirler)",
+            "varsayilan": true
+          },
+          {
+            "deger": 1,
+            "etiket": "Açık (en fazla 1 kare)"
+          }
+        ],
+        "onerilen": 1
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      },
+      "notlar": [
+        "NVIDIA Denetim Masası'ndaki 'Ultra' değeri herkese açık NVAPI'de yok; burada Kapalı/Açık seçilebilir.",
+        "Oyun NVIDIA Reflex destekliyorsa oyun içinde Reflex'i açın; bu ayar o zaman etkisizdir."
+      ]
+    },
+    "GPU-003": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x1057EB71",
+        "secenekler": [
+          {
+            "deger": 5,
+            "etiket": "Optimum güç (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 0,
+            "etiket": "Uyarlamalı"
+          },
+          {
+            "deger": 1,
+            "etiket": "Maksimum performansı tercih et"
+          }
+        ],
+        "onerilen": 5
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ],
+        "form": {
+          "masaustu": "goster",
+          "laptop": "uyar"
+        }
+      },
+      "notlar": [
+        "Genel ayarda 'Maksimum performans' boşta da yüksek saat hızı ve güç tüketimi demektir; oyun başına ayar Oyunlar menüsüne gelecek."
+      ]
+    },
+    "GPU-006": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x00A879CF",
+        "secenekler": [
+          {
+            "deger": 1620202130,
+            "etiket": "Uygulama ayarını kullan (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 1199655232,
+            "etiket": "Açık"
+          },
+          {
+            "deger": 138504007,
+            "etiket": "Kapalı"
+          }
+        ],
+        "onerilen": 1199655232
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      },
+      "notlar": [
+        "Burada yalnızca sürücüdeki Dikey senkronizasyon seçilir. G-SYNC'i NVIDIA Denetim Masası'ndan, FPS sınırını 'Maksimum kare hızı' ayarından açın."
+      ]
+    },
+    "GPU-007": {
+      "liste_yoneticisi": "nvidia",
+      "sinif": "REHBER",
+      "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.",
+      "nvidia": {
+        "ayar": "0x10835002",
+        "secenekler": [
+          {
+            "deger": 0,
+            "etiket": "Kapalı (varsayılan)",
+            "varsayilan": true
+          },
+          {
+            "deger": 60,
+            "etiket": "60 FPS"
+          },
+          {
+            "deger": 117,
+            "etiket": "117 FPS"
+          },
+          {
+            "deger": 141,
+            "etiket": "141 FPS"
+          },
+          {
+            "deger": 162,
+            "etiket": "162 FPS"
+          },
+          {
+            "deger": 237,
+            "etiket": "237 FPS"
+          }
+        ],
+        "onerilen": 0
+      },
+      "uyumluluk": {
+        "gpu": [
+          "NVIDIA"
+        ]
+      },
+      "notlar": [
+        "G-SYNC ile önerilen değer monitör yenileme hızının 3 altıdır (ör. 144 Hz için 141)."
+      ]
+    },
+    "GPU-016": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {"ad": "amd_gpu_anahtarlari"},
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}\\{{amd_gpu_anahtari}}",
+            "ad": "EnableUlps",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      }
+    },
+    "GPU-017": {"uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}, "gpu": null}, "elle_nedeni": "bios"},
+    "GPU-018": {
+      "sinif": "REHBER",
+      "liste_yoneticisi": "msi",
+      "sinif_nedeni": "Aygıt bazında: PCI aygıt listesinden tek tek yapılır (riskli, iki aşamalı onay, yeniden başlatma)."
+    },
+    "CPU-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "54533251-82be-4824-96c1-47b60b740d00",
+            "ayar": "0cc5b647-c1df-4637-891a-dec35c318583",
+            "acik": 100,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      },
+      "uyumluluk": {"kosullar": [{"ad": "x3d_cift_ccd", "degil": true}]}
+    },
+    "CPU-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "54533251-82be-4824-96c1-47b60b740d00",
+            "ayar": "893dee8e-2bef-41e0-89c6-b55d0929964c",
+            "acik": 100,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      }
+    },
+    "CPU-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "54533251-82be-4824-96c1-47b60b740d00",
+            "ayar": "be337238-0d82-4146-a960-4f3749d470c7",
+            "acik": 4,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      },
+      "uyumluluk": {"form": {"masaustu": "gizle", "laptop": "goster"}},
+      "notlar": ["Bu bir deneme ayarıdır: laptop çok ısınıyorsa açın, performans düşerse kapatın."]
+    },
+    "CPU-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "FeatureSettingsOverride",
+            "veri_turu": "REG_DWORD",
+            "acik": 3,
+            "kapali": null,
+            "yoksa": null
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "FeatureSettingsOverrideMask",
+            "veri_turu": "REG_DWORD",
+            "acik": 3,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "geri_yukleme_zorunlu": true,
+      "notlar": ["Bilgisayar yeniden başlatılınca etkili olur.", "Güvenliği azaltır: tarayıcıdaki veya yereldeki kötü amaçlı kod çekirdek belleğini okuyabilir hale gelir.", "Windows 10'da (desteği 14 Ekim 2025'te bitti) bu kapatma Windows 11'e göre daha risklidir.", "Geri yükleme noktası oluşturulamazsa uygulanmaz. AMD ve yeni Intel işlemcilerde kazanç yok denecek kadar azdır.", "Açılmıyorsa geri alma: Güvenli Mod'da yönetici komut isteminde reg delete \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\" /v FeatureSettingsOverride /f ve aynısını FeatureSettingsOverrideMask için çalıştırıp yeniden başlatın; ya da Kurtarma ortamında Sistem Geri Yükleme ile bu değişiklikten önceki noktaya dönün."]
+    },
+    "CPU-005": {"uyumluluk": {"kosullar": [{"ad": "x3d_cift_ccd"}]}, "elle_nedeni": "surucu"},
+    "CPU-006": {"uyumluluk": {"kosullar": [{"ad": "cpu_saglayici", "parametreler": {"saglayici": "Intel"}}, {"ad": "hibrit_cpu"}]}, "elle_nedeni": "bios"},
+    "CPU-008": {"sinif": "REHBER", "sinif_nedeni": "BIOS ayarıdır; Windows içinden yapılamaz.", "rehber": {"adimlar": ["Bilgisayarı yeniden başlatıp BIOS'a girin (açılışta genelde Del veya F2).", "CPU güç yönetimi bölümünde 'Global C-State Control' veya 'C-States' ayarını bulun.", "Disabled yapın, kaydedip çıkın (F10). Geri almak için aynı yerden Auto/Enabled seçin."]}, "elle_nedeni": "bios", "kaynaklar_ek": ["https://forums.blurbusters.com/viewtopic.php?p=104709"]},
+    "CPU-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel",
+            "ad": "GlobalTimerResolutionRequests",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "uyumluluk": {"windows": {"surumler": ["11"], "min_build": {"11": null}}},
+      "belirsizlik": "Veritabanı 'genelde gerekmez' diyor ve etkisi 'belirsiz'. Yalnızca dikkatli kullanıcı için, onay penceresiyle sunulur. GlobalTimerResolutionRequests değeri yalnızca Windows 11'de anlamlıdır."
+    },
+    "PWR-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "guc_plani",
+            "acik": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
+            "kapali": "381b4222-f694-41f0-9685-ff5bb260df2e"
+          }
+        ]
+      },
+      "uyumluluk": {
+        "form": {"masaustu": "goster", "laptop": "uyar"},
+        "kosullar": [
+          {"ad": "guc_plani_mevcut", "parametreler": {"guid": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"}},
+          {"ad": "x3d_cift_ccd", "degil": true}
+        ]
+      },
+      "rehber": {"ac": {"tur": "program", "hedef": "powercfg.cpl"}},
+      "notlar": [
+        "Güç planı değişince İşlemci ve Güç menüsündeki plan ayarları (çekirdek park etme, minimum işlemci durumu vb.) yeni planda tekrar uygulanmalıdır."
+      ],
+      "belirsizlik": "Nihai Performans planı (duplicatescheme ile yeni plan oluşturur) v1'e alınmadı; yalnızca hazır Yüksek Performans planı. Modern Bekleme (S0) destekli birçok laptopta Yüksek Performans planı bulunmaz; o zaman ayar gizlenir."
+    },
+    "PWR-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "guc_modu",
+            "parametreler": {
+              "kaynak": "ac"
+            },
+            "acik": "ded574b5-45a0-4f42-8737-46345c09c238",
+            "kapali": "00000000-0000-0000-0000-000000000000"
+          }
+        ]
+      },
+      "uyumluluk": {
+        "form": {
+          "masaustu": "goster",
+          "laptop": "goster"
+        }
+      },
+      "rehber": {
+        "ac": {
+          "tur": "ms-settings",
+          "hedef": "ms-settings:powersleep"
+        }
+      },
+      "notlar": [
+        "Güç modu yalnızca 'Dengeli' güç planı etkinken geçerlidir; Yüksek/Nihai Performans planında zaten en yüksektir.",
+        "Windows'un belgelenmemiş güç modu API'si kullanılır (powercfg komutları bu Windows sürümünde çalışmıyor)."
+      ],
+      "belirsizlik": "PowerSetActiveOverlayScheme belgelenmemiş bir API'dir; laptopta pilde modu için değer kayıt defterine yazılır ve güç kaynağı değişince geçerli olması beklenir (doğrulanmadı)."
+    },
+    "PWR-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "2a737441-1930-4402-8d77-b2bebba308a3",
+            "ayar": "48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
+            "acik": 0,
+            "kapali": 1
+          }
+        ]
+      }
+    },
+    "PWR-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "501a4d13-42af-4429-9fd1-a8218c268e20",
+            "ayar": "ee12f906-d277-404b-b6da-e5fa1a576df5",
+            "acik": 0,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      }
+    },
+    "PWR-005": {
+      "sinif": "REHBER",
+      "liste_yoneticisi": "cihaz_guc",
+      "sinif_nedeni": "Aygıt bazında: uygulamadaki aygıt listesinden (MSPower_DeviceEnable) tek tek yapılır.",
+      "rehber": {
+        "ac": {
+          "tur": "program",
+          "hedef": "devmgmt.msc"
+        }
+      }
+    },
+    "PWR-006": {"uyumluluk": {"gpu": null}, "elle_nedeni": "uretici"},
+    "PWR-007": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "0012ee47-9041-4b5d-9b77-535fba8b1442",
+            "ayar": "6738e2c4-e8a5-4a42-b16a-e040e769756e",
+            "acik": 0,
+            "kapali": 1200
+          }
+        ]
+      },
+      "uyumluluk": {"kosullar": [{"ad": "hdd_var"}]}
+    },
+    "PWR-008": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "54533251-82be-4824-96c1-47b60b740d00",
+            "ayar": "94d3a615-a899-4ac5-ae2b-e4d8f634367f",
+            "acik": 1,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      }
+    },
+    "NET-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "powercfg",
+            "alt_grup": "19cbb8fa-5279-450e-9fac-8a3d5fedd0c1",
+            "ayar": "12bbebe6-58d6-4636-95bb-3217ef867c1a",
+            "acik": 0,
+            "kapali": "plan_varsayilani"
+          }
+        ]
+      },
+      "uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}, "kosullar": [{"ad": "wifi_var"}]},
+      "belirsizlik": "Veritabanındaki ek bağdaştırıcı ayarları ('MIMO Power Save', 'Roaming Aggressiveness') sürücüye göre değiştiği için switch'e dahil edilmedi; rehber metninde kalır."
+    },
+    "NET-003": {"uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}, "kosullar": [{"ad": "wifi_var"}]}, "islem": {"kontrol": "switch", "adimlar": [{"tur": "yerlesik", "eylem": "wlan_otomatik_yapilandirma", "parametreler": {}, "acik": "Disabled", "kapali": "Enabled"}]}, "notlar": ["Kapalıyken Wi-Fi bağlantısı koparsa kendiliğinden yeniden bağlanmaz ve ağ listesi güncellenmez. Oyun bitince bu ayarı kapatın (Değişiklikler > Eski haline getir de aynı işi yapar)."]},
+    "NET-005": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+            "ad": "DODownloadMode",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:delivery-optimization"}},
+      "notlar": ["Bu bir ilkedir: açıkken Ayarlar'daki Teslim İyileştirme seçeneği gri (değiştirilemez) görünür."]
+    },
+    "NET-006": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {"ad": "ag_arabirimleri"},
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\{{ag_arabirim_guid}}",
+            "ad": "TcpAckFrequency",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": null,
+            "yoksa": null
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\{{ag_arabirim_guid}}",
+            "ad": "TCPNoDelay",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "belirsizlik": "Yalnızca tarama anında bağlı (Up) fiziksel ağ kartlarına uygulanır. Sonradan başka bir ağ kartı veya Wi-Fi'a geçilirse o kartta ayar yoktur; uygulamada yeniden tarama gerekir."
+    },
+    "NET-007": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {
+          "ad": "ag_ozellik_destekleyen",
+          "parametreler": {"anahtarlar": ["*InterruptModeration"], "yalnizca_kablolu": true, "acik": "0", "kapali": "1"}
+        },
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "ag_gelismis_ozellik",
+            "parametreler": {"bagdastirici": "{{ag_bagdastirici}}", "anahtar": "{{ag_ozellik}}"},
+            "acik": "0",
+            "kapali": "1"
+          }
+        ]
+      },
+      "notlar": ["Uygularken ağ kartı birkaç saniyeliğine bağlantıyı keser; oyun veya indirme sırasında uygulamayın."]
+    },
+    "NET-008": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {
+          "ad": "ag_ozellik_destekleyen",
+          "parametreler": {
+            "anahtarlar": ["*EEE", "AdvancedEEE", "EnableGreenEthernet"],
+            "yalnizca_kablolu": true,
+            "acik": "0",
+            "kapali": "1"
+          }
+        },
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "ag_gelismis_ozellik",
+            "parametreler": {"bagdastirici": "{{ag_bagdastirici}}", "anahtar": "{{ag_ozellik}}"},
+            "acik": "0",
+            "kapali": "1"
+          }
+        ]
+      },
+      "notlar": ["Uygularken ağ kartı birkaç saniyeliğine bağlantıyı keser."],
+      "belirsizlik": "Özellik adları üreticiye göre değişir. '*EEE' Microsoft'un standart anahtar kelimesidir; 'AdvancedEEE' ve 'EnableGreenEthernet' Realtek'e özgüdür (bu bilgisayarda görüldü). Intel ve diğer üreticilerin farklı adları kapsanmıyor. 0=kapalı varsayımı yalnızca sürücü 0 ve 1 değerlerini kabul ediyorsa uygulanır."
+    },
+    "NET-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "ag_gelismis_ozellik",
+            "parametreler": {"bagdastirici": "{{ag_bagdastirici}}", "anahtar": "{{ag_ozellik}}"},
+            "acik": "0",
+            "kapali": "1"
+          }
+        ],
+        "cozumleyici": {
+          "ad": "ag_ozellik_destekleyen",
+          "parametreler": {"anahtarlar": ["*RSS", "*LsoV2IPv4", "*LsoV2IPv6"], "acik": "0", "kapali": "1"}
+        }
+      },
+      "notlar": ["Uygularken ağ kartı birkaç saniyeliğine bağlantıyı keser."]
+    },
+    "INP-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Mouse",
+            "ad": "MouseSpeed",
+            "veri_turu": "REG_SZ",
+            "acik": "0",
+            "kapali": "1",
+            "yoksa": "1"
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Mouse",
+            "ad": "MouseThreshold1",
+            "veri_turu": "REG_SZ",
+            "acik": "0",
+            "kapali": "6",
+            "yoksa": "6"
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Mouse",
+            "ad": "MouseThreshold2",
+            "veri_turu": "REG_SZ",
+            "acik": "0",
+            "kapali": "10",
+            "yoksa": "10"
+          }
+        ],
+        "sonrasinda": ["fare_ayarlarini_yenile"]
+      },
+      "rehber": {"ac": {"tur": "program", "hedef": "main.cpl"}}
+    },
+    "INP-003": {
+      "islem": {
+        "kontrol": "secim",
+        "alanlar": [
+          {
+            "id": "hiz",
+            "etiket": "İşaretçi hızı",
+            "adim": {
+              "tur": "registry",
+              "kok": "HKCU",
+              "yol": "Control Panel\\Mouse",
+              "ad": "MouseSensitivity",
+              "veri_turu": "REG_SZ",
+              "yoksa": "10"
+            },
+            "aralik": {"min": 1, "max": 20},
+            "onerilen": "10"
+          }
+        ],
+        "sonrasinda": ["fare_ayarlarini_yenile"]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:mousetouchpad"}}
+    },
+    "INP-005": {"sinif": "REHBER", "sinif_nedeni": "Uygulanacak değerler MarkC'nin ayrı dağıtılan .reg dosyalarındadır ve ekran ölçeğine göre değişir; bu dosyaları uygulamaya gömmek lisans ve doğruluk sorunu yaratır.", "elle_nedeni": "ucuncu_parti"},
+    "INP-006": {
+      "islem": {
+        "kontrol": "secim",
+        "alanlar": [
+          {
+            "id": "gecikme",
+            "etiket": "Tekrarlama gecikmesi",
+            "adim": {
+              "tur": "registry",
+              "kok": "HKCU",
+              "yol": "Control Panel\\Keyboard",
+              "ad": "KeyboardDelay",
+              "veri_turu": "REG_SZ",
+              "yoksa": "1"
+            },
+            "secenekler": [
+              {"deger": "0", "etiket": "Kısa (~250 ms)"},
+              {"deger": "1", "etiket": "~500 ms (Windows varsayılanı)"},
+              {"deger": "2", "etiket": "~750 ms"},
+              {"deger": "3", "etiket": "Uzun (~1 sn)"}
+            ],
+            "onerilen": "0"
+          },
+          {
+            "id": "hiz",
+            "etiket": "Tekrarlama hızı",
+            "adim": {
+              "tur": "registry",
+              "kok": "HKCU",
+              "yol": "Control Panel\\Keyboard",
+              "ad": "KeyboardSpeed",
+              "veri_turu": "REG_SZ",
+              "yoksa": "31"
+            },
+            "aralik": {"min": 0, "max": 31},
+            "onerilen": "31"
+          }
+        ],
+        "sonrasinda": ["klavye_ayarlarini_yenile"]
+      },
+      "rehber": {"ac": {"tur": "denetim_masasi", "hedef": "keyboard"}}
+    },
+    "INP-007": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry_bit",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Accessibility\\StickyKeys",
+            "ad": "Flags",
+            "veri_turu": "REG_SZ",
+            "maske": 4,
+            "acik": 0,
+            "kapali": 4
+          },
+          {
+            "tur": "registry_bit",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Accessibility\\Keyboard Response",
+            "ad": "Flags",
+            "veri_turu": "REG_SZ",
+            "maske": 4,
+            "acik": 0,
+            "kapali": 4
+          },
+          {
+            "tur": "registry_bit",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Accessibility\\ToggleKeys",
+            "ad": "Flags",
+            "veri_turu": "REG_SZ",
+            "maske": 4,
+            "acik": 0,
+            "kapali": 4
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:easeofaccess-keyboard"}},
+      "belirsizlik": "Veritabanı tam değerler veriyor (506/122/58). Kullanıcı başka erişilebilirlik seçeneklerini değiştirdiyse bu değerler farklı olur; bu yüzden tüm değeri yazmak yerine yalnızca 'kısayol etkin' bitini (4) değiştiren bit işlemi tanımlandı. 510-506=126-122=62-58=4 olduğu için veritabanıyla aynı sonucu verir."
+    },
+    "INP-010": {"bilgi_nedeni": "Ayrı ve imzasız bir sürücü kurmayı gerektirir; bu uygulama üçüncü parti sürücü kurmaz.", "elle_nedeni": "ucuncu_parti"},
+    "AUD-001": {
+      "islem": {
+        "kontrol": "switch",
+        "cozumleyici": {
+          "ad": "ses_cikis_cihazlari"
+        },
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render\\{{ses_cihazi}}\\FxProperties",
+            "ad": "{1da5d803-d492-4edd-8c23-e0c0ffee7f0e},5",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ],
+        "sonrasinda": [
+          "ses_servisini_yeniden_baslat"
+        ]
+      },
+      "rehber": {
+        "ac": {
+          "tur": "denetim_masasi",
+          "hedef": "mmsys.cpl"
+        }
+      },
+      "notlar": [
+        "Uygulanırken ses birkaç saniyeliğine kesilir (Windows Ses servisi yeniden başlatılır).",
+        "Her çıkış cihazı için ayrı ayrı açılıp kapatılabilir."
+      ],
+      "belirsizlik": "ADIM 3'te değişti: Microsoft'un belgelediği Core Audio API (IPropertyStore) bu bilgisayarda değeri boş döndürdü; Windows'un kendi düğmesi ise değeri registry'de FxProperties altında tutuyor (bu bilgisayarda 'Headphone' cihazında 1 = kapalı olarak görüldü). Bu anahtara Yöneticiler'in yazma izni olduğu okunarak doğrulandı. Bu yüzden switch, yedeklenen bir registry değeri + Windows Ses servisinin yeniden başlatılması olarak tanımlandı. Emin olmadığım: bazı üretici yazılımları (Nahimic, Dolby, Realtek Console) kendi efektlerini yeniden açabilir. Test listesinde denenecek.",
+      "liste_yoneticisi": "ses_gelistirme"
+    },
+    "AUD-002": {
+      "sinif": "REHBER",
+      "sinif_nedeni": "Cihaz başına: desteklenen biçimler sürücüye sorulur, seçilen biçim uygulamadan yazılır.",
+      "rehber": {
+        "ac": {
+          "tur": "denetim_masasi",
+          "hedef": "mmsys.cpl"
+        }
+      },
+      "liste_yoneticisi": "ses_bicimi"
+    },
+    "AUD-003": {"rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}, "liste_yoneticisi": "ses_ozel_mod", "notlar": ["Bu değerlerin kayıt defterindeki yeri Microsoft tarafından belgelenmemiştir (topluluk tarafından bildirilir); bu bilgisayarda denenmedi. Uygulanırken ses birkaç saniye kesilir.", "Her çıkış cihazı için ayrı ayrı açılıp kapatılabilir."]},
+    "AUD-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Multimedia\\Audio",
+            "ad": "UserDuckingPreference",
+            "veri_turu": "REG_DWORD",
+            "acik": 3,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}
+    },
+    "AUD-005": {"rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:sound"}}, "elle_nedeni": "windows"},
+    "AUD-006": {"sinif": "REHBER", "sinif_nedeni": "Hangi ses cihazının 'kullanılmayan' olduğuna yalnızca kullanıcı karar verebilir (ör. monitör hoparlörü bazıları için gerekli). Yanlış cihazı kapatmak sesi tamamen kesebilir. v2'de cihaz listesinden seçmeli yapılabilir.", "uyumluluk": {"gpu": null}, "rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}, "liste_yoneticisi": "ses_aygit"},
+    "AUD-007": {"rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}, "elle_nedeni": "surucu"},
+    "AUD-009": {"rehber": {"ac": {"tur": "denetim_masasi", "hedef": "printers", "dogrulanmadi": true}}, "liste_yoneticisi": "ses_hfp"},
+    "QOL-001": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+            "ad": "HideFileExt",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      }
+    },
+    "QOL-002": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry_anahtar",
+            "kok": "HKCU",
+            "yol": "Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32",
+            "silinecek_yol": "Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}",
+            "varsayilan_deger": "",
+            "acik": "var",
+            "kapali": "yok"
+          }
+        ],
+        "sonrasinda": ["gezgin_yeniden_baslat_oner"]
+      }
+    },
+    "QOL-003": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+            "ad": "DisableSearchBoxSuggestions",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      }
+    },
+    "QOL-004": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            "ad": "EnableTransparency",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:personalization-colors"}}
+    },
+    "QOL-005": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Control Panel\\Desktop",
+            "ad": "MenuShowDelay",
+            "veri_turu": "REG_SZ",
+            "acik": "100",
+            "kapali": "400",
+            "yoksa": "400"
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:easeofaccess-visualeffects", "dogrulanmadi": true}},
+      "notlar": [
+        "Bu düğme yalnızca menü gecikmesini değiştirir. Animasyon efektleri için Performans menüsündeki 'Görsel efektler' ayarını kullanın."
+      ]
+    },
+    "QOL-006": {
+      "rehber": {
+        "ac": {
+          "tur": "ms-settings",
+          "hedef": "ms-settings:notifications"
+        }
+      },
+      "liste_yoneticisi": "oyunlar",
+      "sinif": "REHBER",
+      "sinif_nedeni": "Oyun başına yapılır: Oyunlar menüsüne taşındı."
+    },
+    "QOL-007": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings",
+            "ad": "TaskbarEndTask",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:developers"}}
+    },
+    "QOL-008": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+            "ad": "SystemPaneSuggestionsEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+            "ad": "SoftLandingEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+            "ad": "SubscribedContent-338388Enabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKCU",
+            "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+            "ad": "SubscribedContent-338389Enabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 1,
+            "yoksa": 1
+          }
+        ]
+      },
+      "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:personalization-start"}}
+    },
+    "QOL-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Edge",
+            "ad": "StartupBoostEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": null,
+            "yoksa": null
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Edge",
+            "ad": "BackgroundModeEnabled",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      },
+      "notlar": [
+        "İlke yazıldığı için Edge ayarlarında 'Tarayıcınız kuruluşunuz tarafından yönetiliyor' yazısı görünebilir. Bu normaldir; düğmeyi kapatınca kaybolur."
+      ],
+      "belirsizlik": "Edge'deki 'kuruluşunuz tarafından yönetiliyor' mesajının çıkacağından büyük ölçüde eminim ama bu sürümde doğrulamadım; test listesinde kontrol edilecek."
+    },
+    "QOL-010": {"uyumluluk": {"gpu": null}, "rehber": {"ac": {"tur": "ms-settings", "hedef": "ms-settings:nightlight"}}, "notlar": ["Gece ışığı: Windows'un bunu açıp kapatmak için belgelenmiş bir API'si yok; 'Ayarı aç' ile Ayarlar'dan yapılır.", "Dijital canlılık: NVIDIA'nın herkese açık NVAPI'sinde bu ayar yok; AMD için Radeon yazılımı gerekir."], "elle_nedeni": "surucu"},
+    "PLC-001": {"bilgi_nedeni": "Ayrı bir program türüdür; uygulama başka program kurmaz veya kaldırmaz."},
+    "PLC-002": {"bilgi_nedeni": "Ayrı bir program türüdür; uygulama başka program kurmaz veya kaldırmaz."},
+    "PLC-003": {
+      "tespit": {
+        "herhangi": [{"tur": "yerlesik", "kontrol": "bcdedit_deger_var", "parametreler": {"degerler": ["useplatformclock"]}}],
+        "mesaj": "Bu bilgisayarda 'useplatformclock' önyükleme ayarı tanımlı. Bu ayar çoğu modern sistemde gecikmeyi artırır."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "pnp_cihaz",
+            "parametreler": {"donanim_kimligi": "ACPI\\PNP0103"},
+            "acik": "Disabled",
+            "kapali": "Enabled"
+          }
+        ]
+      },
+      "notlar": ["Aygıt Yöneticisi'ndeki 'Yüksek duyarlıklı olay zamanlayıcı' (HPET) aygıtını devre dışı bırakır."]
+    },
+    "PLC-004": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "yerlesik",
+            "kontrol": "bcdedit_deger_var",
+            "parametreler": {"degerler": ["disabledynamictick", "useplatformtick", "tscsyncpolicy"]}
+          }
+        ],
+        "mesaj": "Bu bilgisayarda internette yaygın olan önyükleme (bcdedit) ayarlarından biri uygulanmış."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "bcdedit",
+            "parametreler": {"eleman": "disabledynamictick"},
+            "acik": "yes",
+            "kapali": null
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "bcdedit",
+            "parametreler": {"eleman": "useplatformtick"},
+            "acik": "yes",
+            "kapali": null
+          },
+          {
+            "tur": "yerlesik",
+            "eylem": "bcdedit",
+            "parametreler": {"eleman": "tscsyncpolicy"},
+            "acik": "enhanced",
+            "kapali": null
+          }
+        ]
+      },
+      "notlar": [
+        "Önyükleme ayarı (bcdedit) değiştirir. BitLocker kullanıyorsanız, değişiklikten sonra kurtarma anahtarı istenebilir; anahtarınızın elinizde olduğundan emin olun (emin değilim, test edilecek)."
+      ]
+    },
+    "PLC-005": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "yerlesik",
+            "kontrol": "bcdedit_deger_var",
+            "parametreler": {"degerler": ["numproc", "truncatememory"]}
+          }
+        ],
+        "mesaj": "msconfig'de 'İşlemci sayısı' veya 'Maksimum bellek' sınırı uygulanmış. Bu, bilgisayarın tüm gücünü kullanmasını ENGELLER; kaldırmanız önerilir."
+      },
+      "rehber": {"ac": {"tur": "program", "hedef": "msconfig.exe"}},
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "yerlesik", "eylem": "bcdedit", "parametreler": {"eleman": "numproc"}, "acik": "*", "kapali": null},
+          {
+            "tur": "yerlesik",
+            "eylem": "bcdedit",
+            "parametreler": {"eleman": "truncatememory"},
+            "acik": "*",
+            "kapali": null
+          }
+        ],
+        "yalnizca_kapat": true
+      },
+      "notlar": [
+        "Bu zararlı ayar uygulamadan açılamaz; yalnızca bilgisayarınızda uygulanmışsa kapatabilirsiniz.",
+        "Önyükleme ayarı (bcdedit) değiştirir. BitLocker kullanıyorsanız, değişiklikten sonra kurtarma anahtarı istenebilir; anahtarınızın elinizde olduğundan emin olun (emin değilim, test edilecek)."
+      ]
+    },
+    "PLC-006": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control",
+            "ad": "SvcHostSplitThresholdInKB",
+            "karsilastir": "esit_degil",
+            "deger": 3670016
+          }
+        ],
+        "mesaj": "SvcHostSplitThresholdInKB değeri Windows varsayılanından farklı (daha önce bir 'tweak' uygulanmış olabilir)."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control",
+            "ad": "SvcHostSplitThresholdInKB",
+            "veri_turu": "REG_DWORD",
+            "acik": {"hesapla": "toplam_ram_kb"},
+            "kapali": 3670016,
+            "yoksa": 3670016
+          }
+        ]
+      }
+    },
+    "PLC-007": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "LargeSystemCache",
+            "karsilastir": "esit",
+            "deger": 1
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "DisablePagingExecutive",
+            "karsilastir": "esit",
+            "deger": 1
+          }
+        ],
+        "mesaj": "LargeSystemCache veya DisablePagingExecutive değiştirilmiş (daha önce bir 'tweak' uygulanmış olabilir)."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "LargeSystemCache",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "DisablePagingExecutive",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ]
+      }
+    },
+    "PLC-008": {
+      "tespit": {
+        "herhangi": [{"tur": "yerlesik", "kontrol": "sayfa_dosyasi_yok", "parametreler": {}}],
+        "mesaj": "Sayfa dosyası (sanal bellek) kapalı görünüyor. Bu, bellek yetmediğinde programların çökmesine yol açabilir."
+      },
+      "rehber": {"ac": {"tur": "program", "hedef": "SystemPropertiesPerformance.exe"}},
+      "bilgi_nedeni": "Güvenliğiniz için bu ayar hiçbir zaman uygulamadan yapılmaz."
+    },
+    "PLC-009": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "zamanlanmis_gorev",
+            "parametreler": {"yol": "\\Microsoft\\Windows\\Defrag\\", "ad": "ScheduledDefrag"},
+            "acik": "Disabled",
+            "kapali": "Enabled"
+          }
+        ]
+      },
+      "notlar": ["SSD'lerde haftalık TRIM işlemi de durur."]
+    },
+    "PLC-010": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+            "ad": "SystemResponsiveness",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": 20,
+            "yoksa": 20
+          }
+        ]
+      }
+    },
+    "PLC-011": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+            "ad": "NetworkThrottlingIndex",
+            "veri_turu": "REG_DWORD",
+            "acik": 4294967295,
+            "kapali": 10,
+            "yoksa": 10
+          }
+        ]
+      }
+    },
+    "PLC-012": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+            "ad": "Priority",
+            "veri_turu": "REG_DWORD",
+            "acik": 6,
+            "kapali": 2,
+            "yoksa": 2
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+            "ad": "Scheduling Category",
+            "veri_turu": "REG_SZ",
+            "acik": "High",
+            "kapali": "Medium",
+            "yoksa": "Medium"
+          }
+        ]
+      }
+    },
+    "PLC-013": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\Psched",
+            "ad": "NonBestEffortLimit",
+            "veri_turu": "REG_DWORD",
+            "acik": 0,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      }
+    },
+    "PLC-014": {
+      "islem": {
+        "kontrol": "secim",
+        "cozumleyici": {"ad": "ag_arabirimleri"},
+        "alanlar": [
+          {
+            "id": "dns",
+            "etiket": "DNS sunucusu",
+            "adim": {"tur": "yerlesik", "eylem": "dns", "parametreler": {"bagdastirici": "{{ag_bagdastirici}}"}},
+            "secenekler": [
+              {"deger": "otomatik", "etiket": "Otomatik (modem / İSS)"},
+              {"deger": "cloudflare", "etiket": "Cloudflare (1.1.1.1)"},
+              {"deger": "google", "etiket": "Google (8.8.8.8)"},
+              {"deger": "quad9", "etiket": "Quad9 (9.9.9.9)"}
+            ],
+            "onerilen": "otomatik"
+          }
+        ]
+      },
+      "notlar": [
+        "Tüm bağlı ağ kartlarına uygulanır.",
+        "DNSCrypt gibi bir DNS aracı veya VPN kullanıyorsanız değiştirmeyin; bağlantınız bozulabilir."
+      ]
+    },
+    "PLC-015": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters",
+            "ad": "DisabledComponents",
+            "karsilastir": "icinde",
+            "deger": [255, 4294967295]
+          }
+        ],
+        "mesaj": "IPv6 registry ile tamamen kapatılmış. Microsoft bunu önermez; bazı Windows özellikleri ve oyun ağları sorun çıkarabilir."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters",
+            "ad": "DisabledComponents",
+            "veri_turu": "REG_DWORD",
+            "acik": 255,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      }
+    },
+    "PLC-016": {
+      "tespit": {
+        "herhangi": [{"tur": "yerlesik", "kontrol": "tcp_otomatik_ayar_kapali", "parametreler": {}}],
+        "mesaj": "TCP alma penceresi otomatik ayarı kapatılmış. Bu, indirme hızını ciddi düşürebilir."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "tcp_otomatik_ayar",
+            "parametreler": {},
+            "acik": "disabled",
+            "kapali": "normal"
+          }
+        ]
+      }
+    },
+    "PLC-017": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\mouclass\\Parameters",
+            "ad": "MouseDataQueueSize",
+            "karsilastir": "kucuk",
+            "deger": 100
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\kbdclass\\Parameters",
+            "ad": "KeyboardDataQueueSize",
+            "karsilastir": "kucuk",
+            "deger": 100
+          }
+        ],
+        "mesaj": "Fare/klavye veri kuyruğu küçültülmüş. Bu, hızlı harekette girişlerin kaybolmasına yol açabilir."
+      },
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\mouclass\\Parameters",
+            "ad": "MouseDataQueueSize",
+            "veri_turu": "REG_DWORD",
+            "acik": null,
+            "kapali": 100,
+            "yoksa": null,
+            "acik_kosulu": {"kucuk": 100}
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\kbdclass\\Parameters",
+            "ad": "KeyboardDataQueueSize",
+            "veri_turu": "REG_DWORD",
+            "acik": null,
+            "kapali": 100,
+            "yoksa": null,
+            "acik_kosulu": {"kucuk": 100}
+          }
+        ],
+        "yalnizca_kapat": true
+      },
+      "notlar": [
+        "Bu zararlı ayar uygulamadan açılamaz; yalnızca bilgisayarınızda uygulanmışsa kapatabilirsiniz (varsayılan 100'e döner)."
+      ]
+    },
+    "PLC-018": {
+      "tespit": {
+        "herhangi": [
+          {
+            "tur": "registry_anahtar_var",
+            "kok": "HKLM",
+            "yol": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\csrss.exe\\PerfOptions"
+          }
+        ],
+        "mesaj": "csrss.exe için öncelik değişikliği uygulanmış. Bu sistem kararlılığını bozabilir."
+      },
+      "bilgi_nedeni": "Güvenliğiniz için bu ayar hiçbir zaman uygulamadan yapılmaz."
+    },
+    "PLC-019": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+            "ad": "IRQ8Priority",
+            "veri_turu": "REG_DWORD",
+            "acik": null,
+            "kapali": null,
+            "yoksa": null,
+            "acik_kosulu": "var"
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+            "ad": "IRQ16Priority",
+            "veri_turu": "REG_DWORD",
+            "acik": null,
+            "kapali": null,
+            "yoksa": null,
+            "acik_kosulu": "var"
+          }
+        ],
+        "yalnizca_kapat": true
+      },
+      "notlar": ["Veritabanında uygulanacak bir değer olmadığı için uygulamadan açılamaz; uygulanmışsa kapatabilirsiniz."]
+    },
+    "PLC-020": {
+      "tespit": {
+        "herhangi": [{"tur": "yerlesik", "kontrol": "defender_gercek_zamanli_kapali", "parametreler": {}}],
+        "mesaj": "Windows Defender gerçek zamanlı koruması kapalı görünüyor. Başka bir antivirüs kullanmıyorsanız bilgisayarınız korumasız."
+      },
+      "bilgi_nedeni": "Defender'ı tamamen kapatmak (servisler, ilkeler) uygulamadan yapılmaz. Yalnızca gerçek zamanlı koruma, Sistem menüsündeki Defender kartından uyarı ve onayla kapatılabilir."
+    },
+    "PLC-021": {
+      "tespit": {
+        "herhangi": [{"tur": "servis", "ad": "wuauserv", "baslangic": "Disabled"}],
+        "mesaj": "Windows Update servisi devre dışı bırakılmış. Güvenlik güncellemeleri gelmiyor."
+      },
+      "bilgi_nedeni": "Güvenliğiniz için bu ayar hiçbir zaman uygulamadan yapılmaz."
+    },
+    "PLC-022": {"bilgi_nedeni": "Güvenliğiniz için bu ayar hiçbir zaman uygulamadan yapılmaz."},
+    "PLC-023": {
+      "islem": {
+        "kontrol": "eylem",
+        "eylemler": [
+          {"id": "temp", "etiket": "Geçici dosyaları temizle", "eylem": "gecici_dosyalari_temizle"},
+          {"id": "prefetch", "etiket": "Prefetch klasörünü temizle", "eylem": "prefetch_temizle"}
+        ]
+      },
+      "notlar": ["Geri alınamaz. Kullanımdaki dosyalar atlanır. Prefetch silinirse programların ilk açılışı bir süre yavaşlar."]
+    },
+    "PLC-024": {"bilgi_nedeni": "Ayrı bir program türüdür; bu uygulama zaten her değişikliği listeler, yedekler ve geri alır."},
+    "PLC-025": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "servis",
+            "ad": "NVDisplay.ContainerLocalSystem",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Automatic", "calisiyor": true},
+            "yoksa_atla": true
+          },
+          {
+            "tur": "servis",
+            "ad": "NvContainerLocalSystem",
+            "acik": {"baslangic": "Disabled", "calisiyor": false},
+            "kapali": {"baslangic": "Manual", "calisiyor": null},
+            "yoksa_atla": true
+          }
+        ]
+      },
+      "uyumluluk": {"gpu": ["NVIDIA"]},
+      "notlar": ["NVIDIA Kontrol Paneli ve NVIDIA App bazı özellikleri çalışmaz."]
+    },
+    "PLC-026": {"liste_yoneticisi": "nvidia", "sinif": "REHBER", "sinif_nedeni": "NVIDIA sürücü ayarı: NVAPI (DRS) ile uygulamadan seçilir.", "nvidia": {"ayar": "0x20FDD1F9", "secenekler": [{"deger": 0, "etiket": "Kapalı (varsayılan)", "varsayilan": true}, {"deger": 1, "etiket": "Açık"}], "onerilen": 0}, "uyumluluk": {"gpu": ["NVIDIA"]}, "notlar": ["Bu sürücü ayarı yalnızca OpenGL oyunlarını etkiler; DirectX oyunlarında açmanın etkisi yoktur."]},
+    "PLC-027": {
+      "uyumluluk": {"form": {"masaustu": "goster", "laptop": "goster"}},
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "yerlesik",
+            "eylem": "nihai_performans_plani",
+            "parametreler": {},
+            "acik": "nihai",
+            "kapali": "381b4222-f694-41f0-9685-ff5bb260df2e"
+          }
+        ]
+      },
+      "notlar": [
+        "Gerekirse Windows'un 'Nihai Performans' planının bir kopyasını oluşturup etkinleştirir; eski haline getirince önceki plan geri gelir ve oluşturulan kopya silinir."
+      ]
+    },
+    "PLC-028": {
+      "bilgi_nedeni": "İnternet/Ağ menüsündeki Nagle ayarıyla (NET-006) aynıdır; oradan açıp kapatabilirsiniz.",
+      "ilgili": "NET-006"
+    },
+    "PLC-029": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "ClearPageFileAtShutdown",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ]
+      },
+      "notlar": ["Kapanma süresi belirgin şekilde uzayabilir."]
+    },
+    "PLC-030": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+            "ad": "NtfsDisable8dot3NameCreation",
+            "veri_turu": "REG_DWORD",
+            "acik": 1,
+            "kapali": 2,
+            "yoksa": 2
+          }
+        ]
+      }
+    },
+    "PLC-031": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+            "ad": "NtfsDisableLastAccessUpdate",
+            "veri_turu": "REG_DWORD",
+            "acik": 2147483649,
+            "kapali": 2147483650,
+            "yoksa": 2147483650
+          }
+        ]
+      }
+    },
+    "PLC-032": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "IoPageLockLimit",
+            "veri_turu": "REG_DWORD",
+            "acik": 983040,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      }
+    },
+    "PLC-033": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+            "ad": "SecondLevelDataCache",
+            "veri_turu": "REG_DWORD",
+            "acik": 1024,
+            "kapali": 0,
+            "yoksa": 0
+          }
+        ]
+      }
+    },
+    "PLC-034": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters",
+            "ad": "MaxUserPort",
+            "veri_turu": "REG_DWORD",
+            "acik": 65534,
+            "kapali": null,
+            "yoksa": null
+          },
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters",
+            "ad": "TcpTimedWaitDelay",
+            "veri_turu": "REG_DWORD",
+            "acik": 30,
+            "kapali": null,
+            "yoksa": null
+          }
+        ]
+      }
+    },
+    "PLC-035": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {
+            "tur": "registry",
+            "kok": "HKLM",
+            "yol": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters",
+            "ad": "DefaultTTL",
+            "veri_turu": "REG_DWORD",
+            "acik": 64,
+            "kapali": null,
+            "yoksa": 128
+          }
+        ]
+      }
+    }
+  }
+}

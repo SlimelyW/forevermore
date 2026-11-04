@@ -1,0 +1,97 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.venv-derleme/
+.derleme/
+dist/
+build/*
+!build/*.spec
+!build/surum_bilgisi.txt
+!build/forevermore.ico
+*.log
+reports/
+
+# Üçüncü taraf araçlar: kullanıcı kendi bilgisayarında tools\ altına koyar, yeniden dağıtım izinleri belirsiz -> depoya girmez
+tools/Reference.xml
+tools/nvidiaProfileInspector.exe
+tools/nvidiaProfileInspector.exe.config
+tools/nvidiaProfileInspector.pdb
+tools/*nvidiaInspector.zip
+tools/DDU/
+tools/NVCleanstall/
+
+# ucuncu taraf skill kurulumu (depoya girmez)
+.agents/
+skills-lock.json
+.taste-skill/
+
+bot/.wrangler/
+bot/node_modules/
+
+# impeccable tasarım kancasının önbelleği (ayar dosyası .impeccable/config.json depoda)
+.impeccable/hook.cache.json
+
+# Gizli bilgi: asla depoya girmez (imza özel anahtarı %USERPROFILE%\.forevermore-imza altında, depo dışında)
+.env
+.env.*
+.dev.vars
+*.pem
+*.key
+*.pfx
+*.p12
+ozel_anahtar*
+lisans.dat
+lisans_kodlari*
+kodlar*.txt
+
+# --- Açık kaynak yayını için gözden geçirme (4 Kasım 2026) ---
+# Çalışma notları, denetim çıktıları ve kişisel dosyalar yerelde kalır, depoya girmez
+docs/faz-notlari.md
+docs/SECURITY.md
+docs/BACKLOG.md
+docs/ARKADAS_RAPORU_DUZELTMELERI.md
+HANDOFF.md
+denetim/
+audit/
+*-denetim*.md
+*.denetim.*
+security-audit*/
+kisisel/
+private/
+notlarim*.md
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/projects/
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Gizli bilgi ve imzalama anahtarları (ek desenler; asla depoya girmez)
+.forevermore-imza/
+imza_anahtar*
+*.snk
+*.keystore
+*.jks
+id_rsa*
+id_ed25519*
+secrets.*
+credentials*.json
+
+# Telifli içerik: oyun kapak görselleri, mağaza (Steam/Epic vb.) görselleri, marka logoları ve indirilen üçüncü taraf
+# simgeler depoda OLMAZ; uygulama/site bunları çalışma anında yayıncının sunucusundan alır, önbellek kullanıcı klasöründedir.
+kapaklar/
+covers/
+cover_cache/
+ikon_onbellek/
+marka_logolari/
+third_party_assets/
+**/capsule_*.jpg
+**/library_hero*.jpg
+**/library_600x900*.jpg
+**/header.jpg
+
+# Yerel çalışma notları
+CLAUDE.md
+.claude/

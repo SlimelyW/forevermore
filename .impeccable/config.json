@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "site/index.html"
+        ],
+        "createdAt": "2026-10-29T18:25:08.329Z",
+        "reason": "User requested a continuous infinite marquee (feature strip and game-name strip, item 6); it slows on hover and stops under reduced motion and reading mode"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "site/en.html"
+        ],
+        "createdAt": "2026-10-29T18:25:08.494Z",
+        "reason": "Same user-requested marquee as index.html"
+      }
+    ]
+  }
+}

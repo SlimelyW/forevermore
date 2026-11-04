@@ -1,0 +1,4 @@
+# Yalnızca .exe derlemek için gerekir (uygulamanın kendisi için değil).
+-r requirements.txt
+# Lisans: GPL + "bootloader istisnası" -> PyInstaller ile yapılan programı kapalı kaynak/ticari dağıtmak serbest.
+pyinstaller==6.22.3
