@@ -17,10 +17,8 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-kilit" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
   <symbol id="i-tik" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></symbol>
-  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
 </svg>
 <header class="top">
   <div class="wrap">
@@ -30,6 +28,8 @@
       <a href="#oyunlar">Oyunlar</a>
       <a href="#kanit">Kanıtlar</a>
       <a href="#indir">İndir</a>
+      <a href="#destek">Destek</a>
+      <a href="#uyari">Neden uyarı?</a>
       <a href="#sss">SSS</a>
       <button class="a11y" type="button" data-a11y aria-pressed="false" title="Disleksi ve DEHB için: Verdana yazı, geniş satır aralığı">Okuma modu</button>
       <a class="lang" href="en.html" hreflang="en">EN</a>
@@ -324,6 +324,43 @@
     </div>
   </section>
 
+  <section id="destek" class="" data-tint="green">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Beğendiysen destek ol</h2>
+      <p class="kisaca"><b>Kısaca</b>Forevermore ücretsiz ve öyle kalacak. Işine yaradıysa bir kahve ısmarlayarak geliştirmeye devam etmemi sağlayabilirsin.</p>
+      <div class="indir">
+        <div class="kutu tam">
+          <h3>Bir kahve ısmarla</h3>
+          <p>Reklam, kilitli özellik ve hesap yok; bağış tamamen gönüllü. Gelen destek test cihazına, yeni ayarların araştırılmasına ve zamana gider. Bağış yapmasan da her şey aynı çalışır.</p>
+          <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><a class="btn primary buyuk" data-link="bagis" href="#destek">Beğendiysen bağış yap</a><a class="btn" data-link="github" href="#destek">GitHub'da yıldız ver</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="uyari" class="" data-tint="amber">
+    <div class="wrap">
+      <h2 class="baslik" data-kelime>Neden uyarı veriyor?</h2>
+      <p class="kisaca"><b>Kısaca</b>Sistem ayarlarını değiştirir ve kodu henüz imzalı değil; Windows uyarabilir. Bu normaldir, ama kontrol etmen için yollar var.</p>
+      <div class="indir">
+        <div class="kutu">
+          <h3>Uyarının nedenleri</h3>
+          <p>Forevermore sistem ayarlarını (kayıt defteri, hizmetler, güç planı gibi) değiştirdiği için bazı antivirüsler onu şüpheli sayabilir. Üstelik kod imzalama sertifikası henüz yok; SmartScreen bu yüzden "bilinmeyen yayımcı" der. Python ile yazılıp PyInstaller ile paketlendiğinden küçük antivirüslerde yanlış alarm da görülür.</p>
+          <p>Kaynak kodun açık olması uyarıyı tek başına kaldırmaz: Windows kodu okumaz, imzaya ve itibara bakar. Açık kaynak, uyarıya güvenmek zorunda kalmadan kendin bakabilmen içindir.</p>
+        </div>
+        <div class="kutu">
+          <h3>Kendin kontrol et</h3>
+          <ul>
+            <li>Kaynak kod <a data-link="github" href="#uyari">GitHub</a>'da; oku, istersen kendin derle.</li>
+            <li>Zip'in SHA-256 değeri sürüm sayfasında yazar; PowerShell'de <code>Get-FileHash Forevermore.zip</code> ile karşılaştır.</li>
+            <li>2.1.2 paketi VirusTotal'da 67 motordan hiçbirinde işaretlenmedi (0/67, Ekim 2026; sürümler arasında değişebilir). <a data-vt href="#uyari">Raporu aç</a></li>
+          </ul>
+          <p>Resmî zip'i yalnızca bu siteden ya da GitHub Sürümler sayfasından indir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="sss" class="" data-tint="violet">
     <span class="kenar sol" aria-hidden="true"><i></i><b>1 tık</b>geri alma</span><span class="kenar sag" aria-hidden="true"><i></i><b>2 uyarı</b>riskli ayarda</span>
     <div class="wrap">
@@ -333,9 +370,6 @@
         <p>Riskli işaretli ayarlar iki ayrı uyarıyla sorulur ve her değişiklik geri alınabilir: <a href="#geri-alma">Her değişiklikte olan</a>.</p></details>
       <details><summary>Kaynak kod herkese açık mı?</summary>
         <p>Evet. Kod MIT lisansıyla <a data-link="github" href="#sss">GitHub</a>'da; okuyabilir, derleyebilir, değiştirebilir ve katkı verebilirsin.</p></details>
-      <details id="antivirus"><summary>Antivirüs, VirusTotal veya SmartScreen uyarı verdi.</summary>
-        <p>Forevermore Python ile yazılıp PyInstaller ile paketlenir. Bazı zararlı yazılımlar da aynı yöntemi kullandığı için bu paketler küçük antivirüslerde sık yanlış alarm verir. 2.1.2 paketini <a data-vt href="#sss">VirusTotal</a>'da taranan 67 antivirüs motorunun hiçbiri işaretlemedi (0/67, Ekim 2026). Sonuç sürümler arasında değişebilir.</p>
-        <p>SmartScreen'in "bilinmeyen yayımcı" uyarısı, programın henüz ücretli bir kod imzalama sertifikası olmamasından kaynaklanır. Hiçbir yöntem bir masaüstü programının değiştirilmesini tamamen engelleyemez; imza ve SHA-256, değiştirilmiş bir kopyayı fark etmeni sağlar. <a href="#dogrula">Nasıl doğrulanır</a></p></details>
     </div>
   </section>
 

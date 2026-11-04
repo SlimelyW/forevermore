@@ -7,7 +7,7 @@
 @media (prefers-color-scheme: light) { :root { --on-amber: #ffffff; --stutter: #c2362c; } }
 ::selection { background: color-mix(in srgb, var(--green) 38%, transparent); color: var(--text); }
 html { scrollbar-color: var(--edge) var(--bg); }
-.num, .sayac b, .olcu b, .hud b, .plan2 .price, .oyun-sayi b { font-variant-numeric: tabular-nums; }
+.num, .sayac b, .olcu b, .hud b, .oyun-sayi b { font-variant-numeric: tabular-nums; }
 .ikon { width: 1.1em; height: 1.1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s var(--ease); }
 
 /* ---------------------------------------------------------------- tek zemin: bölümler renkli bant değil */
@@ -20,7 +20,7 @@ header.top { background: color-mix(in srgb, var(--bg) 94%, transparent); }
 .btn:hover { transform: translateY(-2px); }
 .btn:hover .ikon { transform: translateY(1px) scale(1.12); }
 .btn:active { transform: translateY(0) scale(.97); transition-duration: .06s; }
-.rozet, .chip, .pro-etiket, .tasarruf, .onerilen, .hud-ornek { max-width: 100%; }
+.rozet, .chip, .hud-ornek { max-width: 100%; }
 .rozet { white-space: normal; }
 nav.links .btn.nav-cta { min-height: 36px; padding: 4px 14px; font-size: 14.5px; color: var(--on-green); }
 nav.links .btn.nav-cta:hover { color: var(--on-green); }
@@ -146,14 +146,6 @@ nav.links .btn.nav-cta:hover { color: var(--on-green); }
 .fark[data-durum="sonra"] .olcu b { color: var(--green); }
 .fark .dipnot { color: var(--muted); font-size: 14px; margin: 16px 0 0; max-width: 80ch; }
 
-/* yumuşak Pro yönlendirmesi */
-.pro-ipucu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 22px 0 0; padding: 14px 18px; border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--border));
-             border-radius: 12px; background: color-mix(in srgb, var(--amber) 7%, var(--surface)); color: var(--text); font-size: 15px; max-width: 820px; }
-.pro-ipucu > .ikon { color: var(--amber); }
-.pro-ac { display: inline-flex; align-items: center; gap: 6px; color: var(--amber); font-weight: 650; text-decoration: none; }
-.pro-ac:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
-.kilit-satir { display: inline-flex; align-items: center; gap: 6px; }
-.kilit-satir .ikon { color: var(--amber); }
 
 /* ---------------------------------------------------------------- bölüm başlıkları ve kartlar */
 section h2.baslik { font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; text-wrap: balance; }
@@ -167,21 +159,6 @@ section[data-tint="violet"] details, .uyari, .oyun-sonuc { border-left-width: 1p
 /* ---------------------------------------------------------------- fiyat */
 .fiyat2 { padding: 64px 0; }
 .plans2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 22px; align-items: center; max-width: 980px; margin-top: 8px; }
-.plan2 { position: relative; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); padding: 28px; display: flex; flex-direction: column; min-width: 0; }
-.plan2 > :not(.halka) { position: relative; }
-.plan2 h3 { margin: 0 0 6px; font-family: var(--display); font-size: 21px; font-weight: 700; }
-.plan2 .price { font-family: var(--display); font-weight: 800; font-size: 46px; letter-spacing: -.03em; line-height: 1.1; margin: 6px 0 2px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
-.plan2 .price small { font-size: 17px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
-.plan2 .fatura { color: var(--muted); font-size: 14.5px; margin: 0 0 4px; min-height: 2.9em; }
-.plan2 ul { list-style: none; padding: 0; margin: 18px 0 24px; display: grid; gap: 10px; }
-.plan2 li { display: flex; gap: 10px; align-items: flex-start; font-size: 15.5px; flex-wrap: wrap; }
-.plan2 li .ikon { margin-top: .22em; color: var(--green); }
-.plan2 li.kilitli { color: var(--muted); }
-.plan2 li.kilitli .ikon { color: var(--amber); }
-.plan2 li .pro-etiket { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 50%, transparent); border-radius: 999px; padding: 0 8px; }
-.plan2 .btns { margin-top: auto; display: flex; gap: 10px; flex-wrap: wrap; }
-.plan2 .btns .btn { flex: 1 1 auto; }
-.plan2.pro { padding: 34px; border: 0; background: transparent; box-shadow: 0 30px 80px -28px color-mix(in srgb, var(--amber) 55%, transparent); }
 /* dönen çerçeve: büyük konik katman yalnızca transform ile döner, iç katman kartın zeminidir */
 .halka { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
 .halka::before { content: ""; position: absolute; left: 50%; top: 50%; width: 160%; aspect-ratio: 1; translate: -50% -50%;
@@ -189,13 +166,6 @@ section[data-tint="violet"] details, .uyari, .oyun-sonuc { border-left-width: 1p
 .js .halka::before { animation: don 8s linear infinite; }
 .halka::after { content: ""; position: absolute; inset: 2px; border-radius: 16px; background: color-mix(in srgb, var(--amber) 8%, var(--surface)); }
 @keyframes don { to { transform: rotate(360deg); } }
-.plan2.pro .price span { color: var(--amber); }
-.plan2.pro .btn.primary { background: var(--amber); color: var(--on-amber); box-shadow: 0 10px 30px -8px color-mix(in srgb, var(--amber) 70%, transparent); }
-.plan2.pro .btn.primary:hover { color: var(--on-amber); }
-.plan2.pro li .ikon { color: var(--amber); }
-.onerilen { position: absolute !important; top: -13px; left: 34px; background: var(--amber); color: var(--on-amber); font-size: 13px; font-weight: 750; padding: 3px 12px; border-radius: 999px; z-index: 1; }
-.tasarruf { font-size: 14px; font-weight: 750; letter-spacing: 0; color: var(--on-green); background: var(--green); border-radius: 999px; padding: 2px 10px; align-self: center; line-height: 1.4; }
-.js .tasarruf.yeni { animation: belir .35s var(--ease); }
 @keyframes belir { from { transform: scale(.7); opacity: 0; } }
 .sure-etiket { margin: 12px 0 6px; font-size: 14.5px; font-weight: 600; color: var(--muted); }
 .sure { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border: 1px solid var(--edge); border-radius: 12px; background: var(--bg); margin: 0 0 8px; overflow: visible; max-width: 360px; }
@@ -219,7 +189,6 @@ section[data-tint="violet"] details, .uyari, .oyun-sonuc { border-left-width: 1p
 @media (max-width: 860px) {
   .olculer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .plans2 { grid-template-columns: 1fr; }
-  .plan2.pro { order: -1; }
   .oyun-kart { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
@@ -231,8 +200,6 @@ section[data-tint="violet"] details, .uyari, .oyun-sonuc { border-left-width: 1p
   .ayirici-ipucu { top: calc(100% + 8px); left: 50%; translate: -50% 0; }   /* dar ekranda tutamacın altında, içerikten önce */
   .sayaclar { gap: 16px 28px; margin-top: 40px; }
   .fark, .fiyat2, main > section { padding-block: 44px; }
-  .plan2, .plan2.pro { padding: 24px 18px; }
-  .onerilen { left: 18px; }
   .sure { max-width: none; }
   .btn.buyuk { width: 100%; }
   .olcu { padding: 16px 14px; }

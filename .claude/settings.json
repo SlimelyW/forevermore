@@ -1,0 +1,12 @@
+{
+  "model": "sonnet",
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70",
+    "DISABLE_TELEMETRY": "1"
+  },
+  "permissions": {
+    "deny": [
+     
+    ]
+  }
+}

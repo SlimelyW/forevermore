@@ -2,6 +2,34 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.3.0 (4 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.3.0 (etiket v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+
+> **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
+> SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
+
+### Yeni neler var
+- **Forevermore artık tamamen ücretsiz ve açık kaynak (MIT).** Pro, lisans kodu ve kilitli özellik kalktı; tüm ayarlar herkese açık.
+- Gönüllü bağış: sol menünün altında sabit "Beğendiysen bağış yap" düğmesi ve sitede indirmenin altında Destek bölümü. Zorunlu değil, hiçbir yerde açılır pencere yok.
+- İki tur güvenlik denetimi düzeltmeleri; oyun günlüğündeki kapanış hatası düzeltildi.
+
+## English
+
+**Version: 2.3.0 (tag v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
+Signature fingerprint: `5FE5-D786-0B89-A56E`
+
+> **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
+> Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
+
+### What's new
+- **Forevermore is now fully free and open source (MIT).** Pro, license codes and locked features are gone; every setting is available to everyone.
+- Voluntary donation: a pinned "Donate if you like it" button at the bottom of the sidebar and a Support section under Download on the site. Optional, no pop-ups anywhere.
+- Two rounds of security-audit fixes; fixed a shutdown error in the game log.
+
 # 2.2.0 (31 Ekim 2026)
 
 ## Türkçe

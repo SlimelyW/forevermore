@@ -244,15 +244,6 @@ tr[hidden] { display: none; }
 .sure button:last-child { border-right: 0; }
 .sure button[aria-pressed="true"] { background: var(--green-wash); color: var(--text); box-shadow: inset 0 -3px 0 var(--green); }
 .plans { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 860px; }
-.plan { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; display: flex; flex-direction: column; }
-.plan.pro { border-color: var(--green); }
-.plan h3 { margin: 0; font-family: var(--display); font-size: 20px; }
-.plan .price { font-family: var(--display); font-size: 38px; font-weight: 650; letter-spacing: -.02em; margin: 6px 0 0; line-height: 1.2; }
-.plan .price small { font-size: 15px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
-.plan .tl { color: var(--muted); font-size: 14px; margin: 0; min-height: 22px; }
-.plan ul { padding-left: 20px; margin: 14px 0 22px; color: var(--muted); }
-.plan ul li { margin: 5px 0; }
-.plan .btns { margin-top: auto; display: flex; gap: 10px; flex-wrap: wrap; }
 .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 6px; background: var(--purple-wash); color: var(--accent); margin-left: 6px; vertical-align: middle; }
 
 /* ---------------------------------------------------------------- indirme, SSS */
@@ -362,10 +353,10 @@ html[data-okunabilir] section, html[data-okunabilir] .hero2, html[data-okunabili
 html[data-okunabilir] :is(.iki, .uclu, .indir, .plans2, .belge) { grid-template-columns: 1fr !important; }
 html[data-okunabilir] .olculer { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr)); }
 html[data-okunabilir] .sure { grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5em), 1fr)); max-width: none; }
-html[data-okunabilir] :is(.chip, .rozet, .serit li, .pro-etiket, .tasarruf, .onerilen, nav.links a) { white-space: normal !important; }
-html[data-okunabilir] :is(.kutu, .plan2, .olcu, li, .kisaca, .oyun-kart) { min-width: 0; }
+html[data-okunabilir] :is(.chip, .rozet, .serit li, nav.links a) { white-space: normal !important; }
+html[data-okunabilir] :is(.kutu, .olcu, li, .kisaca, .oyun-kart) { min-width: 0; }
 /* dar ekranda tek uzun kelime (ör. BATTLEGROUNDS) düğmeyi taşırmasın */
-html[data-okunabilir] :is(.btn, .chip, button, .rozet, .plan2 li) { overflow-wrap: anywhere; min-width: 0; max-width: 100%; }
+html[data-okunabilir] :is(.btn, .chip, button, .rozet) { overflow-wrap: anywhere; min-width: 0; max-width: 100%; }
 html[data-okunabilir] .dagilim-liste li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 html[data-okunabilir] .sira li > div { min-width: 0; overflow-wrap: anywhere; }
 html[data-okunabilir] .oyun-kart > * { min-width: 0; overflow-wrap: anywhere; }
@@ -375,9 +366,6 @@ html[data-okunabilir] .icindekiler { position: static; flex-direction: row; flex
 html[data-okunabilir] .hero2 { min-height: 0; }
 html[data-okunabilir] .hud { position: static; width: auto; max-width: 30em; margin-top: 24px; }
 html[data-okunabilir] .son .actions, html[data-okunabilir] .son h2, html[data-okunabilir] .son p { justify-content: flex-start; margin-inline: 0; }
-html[data-okunabilir] .plan2.pro { order: 0; }
-html[data-okunabilir] .plan2 .price { font-size: 1.9em !important; }
-html[data-okunabilir] .plan2 .price small, html[data-okunabilir] .olcu b small { font-size: .5em !important; }
 html[data-okunabilir] :is(.btn, [role="tab"], .a11y, .sure button, .ab button) { white-space: normal; height: auto; min-height: 48px; line-height: 1.35; }
 html[data-okunabilir] .tanim li { grid-template-columns: 1fr auto; }
 html[data-okunabilir] .tanim li > span:last-child { grid-column: 1 / -1; }
@@ -387,11 +375,11 @@ html[data-okunabilir] header.top { position: static; }
 html[data-okunabilir] header.top .wrap { height: auto; padding-block: 10px; flex-wrap: wrap; }
 html[data-okunabilir] nav.links { gap: 8px 18px; }
 /* süs yok: zemin tek renk, kartlar yalnızca ince çerçeve; tuval, parlama, şerit hareketi kapalı */
-html[data-okunabilir] :is(.kutu, .plan2, .plan2.pro, .pencere, .olcu, .kontrol, details, .hud, .grafik, .pro-ipucu, .sonuc, .bulgu, .kunye-kart) {
+html[data-okunabilir] :is(.kutu, .pencere, .olcu, .kontrol, details, .hud, .grafik, .sonuc, .bulgu, .kunye-kart) {
   background: var(--surface); box-shadow: none !important; }
 html[data-okunabilir] :is(section, .hero2, .serit) { background: var(--bg); border-color: var(--border); }
 html[data-okunabilir] :is(.kutu, .bulgu, .kunye-kart, details, .uyari, .oyun-sonuc) { border: 1px solid var(--border) !important; }
-html[data-okunabilir] :is(.son canvas, .grafik, .plan2 .halka) { display: none !important; }
+html[data-okunabilir] :is(.son canvas, .grafik) { display: none !important; }
 /* sahte öğeler :is() içinde geçersiz sayılıp atlanıyordu: ayrı yazılır */
 html[data-okunabilir] .hero2::before, html[data-okunabilir] .parla::after, html[data-okunabilir] .cizik::after { display: none !important; }
 /* önce/sonra grafiği arka plan değil, metnin altında durağan bir blok; ayırıcı yine sürüklenir ve ok tuşlarıyla kayar */
@@ -403,8 +391,7 @@ html[data-okunabilir] :is(.noktalar, .kenar, .oyun-serit .kapak-yer) { display: 
 html[data-okunabilir] .oyun-serit li { width: auto; min-height: 0; border-radius: 999px; }
 html[data-okunabilir] .oyun-serit li .ad { padding: 4px 12px; font-size: inherit; font-weight: 400; min-height: 0; }
 html[data-okunabilir] .cizik { text-decoration: line-through; text-decoration-thickness: .08em; color: inherit; }
-html[data-okunabilir] .plan2.pro { border: 2px solid var(--amber); }
-html[data-okunabilir] :is(.btn, .tasarruf, .onerilen) { box-shadow: none !important; }
+html[data-okunabilir] :is(.btn) { box-shadow: none !important; }
 html[data-okunabilir] .serit-iz { animation: none !important; transform: none !important; width: auto !important; display: block; }
 html[data-okunabilir] .serit ul { flex-wrap: wrap; min-width: 0; row-gap: 10px; justify-content: flex-start; }
 html[data-okunabilir] .oyun-serit { -webkit-mask: none; mask: none; }
@@ -520,8 +507,5 @@ section[data-tint="violet"] details { border-left: 3px solid var(--tint); }
 .oyun-sonuc.var { border-left-color: var(--green); }
 .oyun-sonuc.yok { border-left-color: var(--sky); }
 
-/* fiyat: Pro kartı sarı */
-.plan.pro { border-color: var(--amber); background: color-mix(in srgb, var(--amber) 6%, var(--surface)); }
-.plan.pro .price { color: var(--amber); }
-.plan.pro .btn.primary { background: var(--amber); color: var(--on-green); }
 .sure button[aria-pressed="true"] { background: color-mix(in srgb, var(--amber) 20%, var(--surface)); box-shadow: inset 0 -3px 0 var(--amber); }
+html[data-okunabilir] .olcu b small { font-size: .5em !important; }

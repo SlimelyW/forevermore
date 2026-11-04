@@ -9,7 +9,7 @@ window.FOREVERMORE = {
   // Gönüllü bağış sayfası (Buy Me a Coffee)
   bagis: "https://buymeacoffee.com/forevermore",
   // Paket doğrulama bilgileri (derle.bat çıktısı)
-  sha256: "53F2075F758366A285729FD4CC6C541797618B8F93A92D96903154A45E6E454D",
+  sha256: "C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347",
 };
 
 document.addEventListener("DOMContentLoaded", () => {

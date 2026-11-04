@@ -21,7 +21,7 @@ VSVersionInfo(
         StringStruct('OriginalFilename', 'Forevermore.exe'),
         StringStruct('ProductName', 'Forevermore'),
         StringStruct('ProductVersion', '2.2.0.0'),
-        StringStruct('LegalCopyright', '© 2026 Kubilay Paşa. MIT Lisansı.'),
+        StringStruct('LegalCopyright', '© 2026 Kubilay Paşa. Tüm hakları saklıdır.'),
         StringStruct('LegalTrademarks', 'Forevermore - yalnızca resmî kaynaktan dağıtılır')
       ])
     ]),
