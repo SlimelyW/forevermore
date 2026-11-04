@@ -2,6 +2,32 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.3.2 (5 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.3.2 (etiket v2.3.2).** SHA-256 (Forevermore.zip): `904A89FBBFFD4EB2C7503EF5474A216BC0321F209AA33F27D4FBEBB2781A7876`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+
+> **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
+> SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
+
+### Yeni neler var
+- Bilgi sayfasından Discord adı ve e-posta kaldırıldı; geri bildirim GitHub Issues üzerinden.
+- Başka işlev değişikliği yok.
+
+## English
+
+**Version: 2.3.2 (tag v2.3.2).** SHA-256 (Forevermore.zip): `904A89FBBFFD4EB2C7503EF5474A216BC0321F209AA33F27D4FBEBB2781A7876`
+Signature fingerprint: `5FE5-D786-0B89-A56E`
+
+> **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
+> Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
+
+### What's new
+- Removed the Discord name and email from the About page; feedback goes through GitHub Issues.
+- No other functional changes.
+
 # 2.3.1 (5 Kasım 2026)
 
 ## Türkçe
