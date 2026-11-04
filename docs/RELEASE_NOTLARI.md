@@ -6,7 +6,7 @@ GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapı
 
 ## Türkçe
 
-**Sürüm: 2.3.0 (etiket v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
+**Sürüm: 2.3.0 (etiket v2.3.0).** SHA-256 (Forevermore.zip): `55771B128C3FB5D48CC584AE1E5FF8470C74E24597D959737F64E2E30BD4C20F`
 İmza parmak izi: `5FE5-D786-0B89-A56E`
 
 > **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
@@ -19,7 +19,7 @@ GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapı
 
 ## English
 
-**Version: 2.3.0 (tag v2.3.0).** SHA-256 (Forevermore.zip): `C11F8BF3A658FABD2A944E7AF2399CF4129DDAFC61AE2CB94FA4DA8980AB0347`
+**Version: 2.3.0 (tag v2.3.0).** SHA-256 (Forevermore.zip): `55771B128C3FB5D48CC584AE1E5FF8470C74E24597D959737F64E2E30BD4C20F`
 Signature fingerprint: `5FE5-D786-0B89-A56E`
 
 > **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
