@@ -11,7 +11,7 @@ are shipped with, or used by, the program, their licenses, and whether they are 
 ÖZET / SUMMARY
 --------------
 Pakete giren (dağıtılan) bileşenler: Python (PSF), Qt / PySide6 (LGPLv3), PyInstaller önyükleyicisi (GPLv2+ ve
-önyükleyici istisnası), Intel PresentMon (MIT). Tanıtım sitesinde: Atkinson Hyperlegible, Lexend, OpenDyslexic
+önyükleyici istisnası), Intel PresentMon (MIT). Tanıtım sitesinde: Atkinson Hyperlegible, Lexend
 yazı tipleri (SIL OFL 1.1). Hiçbiri MIT ile çelişmez:
 - MIT, MIT/BSD/PSF/OFL bileşenleriyle doğrudan uyumludur (bildirim ve lisans metni korunur).
 - LGPLv3 (Qt/PySide6): program Qt'yi değiştirmeden, ayrı DLL/PYD dosyaları olarak bağlar (derleme "klasör" biçimindedir,
@@ -91,12 +91,11 @@ yayıncının sunucusundan çalışma anında alır.
 11) Web sitesi yazı tipleri (yalnızca site/fonts/; uygulamaya girmez) - SIL Open Font License 1.1
     - Atkinson Hyperlegible: Copyright 2020 Braille Institute of America, Inc.
     - Lexend: Copyright 2019 The Lexend Project Authors (https://github.com/googlefonts/lexend)
-    - OpenDyslexic: Copyright (c) 2019-07-29, Abbie Gonzalez (https://abbiecod.es), Reserved Font Name OpenDyslexic
     Tam lisans metinleri: site/fonts/LICENSE-*.txt
 
 12) Ayar fikirleri ve kaynaklar: ayar kataloğu (data/) kayıt defteri adı, hizmet adı gibi olgulardan ve Microsoft ile
     donanım üreticilerinin belgelerinden derlenmiştir; başka projelerin kodu ya da metni kopyalanmamıştır (taranan
-    kaynaklar: docs/C1_KAYNAK_TARAMA.md). Uygulamada gösterilen dış bağlantılar yalnızca
+    kaynaklar: docs/C1_KAYNAK_TARAMA.md, docs/C3_KAYNAK_LISANS.md). Uygulamada gösterilen dış bağlantılar yalnızca
     adrestir; sitelerin içeriği kopyalanmaz.
 
 13) Ed25519 (app/core/ed25519.py): RFC 8032 tanımına göre bu projede yazılmış saf Python uygulaması; üçüncü taraf

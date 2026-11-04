@@ -4,7 +4,8 @@ Uygulama silinmeden önce bilgisayarda bıraktığı izleri kaldırır:
 1. "Windows'la başlat" zamanlanmış görevi (uygulamanın Windows'a eklediği tek kalıcı kayıt).
 2. Yarım kalmış oyun oturumu (oyun sırasında durdurulan servisler, güç planı, bildirimler).
 3. İstenirse: uygulamanın yaptığı TÜM değişiklikler eski haline getirilir.
-4. İstenirse: uygulama verileri (%LOCALAPPDATA%\\Forevermore) silinir. Değişiklikler geri
+4. İstenirse: uygulama verileri (%LOCALAPPDATA%\\Forevermore ve %ProgramData%\\Forevermore'daki
+   bu hesabın klasörü) silinir. Değişiklikler geri
    alınmadan veriler silinemez; aksi hâlde geri alma için gereken yedekler kaybolur.
 
 Kurulum programı kaldırırken `Forevermore.exe --kaldir` çalıştırmalıdır
@@ -49,5 +50,10 @@ def cleanup(engine, revert_changes=False, delete_data=False, session=None):
             logging.shutdown()  # log dosyası açıkken klasör silinemez
             shutil.rmtree(paths.user_data_dir(), ignore_errors=True)
             shutil.rmtree(paths.legacy_data_dir(), ignore_errors=True)  # eski adın (PC Optimizer) kopyası
+            shutil.rmtree(paths.protected_path(), ignore_errors=True)
+            try:
+                paths.protected_root().rmdir()   # başka hesabın yedeği varsa dolu kalır
+            except OSError:
+                pass
             report["veri_silindi"] = True
     return report

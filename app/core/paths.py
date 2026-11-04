@@ -2,8 +2,11 @@
 
 - Program klasörü: .exe'nin (veya geliştirirken proje klasörünün) bulunduğu yer.
   data/ ve lang/ burada durur; sen güncelleyebilirsin.
-- Kullanıcı veri klasörü: %LOCALAPPDATA%\\Forevermore. Log, yedek ve raporlar
+- Kullanıcı veri klasörü: %LOCALAPPDATA%\\Forevermore. Log ve raporlar
   buraya yazılır; .exe nerede olursa olsun yazma izni sorunu çıkmaz.
+- Korumalı veri klasörü: %ProgramData%\\Forevermore\\<SID>. Yedek ve kaldırıcı verisi burada durur; yalnızca
+  Yöneticiler/SYSTEM yazar, çünkü yönetici olarak geri yüklenirler. Hesap başına ayrıdır: HKCU yedeği başka hesaba
+  dönmemeli, yedek anahtarı da (DPAPI) hesaba bağlıdır.
 
 Uygulamanın eski adı "PC Optimizer" idi. Eski veri klasörü (%LOCALAPPDATA%\\PCOptimizer)
 varsa ve yenisi henüz yoksa, ilk açılışta bir kez KOPYALANIR (taşınmaz, silinmez);
@@ -11,12 +14,18 @@ böylece eski yedekler ve "Eski haline getir" kayıtları çalışmaya devam ede
 """
 
 import os
+import secrets
 import shutil
 import sys
 from pathlib import Path
 
+from app.core import dpapi, guvenli_klasor
+
 APP_NAME = "Forevermore"
 LEGACY_APP_NAME = "PCOptimizer"
+PROTECTED_MARK = "tasindi.txt"
+BACKUP_KEY = "yedek_anahtar.dat"
+UNINSTALL_BACKUPS = "kaldirici_yedek"
 
 
 def app_dir():
@@ -120,5 +129,82 @@ def reports_dir():
     return _sub("reports")
 
 
+def protected_root():
+    return guvenli_klasor.common_appdata() / APP_NAME
+
+
+def protected_path():
+    """Bu hesabın korumalı klasörünün yolu; OLUŞTURMAZ."""
+    return protected_root() / guvenli_klasor.current_sid()
+
+
+def _protected(name):
+    """Taşıma bittiyse korumalı klasör; bitmediyse eski yer (salt okunur mod ve taşınamama durumu)."""
+    base = protected_path()
+    return base / name if os.path.exists(base / PROTECTED_MARK) else _sub(name)
+
+
 def backups_dir():
-    return _sub("backups")
+    return _protected("backups")
+
+
+def uninstall_backups_dir():
+    return _protected(UNINSTALL_BACKUPS)
+
+
+def _tree_sizes(root):
+    return {path.relative_to(root): path.stat().st_size for path in root.rglob("*") if path.is_file()}
+
+
+def _copy_backups(source, target):
+    if target.is_dir():   # önceki denemede bitti
+        return
+    temp = target.with_name(target.name + ".tasiniyor")
+    shutil.rmtree(temp, ignore_errors=True)
+    if source.is_dir():
+        shutil.copytree(source, temp)
+        if _tree_sizes(source) != _tree_sizes(temp):
+            raise OSError("Yedek kopyası eksik")
+    else:
+        temp.mkdir()
+    key = temp / BACKUP_KEY
+    if (temp / "yedekler.json").exists() and not key.exists():
+        # Anahtar varken imzasız dosya kabul edilmez: kaynak kullanıcı klasörüydü, kullanıcı onayıyla kurtarılır (BackupStore)
+        atomic_write(key, dpapi.protect(secrets.token_bytes(32)))
+    os.replace(temp, target)
+
+
+def _move_sessions(source, target):
+    target.mkdir(exist_ok=True)
+    if not source.is_dir():
+        return
+    for session in source.iterdir():
+        if guvenli_klasor.is_link(session):   # kaynak kullanıcı klasörüydü: bağlantı korumalı klasöre alınmaz
+            continue
+        temp = target / (session.name + ".tasiniyor")
+        shutil.rmtree(temp, ignore_errors=True)
+        shutil.move(str(session), str(temp))   # kaldırıcı yedeği GB'larca olabilir: kopyalanmaz, oturum oturum taşınır
+        if not guvenli_klasor.reset_acl(temp):
+            from app.core import log  # log, paths'e bağlı: döngüyü önler
+            log.get("paths").warning("Kaldırıcı yedeğinin izinleri tam sıfırlanamadı: %s", session.name)
+        os.replace(temp, target / session.name)
+
+
+def migrate_to_protected():
+    """Korumalı klasörü doğrular; eski yedekleri bir kez oraya geçirir. Yalnızca yönetici sürecinden çağrılır.
+    True: bu çağrıda taşındı. OSError: bitmedi, eski veri okunabilir kalır ve sonraki açılışta yeniden denenir.
+    İşaret dosyası yazıldıktan sonra kullanıcı klasörü bir daha okunmaz (saldırgan oraya yeni dosya koysa da)."""
+    guvenli_klasor.ensure(protected_root(), guvenli_klasor.sddl("BU"))
+    sid = guvenli_klasor.current_sid()
+    base = guvenli_klasor.ensure(protected_root() / sid, guvenli_klasor.sddl(sid))
+    if os.path.exists(base / PROTECTED_MARK):
+        return False
+    old = user_data_dir()
+    _copy_backups(old / "backups", base / "backups")
+    _move_sessions(old / UNINSTALL_BACKUPS, base / UNINSTALL_BACKUPS)
+    atomic_write(base / PROTECTED_MARK, "Yedekler bu klasöre taşındı; eski klasör backups.tasindi adıyla durur.\n")
+    try:
+        os.replace(old / "backups", old / "backups.tasindi")  # silinmez: elle kurtarma için durur
+    except OSError:
+        pass
+    return True

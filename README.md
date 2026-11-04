@@ -87,7 +87,7 @@ Klasör yapısı: `app/core` (ayarlar, yollar, dil), `app/engine` (motor, yedek,
 ## Gizlilik
 
 Telemetri, reklam, analiz yok. Tarama sonuçları, ayarlar, yedekler ve günlükler yalnızca bilgisayarınızda
-(`%LOCALAPPDATA%\Forevermore`) kalır. Uygulama varsayılan olarak internete hiç bağlanmaz; tek istisna, Ayarlar'dan sizin
+(`%LOCALAPPDATA%\Forevermore`, yedekler `%ProgramData%\Forevermore`) kalır. Uygulama varsayılan olarak internete hiç bağlanmaz; tek istisna, Ayarlar'dan sizin
 açtığınız güncelleme denetimidir (yalnızca GitHub, veri göndermez, indirilen paketin imzası doğrulanır).
 
 ## Katkı, güvenlik, destek

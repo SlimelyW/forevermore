@@ -458,8 +458,8 @@ class MainWindow(QMainWindow):
             self.banner_area.addWidget(w.banner(t("yeniden.gezgin"), "bilgi"))
         store = self.c.engine.store
         if store.tampered:
-            buttons = [w.button(t("ui.yedek_sifirla"), self._dismiss_broken_backup)]
-            if store.recoverable:
+            buttons = [] if store.readonly else [w.button(t("ui.yedek_sifirla"), self._dismiss_broken_backup)]
+            if store.recoverable and not store.readonly:
                 buttons.insert(0, w.button(t("ui.yedek_kurtar"), self._recover_backup, primary=True))
             self.banner_area.addWidget(w.banner(t("ui.yedek_degistirilmis"), "sorun", *buttons))
         from app.engine import driver_tools  # noqa: WPS433

@@ -1736,12 +1736,12 @@ class TestUserInterface(unittest.TestCase):
         self.wait_for(lambda: page.autostart is not None)
         labels = lambda p: " ".join(lbl.text() for lbl in p.findChildren(type(p.header.itemAt(0).widget()))  # noqa: E731
                                     if hasattr(lbl, "text"))
-        self.assertNotIn("[kaldirildi]", labels(page))  # bilgi bölümü Ekstra ayarlar'dan kaldırıldı
+        self.assertNotIn("smileyw", labels(page))  # bilgi bölümü Ekstra ayarlar'dan kaldırıldı
         self.window.navigate("bilgi")
         about = self.window.pages["bilgi"]
         text = labels(about)
         self.assertIn("Kubilay Paşa", text)
-        self.assertNotIn("[kaldirildi]", text)
+        self.assertNotIn("smileyw", text)
         settings.set("tepsiye_kucult", True)
         self.window.update_tray()
         if self.window.tray is not None:  # bazı test ortamlarında sistem tepsisi yok

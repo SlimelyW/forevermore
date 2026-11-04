@@ -33,6 +33,7 @@ _log = log.get("ui")
 MODE_NORMAL = "normal"          # yönetici, ayarlar değiştirilebilir
 MODE_READ_ONLY = "salt_okunur"  # yönetici izni verilmedi
 MODE_PREVIEW = "onizleme"       # deneme modu: hiçbir şey değiştirilmez, yedek geçici klasörde
+MODE_BACKUPS_NOT_MOVED = "yedek_tasinamadi"  # yönetici ama yedekler korumalı klasöre geçirilemedi: yazma yok
 
 RESTART_PRIORITY = ["bilgisayar", "oturum", "gezgin", "uygulama", "ses_servisi", "durumsal", "yok"]
 STATE_WORKERS = 8
@@ -70,7 +71,7 @@ class Controller:
                 self._tmp = tempfile.TemporaryDirectory()
                 store = BackupStore(Path(self._tmp.name))
             else:
-                store = BackupStore()
+                store = BackupStore(readonly=mode != MODE_NORMAL)
             system = WindowsSystem() if mode == MODE_NORMAL else ReadOnlySystem(WindowsSystem())
             is_admin = admin.is_admin if mode == MODE_NORMAL else (lambda: False)
             engine = Engine(system=system, store=store, is_admin=is_admin)

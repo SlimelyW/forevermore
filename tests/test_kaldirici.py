@@ -1,10 +1,16 @@
 """Uygulama kaldırıcı: sahte kayıt defteri ve geçici klasörlerle (gerçek sisteme dokunmaz)."""
+import ctypes
 import datetime
 import json
+import subprocess
+import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
+from app.core import admin
 from app.engine import uninstaller as u
 
 
@@ -79,6 +85,44 @@ class TestList(unittest.TestCase):
         self.assertFalse(u.start_uninstall(program(korumali=True), lambda e, a: calls.append((e, a)) or True))
         self.assertTrue(u.start_uninstall(program(), lambda e, a: calls.append((e, a)) or True))
         self.assertEqual(calls, [("C:\\x\\unins.exe", "/S")])
+
+    def test_hkcu_command_never_reaches_elevated_runner(self):
+        elevated, user = mock.Mock(return_value=True), mock.Mock(return_value=True)
+        self.assertTrue(u.start_uninstall(program(kok="HKCU"), elevated, user))
+        user.assert_called_once_with("C:\\x\\unins.exe", "/S")
+        elevated.assert_not_called()
+
+    def test_hkcu_failure_does_not_fall_back_to_elevated(self):
+        elevated, user = mock.Mock(return_value=True), mock.Mock(return_value=False)
+        self.assertFalse(u.start_uninstall(program(kok="HKCU"), elevated, user))
+        elevated.assert_not_called()
+
+    def test_hklm_keeps_elevated_runner(self):
+        elevated, user = mock.Mock(return_value=True), mock.Mock(return_value=True)
+        self.assertTrue(u.start_uninstall(program(), elevated, user))
+        user.assert_not_called()
+        elevated.assert_called_once()
+
+
+@unittest.skipUnless(ctypes.windll.user32.GetShellWindow(), "masaüstü kabuğu yok")
+class TestRunUnelevated(unittest.TestCase):
+    """Gerçek süreç başlatır (yalnızca geçici klasöre yazan pythonw). Yetkinin düşmesi yükseltilmiş süreç ister: EL_TESTLERI."""
+
+    def test_child_runs_under_shell_with_arguments(self):
+        pythonw = Path(sys._base_executable).with_name("pythonw.exe")
+        shell_pid = ctypes.c_ulong()
+        ctypes.windll.user32.GetWindowThreadProcessId(ctypes.windll.user32.GetShellWindow(), ctypes.byref(shell_pid))
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            out = Path(tmp) / "boslukl u.txt"
+            code = "import os,sys;open(sys.argv[1],'w').write(str(os.getppid()))"
+            self.assertTrue(admin.run_unelevated(str(pythonw), subprocess.list2cmdline(["-c", code, str(out)])))
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline and not (out.exists() and out.read_text()):
+                time.sleep(0.05)
+            self.assertEqual(int(out.read_text()), shell_pid.value)
+
+    def test_missing_program_returns_false(self):
+        self.assertFalse(admin.run_unelevated("C:\\yok\\yok.exe", "/S"))
 
 
 class TestLeftovers(unittest.TestCase):

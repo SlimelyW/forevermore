@@ -21,7 +21,13 @@
    - Nokta oluşturulamazsa (ör. Sistem Koruması kapalı) kullanıcı **açıkça kabul etmeden**
      hiçbir şey değiştirilmez.
 3. **Yedek.** Dokunulacak her değerin o anki hâli, yazmadan **önce**
-   `%LOCALAPPDATA%\Forevermore\backups\yedekler.json` dosyasına yazılır.
+   `%ProgramData%\Forevermore\<SID>\backups\yedekler.json` dosyasına yazılır.
+   - Klasöre yalnızca Yöneticiler/SYSTEM yazabilir, hesabın kendisi yalnızca okur (`app/core/guvenli_klasor.py`). Klasör
+     ACL'siyle tek adımda oluşturulur; önceden açılmış, sahibi güvenilmeyen veya junction olan klasör kenara alınır.
+     Eski `%LOCALAPPDATA%\Forevermore\backups` ilk yönetici açılışında bir kez kopyalanır ve `backups.tasindi` olur.
+     Kaldırıcı yedekleri (`kaldirici_yedek`) de aynı yere taşınır.
+   - Kaldırıcı: HKCU'daki kaldırma komutlarını her program yazabildiği için bunlar yönetici yetkisi almaz; normal kullanıcı
+     olarak başlar, başlatılamazsa yönetici yetkisiyle denenmez (`admin.run_unelevated`).
    - Registry anahtarları ayrıca `.reg` dosyası olarak `backups\reg\` klasörüne aktarılır.
    - `yedekler.json` DPAPI anahtarıyla HMAC-SHA256 imzalıdır; imza tutmazsa dosya yüklenmez, `yedekler.bozuk.json`
      olarak saklanır ve üstte uyarı çıkar. Geri almadan önce adımların konumu şemadan geçirilir (docs/SECURITY.md).
@@ -133,7 +139,7 @@ bilgisayarda `%LOCALAPPDATA%\Forevermore\onay.json` dosyasında tutulur.
 ## Uygulama hiç açılmazsa (elle kurtarma)
 
 1. **Sistem Geri Yükleme:** Başlat'a `rstrui` yaz → "Forevermore - degisiklik oncesi" noktasını seç.
-2. **.reg yedekleri:** `%LOCALAPPDATA%\Forevermore\backups\reg\` klasöründeki ilgili dosyaya
+2. **.reg yedekleri:** `%ProgramData%\Forevermore\<SID>\backups\reg\` klasöründeki ilgili dosyaya
    çift tıkla. Bu yöntem değerleri geri yazar ama uygulamanın oluşturduğu yeni değerleri silmez;
    tam geri dönüş için 1. yol daha iyidir.
 

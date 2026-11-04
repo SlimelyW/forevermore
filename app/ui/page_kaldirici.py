@@ -201,7 +201,8 @@ class UninstallerPage(w.Page):
         if not dialogs.ask_yes_no(self.app, t("ui.dikkat"), question):
             return
         if not uninstaller.start_uninstall(program):
-            self.app.set_status(t("ui.kaldirici.baslamadi", ad=program["ad"]), "sorun")
+            key = "ui.kaldirici.baslamadi_kullanici" if program["kok"] == "HKCU" else "ui.kaldirici.baslamadi"
+            self.app.set_status(t(key, ad=program["ad"]), "sorun")
             return
         self.pending, self.leftovers = program, None
         self.app.set_status(t("ui.kaldirici.basladi", ad=program["ad"]), "bilgi")
