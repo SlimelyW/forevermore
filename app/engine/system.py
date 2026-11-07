@@ -134,6 +134,10 @@ class WindowsSystem:
                 pass
             current = current.rpartition("\\")[0]
 
+    def list_reg(self, root, path):
+        """(değer adları, alt anahtar adları); yalnızca okur."""
+        return list(registry.values(root, path)), registry.subkeys(root, path)
+
     def export_reg_key(self, root, path, file_path):
         """Anahtarı .reg dosyasına yedekler (elle geri yükleme için). Başarısızsa False."""
         try:

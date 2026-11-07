@@ -11,8 +11,8 @@ rehberler çalışır, ayarlar değiştirilemez).
 import argparse
 import sys
 
-from app.core import admin, i18n, log
-from app.ui.controller import MODE_NORMAL, MODE_PREVIEW, MODE_READ_ONLY
+from app.core import admin, i18n, log, paths
+from app.ui.controller import MODE_BACKUPS_NOT_MOVED, MODE_NORMAL, MODE_PREVIEW, MODE_READ_ONLY
 
 
 def main():
@@ -24,6 +24,8 @@ def main():
                         help="Kaldırmadan önce temizlik: Windows'la başlat görevini ve yarım oyun ayarlarını kaldırır")
     parser.add_argument("--tumunu-geri-al", action="store_true",
                         help="--kaldir ile birlikte: uygulamanın yaptığı tüm değişiklikleri de geri alır")
+    parser.add_argument("--temizlik-olc", action="store_true",
+                        help="Pencere açmadan temizleyicilerin toplam boyutunu ölçüp yazar (haftalık görev); hiçbir şey taşımaz")
     parser.add_argument("--uyku-testi", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--kontrol", action="store_true",
                         help="Pencere açmadan paket kontrolü yapar (veri, metin, arayüz dosyaları) ve çıkar")
@@ -42,12 +44,20 @@ def main():
     if args.kontrol:
         return self_check()
 
+    if args.temizlik_olc:  # yönetici istemeden, salt okunur
+        from app.core import temizlik_olcum  # noqa: WPS433
+        temizlik_olcum.measure_and_save()
+        return 0
+
     if args.kaldir:
         if not admin.is_admin() and not args.yukseltildi and admin.relaunch_as_admin(["--yukseltildi"]):
             return 0
         from app.core import uninstall  # noqa: WPS433
+        from app.engine.backup import BackupStore  # noqa: WPS433
         from app.engine.engine import Engine  # noqa: WPS433
-        engine = Engine()
+        if admin.is_admin():
+            _protect_backups(_log)
+        engine = Engine(store=BackupStore(readonly=not admin.is_admin()))
         engine.accept_without_restore_point()  # yalnızca geri alma yapılır; geri alma nokta gerektirmez
         report = uninstall.cleanup(engine, revert_changes=args.tumunu_geri_al)
         return 0 if not report["geri_alinamayan"] else 2
@@ -55,7 +65,7 @@ def main():
     if args.onizleme:
         mode = MODE_PREVIEW
     elif admin.is_admin():
-        mode = MODE_NORMAL
+        mode = MODE_NORMAL if _protect_backups(_log) else MODE_BACKUPS_NOT_MOVED
     elif not args.yukseltildi and admin.relaunch_as_admin(["--yukseltildi"]):
         _log.info("Yönetici olarak yeniden başlatıldı")
         return 0
@@ -67,6 +77,17 @@ def main():
     from app.ui.app import run  # Tk yalnızca gerektiğinde yüklensin
     run(mode, in_tray=args.tepside)
     return 0
+
+
+def _protect_backups(logger):
+    """Yedekleri korumalı klasöre geçirir. False: geçirilemedi; yeni yedek alınmamalı, eski veri yerinde durur."""
+    try:
+        if paths.migrate_to_protected():
+            logger.info("Yedekler korumalı klasöre taşındı")
+        return True
+    except OSError as exc:
+        logger.error("Yedekler korumalı klasöre taşınamadı: %s", exc)
+        return False
 
 
 def self_check():

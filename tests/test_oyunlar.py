@@ -4,6 +4,7 @@
     py -3.12 -m unittest tests.test_oyunlar -v
 """
 
+import json
 import os
 import tempfile
 import unittest
@@ -12,24 +13,11 @@ from pathlib import Path
 from app.games import discovery, profiles, runtime
 from tests.fake_system import FakeSystem
 
-TOPOLOGY = {
-    "cpular": [{"id": 256 + n, "no": n, "cekirdek": n // 2 * 2, "l3": 0 if n < 8 else 8, "sinif": 1 if n < 8 else 0,
-                "p": n < 8, "ilk_is_parcacigi": n % 2 == 0, "l3_boyut": None} for n in range(20)],
-    "hibrit": True, "smt": True, "vcache_l3": None,
-    "l3_gruplari": [{"indeks": 0, "boyut_mb": 16, "cpular": list(range(8))},
-                    {"indeks": 8, "boyut_mb": 8, "cpular": list(range(8, 20))}],
-}
-
-
 class FakeOps:
-    def __init__(self, processes=None, deny=()):
+    def __init__(self, processes=None):
         self.processes = processes or []
         self.paths = {}
-        self.deny = set(deny)
-        self.cpu_sets = {}
-        self.exempt = set()
         self.priorities = {}
-        self.purged = 0
 
     def list_processes(self):
         return list(self.processes)
@@ -37,26 +25,8 @@ class FakeOps:
     def process_path(self, pid):
         return self.paths.get(pid)
 
-    def _check(self, name):
-        if name in self.deny:
-            raise PermissionError("erişim reddedildi")
-
-    def set_cpu_sets(self, pid, ids):
-        self._check("cpu")
-        self.cpu_sets[pid] = list(ids)
-
-    def exempt_power_throttling(self, pid):
-        self._check("throttle")
-        self.exempt.add(pid)
-
-    def get_priority(self, pid):
-        return self.priorities.get(pid, runtime.NORMAL_PRIORITY_CLASS)
-
     def set_priority(self, pid, value):
         self.priorities[pid] = value
-
-    def purge_standby(self):
-        self.purged += 1
 
 
 def make_game(**profile):
@@ -144,13 +114,12 @@ class TestStore(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.store.add("Vanguard", r"C:\Riot", "Elle", r"C:\Program Files\Riot Vanguard\vgc.exe")
 
-    def test_runtime_games_and_persistence(self):
+    def test_profile_persistence_and_old_in_game_fields_ignored(self):
         game = self.store.add("Oyun", r"C:\Oyun", "Steam", r"C:\Oyun\oyun.exe")
-        self.assertEqual(self.store.runtime_games(), [])
-        self.store.update_profile(game["id"], dict(game["profil"], guc_plani=True))
-        self.assertEqual(len(self.store.runtime_games()), 1)
-        again = profiles.GameStore(self.store.path)
-        self.assertTrue(again.get(game["id"])["profil"]["guc_plani"])
+        self.assertNotIn("guc_plani", game["profil"])  # oyun sırasında ayarları kaldırıldı (izleyici yok)
+        self.store.update_profile(game["id"], dict(game["profil"], oncelik="AboveNormal", guc_plani=True))
+        again = profiles.GameStore(self.store.path).get(game["id"])["profil"]
+        self.assertEqual(again["oncelik"], "AboveNormal")  # eski dosyadaki alan okunur ama hiçbir yerde kullanılmaz
 
     def test_anti_cheat_detection(self):
         import os
@@ -161,6 +130,26 @@ class TestStore(unittest.TestCase):
         riot = profiles.detect_anti_cheat({"kaynak": "Riot", "klasor": self.tmp.name + "/yok"})
         self.assertEqual(riot, ["Riot Vanguard"])
         self.assertEqual(profiles.detect_anti_cheat({"kaynak": "Steam", "klasor": self.tmp.name + "/yok"}), [])
+
+    def test_blackcipher_is_detected_and_old_records_rescanned_once_without_losing(self):
+        from unittest import mock
+        """The First Descendant: EAC + Nexon BlackCipher (M1/Binaries/Win64/BlackCipher, 4. seviye)."""
+        import os
+        folder = os.path.join(self.tmp.name, "TFD")
+        os.makedirs(os.path.join(folder, "EasyAntiCheat"))
+        os.makedirs(os.path.join(folder, "M1", "Binaries", "Win64", "BlackCipher"))
+        game = self.store.add("TFD", folder, "Steam", os.path.join(folder, "M1.exe"))
+        self.assertEqual(game["anti_cheat"], ["EasyAntiCheat", "Nexon BlackCipher"])
+        game["anti_cheat"] = ["EasyAntiCheat"]           # eski sürümün kaydı: BlackCipher tanınmıyordu
+        del game["anti_cheat_surum"]
+        gone = dict(game, id="OYUN-yok", klasor=os.path.join(self.tmp.name, "takili_degil"), anti_cheat=["BattlEye"])
+        self.store.games.append(gone)
+        self.store.ensure_anti_cheat()
+        self.assertEqual(game["anti_cheat"], ["EasyAntiCheat", "Nexon BlackCipher"])
+        self.assertEqual(gone["anti_cheat"], ["BattlEye"])  # klasör yok: bulunan koruma silinmez
+        with mock.patch.object(profiles, "detect_anti_cheat") as again:
+            self.store.ensure_anti_cheat()
+        again.assert_not_called()                           # bir kez
 
     def test_persistent_changes_keep_other_compat_flags(self):
         game = make_game(oncelik="High", fso_kapali=True)
@@ -206,109 +195,55 @@ class TestStoreAfterHardReset(unittest.TestCase):
         self.assertTrue((Path(self.tmp.name) / "oyunlar.bozuk.json").is_file())
 
 
-class TestSession(unittest.TestCase):
+OLD_JOURNAL = {"oyun": "OYUN-1", "ad": "Oyun", "pid": 10, "servisler": ["SysMain", "WSearch"],
+               "guc_plani": "381b4222-f694-41f0-9685-ff5bb260df2e", "bildirim": {"var": False, "deger": None},
+               "steam": [[20, 0x20]]}
+
+
+class TestOldSessionRecovery(unittest.TestCase):
+    """Eski sürümün (oyun izleyici) yarım kalan oyun-sırası günlüğü açılışta/kaldırırken geri alınır; yeni ayar uygulanmaz."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.sys = FakeSystem()
-        self.sys.services.update({"SysMain": {"baslangic": "Automatic", "calisiyor": True},
-                                  "WSearch": {"baslangic": "AutomaticDelayed", "calisiyor": True},
-                                  "DiagTrack": {"baslangic": "Manual", "calisiyor": False}})
+        self.sys.services.update({"SysMain": {"baslangic": "Automatic", "calisiyor": False},
+                                  "WSearch": {"baslangic": "AutomaticDelayed", "calisiyor": False}})
+        self.sys.active_scheme = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+        self.sys.write_reg("HKCU", runtime.TOAST_KEY, "ToastEnabled", 0, "REG_DWORD")
         self.ops = FakeOps(processes=[(10, "oyun.exe"), (20, "steamwebhelper.exe")])
+        self.ops.priorities[20] = runtime.BELOW_NORMAL_PRIORITY_CLASS
         self.journal = Path(self.tmp.name) / "oyun_oturumu.json"
-        self.session = runtime.GameSession(self.sys, self.ops, self.journal)
+        self.journal.write_text(json.dumps(OLD_JOURNAL), encoding="utf-8")
 
     def tearDown(self):
         self.tmp.cleanup()
 
-    def test_apply_and_revert_everything(self):
-        game = make_game(cekirdek_secimi="performans", guc_kismasi_muaf=True, servisleri_duraklat=True,
-                         windows_search_durdur=True, steam_dusuk_oncelik=True, guc_plani=True,
-                         bildirimleri_kapat=True, standby_temizle=True)
-        before_plan = self.sys.active_scheme
-        results = self.session.start(game, 10, TOPOLOGY)
-        self.assertTrue(all(ok for _k, ok, _m in results), results)
-        self.assertEqual(self.ops.cpu_sets[10], [256 + n for n in range(8)])
-        self.assertIn(10, self.ops.exempt)
-        self.assertFalse(self.sys.services["SysMain"]["calisiyor"])
-        self.assertFalse(self.sys.services["WSearch"]["calisiyor"])
-        self.assertEqual(self.ops.priorities[20], runtime.BELOW_NORMAL_PRIORITY_CLASS)
-        self.assertEqual(self.sys.active_scheme, runtime.HIGH_PERFORMANCE_PLAN)
-        self.assertEqual(self.sys.read_reg("HKCU", runtime.TOAST_KEY, "ToastEnabled")[0], 0)
-        self.assertEqual(self.ops.purged, 1)
-        self.assertTrue(self.journal.exists())
-        self.session.stop()
+    def test_session_can_no_longer_apply_settings(self):
+        self.assertFalse(hasattr(runtime.GameSession, "start"))
+        self.assertFalse(hasattr(runtime, "GameWatcher"))
+
+    def test_recover_reverts_everything(self):
+        self.assertTrue(runtime.GameSession(self.sys, self.ops, self.journal).recover())
         self.assertTrue(self.sys.services["SysMain"]["calisiyor"])
-        self.assertEqual(self.sys.services["WSearch"]["baslangic"], "AutomaticDelayed")
-        self.assertFalse(self.sys.services["DiagTrack"]["calisiyor"])  # zaten durmuştu: başlatılmaz
+        self.assertTrue(self.sys.services["WSearch"]["calisiyor"])
         self.assertEqual(self.ops.priorities[20], runtime.NORMAL_PRIORITY_CLASS)
-        self.assertEqual(self.sys.active_scheme, before_plan)
+        self.assertEqual(self.sys.active_scheme, OLD_JOURNAL["guc_plani"])
         self.assertIsNone(self.sys.read_reg("HKCU", runtime.TOAST_KEY, "ToastEnabled"))
         self.assertFalse(self.journal.exists())
 
-    def test_denied_setting_is_skipped_and_reported(self):
-        self.ops.deny = {"cpu"}
-        results = self.session.start(make_game(cekirdek_secimi="fiziksel", guc_kismasi_muaf=True), 10, TOPOLOGY)
-        self.assertEqual({k: ok for k, ok, _ in results}, {"cekirdekler": False, "guc_kismasi_muaf": True})
-
-    def test_boost_closes_listed_programs_gently_never_the_game_never_forced(self):
-        from unittest import mock
-
-        class CloserOps:
-            def __init__(self):
-                self.procs = [(10, "oyun.exe"), (30, "chrome.exe"), (31, "discord.exe"), (32, "explorer.exe")]
-                self.asked, self.terminated = [], []
-
-            def list_processes(self):
-                return list(self.procs)
-
-            def post_close(self, pids):
-                self.asked += sorted(pids)
-                self.procs = [p for p in self.procs if p[1] != "chrome.exe" or p[0] not in pids]  # discord kapanmıyor
-                return len(pids)
-
-            def terminate(self, pid):
-                self.terminated.append(pid)
-
-        closer_ops = CloserOps()
-        session = runtime.GameSession(self.sys, self.ops, self.journal, closer_ops=closer_ops)
-        game = make_game(boost=True)
-        with mock.patch.object(runtime.settings, "get", return_value=["chrome", "discord", "oyun", "explorer"]):
-            results = session.start(game, 10, TOPOLOGY)
-        boost = next(r for r in results if r[0] == "boost")
-        self.assertFalse(boost[1])  # discord kapanmadı: raporlanır
-        self.assertIn("discord", boost[2])
-        self.assertEqual(sorted(closer_ops.asked), [30, 31])  # oyun (10) ve korumalı explorer (32) istenmedi
-        self.assertEqual(closer_ops.terminated, [])  # zorla sonlandırma yok
-        self.assertEqual([p[1] for p in closer_ops.procs], ["oyun.exe", "discord.exe", "explorer.exe"])
-
-    def test_boost_off_by_default_touches_nothing(self):
-        results = self.session.start(make_game(), 10, TOPOLOGY)
-        self.assertNotIn("boost", [r[0] for r in results])
-
-    def test_recover_after_crash(self):
-        self.session.start(make_game(servisleri_duraklat=True), 10, TOPOLOGY)
-        fresh = runtime.GameSession(self.sys, self.ops, self.journal)  # uygulama yeniden açıldı
-        self.assertTrue(fresh.recover())
-        self.assertTrue(self.sys.services["SysMain"]["calisiyor"])
-        self.assertFalse(self.journal.exists())
-
     def test_failed_restore_keeps_journal_for_retry(self):
-        self.session.start(make_game(servisleri_duraklat=True), 10, TOPOLOGY)
         self.sys.fail_on.add("set_service")
-        self.session.stop()
+        runtime.GameSession(self.sys, self.ops, self.journal).recover()
         self.assertTrue(self.journal.exists())
         self.sys.fail_on.clear()
         self.assertTrue(runtime.GameSession(self.sys, self.ops, self.journal).recover())
         self.assertTrue(self.sys.services["SysMain"]["calisiyor"])
         self.assertFalse(self.journal.exists())
 
-    def test_new_session_retries_pending_journal(self):
-        self.session.start(make_game(servisleri_duraklat=True), 10, TOPOLOGY)
-        self.sys.fail_on.add("set_service")
-        self.session.stop()
-        self.sys.fail_on.clear()
-        self.session.start(make_game(), 11, TOPOLOGY)
-        self.assertTrue(self.sys.services["SysMain"]["calisiyor"])
+    def test_no_journal_nothing_happens(self):
+        self.journal.unlink()
+        self.assertFalse(runtime.GameSession(self.sys, self.ops, self.journal).recover())
+        self.assertNotIn("set_service", self.sys.calls)
 
     def test_foreign_journal_is_ignored(self):
         self.journal.write_text('{"servisler": ["BaskaServis"], "steam": []}', encoding="utf-8")
@@ -317,36 +252,31 @@ class TestSession(unittest.TestCase):
         self.assertFalse(self.journal.exists())
 
 
-class TestWatcher(unittest.TestCase):
+class TestDetector(unittest.TestCase):
+    """"Oyun açık mı" algılayıcısı: yalnızca haber verir (canlı FPS / kayıt için), hiçbir ayar uygulamaz."""
+
     def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
-        self.store = profiles.GameStore(Path(self.tmp.name) / "oyunlar.json")
-        game = self.store.add("Oyun", r"C:\Oyun", "Steam", r"C:\Oyun\oyun.exe")
-        self.store.update_profile(game["id"], dict(game["profil"], guc_kismasi_muaf=True))
-        self.sys = FakeSystem()
         self.ops = FakeOps()
         self.events = []
-        session = runtime.GameSession(self.sys, self.ops, Path(self.tmp.name) / "j.json")
-        self.watcher = runtime.GameWatcher(self.store, self.sys, self.ops,
-                                           on_event=lambda kind, g, r: self.events.append(kind), session=session)
-
-    def tearDown(self):
-        self.tmp.cleanup()
+        self.game = make_game()
+        self.detector = runtime.GameDetector(lambda: [self.game], self.ops,
+                                             on_event=lambda kind, g: self.events.append((kind, g["id"])))
 
     def test_start_and_exit(self):
         self.ops.processes = [(5, "vgc.exe"), (10, "oyun.exe")]
         self.ops.paths[10] = r"C:\Oyun\oyun.exe"
-        self.watcher.tick()
-        self.assertEqual(self.events, ["basladi"])
-        self.assertEqual(self.ops.exempt, {10})  # anti-cheat (5) hiç ellenmedi
+        self.detector.tick()
+        self.assertEqual(self.events, [("basladi", "OYUN-1")])
+        self.assertEqual(self.ops.priorities, {})  # hiçbir sürece (anti-cheat 5 dahil) dokunulmadı
         self.ops.processes = [(5, "vgc.exe")]
-        self.watcher.tick()
-        self.assertEqual(self.events, ["basladi", "bitti"])
+        self.detector.tick()
+        self.assertEqual(self.events, [("basladi", "OYUN-1"), ("bitti", "OYUN-1")])
+        self.assertIsNone(self.detector.active)
 
     def test_same_name_in_other_folder_is_ignored(self):
         self.ops.processes = [(11, "oyun.exe")]
         self.ops.paths[11] = r"D:\Baska\oyun.exe"
-        self.watcher.tick()
+        self.detector.tick()
         self.assertEqual(self.events, [])
 
 

@@ -1,0 +1,85 @@
+# TASLAK (8 Kasım 2026): HİÇ ÇALIŞTIRILMADI. Ayrıntı ve açık sorular: docs/SIGNPATH_CI.md
+# Yalnızca elle başlatılır ve yalnızca public depoda (SlimelyW/forevermore) çalışır; private depoya push bunu tetiklemez.
+# Sır yok: SignPath bağlantı bilgileri public deponun Settings > Secrets and variables > Actions bölümünde.
+# Güncelleme paketinin kendi imzası (tools/imzala.py, özel anahtar) BURADA ATILMAZ; yerel adım docs/SIGNPATH_CI.md'de.
+name: İmzalı derleme (taslak)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read  # SignPath yüklenen artefaktı GitHub API'den okur
+
+jobs:
+  derle-ve-imzala:
+    if: github.repository == 'SlimelyW/forevermore'
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      PYTHONUTF8: '1'
+      PYTHONHASHSEED: '0'  # tekrarlanabilir derleme (derle.ps1 ile aynı)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Paketler
+        run: python -m pip install --disable-pip-version-check -r requirements-derleme.txt
+
+      - name: Ayar veritabanı
+        run: python tools/convert_tweaks.py
+
+      - name: Testler
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m unittest discover -s tests -t .
+
+      - name: PyInstaller (klasör)
+        run: |
+          $env:SOURCE_DATE_EPOCH = git log -1 --format=%ct
+          python -m PyInstaller build/forevermore.spec --noconfirm --clean --workpath .derleme --distpath dist
+
+      - name: Pakete eklenecek dosyalar (derle.ps1 ile aynı)
+        run: |
+          Copy-Item LICENSE, THIRD-PARTY-NOTICES.txt, docs/OKUBENI.txt, licenses/LGPL-3.0.txt dist/Forevermore/
+          Copy-Item tools/PresentMon-*.exe dist/Forevermore/
+
+      - name: Paket kontrolü (pencere açılmaz, ayar değiştirmez)
+        run: |
+          $p = Start-Process dist/Forevermore/Forevermore.exe -ArgumentList '--kontrol' -Wait -PassThru
+          Get-Content (Join-Path $env:LOCALAPPDATA 'Forevermore\logs\kontrol.txt')
+          if ($p.ExitCode -ne 0) { throw 'Paket kontrolü başarısız.' }
+
+      - name: İmzasız paketi yükle
+        id: imzasiz
+        uses: actions/upload-artifact@v4
+        with:
+          name: Forevermore-imzasiz
+          path: dist/Forevermore/
+          if-no-files-found: error
+
+      - name: SignPath imzası
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.imzasiz.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: imzali
+
+      - name: İmzalı paketi yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Forevermore-imzali
+          path: imzali/
+          if-no-files-found: error

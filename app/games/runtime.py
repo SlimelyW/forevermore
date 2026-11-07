@@ -1,39 +1,28 @@
-"""Oyun sırasında uygulanan ve oyun kapanınca geri alınan ayarlar.
+"""Oyun süreçleri: "oyun açık mı" algılayıcısı ve eski oyun oturumu günlüğünün geri alınması.
 
-İzleyici (GameWatcher) yalnızca uygulama açıkken ve en az bir oyunda "oyun sırasında"
-ayarı varken çalışır: 2 saniyede bir süreç listesine bakar (CreateToolhelp32Snapshot;
-çok hafif). Arka planda sürekli bir sürücü veya kanca YOKTUR.
-
-GÜVENLİK:
-- Ayarlar yalnızca oyunun kendi sürecine uygulanır. Anti-cheat süreçlerine (vgc, vgk,
-  BEService, EasyAntiCheat...) hiçbir zaman dokunulmaz.
-- Korumalı oyunlarda Windows erişimi reddedebilir; o ayar atlanır ve kullanıcıya söylenir.
-- Değişiklikler önce bir günlük dosyasına yazılır (oyun_oturumu.json). Uygulama oyun
-  sırasında kapanır veya çökerse, bir sonraki açılışta günlükteki her şey geri alınır.
-
-Kullanılan Windows API'leri belgelenmiştir: SetProcessDefaultCpuSets (CPU Sets),
-SetProcessInformation(ProcessPowerThrottling), Get/SetPriorityClass. Standby temizliği
-NtSetSystemInformation ile yapılır (yarı belgelenmiş; Sysinternals RAMMap'in kullandığı yol).
+Oyun izleyici (oyun açılınca ayar uygulayıp kapanınca geri alan GameWatcher) 7 Kasım 2026'da KALDIRILDI
+(docs/KARAR_GUNLUGU.md). Kalan:
+- GameDetector: yalnızca Canlı FPS veya oyun oturumu kaydı açıkken, 2 saniyede bir süreç listesine bakar
+  (CreateToolhelp32Snapshot; çok hafif) ve listedeki oyunun açılıp kapandığını haber verir. HİÇBİR ayar uygulamaz.
+  Anti-cheat süreçleri (profiles.PROTECTED_EXES) oyun sayılmaz.
+- GameSession.recover: eski sürümde oyun sırasında kapanan uygulamanın bıraktığı günlüğü (oyun_oturumu.json)
+  açılışta ve kaldırırken geri alır (servisler, Steam önceliği, güç planı, bildirimler).
 """
 
 import ctypes
 import json
 import re
 import threading
-import time
 from ctypes import wintypes
 
-from app.core import log, paths, settings
-from app.engine import closer, cpu_topology
+from app.core import log, paths
 from app.games.profiles import PROTECTED_EXES
 
 _log = log.get("games")
 
 PAUSE_SERVICES = ("SysMain", "DiagTrack", "MapsBroker", "WerSvc")
 SEARCH_SERVICE = "WSearch"
-HIGH_PERFORMANCE_PLAN = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
 TOAST_KEY = r"Software\Microsoft\Windows\CurrentVersion\PushNotifications"
-STEAM_HELPERS = ("steamwebhelper.exe",)
 BELOW_NORMAL_PRIORITY_CLASS = 0x4000
 NORMAL_PRIORITY_CLASS = 0x20
 JOURNAL_PRIORITIES = (None, 0, NORMAL_PRIORITY_CLASS, BELOW_NORMAL_PRIORITY_CLASS, 0x40, 0x80, 0x8000)  # gerçek zamanlı yok
@@ -44,7 +33,6 @@ class ProcessOps:
 
     TH32CS_SNAPPROCESS = 0x2
     QUERY_LIMITED = 0x1000
-    SET_LIMITED = 0x2000
     SET_INFORMATION = 0x0200
 
     class _Entry(ctypes.Structure):
@@ -97,33 +85,6 @@ class ProcessOps:
         finally:
             self.k.CloseHandle(handle)
 
-    def set_cpu_sets(self, pid, cpu_set_ids):
-        handle = self._open(pid, self.SET_LIMITED | self.QUERY_LIMITED)
-        try:
-            array = (wintypes.ULONG * len(cpu_set_ids))(*cpu_set_ids)
-            if not self.k.SetProcessDefaultCpuSets(ctypes.c_void_p(handle), array, len(cpu_set_ids)):
-                raise PermissionError(f"SetProcessDefaultCpuSets hata {ctypes.get_last_error()}")
-        finally:
-            self.k.CloseHandle(handle)
-
-    def exempt_power_throttling(self, pid):
-        class _State(ctypes.Structure):
-            _fields_ = [("Version", wintypes.ULONG), ("ControlMask", wintypes.ULONG), ("StateMask", wintypes.ULONG)]
-        handle = self._open(pid, self.SET_INFORMATION)
-        try:
-            state = _State(1, 0x1, 0x0)  # PROCESS_POWER_THROTTLING_EXECUTION_SPEED kapalı
-            if not self.k.SetProcessInformation(ctypes.c_void_p(handle), 4, ctypes.byref(state), ctypes.sizeof(state)):
-                raise PermissionError(f"SetProcessInformation hata {ctypes.get_last_error()}")
-        finally:
-            self.k.CloseHandle(handle)
-
-    def get_priority(self, pid):
-        handle = self._open(pid, self.QUERY_LIMITED)
-        try:
-            return self.k.GetPriorityClass(ctypes.c_void_p(handle))
-        finally:
-            self.k.CloseHandle(handle)
-
     def set_priority(self, pid, priority_class):
         handle = self._open(pid, self.SET_INFORMATION | self.QUERY_LIMITED)
         try:
@@ -132,26 +93,6 @@ class ProcessOps:
         finally:
             self.k.CloseHandle(handle)
 
-    def purge_standby(self):
-        """Standby bellek listesini boşaltır (SeProfileSingleProcessPrivilege gerekir; yönetici)."""
-        advapi = ctypes.WinDLL("advapi32", use_last_error=True)
-
-        class _Luid(ctypes.Structure):
-            _fields_ = [("Low", wintypes.DWORD), ("High", wintypes.LONG)]
-
-        class _Privileges(ctypes.Structure):
-            _fields_ = [("Count", wintypes.DWORD), ("Luid", _Luid), ("Attributes", wintypes.DWORD)]
-        token = ctypes.c_void_p()
-        advapi.OpenProcessToken(ctypes.c_void_p(self.k.GetCurrentProcess()), 0x0020 | 0x0008, ctypes.byref(token))
-        luid = _Luid()
-        advapi.LookupPrivilegeValueW(None, "SeProfileSingleProcessPrivilege", ctypes.byref(luid))
-        privileges = _Privileges(1, luid, 0x2)
-        advapi.AdjustTokenPrivileges(token, False, ctypes.byref(privileges), 0, None, None)
-        self.k.CloseHandle(token)
-        command = ctypes.c_int(4)  # MemoryPurgeStandbyList
-        status = ctypes.WinDLL("ntdll").NtSetSystemInformation(80, ctypes.byref(command), ctypes.sizeof(command))
-        if status != 0:
-            raise PermissionError(f"NtSetSystemInformation durum {status & 0xFFFFFFFF:#x}")
 
 
 def journal_ok(journal):
@@ -167,103 +108,15 @@ def journal_ok(journal):
 
 
 class GameSession:
-    """Bir oyunun oyun-sırası ayarları ve geri alma günlüğü."""
+    """Eski sürümün oyun-sırası ayar günlüğünü geri alır (yeni ayar UYGULAMAZ)."""
 
-    def __init__(self, system, ops, journal_path=None, closer_ops=None):
+    def __init__(self, system, ops, journal_path=None):
         self.system, self.ops = system, ops
-        self.closer_ops = closer_ops  # Boost: program kapatma işlemleri (None: gerçek Windows)
         self.journal_path = journal_path or (paths.user_data_dir() / "oyun_oturumu.json")
         self.journal = None
 
-    def _save(self):
-        paths.atomic_write(self.journal_path, json.dumps(self.journal, ensure_ascii=False))
-
-    def start(self, game, pid, topology=None):
-        """Ayarları uygular; [(ayar, başarılı, açıklama)] döndürür."""
-        if self.journal is None and self.journal_path.exists():
-            self.recover()  # geri alınamamış önceki oturumun günlüğü ezilmesin
-        profile = game["profil"]
-        results = []
-        self.journal = {"oyun": game["id"], "ad": game["ad"], "pid": pid, "servisler": [], "guc_plani": None,
-                        "bildirim": None, "steam": []}
-        self._save()
-
-        def attempt(key, func):
-            try:
-                func()
-                results.append((key, True, ""))
-            except Exception as exc:  # korumalı oyunlar erişimi reddedebilir; atla, söyle
-                _log.warning("Oyun ayarı uygulanamadı (%s, %s): %s", game["ad"], key, exc)
-                results.append((key, False, str(exc)))
-
-        selection = profile.get("cekirdek_secimi", "tum")
-        if selection != "tum":
-            def cores():
-                topo = topology or cpu_topology.read()
-                numbers = (profile.get("cekirdekler") or []) if selection == "ozel" else \
-                    cpu_topology.preset_ids(topo, selection)
-                ids = [c["id"] for c in topo["cpular"] if c["no"] in set(numbers)]
-                if not ids:
-                    raise ValueError("çekirdek seçilmedi")
-                self.ops.set_cpu_sets(pid, ids)
-            attempt("cekirdekler", cores)
-        if profile.get("guc_kismasi_muaf"):
-            attempt("guc_kismasi_muaf", lambda: self.ops.exempt_power_throttling(pid))
-        services = list(PAUSE_SERVICES) if profile.get("servisleri_duraklat") else []
-        if profile.get("windows_search_durdur"):
-            services.append(SEARCH_SERVICE)
-        for name in services:
-            def stop(name=name):
-                info = self.system.get_service(name)
-                if info and info["calisiyor"]:
-                    self.journal["servisler"].append(name)
-                    self._save()
-                    self.system.set_service(name, info["baslangic"], False)
-            attempt(f"servis:{name}", stop)
-        if profile.get("steam_dusuk_oncelik"):
-            def steam():
-                for helper_pid, exe in self.ops.list_processes():
-                    if exe in STEAM_HELPERS:
-                        previous = self.ops.get_priority(helper_pid)
-                        self.ops.set_priority(helper_pid, BELOW_NORMAL_PRIORITY_CLASS)
-                        self.journal["steam"].append([helper_pid, previous])
-                self._save()
-            attempt("steam_dusuk_oncelik", steam)
-        if profile.get("guc_plani"):
-            def plan():
-                previous = self.system.get_active_scheme()
-                if previous.lower() != HIGH_PERFORMANCE_PLAN:
-                    self.journal["guc_plani"] = previous
-                    self._save()
-                    self.system.set_active_scheme(HIGH_PERFORMANCE_PLAN)
-            attempt("guc_plani", plan)
-        if profile.get("bildirimleri_kapat"):
-            def toast():
-                previous = self.system.read_reg("HKCU", TOAST_KEY, "ToastEnabled")
-                self.journal["bildirim"] = {"var": previous is not None,
-                                            "deger": previous[0] if previous else None}
-                self._save()
-                self.system.write_reg("HKCU", TOAST_KEY, "ToastEnabled", 0, "REG_DWORD")
-            attempt("bildirimleri_kapat", toast)
-        if profile.get("standby_temizle"):
-            attempt("standby_temizle", self.ops.purge_standby)
-        if profile.get("boost"):  # en sonda: kapanmayan bir program diğer ayarları geciktirmesin
-            attempt("boost", lambda: self._boost(game))
-        return results
-
-    def _boost(self, game):
-        """Boost listesindeki açık programları NAZİKÇE kapatır (zorla sonlandırma asla otomatik değil, geri alınmaz).
-        Oyunun kendisi listede olsa bile kapatılmaz. Kapanmayan olursa ayar "uygulanamadı" diye raporlanır."""
-        own = closer._normal(game.get("exe") or "")
-        names = [n for n in settings.get("boost_listesi") or [] if closer._normal(n) != own]
-        ops = self.closer_ops or closer.WindowsOps()
-        results = closer.close_many(closer.running(names, ops), ops, timeout=3.0)
-        stuck = [name for name, result in results.items() if result == "calisiyor"]
-        if stuck:
-            raise RuntimeError("kapanmadı: " + ", ".join(stuck))
-
     def stop(self):
-        """Oyun kapandı: günlükteki her şeyi geri alır."""
+        """Günlükteki her şeyi geri alır."""
         journal = self.journal
         if journal is None:
             return
@@ -323,37 +176,33 @@ class GameSession:
         return True
 
 
-class GameWatcher:
-    """Oyun süreçlerini izler; açılınca ayarları uygular, kapanınca geri alır."""
+class GameDetector:
+    """Yalnızca "oyun açık mı": listedeki oyun açılınca ("basladi") ve kapanınca ("bitti") on_event(tür, oyun) çağrılır.
+    Canlı FPS ve oyun oturumu kaydı bununla başlar/biter. Hiçbir ayar uygulamaz, geri almaz."""
 
-    def __init__(self, store, system, ops=None, on_event=None, interval=2.0, session=None, games=None):
-        self.store, self.system = store, system
-        self.games = games or store.runtime_games  # izlenecek oyunlar (ücretsizde yalnız deneme oyunu)
+    def __init__(self, games, ops=None, on_event=None, interval=2.0):
+        self.games = games  # çağrılınca [oyun] döner (exe'si olan oyunlar)
         self.ops = ops or ProcessOps()
         self.on_event = on_event or (lambda *_a: None)
         self.interval = interval
-        self.session = session or GameSession(system, self.ops)
         self.active = None  # (oyun, pid)
         self._stop = threading.Event()
         self._thread = None
 
     def start(self):
         if self._thread is None:
-            self._thread = threading.Thread(target=self._loop, name="oyun-izleyici", daemon=True)
+            self._thread = threading.Thread(target=self._loop, name="oyun-algilayici", daemon=True)
             self._thread.start()
 
     def stop(self):
         self._stop.set()
-        if self.active:
-            self.session.stop()
-            self.active = None
 
     def _loop(self):
         while not self._stop.is_set():
             try:
                 self.tick()
             except Exception:
-                _log.exception("Oyun izleyici hatası")
+                _log.exception("Oyun algılayıcı hatası")
             self._stop.wait(self.interval)
 
     def tick(self):
@@ -361,9 +210,8 @@ class GameWatcher:
         if self.active:
             game, pid = self.active
             if not any(p == pid for p, _ in processes):
-                self.session.stop()
                 self.active = None
-                self.on_event("bitti", game, [])
+                self.on_event("bitti", game)
             return
         games = {}
         for game in self.games():
@@ -376,6 +224,5 @@ class GameWatcher:
             if game is None:
                 continue
             self.active = (game, pid)
-            results = self.session.start(game, pid)
-            self.on_event("basladi", game, results)
+            self.on_event("basladi", game)
             return

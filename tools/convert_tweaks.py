@@ -291,6 +291,17 @@ def bilgi_reason(tweak, placebo_reasons):
 # Ana dönüşüm
 # ---------------------------------------------------------------------------
 
+def apply_sade_adlar(tweaks, sade, report):
+    """data/sade_adlar.json -> ayarın `sade_ad` alanı. Katalogda olmayan kimlik rapora HATA olarak yazılır."""
+    for tweak in tweaks:
+        if tweak["id"] in sade:
+            tweak["sade_ad"] = sade[tweak["id"]]
+    known = {t["id"] for t in tweaks}
+    for tid in sade:
+        if tid not in known:
+            report["hata"].append(f"sade_adlar.json'da olmayan kimlik: {tid}")
+
+
 def convert():
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
     curated_all = json.loads(CURATED.read_text(encoding="utf-8"))["ayarlar"]
@@ -358,6 +369,9 @@ def convert():
             "kaynak_metin": {k: tweak[k] for k in ("tip", "okuma", "uygulama", "geri_alma")},
         }
 
+        if isinstance(curated.get("rev"), int):
+            out["rev"] = curated["rev"]  # ayarın adımları değişince artırılır; "Güncellendi" rozeti için
+
         if sinif == "SWITCH":
             out["islem"] = curated["islem"]
             for label, status, detail in cross_check(tweak, curated["islem"]):
@@ -419,6 +433,9 @@ def convert():
         for err in validate_tweak(out):
             report["hata"].append(err)
         out_tweaks.append(out)
+
+    sade = json.loads((ROOT / "data" / "sade_adlar.json").read_text(encoding="utf-8"))["ayarlar"]
+    apply_sade_adlar(out_tweaks, sade, report)
 
     meta = dict(source["meta"])
     meta["anti_cheat_uyarisi"] = next(

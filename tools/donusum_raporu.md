@@ -1,6 +1,6 @@
 # Dönüşüm raporu
 
-Üretim: `tools/convert_tweaks.py` — 2026-11-04. Bu dosya her çalıştırmada yeniden yazılır.
+Üretim: `tools/convert_tweaks.py` — 2026-11-08. Bu dosya her çalıştırmada yeniden yazılır.
 
 ## 1. Özet
 

@@ -5,6 +5,8 @@ Bilgiler taramadan gelir (salt okunur). Seri numarası, kullanıcı adı gibi ki
 bilgiler okunmaz (bkz. app/core/privacy.py).
 """
 
+import os
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout
 
@@ -14,8 +16,8 @@ from app.scan.displays import label as display_label
 from app.ui import dialogs, theme, widgets as w
 
 
-def _card(glyph_key, heading, lines, extra=None, plain=False):
-    """Simgeli bilgi kartı: başlık, satırlar ve isteğe bağlı rozetler."""
+def _card(glyph_key, heading, lines, extra=None, plain=False, rows=()):
+    """Simgeli bilgi kartı: başlık, satırlar, isteğe bağlı rozetler ve satır (widget) listesi."""
     card = w.Card(layout="h", spacing=12)
     card.lay.addWidget(w.IconTile(theme.ICONS[glyph_key], theme.category_color(glyph_key)), 0,
                        Qt.AlignmentFlag.AlignTop)
@@ -30,6 +32,8 @@ def _card(glyph_key, heading, lines, extra=None, plain=False):
     for line in lines:
         if line:
             text.addWidget(w.label(line, muted=True, size=theme.SMALL_SIZE, selectable=True, plain=plain))
+    for row in rows:
+        text.addWidget(row)
     text.addStretch(1)
     card.lay.addLayout(text, 1)
     return card
@@ -210,13 +214,29 @@ class PcDetailsPage(w.Page):
             exts = group["eklentiler"]
             on = [e for e in exts if e["etkin"]]
             name = group["tarayici"] + (f" ({group['profil']})" if group["profil"] else "")
-            lines = [", ".join(e["ad"] + (f" — {t('ui.tarayici.tum_siteler')}" if e["tum_siteler"] else "") for e in on)]
-            off = [e["ad"] for e in exts if not e["etkin"]]
-            if off:
-                lines.append(t("ui.tarayici.devre_disi", liste=", ".join(off)))
-            lay.addWidget(_card("QOL", t("ui.tarayici.baslik", tarayici=name, toplam=len(exts), etkin=len(on)), lines, plain=True),
-                          i // 2, i % 2)
+            rows = [self._extension_row(group, e) for e in sorted(exts, key=lambda e: not e["etkin"])]
+            lay.addWidget(_card("QOL", t("ui.tarayici.baslik", tarayici=name, toplam=len(exts), etkin=len(on)), [],
+                                plain=True, rows=rows), i // 2, i % 2)
         self.body.addWidget(container)
+
+    def _extension_row(self, group, ext):
+        """Eklenti adı ve yanında 'Tarayıcıda kaldır': yalnızca tarayıcının o eklentinin yönetim sayfasını açar."""
+        tags = ([t("ui.tarayici.kapali")] if not ext["etkin"] else []) + (
+            [t("ui.tarayici.tum_siteler")] if ext["tum_siteler"] else [])
+        label = w.label(ext["ad"] + (f" — {', '.join(tags)}" if tags else ""), muted=True, size=theme.SMALL_SIZE,
+                        selectable=True, plain=True)
+        launch = browser_ext.manage_launch(group["tarayici"], group["profil"], ext["id"])
+        if launch is None:
+            return label
+        button = w.button(t("ui.tarayici.kaldir"), lambda _=False: self._open_manage(*launch))
+        button.setToolTip(t("ui.tarayici.kaldir_ipucu"))
+        return w.hbox((label, 1), button)
+
+    def _open_manage(self, program, arguments):
+        try:
+            os.startfile(program, arguments=arguments)
+        except OSError:  # tarayıcı bulunamadı/açılamadı: pencere açmadan tek satır
+            self.app.set_status(t("ui.tarayici.acilamadi"), "bilgi")
 
     def _others(self, sections, hw):
         cards = []

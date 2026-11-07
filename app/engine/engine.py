@@ -219,6 +219,16 @@ class Engine:
                         self.system.export_reg_key(step["kok"], path, self.store.reg_export_path(tweak["id"], i))
         return created
 
+    def needs_update(self, tweak):
+        """Ayar uygulandıktan sonra katalogda güncellendi mi? Kayıtta rev yoksa (eski kayıt) hayır: yalancı alarm yok."""
+        entry, rev = self.store.get(tweak["id"]), tweak.get("rev")
+        return bool(entry) and isinstance(rev, int) and isinstance(entry.get("rev"), int) and entry["rev"] < rev
+
+    def _stamp(self, tweak, steps=(), snaps=()):
+        if isinstance(tweak.get("rev"), int):
+            entries = [{"adim": s, "anlik": n} for s, n in zip(steps, snaps)] if self.needs_update(tweak) else ()
+            self.store.stamp_rev(tweak["id"], tweak["rev"], entries)
+
     def _drop_unused_backup(self, tweak_id, created):
         """İşlem başarısız olup her şey geri alındıysa, bu işlemde açılan yedek
         kaydı silinir; aksi hâlde hiçbir şey değişmediği hâlde ayar
@@ -290,10 +300,12 @@ class Engine:
             steps = self._steps(tweak)
             snaps = [handlers.snapshot(self.system, step) for step in steps]
             if all(handlers.state(s, n) in (which, "yok") for s, n in zip(steps, snaps)):
+                self._stamp(tweak)
                 return Result(True, "sonuc.zaten")
             _log.info("%s: %s (%s), %d adım", action, tweak["id"], tweak["ad"], len(steps))
             created = self._backup(tweak, steps, snaps)
             self._write(steps, snaps, which, written)
+            self._stamp(tweak, steps, snaps)
         except Exception as exc:
             key, params = friendly(exc)
             _log.error("%s başarısız (%s): %s", action, tweak["id"], exc)
@@ -334,6 +346,7 @@ class Engine:
             for (field_id, step), snap in zip(pairs, snaps):
                 written.append((step, snap))
                 handlers.write_value(self.system, step, str(values[field_id]))
+            self._stamp(tweak, steps, snaps)
         except Exception as exc:
             key, params = friendly(exc)
             _log.error("Seçim başarısız (%s): %s", tweak["id"], exc)

@@ -53,6 +53,14 @@ class _PowerStatus(ctypes.Structure):
                 ("BatteryLifeTime", wintypes.DWORD), ("BatteryFullLifeTime", wintypes.DWORD)]
 
 
+def free_mb():
+    """Şu an kullanılabilir fiziksel bellek (MB, yuvarlamasız): Boost'un önce/sonra ölçümü bunu kullanır."""
+    status = _MemoryStatus()
+    status.dwLength = ctypes.sizeof(_MemoryStatus)
+    ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+    return status.ullAvailPhys // 1024 ** 2
+
+
 def memory_status():
     status = _MemoryStatus()
     status.dwLength = ctypes.sizeof(_MemoryStatus)
@@ -463,7 +471,8 @@ def _nvidia_smi():
         parts = [p.strip() for p in line.split(",")]
         if len(parts) == 5:
             rows.append({"ad": parts[0], "surucu": parts[1], "vram_mb": parts[2],
-                         "sicaklik_c": parts[3], "guc_durumu": parts[4], "bar1_mb": None})
+                         "sicaklik_c": parts[3], "guc_durumu": parts[4],
+                         "bar1_mb": None})
     for row, bar1 in zip(rows, _nvidia_bar1()):
         row["bar1_mb"] = bar1
     return rows

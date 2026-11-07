@@ -16,7 +16,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from app.core import paths, registry
+from app.core import admin, guvenli_klasor, log, paths, registry
+
+_log = log.get("uninstaller")
 
 UNINSTALL_KEYS = (("HKLM", r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"),
                   ("HKLM", r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"),
@@ -30,7 +32,6 @@ PROTECTED = re.compile(r"^(microsoft (visual c\+\+|\.net|edge|windows|update hea
 GENERIC = {"microsoft", "windows", "common files", "packages", "programs", "temp", "google", "intel", "nvidia", "amd", "apps",
            "data", "cache", "logs", "software", "app", "setup", "installer", "microsoft shared", "windowsapps", "classes"}
 UPDATE_TYPES = {"update", "hotfix", "security update", "critical update", "update rollup", "service pack"}
-BACKUP_DIR = "kaldirici_yedek"
 
 
 def _norm(text):
@@ -94,12 +95,13 @@ def shell_execute(exe, args):
     return ctypes.windll.shell32.ShellExecuteW(None, "open", exe, args or None, None, 1) > 32
 
 
-def start_uninstall(program, runner=shell_execute):
-    """Programın KENDİ kaldırıcısını başlatır. Korumalı programlar reddedilir."""
+def start_uninstall(program, runner=shell_execute, user_runner=admin.run_unelevated):
+    """Programın KENDİ kaldırıcısını başlatır. Korumalı programlar reddedilir. HKCU kaydını yönetici olmayan her program
+    yazabilir: oradaki komut yönetici yetkisi almaz, başlatılamazsa da yönetici yetkisiyle denenmez."""
     if program.get("korumali"):
         return False
     exe, args = split_command(program["komut"])
-    return bool(exe) and runner(exe, args)
+    return bool(exe) and (user_runner if program["kok"] == "HKCU" else runner)(exe, args)
 
 
 # --------------------------------------------------------------------------- kalıntı tarama
@@ -185,25 +187,37 @@ class RegOps:
 
 
 def backup_dir():
-    path = paths.user_data_dir() / BACKUP_DIR
+    path = paths.uninstall_backups_dir()
     path.mkdir(parents=True, exist_ok=True)
     return path
 
 
-def remove_leftovers(program_name, items, base=None, ops=None, now=None):
+def _reset_acl(path):
+    """Klasör taşınınca eski izinleri de gelir: yedekte kullanıcı yazabilir kalır, geri yüklenince program klasörüne erişemez."""
+    if not guvenli_klasor.reset_acl(path):
+        _log.warning("İzinler tam sıfırlanamadı: %s", path)
+
+
+def remove_leftovers(program_name, items, base=None, ops=None, now=None, tur=None):
     """Seçilen kalıntıları yedekleyip kaldırır. Klasör: yedek klasörüne taşınır; kayıt: .reg'e aktarılıp silinir.
-    {"oturum", "kaldirilan": n, "basarisiz": [{"yol", "neden"}]} döner; yedek varsa manifest.json yazılır."""
+    {"oturum", "kaldirilan": n, "basarisiz": [{"yol", "neden"}]} döner; yedek varsa manifest.json yazılır.
+    tur: oturumun nereden geldiği (ör. "temizlik"; Temizlik sayfası yalnız kendi taşımalarını listeler); öğedeki
+    "boyut" varsa taşınanların toplamı manifeste yazılır."""
     base, ops = Path(base) if base else backup_dir(), ops or RegOps()
     now = now or datetime.datetime.now()
+    while (base / now.strftime("%Y%m%d-%H%M%S")).exists():  # aynı saniyede ikinci taşıma eski yedeğin manifestini ezmesin
+        now += datetime.timedelta(seconds=1)
     session = base / now.strftime("%Y%m%d-%H%M%S")
     session.mkdir(parents=True, exist_ok=True)
-    done, failed = [], []
+    done, failed, moved_size = [], [], 0
     for number, item in enumerate(items, 1):
         try:
             if item["tur"] == "klasor":
                 target = session / f"k{number}"
                 shutil.move(item["yol"], str(target))
+                _reset_acl(target)
                 done.append({"tur": "klasor", "yol": item["yol"], "yedek": target.name})
+                moved_size += item.get("boyut") or 0
             else:
                 file = session / f"r{number}.reg"
                 if not ops.export(item["kok"], item["yol"], file):
@@ -214,6 +228,8 @@ def remove_leftovers(program_name, items, base=None, ops=None, now=None):
         except (OSError, shutil.Error) as exc:
             failed.append({"yol": item["yol"], "neden": str(exc)})
     manifest = {"program": program_name, "tarih": now.isoformat(timespec="seconds"), "ogeler": done}
+    if tur:
+        manifest.update(tur=tur, boyut=moved_size)
     if done:
         (session / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     else:
@@ -222,7 +238,7 @@ def remove_leftovers(program_name, items, base=None, ops=None, now=None):
 
 
 def list_sessions(base=None):
-    """Geri yüklenebilir kaldırmalar, yeni olan önce: [{"oturum", "program", "tarih", "adet"}]."""
+    """Geri yüklenebilir kaldırmalar, yeni olan önce: [{"oturum", "program", "tarih", "adet", "tur", "boyut"}]."""
     base = Path(base) if base else backup_dir()
     sessions = []
     for manifest in base.glob("*/manifest.json"):
@@ -231,7 +247,8 @@ def list_sessions(base=None):
         try:
             data = json.loads(manifest.read_text(encoding="utf-8"))
             sessions.append({"oturum": manifest.parent.name, "program": data["program"], "tarih": data["tarih"],
-                             "adet": len(data["ogeler"])})
+                             "adet": len(data["ogeler"]), "tur": data.get("tur", ""),
+                             "boyut": data.get("boyut") or 0})
         except (OSError, ValueError, KeyError):
             continue
     return sorted(sessions, key=lambda s: s["oturum"], reverse=True)
@@ -247,7 +264,7 @@ def restore(session_name, base=None, ops=None):
     restored, failed = 0, []
     for item in data["ogeler"]:
         try:
-            if not BACKUP_NAME.fullmatch(item["yedek"]):  # manifest kullanıcı klasöründe: yedek oturumun dışını gösteremez
+            if not BACKUP_NAME.fullmatch(item["yedek"]):  # eski oturumlar kullanıcı klasöründen geldi: yedek oturumun dışını gösteremez
                 raise OSError("yedek yolu")
             source = session / item["yedek"]
             if item["tur"] == "klasor":
@@ -255,6 +272,7 @@ def restore(session_name, base=None, ops=None):
                     raise OSError("yer dolu")
                 Path(item["yol"]).parent.mkdir(parents=True, exist_ok=True)
                 shutil.move(str(source), item["yol"])
+                _reset_acl(item["yol"])
             elif not ops.import_file(source):
                 raise OSError("import")
             restored += 1

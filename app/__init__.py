@@ -1,3 +1,3 @@
-__version__ = "2.3.2"
+__version__ = "2.4.0"
 __author__ = "Kubilay Paşa"
 COPYRIGHT_YEAR = 2026  # telif satırı: Bilgi sayfası, LICENSE, .exe ayrıntıları

@@ -28,16 +28,9 @@ def _name(controller, record_id):
 def _game_line(game):
     p = game["profil"]
     parts = [t("rapor_ek.oncelik", deger=t(f"ui.oncelik.{p['oncelik']}")),
-             t("rapor_ek.gpu", deger=t(f"ui.gpu_tercihi.{p['gpu_tercihi']}")),
-             t("rapor_ek.cekirdek", deger=t(f"ui.cekirdek.{p['cekirdek_secimi']}"))]
+             t("rapor_ek.gpu", deger=t(f"ui.gpu_tercihi.{p['gpu_tercihi']}"))]
     if p.get("fso_kapali"):
         parts.append(t("rapor_ek.fso"))
-    runtime = [t(f"ui.oyun_kisa.{k}") if k not in ("servisleri_duraklat", "windows_search_durdur", "pencereyi_kucult")
-               else t(f"rapor_ek.kisa.{k}") for k in ("guc_kismasi_muaf", "servisleri_duraklat", "windows_search_durdur",
-                                                      "steam_dusuk_oncelik", "guc_plani", "bildirimleri_kapat",
-                                                      "standby_temizle", "pencereyi_kucult") if p.get(k)]
-    if runtime:
-        parts.append(t("rapor_ek.oyun_sirasinda", liste=", ".join(runtime)))
     exe = os.path.basename(game.get("exe") or "") or "—"
     return f"- {game['ad']} ({exe}): " + "; ".join(parts)
 

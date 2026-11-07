@@ -15,7 +15,8 @@ ONEFILE = os.environ.get("PCOPT_ONEFILE") == "1"
 
 # data\ ve lang\ programın içine gömülür. Kullanıcı .exe'nin yanına bir data\
 # klasörü koyarsa uygulama gömülü kopya yerine onu kullanır.
-datas = [(os.path.join(ROOT, "data"), "data"), (os.path.join(ROOT, "lang"), "lang")]
+datas = [(os.path.join(ROOT, "data"), "data"), (os.path.join(ROOT, "lang"), "lang"),
+         (os.path.join(ROOT, "docs", "RELEASE_NOTLARI.md"), "docs")]  # Ayarlar > Sistem > Sürüm notları
 
 a = Analysis(
     [os.path.join(ROOT, "baslat.py")],

@@ -9,6 +9,8 @@ Donanım veya BIOS gerektiren bulgularda (tek kanal RAM, HDD, XMP, disk sağlı�
 olay kayıtları) "Çöz" yoktur; bunları yazılım çözemez.
 """
 
+from app.engine import varsayilan
+
 # bulgu kodu -> (tür, ayar kimliği[, eylem kimliği])
 #   "ac":    ayarı uygula (switch'i aç)
 #   "eylem": tek seferlik eylemi çalıştır
@@ -27,6 +29,8 @@ def fix_for(finding, by_id):
     """Bulgunun çözümü: {'tur', 'id', 'eylem'?} veya None."""
     spec = FIXES.get(finding["kod"])
     if spec is None and finding["kod"] == "tespit" and finding["ilgili"]:
+        if finding["ilgili"][0] in varsayilan.SUPPORTED and finding["ilgili"][0] in by_id:
+            return {"tur": "varsayilan", "id": finding["ilgili"][0]}  # BİLGİ ayarı: Windows varsayılanına döndür
         spec = ("kapat", finding["ilgili"][0])  # daha önce uygulanmış sorunlu ayarı kapat
     if spec is None:
         return None
@@ -49,6 +53,8 @@ def is_resolved(fix, state, done_actions=()):
     """Çözüm şu an geçerli mi? (Durum sistemden okunmuş olmalı.)"""
     if fix["tur"] == "eylem":
         return fix["id"] in done_actions
+    if fix["tur"] == "varsayilan":
+        return False  # çözülünce yeniden okuma (recheck) bulguyu listeden kaldırır
     if state is None:
         return False
     if fix["tur"] == "ac":

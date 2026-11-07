@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QProgressBar, QVBoxLayout, QW
 
 from app.core import settings
 from app.core.i18n import fmt_number, fmt_percent, t
-from app.engine import fixes
+from app.engine import fixes, varsayilan
 from app.scan.report import finding_text
 from app.ui import dialogs, motion, theme, widgets as w
 
@@ -119,6 +119,8 @@ class FindingCard(w.Card):
         head.setWordWrap(True)
         text.addWidget(head)
         text.addWidget(w.label(body, muted=True))
+        if finding["kod"] == "tespit" and finding["ilgili"][0] in varsayilan.MANUAL:
+            text.addWidget(w.label(t(f"ui.varsayilan.elle.{finding['ilgili'][0]}"), size=12))
         self.lay.addLayout(text, 1)
         self.actions = w.hbox(spacing=6)
         self.lay.addWidget(self.actions)
@@ -132,7 +134,7 @@ class FindingCard(w.Card):
         lay = self.actions.layout()
         w.clear_layout(lay)
         if self.fix is None:
-            related = [tid for tid in self.finding["ilgili"] if tid in self.c.by_id]
+            related = [self.c.by_id[tid].get("ilgili") or tid for tid in self.finding["ilgili"] if tid in self.c.by_id]
             if related:
                 lay.addWidget(w.button(t("ui.ayara_git"), lambda _=False, tid=related[0]: self.app.go_to_tweak(tid)))
             return
@@ -146,8 +148,11 @@ class FindingCard(w.Card):
             if self.fix["tur"] == "ac" and self.c.engine.store.has(tweak_id) and self.c.can_modify:
                 lay.addWidget(w.button(t("ui.geri_al"), self._undo))
             return
-        fixable = self.c.can_modify and (self.fix["tur"] == "eylem" or self.c.is_fresh(tweak_id))
-        button = w.button(t("ui.coz"), self._solve, primary=True)
+        fixable = self.c.can_modify and (self.fix["tur"] in ("eylem", "varsayilan") or self.c.is_fresh(tweak_id))
+        # Tespit edilen (başka programın uyguladığı) ayar: kapatmak Windows varsayılanını yazar.
+        to_default = self.fix["tur"] == "varsayilan" or (self.finding["kod"] == "tespit"
+                                                          and not self.c.engine.store.has(tweak_id))
+        button = w.button(t("ui.varsayilan.dugme" if to_default else "ui.coz"), self._solve, primary=True)
         button.setEnabled(fixable)
         button.setToolTip(t("ui.coz_ipucu") if fixable else t("ui.durum.okunuyor"))
         lay.addWidget(button)
@@ -160,6 +165,8 @@ class FindingCard(w.Card):
         if self.fix["tur"] == "eylem":
             action = next(a for a in tweak["islem"]["eylemler"] if a["id"] == self.fix["eylem"])
             self.app.run_action(tweak, action, done)
+        elif self.fix["tur"] == "varsayilan":
+            self.app.restore_default(tweak, done)
         elif self.fix["tur"] == "kapat" and self.c.engine.store.has(tweak["id"]):
             self.app.revert(tweak["id"], done)
         else:
@@ -464,8 +471,12 @@ class SummaryPage(w.Page):
                if s.get("ram_toplam") else "")
         self.tiles["ram"].show_values(pct(s.get("ram_yuzde")), ram)
         vram = s.get("gpu_bellek")
-        self.tiles["gpu"].show_values(pct(s.get("gpu")), t("ui.canli.vram", gb=fmt_number(vram / gb, 1))
-                                      if vram is not None else "")
+        used, total = s.get("gpu_bellek_kart") or (None, None)
+        if used is not None and total and used <= total:  # paylaşımlı belleğe taşan (tümleşik kart) değer toplamı aşar: yalnızca kullanılanı yaz
+            vram_text = t("ui.canli.vram_toplam", kullanilan=fmt_number(used / gb, 1), toplam=fmt_number(total / gb, 1))
+        else:
+            vram_text = t("ui.canli.vram", gb=fmt_number(vram / gb, 1)) if vram is not None else ""
+        self.tiles["gpu"].show_values(pct(s.get("gpu")), vram_text)
         self.tiles["disk"].show_values(pct(s.get("disk")), t("ui.canli.disk_alt", okuma=_rate(s.get("disk_okuma")),
                                                              yazma=_rate(s.get("disk_yazma"))))
         self.tiles["ag"].show_values("↓ " + _rate(s.get("ag_alinan"), "bit"),

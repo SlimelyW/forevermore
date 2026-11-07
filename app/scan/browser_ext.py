@@ -8,6 +8,7 @@ Yalnızca Chrome gerçek bir bilgisayarda denendi; diğer tarayıcıların biçi
 
 import json
 import os
+import re
 from pathlib import Path
 
 _ALL_SITES = ("<all_urls>", "*://*/*", "http://*/*", "https://*/*")
@@ -109,6 +110,27 @@ def _firefox():
         if exts:
             result.append({"tarayici": "Firefox", "profil": profile.name.split(".", 1)[-1], "eklentiler": exts})
     return result
+
+
+# Eklentiyi "kaldırma" yalnızca tarayıcının kendi yönetim sayfasını açmaktır: klasör silinmez, profil dosyasına yazılmaz
+# (Chrome/Edge bütünlük denetimi bozulur). Kaldırmayı kullanıcı o sayfada kendisi yapar. Brave/Vivaldi/Opera için düğme yok.
+_MANAGE = {"Chrome": ("chrome.exe", "chrome://extensions/?id={id}"), "Edge": ("msedge.exe", "edge://extensions/?id={id}")}
+_EXT_ID = re.compile(r"[a-p]{32}")
+_PROFILE = re.compile(r"Default|Profile \d+")
+
+
+def manage_launch(browser, profile, ext_id):
+    """(program, bağımsız değişkenler) ya da None: tarayıcıda eklentinin yönetim sayfasını açan komut.
+    Program Windows'un App Paths kaydından çözülür (os.startfile). Kimlik/profil adı biçimi uymazsa None."""
+    if browser == "Firefox":
+        return "firefox.exe", "about:addons"  # Firefox eklenti sayfası kimlikle açılamaz: genel sayfa
+    if browser not in _MANAGE or not _EXT_ID.fullmatch(ext_id or ""):
+        return None
+    exe, url = _MANAGE[browser]
+    args = url.format(id=ext_id)
+    if _PROFILE.fullmatch(profile or ""):  # eklenti hangi profildeyse o profilde aç
+        args = f'--profile-directory="{profile}" {args}'
+    return exe, args
 
 
 def collect():

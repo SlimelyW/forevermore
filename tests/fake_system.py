@@ -125,6 +125,12 @@ class FakeSystem:
         self._maybe_fail("delete_reg_value")
         self.reg.pop((root, path.lower(), name.lower()), None)
 
+    def list_reg(self, root, path):
+        low = path.lower()
+        names = [k[2] for k in self.reg if k[0] == root and k[1] == low]
+        children = {k[1][len(low) + 1:].split("\\")[0] for k in self.keys if k[0] == root and k[1].startswith(low + "\\")}
+        return names, sorted(children)
+
     def create_reg_key(self, root, path, default_value=None):
         self._maybe_fail("create_reg_key")
         self._add_key(root, path)
@@ -163,6 +169,8 @@ class FakeSystem:
 
     def set_service(self, name, start_type, running):
         self._maybe_fail("set_service")
+        if running is None:  # gerçek sistemde olduğu gibi: çalışma durumuna dokunma
+            running = self.services.get(name, {"calisiyor": True})["calisiyor"]
         self.services[name] = {"baslangic": start_type, "calisiyor": running}
 
     # güç -----------------------------------------------------------------------

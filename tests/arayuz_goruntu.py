@@ -12,20 +12,34 @@ Seçici çizim: PCOPT_SAYFALAR="SYS,ozet,pencereler" yalnızca bu sayfaları (ve
 onay pencerelerini) çizer; PCOPT_OLCEK=0.6 görüntüleri küçültür (okuması daha az yer kaplar).
 """
 
+import glob
 import os
 import sys
 import tempfile
 import time
 
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # boruya yönlenince cp1252 hatası vermesin
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.environ["LOCALAPPDATA"] = os.environ.get("PCOPT_TEST_LOCALAPPDATA") or tempfile.mkdtemp(prefix="pcopt_test_")
 sys.path.insert(0, PROJECT)
 os.chdir(PROJECT)
 
+if os.environ.get("PCOPT_ORNEK_OYUN") == "1":  # Oyunlar sayfası dolu hâliyle çizilsin: geçici klasörde tek örnek oyun
+    import json
+    _folder = os.path.join(os.environ["LOCALAPPDATA"], "OrnekOyun")
+    os.makedirs(os.path.join(_folder, "Bin"), exist_ok=True)
+    _exe = os.path.join(_folder, "Bin", "OrnekOyun.exe")
+    open(_exe, "wb").close()
+    os.makedirs(os.path.join(os.environ["LOCALAPPDATA"], "Forevermore"), exist_ok=True)
+    with open(os.path.join(os.environ["LOCALAPPDATA"], "Forevermore", "oyunlar.json"), "w", encoding="utf-8") as _f:
+        json.dump({"oyunlar": [{"id": "OYUN-ORNEK", "ad": "Örnek Oyun", "klasor": _folder, "kaynak": "steam", "exe": _exe,
+                                "anti_cheat": [], "profil": {}}]}, _f, ensure_ascii=False)
+
 from PySide6.QtCore import QTimer, Qt  # noqa: E402
+from PySide6.QtGui import QFontDatabase, QGuiApplication  # noqa: E402
 
 from app.core import i18n, log  # noqa: E402
-from app.ui import app as app_module, dialogs  # noqa: E402
+from app.ui import app as app_module, dialogs, theme  # noqa: E402
 from app.ui.controller import MODE_PREVIEW, Controller  # noqa: E402
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else tempfile.mkdtemp(prefix="pcopt_shots_")
@@ -33,6 +47,25 @@ os.makedirs(OUT, exist_ok=True)
 log.setup()
 i18n.load(os.environ.get("PCOPT_DIL") or "tr")
 qt_app = app_module.create_app()
+
+
+def load_system_fonts():
+    """QT_QPA_PLATFORM=offscreen eklentisi Windows yazı tiplerini görmez (her harf kutucuk çıkar). Yalnızca o durumda
+    uygulamanın kullandığı sistem yazı tiplerini dosyadan yükler ve temayı yeniden uygular. Normal platformda dokunmaz."""
+    if QGuiApplication.platformName() != "offscreen":
+        return 0
+    fonts = os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts")
+    names = ("segoeui*.ttf", "seguisym.ttf", "seguiemj.ttf", "SegUIVar.ttf", "SegoeIcons.ttf", "segmdl2.ttf", "verdana*.ttf",
+             "consola*.ttf", "arial.ttf", "arialbd.ttf", "ARIALUNI.ttf", "malgun*.ttf", "msyh*.ttc", "YuGoth*.ttc")
+    loaded = sum(1 for pattern in names for f in glob.glob(os.path.join(fonts, pattern))
+                 if QFontDatabase.addApplicationFont(f) >= 0)
+    theme._icon_family = None  # simge yazı tipi de yeniden aranır
+    app_module.apply_language(qt_app)  # uygulama yazı tipi
+    app_module.apply_theme(qt_app)
+    return loaded
+
+
+print(f"yüklenen yazı tipi dosyası: {load_system_fonts()}")
 start = time.perf_counter()
 window = app_module.MainWindow(Controller(MODE_PREVIEW))
 window.setAttribute(Qt.WidgetAttribute.WA_DontShowOnScreen, True)
@@ -72,7 +105,7 @@ def pages():
     sample = window.pages["ozet"].last_sample or {}
     timings["canli_olcum_ms"] = sample.get("olcum_ms")
     for key in ["ozet", "pc_detay", "profiller", "oyunlar", "DISP", "SYS", "baslangic", "PERF", "GPU", "CPU", "PWR", "NET", "INP", "AUD",
-                "QOL", "PLC", "elle", "degisiklikler", "rapor", "olcum", "boost", "kaldirici", "ayarlar", "lisans", "bilgi"]:
+                "QOL", "PLC", "elle", "degisiklikler", "rapor", "olcum", "boost", "kaldirici", "temizlik", "ayarlar", "lisans", "bilgi"]:
         if WANTED and key not in WANTED:
             continue
         t0 = time.perf_counter()

@@ -97,10 +97,14 @@ class TestUninstall(unittest.TestCase):
                 return True
         with (mock.patch.object(uninstall.autostart, "is_enabled", return_value=True),
               mock.patch.object(uninstall.autostart, "disable") as disable,
+              mock.patch.object(uninstall.temizlik_olcum, "is_enabled", return_value=True),
+              mock.patch.object(uninstall.temizlik_olcum, "disable") as olcum_disable,
               mock.patch.object(uninstall.paths, "user_data_dir", return_value=self.data),
+              mock.patch.object(uninstall.paths, "protected_root", return_value=self.data / "korumali"),
               mock.patch.object(uninstall.logging, "shutdown")):
             report = uninstall.cleanup(self.engine, session=Session(), **kwargs)
         disable.assert_called_once()
+        olcum_disable.assert_called_once()  # haftalık temizlik ölçümü görevi de kaldırılır
         return report
 
     def _change(self):

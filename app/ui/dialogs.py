@@ -70,7 +70,7 @@ def display_name(tweak):
     """Ad + işe yaramayanlar için "(placebo)" / "(zararlı)" etiketi."""
     reality = tweak["gerceklik"]["durum"]
     suffix = {"placebo": t("ui.etiket.placebo"), "zararlı": t("ui.etiket.zararli")}.get(reality, "")
-    return f"{tweak['ad']} {suffix}".strip()
+    return f"{tweak.get('sade_ad') or tweak['ad']} {suffix}".strip()
 
 
 def _pros_cons(lay, tweak, pros_title=None, cons_title=None):
@@ -119,6 +119,7 @@ def fill_tweak_details(lay, tweak):
         _section(lay, t("ui.dokunmamali"), items=tweak["dokunmamali"], tone="uyari")
     level_text = value_label("deger.etki", level)
     _section(lay, t("ui.performans_etkisi", seviye=level_text), tweak["performans_etkisi"].get("gerekce") or level_text)
+    _sources(lay, tweak)  # kanıt her zaman görünür (Kubilay, 5 Kasım 2026); "Ekstra bilgi" yalnızca ayrıntıları ekler
     if settings.get("ekstra_bilgi"):
         reality = value_label("deger.gerceklik", tweak["gerceklik"]["durum"])
         reality_text = tweak["gerceklik"].get("aciklama") or ""
@@ -127,7 +128,6 @@ def fill_tweak_details(lay, tweak):
         _section(lay, t("ui.gerceklik_baslik", durum=reality), reality_text or reality)
         _section(lay, t("ui.windows"), tweak["uyumluluk"]["kaynak_metin"]["windows"])
         _section(lay, t("ui.varsayilan"), tweak.get("varsayilan"))
-        _sources(lay, tweak)
 
 
 def _cautions(tweak, availability):
@@ -147,6 +147,8 @@ class InfoDialog(_Dialog):
     def __init__(self, parent, tweak, availability=None, detected=False):
         super().__init__(parent, tweak["ad"], height=600)
         self.heading(display_name(tweak))
+        if tweak.get("sade_ad"):
+            self.outer.addWidget(w.label(tweak["ad"], muted=True, size=12))
         lay = self.scroll_body()
         fill_tweak_details(lay, tweak)
         self.outer.addWidget(w.hbox(None, w.button(t("ui.kapat"), self.accept, width=120)))

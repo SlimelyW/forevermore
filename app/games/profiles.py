@@ -2,19 +2,17 @@
 
 Yerel dosya: %LOCALAPPDATA%\\Forevermore\\oyunlar.json (hiçbir yere gönderilmez).
 
-Ayarlar iki türdür:
-- KALICI (uygulama kapalıyken de geçerli; kaydedince yazılır, Değişiklikler'den geri alınır):
-  öncelik (IFEO PerfOptions), GPU tercihi (DirectX UserGpuPreferences),
-  tam ekran optimizasyonları (AppCompatFlags\\Layers).
-- OYUN SIRASINDA (uygulama açıkken; oyun açılınca uygulanır, kapanınca geri alınır):
-  çekirdek seçimi (CPU Sets), güç kısmasından muafiyet, servis duraklatma,
-  Windows Search, Steam önceliği, oyun güç planı, bildirimler, standby temizliği,
-  pencereyi küçültme. Bkz. runtime.py.
+Ayarlar yalnızca KALICI olanlardır (uygulama kapalıyken de geçerli; "Kaydet" / "Önerilen ayarları uygula" ile motordan
+yazılır, Değişiklikler'den geri alınır): öncelik (IFEO PerfOptions), GPU tercihi (DirectX UserGpuPreferences),
+tam ekran optimizasyonları (AppCompatFlags\\Layers). Oyun açılınca uygulanıp kapanınca geri alınan "oyun sırasında"
+ayarları (çekirdek seçimi, güç kısması, servisler, bildirimler, oyun içi Boost…) oyun izleyiciyle birlikte 7 Kasım
+2026'da KALDIRILDI; eski oyunlar.json'daki bu alanlar okunur ama yok sayılır.
 """
 
 import copy
 import json
 import os
+import re
 import shutil
 
 from app.core import log, paths
@@ -24,25 +22,12 @@ from app.games import discovery
 _log = log.get("games")
 
 DEFAULT_PROFILE = {
-    "otomatik": True,               # oyun açılınca otomatik uygula (kapalıyken seçimler saklanır, uygulanmaz)
+    "otomatik": True,               # kapalıyken seçimler saklanır, sisteme Windows varsayılanı yazılır
     "oncelik": "Normal",            # Normal / AboveNormal / High (Realtime YOK)
     "gpu_tercihi": "varsayilan",    # varsayilan / guc_tasarrufu / yuksek_performans
     "fso_kapali": False,
-    "cekirdek_secimi": "tum",       # tum / performans / fiziksel / vcache / ozel
-    "cekirdekler": None,            # özel seçimde CPU numaraları
-    "guc_kismasi_muaf": False,
-    "servisleri_duraklat": False,
-    "windows_search_durdur": False,
-    "steam_dusuk_oncelik": False,
-    "guc_plani": False,
-    "bildirimleri_kapat": False,
-    "standby_temizle": False,       # durumsal: ölçerek kullanın
-    "pencereyi_kucult": False,
-    "boost": False,                 # oyun açılınca Boost listesindeki açık programları nazikçe kapat (geri alınmaz)
 }
 PERSISTENT_DEFAULTS = {"oncelik": "Normal", "gpu_tercihi": "varsayilan", "fso_kapali": False}
-RUNTIME_KEYS = ("guc_kismasi_muaf", "servisleri_duraklat", "windows_search_durdur", "steam_dusuk_oncelik",
-                "guc_plani", "bildirimleri_kapat", "standby_temizle", "pencereyi_kucult", "boost")
 
 # Anti-cheat ve başlatıcı süreçleri: oyun olarak eklenemez, hiçbir ayar uygulanmaz.
 PROTECTED_EXES = {"vgc.exe", "vgk.exe", "vgtray.exe", "beservice.exe", "beservice_x64.exe", "easyanticheat.exe",
@@ -66,7 +51,9 @@ ANTI_CHEAT_MARKERS = (
     ("nProtect GameGuard", ("gameguard",)),
     ("XIGNCODE3", ("xigncode",)),
     ("EA Javelin", ("eaanticheat",)),
+    ("Nexon BlackCipher", ("blackcipher",)),  # The First Descendant: canlı FPS açıkken oyunu kapattı (docs/CANLI_FPS_COKME.md)
 )
+ANTI_CHEAT_VERSION = 2  # işaret listesi değişince artar: eski kayıtlar bir kez yeniden taranır
 
 
 def detect_anti_cheat(game, max_depth=4):
@@ -93,6 +80,22 @@ def detect_anti_cheat(game, max_depth=4):
 
 def is_protected(exe):
     return os.path.basename(exe or "").lower() in PROTECTED_EXES
+
+
+_LAUNCH_URI = re.compile(r"steam://rungameid/\d+|com\.epicgames\.launcher://apps/[\w.-]+\?action=launch&silent=true")
+
+
+def launch_target(game, rediscover=False):
+    """Başlatma hedefi: bulunan Steam/Epic kısayolu (oyun listesi dosyası elle değişmiş olabilir: yalnızca bu iki kalıp
+    kabul edilir), yoksa var olan exe, yoksa None. Anti-cheat'li oyunda da aynı normal başlatmadır.
+    rediscover: kayıtlı kısayol yoksa Steam/Epic dosyalarından yeniden bulunur (yalnızca tıklayınca; disk okur)."""
+    uri = game.get("baslat")
+    if not (isinstance(uri, str) and _LAUNCH_URI.fullmatch(uri)) and rediscover:
+        uri = discovery.launcher_uri(game.get("exe") or game.get("klasor"))
+    if isinstance(uri, str) and _LAUNCH_URI.fullmatch(uri):
+        return uri
+    exe = game.get("exe")
+    return exe if exe and os.path.isfile(exe) else None
 
 
 class GameStore:
@@ -150,7 +153,7 @@ class GameStore:
     def get(self, game_id):
         return next((g for g in self.games if g["id"] == game_id), None)
 
-    def add(self, name, folder, source, exe=None):
+    def add(self, name, folder, source, exe=None, baslat=None):
         exe = discovery.real_game_exe(exe)
         if exe and is_protected(exe):
             raise ValueError("korumali")
@@ -160,7 +163,9 @@ class GameStore:
             return existing
         game = {"id": game_id, "ad": name, "klasor": folder, "kaynak": source, "exe": exe,
                 "profil": copy.deepcopy(DEFAULT_PROFILE)}
-        game["anti_cheat"] = detect_anti_cheat(game)
+        if baslat:
+            game["baslat"] = baslat
+        game["anti_cheat"], game["anti_cheat_surum"] = detect_anti_cheat(game), ANTI_CHEAT_VERSION
         self.games.append(game)
         self.games.sort(key=lambda g: g["ad"].lower())
         self.save()
@@ -178,11 +183,13 @@ class GameStore:
         self.save()
 
     def ensure_anti_cheat(self):
-        """Eski kayıtlarda anti-cheat bilgisi yoksa bir kez hesaplar."""
+        """Eski kayıtlarda (veya işaret listesi değişince) anti-cheat bilgisini bir kez hesaplar. Yalnızca EKLER: klasör o an
+        erişilemezse (sürücü takılı değil) daha önce bulunan koruma silinmez."""
         changed = False
         for game in self.games:
-            if "anti_cheat" not in game:
-                game["anti_cheat"] = detect_anti_cheat(game)
+            if game.get("anti_cheat_surum") != ANTI_CHEAT_VERSION:
+                game["anti_cheat"] = sorted(set(game.get("anti_cheat") or []) | set(detect_anti_cheat(game)))
+                game["anti_cheat_surum"] = ANTI_CHEAT_VERSION
                 changed = True
         if changed:
             self.save()
@@ -190,11 +197,6 @@ class GameStore:
     def remove(self, game_id):
         self.games = [g for g in self.games if g["id"] != game_id]
         self.save()
-
-    def runtime_games(self):
-        """Oyun sırasında uygulanacak ayarı olan oyunlar (izleyici yalnızca bunlar için çalışır)."""
-        return [g for g in self.games if g.get("exe") and g["profil"].get("otomatik", True) and (
-            any(g["profil"].get(k) for k in RUNTIME_KEYS) or g["profil"].get("cekirdek_secimi") != "tum")]
 
 
 # ---------------------------------------------------------------------------

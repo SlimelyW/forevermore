@@ -22,6 +22,11 @@ def _f(kod, seviye, ilgili=None, **params):
     return {"kod": kod, "seviye": seviye, "ilgili": ilgili or [], "params": params}
 
 
+def tespit_bulgusu(item):
+    level = "sorun" if item["durum"] == "zararlı" else "uyari"
+    return _f("tespit", level, [item["id"]], ad=item["ad"], mesaj=item["mesaj"])
+
+
 def _displays(hw, out):
     displays = hw.get("ekranlar") or []
     low = [d for d in displays if d["yenileme_hz"] + 1 < d["bu_cozunurlukte_en_yuksek_hz"]]
@@ -180,9 +185,7 @@ def build(scan):
     _network(sections.get("ag"), out)
     if (system.get("windows") or {}).get("surum") == "10":
         out.append(_f("windows10", "uyari"))
-    for item in scan.get("tespitler") or []:
-        level = "sorun" if item["durum"] == "zararlı" else "uyari"
-        out.append(_f("tespit", level, [item["id"]], ad=item["ad"], mesaj=item["mesaj"]))
+    out.extend(tespit_bulgusu(item) for item in scan.get("tespitler") or [])
     for option in scan.get("onyukleme_secenekleri") or []:
         out.append(_f(f"onyukleme_{option}", "uyari"))
     if not system.get("yonetici"):

@@ -1,12 +1,14 @@
 """Uygulama güncellemesi (app/core/guncelleme.py): sürüm denetimi, güvenli açma, imza/sürüm doğrulama.
 Ağ yok: sahte `get`; paketler testte üretilen geçici anahtarla imzalanır."""
 
+import datetime
 import json
 import secrets
 import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from unittest import mock
 
 from app.core import ed25519, guncelleme, integrity
 
@@ -188,6 +190,104 @@ class TestSwapScriptReal(unittest.TestCase):
             self.run_swap(base, base / "yok_boyle_bir_klasor")  # Move-Item hata verir
             self.assertEqual((base / "Forevermore" / "surum.txt").read_text(encoding="utf-8"), "Forevermore")
             self.assertFalse((base / "Forevermore.eski").exists())
+
+
+class TestDenetimVakti(unittest.TestCase):
+    """Günde-bir-kez mantığı: yalnızca açık True bağlanır."""
+    NOW = datetime.datetime(2026, 11, 5, 12, 0, tzinfo=datetime.timezone.utc)
+
+    def vakit(self, denetle, son=""):
+        return guncelleme.denetim_vakti(denetle, son, self.NOW)
+
+    def test_only_explicit_yes_connects(self):
+        self.assertFalse(self.vakit(None))   # hiç sorulmadı
+        self.assertFalse(self.vakit(False))
+        self.assertFalse(self.vakit(0))      # True olmayan hiçbir değer bağlanmaz
+        self.assertTrue(self.vakit(True))
+
+    def test_at_most_once_a_day(self):
+        recent = (self.NOW - datetime.timedelta(hours=23)).isoformat()
+        old = (self.NOW - datetime.timedelta(hours=25)).isoformat()
+        self.assertFalse(self.vakit(True, recent))
+        self.assertTrue(self.vakit(True, old))
+
+    def test_broken_or_future_timestamp_checks_again(self):
+        self.assertTrue(self.vakit(True, "bozuk"))
+        self.assertTrue(self.vakit(True, (self.NOW + datetime.timedelta(days=2)).isoformat()))  # saat geri alınmış
+
+
+class TestIlkSoru(unittest.TestCase):
+    """İlk açılış sorusu (app.ui.app._ask_update_check): ağ yok, pencere yok (sahte ask), ayar dosyası geçici."""
+
+    def setUp(self):
+        from app.core import settings
+        self.settings = settings
+        self.tmp = tempfile.TemporaryDirectory()
+        self.file = Path(self.tmp.name) / "uygulama_ayarlari.json"
+        patches = [mock.patch.object(settings, "_path", return_value=self.file),
+                   mock.patch("urllib.request.urlopen", side_effect=AssertionError("gerçek ağ isteği"))]
+        for p in patches:
+            p.start()
+            self.addCleanup(p.stop)
+        settings.reset_cache()
+        self.addCleanup(settings.reset_cache)
+        self.addCleanup(self.tmp.cleanup)
+
+    def soru(self, answer, mode=None):
+        from app.ui import app as ui_app
+        calls = []
+        ui_app._ask_update_check(ui_app.MODE_NORMAL if mode is None else mode, lambda: calls.append(1) or answer)
+        return len(calls)
+
+    def test_fresh_user_is_asked_once_and_yes_is_saved(self):
+        self.assertIsNone(self.settings.get("guncelleme_denetle"))
+        self.assertEqual(self.soru(True), 1)
+        self.assertIs(self.settings.get("guncelleme_denetle"), True)
+        self.settings.reset_cache()  # dosyadan okunur: kalıcı
+        self.assertIs(self.settings.get("guncelleme_denetle"), True)
+        self.assertEqual(self.soru(False), 0)  # bir daha sorulmaz
+        self.assertIs(self.settings.get("guncelleme_denetle"), True)
+
+    def test_no_or_closed_dialog_means_never_connect(self):
+        self.assertEqual(self.soru(False), 1)
+        self.assertIs(self.settings.get("guncelleme_denetle"), False)
+        self.assertFalse(guncelleme.denetim_vakti(self.settings.get("guncelleme_denetle"), "", datetime.datetime.now(datetime.timezone.utc)))
+
+    def _yaz(self, **values):
+        self.file.write_text(json.dumps(values), encoding="utf-8")
+        self.settings.reset_cache()
+
+    def test_old_false_without_flag_is_asked_once(self):
+        self._yaz(guncelleme_denetle=False)
+        self.assertEqual(self.soru(True), 1)
+        self.assertIs(self.settings.get("guncelleme_denetle"), True)
+        self.assertIs(self.settings.get("guncelleme_soruldu"), True)
+
+    def test_old_false_answer_no_stays_false_and_never_connects(self):
+        self._yaz(guncelleme_denetle=False)
+        self.assertEqual(self.soru(False), 1)  # urlopen sahte: çağrılırsa test düşer
+        self.assertIs(self.settings.get("guncelleme_denetle"), False)
+        self.assertIs(self.settings.get("guncelleme_soruldu"), True)
+        self.assertEqual(self.soru(True), 0)
+
+    def test_flag_present_is_never_asked(self):
+        for stored in (None, True, False):
+            self._yaz(guncelleme_denetle=stored, guncelleme_soruldu=True)
+            self.assertEqual(self.soru(not stored), 0)
+            self.assertIs(self.settings.get("guncelleme_denetle"), stored)
+
+    def test_true_without_flag_not_asked_but_flag_written(self):
+        self._yaz(guncelleme_denetle=True)
+        self.assertEqual(self.soru(False), 0)
+        self.assertIs(self.settings.get("guncelleme_denetle"), True)
+        self.settings.reset_cache()
+        self.assertIs(self.settings.get("guncelleme_soruldu"), True)
+
+    def test_preview_mode_never_asks(self):
+        from app.ui.controller import MODE_PREVIEW
+        self.assertEqual(self.soru(True, MODE_PREVIEW), 0)
+        self.assertIsNone(self.settings.get("guncelleme_denetle"))
+        self.assertFalse(self.settings.get("guncelleme_soruldu"))
 
 
 if __name__ == "__main__":

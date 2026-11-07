@@ -1,4 +1,5 @@
-"""Uygulama güncellemesi (İSTEĞE BAĞLI; Ayarlar'da varsayılan KAPALI, yalnızca kullanıcı isteyince çalışır).
+"""Uygulama güncellemesi (kullanıcı bir kez sorulduğunda "evet" derse günde bir denetim; "hayır" derse hiç bağlanmaz;
+Ayarlar > Sistem'den değiştirilir, "Şimdi denetle" düğmesi her durumda çalışır).
 
 Ağ: yalnızca GitHub'ın herkese açık sürüm listesine (api.github.com) ve sürüm dosyasına (github.com/<depo>/releases/download)
 bağlanır. Hiçbir veri gönderilmez (GET; sürüm numarası bile yok). Kod ve paket güveni GİTHUB'a değil İMZAYA dayanır:
@@ -98,6 +99,18 @@ def http_get(url, limit=MAX_API_BYTES):
     if len(data) > limit:
         raise GuncellemeHatasi("boyut", "yanıt çok büyük")
     return data
+
+
+def denetim_vakti(denetle, son_deneme, simdi):
+    """Açılıştaki otomatik denetim yapılmalı mı? Yalnızca açıkça True ise (None = hiç sorulmadı: bağlanma) ve son denemeden
+    CHECK_INTERVAL geçtiyse. `son_deneme`: ISO metni; bozuksa/boşsa/gelecekteyse (saat geri alınmış) denetlenir."""
+    if denetle is not True:
+        return False
+    try:
+        last = datetime.datetime.fromisoformat(son_deneme or "")
+    except ValueError:
+        return True
+    return not (last <= simdi and simdi - last < CHECK_INTERVAL)
 
 
 def kontrol(get=http_get, current=__version__):

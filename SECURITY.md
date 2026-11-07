@@ -26,7 +26,7 @@ Kapsama giren örnekler:
 - Güncelleme: imzası doğrulanmamış ya da eski bir paketin kurulması (`app/core/guncelleme.py`, `app/core/integrity.py`).
 - Yönetici olarak çalıştırılan dış araçların (`tools\` klasörü) doğrulamasız çalıştırılması.
 - Uygulamanın kullanıcı verisini (tarama sonuçları, ayarlar, günlük) bilgisayarın dışına göndermesi. Uygulamanın
-  telemetrisi yoktur; ağa yalnızca kullanıcının açtığı güncelleme denetiminde (GitHub) bağlanır.
+  telemetrisi yoktur; ağa yalnızca kullanıcının bir kez sorulan soruya "evet" dediği (Ayarlar'dan kapatılır) güncelleme denetiminde (GitHub) bağlanır.
 
 Kapsama girmeyenler: bir ayarın tasarımı gereği güvenliği azaltması (ör. Spectre/Meltdown azaltımını kapatmak; bu
 ayar onay penceresinde açıkça uyarılır), yönetici hesabı zaten ele geçirilmiş bir bilgisayarda yapılabilecek saldırılar,

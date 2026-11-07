@@ -112,6 +112,49 @@ class PdhQuery:
             self.handle = ctypes.c_void_p()
 
 
+VRAM_PATH = r"\GPU Adapter Memory(*)\Dedicated Usage"
+_LUID = re.compile(r"luid_0x([0-9a-fA-F]+)_0x([0-9a-fA-F]+)")
+
+
+def main_adapter():
+    """(luid, toplam_bayt) oyunlarda kullanılan kart (DXGI); okunamazsa (None, None)."""
+    from app.scan import gpus  # noqa: WPS433 - yalnızca Windows'ta anlamlı
+    try:
+        adapters = gpus.dxgi_adapters()
+    except Exception:
+        _log.exception("DXGI kart listesi okunamadı")
+        return None, None
+    main = next((a for a in adapters if a.get("yuksek_performans")), adapters[0] if adapters else None)
+    return (main["luid"], main["vram_mb"] * 2 ** 20) if main and main.get("vram_mb") else (None, None)
+
+
+def vram_used(items, luid):
+    """PDH 'Dedicated Usage' örneklerinden (ad, bayt) o kartın kullanılan belleği; eşleşme yoksa None.
+    Örnek adı luid_0xYÜKSEK_0xDÜŞÜK_phys_N; DXGI luid'i YÜKSEK+DÜŞÜK (8+8 onaltılık hane)."""
+    used = [value for name, value in items
+            if (m := _LUID.search(name)) and f"{int(m[1], 16):08X}{int(m[2], 16):08X}" == luid]
+    return sum(used) if used else None
+
+
+class VramReader:
+    """Oyun oturumunda tek sayaçla ekran kartı belleği: read() -> (kullanılan, toplam) bayt veya None."""
+
+    def __init__(self):
+        self.query = PdhQuery()
+        self.luid, self.total = main_adapter()
+        if not (self.luid and self.query.add("v", VRAM_PATH)):
+            self.luid = None
+
+    def read(self):
+        if self.luid is None or not self.query.collect():
+            return None
+        used = vram_used(self.query.array("v", PDH_FMT_DOUBLE), self.luid)
+        return None if used is None else (used, self.total)
+
+    def close(self):
+        self.query.close()
+
+
 _GPU_ENGINE = re.compile(r"luid_(0x[0-9a-fA-F]+_0x[0-9a-fA-F]+)_phys_(\d+)_eng_(\d+)_engtype_(.*)$")
 _PROCESS_SUFFIX = re.compile(r"#\d+$")
 _SKIP_PROCESSES = {"_total", "idle", "system", "memory compression"}
@@ -131,7 +174,7 @@ class LiveSampler:
         "ag_alinan": r"\Network Interface(*)\Bytes Received/sec",
         "ag_gonderilen": r"\Network Interface(*)\Bytes Sent/sec",
         "gpu": r"\GPU Engine(*)\Utilization Percentage",
-        "gpu_bellek": r"\GPU Adapter Memory(*)\Dedicated Usage",
+        "gpu_bellek": VRAM_PATH,
         "surec_sayisi": r"\System\Processes",
     }
     PROCESSES = {
@@ -151,6 +194,7 @@ class LiveSampler:
         self.cpu_count = os.cpu_count() or 1
         self._tick = 0
         self._top = []
+        self.vram_luid, self.vram_total = main_adapter()
         self.query.collect()
         if self.proc_query:
             self.proc_query.collect()
@@ -190,13 +234,16 @@ class LiveSampler:
         perf, base = q.value("cpu_performans"), q.value("cpu_frekans")
         idle = q.value("disk_bos")
         total, used = memory()
-        gpu_mem = [v for _, v in q.array("gpu_bellek", PDH_FMT_DOUBLE)]
+        gpu_items = q.array("gpu_bellek", PDH_FMT_DOUBLE)
+        gpu_mem = [v for _, v in gpu_items]
         result = {
             "cpu": None if cpu is None else min(100.0, max(0.0, cpu)),
             "cpu_ghz": round(perf * base / 100 / 1000, 2) if perf and base else None,
             "ram_toplam": total, "ram_kullanilan": used,
             "gpu": self._gpu(),
             "gpu_bellek": max(gpu_mem) if gpu_mem else None,
+            # Oyun kartının (kullanılan, toplam) belleği; eşleşmezse None (satır eski haline döner)
+            "gpu_bellek_kart": (vram_used(gpu_items, self.vram_luid), self.vram_total) if self.vram_luid else None,
             "disk": None if idle is None else max(0.0, min(100.0, 100.0 - idle)),
             "disk_okuma": q.value("disk_okuma"), "disk_yazma": q.value("disk_yazma"),
             "ag_alinan": sum(v for _, v in q.array("ag_alinan", PDH_FMT_DOUBLE)),

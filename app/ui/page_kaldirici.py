@@ -29,6 +29,13 @@ class UninstallerPage(w.Page):
         self.ensure_built()
         if self.programs is None:
             self.refresh()
+        else:  # Temizlik gibi başka sayfa yedek eklemiş olabilir: yalnız yedek listesi yeniden okunur
+            self.app.worker.run(uninstaller.list_sessions, self._sessions_read, lambda _exc: None, serial=False)
+
+    def _sessions_read(self, sessions):
+        if sessions != self.sessions:
+            self.sessions = sessions
+            self.data_reloaded()
 
     def refresh(self):
         self.programs = None
@@ -201,7 +208,8 @@ class UninstallerPage(w.Page):
         if not dialogs.ask_yes_no(self.app, t("ui.dikkat"), question):
             return
         if not uninstaller.start_uninstall(program):
-            self.app.set_status(t("ui.kaldirici.baslamadi", ad=program["ad"]), "sorun")
+            key = "ui.kaldirici.baslamadi_kullanici" if program["kok"] == "HKCU" else "ui.kaldirici.baslamadi"
+            self.app.set_status(t(key, ad=program["ad"]), "sorun")
             return
         self.pending, self.leftovers = program, None
         self.app.set_status(t("ui.kaldirici.basladi", ad=program["ad"]), "bilgi")
@@ -287,6 +295,8 @@ class UninstallerPage(w.Page):
         for session in self.sessions:
             restore = w.button(t("ui.kaldirici.geri_yukle"), lambda _=False, s=session: self._restore(s))
             restore.setEnabled(self.c.can_modify)
+            if not self.c.can_modify:
+                restore.setToolTip(t("ui.temizlik.yetki"))
             delete = w.button(t("ui.kaldirici.yedegi_sil"), lambda _=False, s=session: self._delete(s), warn=True)
             card.lay.addWidget(w.hbox((w.label(t("ui.kaldirici.yedek_satir", ad=session["program"], tarih=session["tarih"][:16].replace("T", " "),
                                                  adet=session["adet"]), wrap=False, plain=True), 1), restore, delete, spacing=10))

@@ -27,6 +27,27 @@ TOOLS = {
                      "https://www.techpowerup.com/download/techpowerup-nvcleanstall/"),
 }
 
+# Yalnızca tarayıcıda açılır; uygulama sürücü indirmez/kurmaz (Kubilay kararı, docs/SURUCU_INDIRME.md).
+DRIVER_PAGES = {
+    "NVIDIA": "https://www.nvidia.com/en-us/drivers/",
+    "AMD": "https://www.amd.com/en/support/download/drivers.html",
+}
+
+# Fare/klavye üreticisinin resmi yazılım sayfası (yalnızca tarayıcıda açılır; elle doğrulandı 7 Kas 2026,
+# docs/KLAVYE_FARE_MERKEZI.md). SteelSeries doğrulanamadı: eklenmedi. Anahtar = peripherals.USB_VENDORS adı.
+INPUT_VENDOR_PAGES = {
+    "Logitech": "https://www.logitechg.com/en-us/software/ghub",
+    "Corsair": "https://www.corsair.com/ww/en/s/downloads",
+    "Razer": "https://www.razer.com/synapse-4",
+    "HyperX": "https://hyperx.com/pages/ngenuity",
+}
+
+
+def driver_pages(gpus):
+    """Bu bilgisayardaki kartların resmi sürücü sayfaları: [(üretici, adres)]. Hibrit dizüstünde iki satır olabilir."""
+    found = {gpu.get("uretici") for gpu in gpus}
+    return [(vendor, url) for vendor, url in DRIVER_PAGES.items() if vendor in found]
+
 
 def find(tool):
     """tools klasöründeki aracın yolu (yoksa None). Klasör adı büyük/küçük harf duyarsız."""

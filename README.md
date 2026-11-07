@@ -46,8 +46,12 @@ Forevermore **kayıt defterini, servisleri, önyükleme ayarlarını ve sürüc�
 2. Bir klasöre açın (klasörü olduğu gibi tutun; `_internal` programın parçasıdır) ve **Forevermore.exe**'yi çalıştırın.
 3. Kaldırmak için önce uygulamada Ekstra ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
 
-Zip'in SHA-256 değeri Releases sayfasında yazar (`Get-FileHash Forevermore.zip`). Python + PyInstaller ile paketlenen
-programlar küçük antivirüslerde yanlış alarm verebilir; kod açık olduğu için isterseniz kendiniz derleyebilirsiniz.
+**İndirdiğin dosyayı doğrula (iki adım):**
+1. PowerShell'de zip'in olduğu klasörde şunu yaz: `Get-FileHash .\Forevermore.zip -Algorithm SHA256`
+2. Çıkan değeri Releases sayfasında yazan SHA-256 ile karşılaştır. Aynıysa dosya değişmemiştir; farklıysa çalıştırma, yeniden indir.
+
+Windows uyarı gösterirse bu normaldir, kod imzalama sertifikamız henüz yok; dosyanın SHA-256'sını doğrulayabilirsin.
+Python + PyInstaller ile paketlenen programlar küçük antivirüslerde yanlış alarm verebilir; kod açık olduğu için isterseniz kendiniz derleyebilirsiniz.
 
 ## Kaynaktan çalıştırma ve derleme
 
@@ -87,8 +91,9 @@ Klasör yapısı: `app/core` (ayarlar, yollar, dil), `app/engine` (motor, yedek,
 ## Gizlilik
 
 Telemetri, reklam, analiz yok. Tarama sonuçları, ayarlar, yedekler ve günlükler yalnızca bilgisayarınızda
-(`%LOCALAPPDATA%\Forevermore`) kalır. Uygulama varsayılan olarak internete hiç bağlanmaz; tek istisna, Ayarlar'dan sizin
-açtığınız güncelleme denetimidir (yalnızca GitHub, veri göndermez, indirilen paketin imzası doğrulanır).
+(`%LOCALAPPDATA%\Forevermore`, yedekler `%ProgramData%\Forevermore`) kalır. İnternete tek bağlandığı yer güncelleme denetimidir: size bir kez
+sorulur, "evet" derseniz günde en çok bir kez çalışır (yalnızca GitHub, veri göndermez, indirilen paketin imzası doğrulanır);
+"hayır" derseniz kendiliğinden hiç bağlanmaz. Ayarlar > Sistem'den değiştirilir.
 
 ## Katkı, güvenlik, destek
 
@@ -111,7 +116,8 @@ açtığınız güncelleme denetimidir (yalnızca GitHub, veri göndermez, indir
 Forevermore is a free, open-source (MIT) Windows 10/11 settings app for gamers. It scans your PC, explains what each
 setting does with its pros and cons and an evidence label (real / partial / situational / debated / placebo / harmful),
 and backs up every change so it can be undone with one click. There is no Pro tier, no account and no telemetry; the app
-connects to the internet only for the update check you can turn on in Settings (GitHub only, sends nothing).
+connects to the internet only for the update check it asks you about once (GitHub only, sends nothing;
+answer "No" and it never connects on its own; change it in Settings > System).
 
 **Warning: it changes system settings** (registry, services, boot options, GPU driver settings). It tries to create a
 system restore point before the first change, backs up every value it writes, and asks for administrator rights only to
@@ -119,6 +125,7 @@ apply changes (without them it opens read-only; `--onizleme` tries everything wi
 reduce security or need a restart and say so before you confirm. The software is provided "as is", without warranty.
 
 - **Install:** download `Forevermore.zip` from [Releases](https://github.com/SlimelyW/forevermore/releases/latest), extract it, run `Forevermore.exe`.
+- **Check your download (two steps):** (1) In PowerShell, in the folder with the zip, run `Get-FileHash .\Forevermore.zip -Algorithm SHA256`. (2) Compare the result with the SHA-256 on the Releases page; if it differs, do not run it, download again. If Windows shows a warning, that is normal: we do not have a code-signing certificate yet, and you can verify the file's SHA-256.
 - **Run from source:** Python 3.12, `py -3.12 -m venv .venv`, `.venv\Scripts\python -m pip install -r requirements.txt`, `.venv\Scripts\python -m app`.
 - **Tests:** `$env:QT_QPA_PLATFORM="offscreen"; .venv\Scripts\python -m unittest discover -s tests -t .`
 - **Build a package:** `derle.bat` (PyInstaller; unsigned unless you hold the maintainer's update-signing key).

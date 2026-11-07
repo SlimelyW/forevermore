@@ -27,18 +27,22 @@ from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QFrame
 
 from app.core import admin, consent, guncelleme, i18n, log, paths, settings, tek_ornek
 from app.core.i18n import fmt_date, t
-from app.engine import profiles as profile_module, system_protection
-from app.ui import dialogs, motion, theme, widgets as w
+from app.engine import profiles as profile_module, system_protection, varsayilan
+from app.engine.user_presets import PresetStore
+from app.games import recorder
+from app.ui import dialogs, fps_widget, motion, theme, widgets as w
 from app.ui.controller import MODE_NORMAL, MODE_PREVIEW, OWN_PAGE, Controller, is_manual
 from app.ui.live_monitor import LiveMonitor
 from app.ui.page_boost import BoostPage
 from app.ui.page_kaldirici import UninstallerPage
+from app.ui.page_temizlik import CleanerPage
 from app.ui.page_category import CategoryPage, ManualPage
 from app.ui.page_other import ChangesPage, ProfilesPage, ReportPage
 from app.ui.page_details import PcDetailsPage
 from app.ui.page_settings import AboutPage, SettingsPage, about_data, donate_url_ok
 from app.games.profiles import GameStore
-from app.games.runtime import GameSession, GameWatcher, ProcessOps
+from app.games.runtime import GameDetector, GameSession, ProcessOps
+from app.measure import live_fps
 from app.ui.page_games import GamesPage
 from app.ui.page_measure import MeasurePage
 from app.ui.page_startup import StartupPage
@@ -132,6 +136,15 @@ class NavItem(motion.HoverFade, QFrame):
             self._on_click(self.key)
 
 
+def _vram_percent(reader):
+    """Oyun kartı belleği doluluğu (%), okunamıyorsa None. 1 GB'tan küçük ayrılmış bellek = tümleşik kart (paylaşımlı): None."""
+    try:
+        read = reader.read() if reader is not None else None
+    except Exception:
+        return None
+    return read[0] / read[1] * 100 if read and read[1] >= 2 ** 30 else None
+
+
 class MainWindow(QMainWindow):
     # Testler sahte örnekleyici verir; None = Windows performans sayaçları.
     live_sampler_factory = None
@@ -148,7 +161,15 @@ class MainWindow(QMainWindow):
         self.stall_watch = StallWatch(self) if os.environ.get("PCOPT_BEKCI") != "kapali" else None
         self.live_monitor = LiveMonitor(self.live_sampler_factory)
         self.game_store = GameStore()
-        self.game_watcher = None
+        self.preset_store = PresetStore()  # kullanıcı presetleri (yalnızca ayar kimlikleri)
+        self.game_detector = None      # "oyun açık mı" (runtime.GameDetector): yalnızca canlı FPS / oyun kaydı açıkken
+        self.recorder = None           # oyun oturumu kaydı: yalnızca oyun sürerken ve ayar açıkken
+        self.live_fps = None           # canlı FPS (app/measure/live_fps.py): yalnızca oyun sürerken ve ayar açıkken
+        self.fps_stats = None
+        self.fps_widget = None         # oyun üstü FPS kutusu (app/ui/fps_widget.py): yalnızca canlı FPS sürerken ve izinliyse
+        self.live_fps_game = None
+        self.vram_reader = None        # ekran kartı belleği okuyucusu: yalnızca canlı FPS sürerken ve "vram_uyari" açıkken
+        self.last_sessions = {}        # oyun kimliği -> son oyun oturumunun özeti (yalnızca bellekte)
         self.tray = None
         self.quitting = False
         self.skip_save = False  # "Kaldırmaya hazırla" verileri sildiyse hiçbir şey yazılmaz
@@ -232,7 +253,7 @@ class MainWindow(QMainWindow):
         rare = {"PLC", "baslangic", "elle"}  # "Daha fazla" altında katlanır
         entries = [t("ui.menu.grup.basla"), ("ozet", t("ui.menu.ozet")), ("pc_detay", t("ui.menu.pc_detay")),
                    ("profiller", t("ui.menu.profiller")), ("oyunlar", t("ui.menu.oyunlar")), ("boost", t("ui.menu.boost")),
-                   ("kaldirici", t("ui.menu.kaldirici")),
+                   ("kaldirici", t("ui.menu.kaldirici")), ("temizlik", t("ui.menu.temizlik")),
                    t("ui.menu.grup.ayarlar")]
         for c in self.c.categories:
             entries.append((c["id"], t(f"kategori.{c['id']}")))
@@ -307,6 +328,8 @@ class MainWindow(QMainWindow):
                 page = BoostPage(self)
             elif key == "kaldirici":
                 page = UninstallerPage(self)
+            elif key == "temizlik":
+                page = CleanerPage(self)
             else:
                 page = CategoryPage(self, next(c for c in self.c.categories if c["id"] == key))
             self.pages[key] = page
@@ -396,15 +419,11 @@ class MainWindow(QMainWindow):
 
     # ------------------------------------------------------------------ güncelleme
     def _auto_update_check(self):
-        """Kullanıcı Ayarlar'da açtıysa günde en çok bir kez yeni sürüm var mı diye bakar; yalnızca durum çubuğuna yazar."""
-        if self.c.mode == MODE_PREVIEW or not settings.get("guncelleme_denetle"):
-            return
+        """Kullanıcı ilk soruda/Ayarlar'da evet dediyse günde en çok bir kez yeni sürüm var mı diye bakar; sessiz: yalnızca
+        durum çubuğuna tek satır yazar, hata sessiz geçilir."""
         now = datetime.datetime.now(datetime.timezone.utc)
-        try:
-            last = datetime.datetime.fromisoformat(settings.get("guncelleme_son_deneme") or "")
-        except ValueError:
-            last = None
-        if last is not None and last <= now and now - last < guncelleme.CHECK_INTERVAL:
+        if self.c.mode == MODE_PREVIEW or not guncelleme.denetim_vakti(
+                settings.get("guncelleme_denetle"), settings.get("guncelleme_son_deneme"), now):
             return
         settings.set("guncelleme_son_deneme", now.isoformat())
         self.worker.run(guncelleme.kontrol, lambda info: info and self.set_status(
@@ -458,8 +477,8 @@ class MainWindow(QMainWindow):
             self.banner_area.addWidget(w.banner(t("yeniden.gezgin"), "bilgi"))
         store = self.c.engine.store
         if store.tampered:
-            buttons = [w.button(t("ui.yedek_sifirla"), self._dismiss_broken_backup)]
-            if store.recoverable:
+            buttons = [] if store.readonly else [w.button(t("ui.yedek_sifirla"), self._dismiss_broken_backup)]
+            if store.recoverable and not store.readonly:
                 buttons.insert(0, w.button(t("ui.yedek_kurtar"), self._recover_backup, primary=True))
             self.banner_area.addWidget(w.banner(t("ui.yedek_degistirilmis"), "sorun", *buttons))
         from app.engine import driver_tools  # noqa: WPS433
@@ -541,7 +560,7 @@ class MainWindow(QMainWindow):
 
     # ------------------------------------------------------------------ oyunlar
     def _start_games(self):
-        """Önceki oturumdan yarım kalan oyun ayarlarını geri alır, sonra izleyiciyi gerekiyorsa başlatır."""
+        """Eski sürümde yarım kalan oyun ayarlarını geri alır, sonra oyun algılayıcıyı gerekiyorsa başlatır."""
         if not self.c.can_modify:
             return
         system = self.c.engine.system
@@ -552,44 +571,129 @@ class MainWindow(QMainWindow):
         def done(recovered):
             if recovered:
                 self.set_status(t("ui.oyun_oturumu_geri_alindi"), "bilgi")
-            self.update_game_watcher()
-        self.worker.run(recover, done, lambda _e: self.update_game_watcher(), serial=False)
+            self.update_game_detector()
+        self.worker.run(recover, done, lambda _e: self.update_game_detector(), serial=False)
 
-    def watched_games(self):
-        """Oyun sırasında ayarı uygulanacak oyunlar."""
-        return self.game_store.runtime_games()
-
-    def update_game_watcher(self):
-        """Oyun sırasında ayarı olan oyun varsa izleyiciyi çalıştırır, yoksa durdurur."""
+    def update_game_detector(self):
+        """Canlı FPS veya oyun oturumu kaydı açıksa ve exe'si bilinen oyun varsa "oyun açık mı" algılayıcısını çalıştırır,
+        değilse durdurur (oyun sürerken durdurmaz: oyun bitince yeniden bakılır). Hiçbir oyun ayarı uygulanmaz."""
         if not self.c.can_modify:
             return
-        needed = bool(self.watched_games())
-        if needed and self.game_watcher is None:
-            self.game_watcher = GameWatcher(self.game_store, self.c.engine.system, games=self.watched_games,
-                                            on_event=lambda *a: self.worker.call_soon(self._game_event, *a))
-            self.game_watcher.start()
-        elif not needed and self.game_watcher is not None and not self.game_watcher.active:
-            self.game_watcher.stop()
-            self.game_watcher = None
+        needed = bool((settings.get("canli_fps") or settings.get("oyun_kaydi"))
+                      and any(g.get("exe") for g in self.game_store.games))
+        if needed and self.game_detector is None:
+            self.game_detector = GameDetector(lambda: [g for g in self.game_store.games if g.get("exe")],
+                                              on_event=lambda *a: self.worker.call_soon(self._game_event, *a))
+            self.game_detector.start()
+        elif not needed and self.game_detector is not None and not self.game_detector.active:
+            self.game_detector.stop()
+            self.game_detector = None
 
-    def _game_event(self, kind, game, results):
-        store = self.c.engine.store
-        failed = [key for key, ok, _ in results if not ok]
-        if kind == "basladi":
-            store.history("oyun_basladi", game["id"], not failed, ", ".join(failed))
-            text = t("ui.oyun_ayarlar_uygulandi", ad=game["ad"])
-            if failed:
-                text += " " + t("ui.oyun_ayar_atlandi", liste=", ".join(t(f"ui.oyun_kisa.{k.split(':')[0]}")
-                                                                          for k in failed))
-            self.set_status(text, "uyari" if failed else "iyi")
-            if game["profil"].get("pencereyi_kucult"):
-                self.showMinimized()
-        else:
-            store.history("oyun_bitti", game["id"], True)
-            self.set_status(t("ui.oyun_ayarlar_geri_alindi", ad=game["ad"]), "iyi")
+    def _reload_games_page(self):
         page = self.pages.get("oyunlar")
         if page is not None and page.built:
             page.data_reloaded()
+
+    def _start_recording(self, game):
+        if self.recorder is None and settings.get("oyun_kaydi"):
+            self.recorder = recorder.SessionRecorder(os.path.basename(game.get("exe") or ""))
+            self.recorder.start()
+
+    def live_fps_allowed(self, game):
+        """Canlı FPS bu oyunda çalışır mı: ayar açık ve oyunda anti-cheat YOK. Anti-cheat'li oyunda hiçbir izinle açılmaz:
+        The First Descendant (EAC + BlackCipher) canlı FPS açıkken kapandı (docs/CANLI_FPS_COKME.md, Kubilay kararı)."""
+        return bool(settings.get("canli_fps")) and not game.get("anti_cheat")
+
+    def fps_widget_allowed(self, game):
+        """FPS kutusu bu oyunda görünür mü: ayar açık ve canlı FPS bu oyunda çalışıyor."""
+        return bool(settings.get("fps_widget")) and self.live_fps_allowed(game)
+
+    def update_fps_widget(self):
+        """Kutu canlı FPS'le birlikte yaşar; oyun sürerken ayar değişirse hemen açılır/kapanır (Alt+H de onunla)."""
+        wanted = self.live_fps is not None and self.fps_widget_allowed(self.live_fps_game)
+        if wanted and self.fps_widget is None:
+            self.fps_widget = fps_widget.FpsWidget(self._fps_widget_text)
+        elif not wanted and self.fps_widget is not None:
+            self.fps_widget.stop()
+            self.fps_widget = None
+
+    def _fps_widget_text(self):
+        percent = _vram_percent(self.vram_reader)
+        return fps_widget.text_for(self.live_fps.snapshot(), None if percent is None else round(percent))
+
+    def _start_live_fps(self, game):
+        if self.live_fps is not None or not self.live_fps_allowed(game):
+            return
+        self.live_fps_game = game
+        self.fps_stats = self.recorder.fps if self.recorder is not None else recorder.FpsStats()  # kayıt açıksa aynı özet
+        try:
+            self.live_fps = live_fps.LiveFps(os.path.basename(game.get("exe") or ""), on_second=self.fps_stats.add,
+                                             on_drop=self.fps_stats.drop,
+                                             on_fail=lambda durum: self.worker.call_soon(self._live_fps_failed, durum))
+            self.live_fps.start()
+        except Exception:
+            _log.exception("Canlı FPS başlatılamadı")
+            self.live_fps = None
+            self._live_fps_failed("baslamadi")
+            return
+        if settings.get("vram_uyari"):
+            try:
+                from app.scan.live import VramReader  # noqa: WPS433 - yalnızca Windows'ta
+                self.vram_reader = VramReader()
+            except Exception:
+                _log.exception("Ekran kartı belleği okuyucusu başlatılamadı")
+        self.update_fps_widget()
+
+    def _live_fps_failed(self, durum):
+        """Canlı FPS hiçbir durumda uygulamayı durdurmaz: ayar kapanır, Oyunlar'da tek satır kalır (ölçücü oyun bitene kadar
+        durumunu gösterir), ayrıntı log'da. Kullanıcı ayarı yeniden açınca sonraki oyunda tekrar denenir."""
+        _log.warning("Canlı FPS başlatılamadı (%s); ayar kapatıldı", durum)
+        settings.set("canli_fps", False)
+        self.update_fps_widget()
+        self.update_game_detector()
+        self.set_status(t("ui.canli_fps.baslamadi"), "uyari")
+        self._reload_games_page()
+
+    def vram_dolu(self):
+        """Oyun kartı belleği %90'ın üstündeyse yüzde (tamsayı), değilse veya okunamıyorsa None."""
+        percent = _vram_percent(self.vram_reader)
+        return round(percent) if percent is not None and percent > 90 else None
+
+    def _stop_live_fps(self):
+        """Canlı FPS özeti ({"fps", "fps_dususleri"}; ölçüm yapılmadıysa {})."""
+        reader, self.vram_reader = self.vram_reader, None
+        if reader is not None:
+            reader.close()
+        live, self.live_fps = self.live_fps, None
+        self.update_fps_widget()
+        if live is None:
+            return {}
+        live.stop()
+        return self.fps_stats.result()
+
+    def _stop_recording(self, game):
+        """Kaynak kullanımı/FPS özeti (ikisi de kapalıysa None). Yeterli örnek varsa ve kayıt açıksa yerel geçmişe de yazılır;
+        yalnızca FPS alınan (kayıt kapalı) oturum geçmişe YAZILMAZ."""
+        fps = self._stop_live_fps()
+        rec, self.recorder = self.recorder, None
+        if rec is None:
+            return dict(fps, ornek=0) if fps else None
+        stats = rec.stop()
+        if stats["ornek"] >= 2:
+            recorder.add_history(game, stats, datetime.datetime.now().isoformat(timespec="seconds"))
+        return stats
+
+    def _game_event(self, kind, game):
+        """Oyun açıldı: kayıt ve canlı FPS başlar. Oyun kapandı: ikisi biter, özet Oyunlar'daki son oturum kartına gider."""
+        if kind == "basladi":
+            self._start_recording(game)
+            self._start_live_fps(game)
+        else:
+            usage = self._stop_recording(game)
+            if usage is not None:
+                self.last_sessions[game["id"]] = {"ad": game["ad"], "kaynak": usage}
+            self.update_game_detector()  # ayar oyun sürerken kapandıysa algılayıcı şimdi durur
+        self._reload_games_page()
 
     # ------------------------------------------------------------------ değişiklik akışı
     def ensure_prepared(self, proceed, cancel):
@@ -758,22 +862,38 @@ class MainWindow(QMainWindow):
         dialogs.show_message(self, t("ui.degistirilemez_baslik"), t(f"ui.mod_aciklama.{self.c.mode}"), "uyari")
         return True
 
-    def _run_change(self, tweak_id, work, done, undoable=False):
+    def _recheck_reverted(self, ids):
+        """Geri almadan sonra ayarların tespitini yeniden okur (kalkan bulgu çıkar, geri gelen bulgu eklenir; yalnız o
+        maddeler, tam tarama yok). Özet bulgu listesi değiştiyse True. Arka plan iş parçacığında çağrılır."""
+        return any([self.c.recheck(i) for i in set(ids) & set(self.c.by_id)])
+
+    def _related_ids(self, tweak_id):
+        return {tweak_id, self.c.engine.stored_related(tweak_id)}
+
+    def _run_change(self, tweak_id, work, done, undoable=False, reverted=False):
         self.busy = True
         self.toast.hide()  # eski "Geri al" başka değişikliği geri almasın
+        before = self._related_ids(tweak_id) if reverted else set()  # geri alınca yedek kaydı silinir
+        saved_name = (self.c.engine.store.get(tweak_id) or {}).get("ad", tweak_id)
+        findings_changed = []
 
         def finished(result):
             self.busy = False
             self.c.note_result(result)
             entry = self.c.engine.store.get(tweak_id) or {}
-            name = self.c.by_id[tweak_id]["ad"] if tweak_id in self.c.by_id else entry.get("ad", tweak_id)
-            self._report_result(result, name)
+            name = self.c.by_id[tweak_id]["ad"] if tweak_id in self.c.by_id else entry.get("ad", saved_name)
+            self._report_result(result, name, reverted)
+            if reverted and result.ok:
+                self.toast.show_text(t("ui.geri_alindi_kisa", ad=name), 4000)
             if undoable and result.ok and self.c.engine.store.has(tweak_id):
                 self.toast.show_text(t("ui.uygulandi_kisa", ad=name), 6000, action_label=t("ui.geri_al"),
                                      action=lambda: self.revert(tweak_id, lambda: None))
             self.update_banners()
             self._tweak_updated(tweak_id)
-            if self.current == "degisiklikler":
+            if findings_changed:  # geri alma bir sorunlu ayarı geri getirdi: Özet ve ilgili sayfalar kendiliğinden yenilenir
+                self.reload_pages()
+                self._update_counts()
+            elif self.current == "degisiklikler":
                 self.pages[self.current].data_reloaded()
             self._save_timer.start(500)
             done()
@@ -787,12 +907,16 @@ class MainWindow(QMainWindow):
             result = work()
             if tweak_id in self.c.by_id:
                 self.c.refresh_one(tweak_id)
+            if reverted and result.ok and self._recheck_reverted(before):
+                findings_changed.append(1)
             return result
 
         self.worker.run(task, finished, failed)
 
-    def _report_result(self, result, name):
+    def _report_result(self, result, name, reverted=False):
         text = f"{name}: {t(result.key, **result.params)}"
+        if reverted and result.ok:
+            text = t("ui.geri_alindi_kisa", ad=name)
         for key, params in result.warnings:
             text += " " + t(key, **params)
         self.set_status(text, "iyi" if result.ok else "sorun")
@@ -837,7 +961,7 @@ class MainWindow(QMainWindow):
             if not ok:
                 done()
                 return
-        self._run_change(tweak_id, lambda: engine.revert(tweak_id, confirmed=True), done)
+        self._run_change(tweak_id, lambda: engine.revert(tweak_id, confirmed=True), done, reverted=True)
 
     def apply_custom(self, change_id, name, steps, values, done, level=0, restart="yok", related=None, after=()):
         """Yöneticilerden gelen değişiklik (başlangıç öğesi, servis, MSI, aygıt gücü, monitör Hz).
@@ -849,6 +973,21 @@ class MainWindow(QMainWindow):
                                                   restart=restart, confirmed=True, related=related,
                                                   after=after)
         self.ensure_prepared(lambda: self._run_change(change_id, work, done, undoable=True), done)
+
+    def restore_default(self, tweak, done):
+        """Başka programın uyguladığı sorunlu ayarı Windows varsayılanına döndürür (app/engine/varsayilan.py):
+        tek satır önizleme + onay, sonra apply_custom (yedek, Değişiklikler, geri alma); yeniden okumayı çağıran yapar."""
+        plan = varsayilan.plan(self.c.engine.system, tweak["id"])
+        if plan is None:
+            self.set_status(t("ui.varsayilan.beklenmeyen"), "uyari")
+            done()
+            return
+        key, params = plan["onizleme"]
+        if not dialogs.ask_yes_no(self, t("ui.varsayilan.dugme"), t(key, **params), yes_text=t("ui.varsayilan.dugme")):
+            done()
+            return
+        self.apply_custom(varsayilan.change_id(tweak["id"]), t("ui.varsayilan.degisiklik", ad=tweak["ad"]),
+                          plan["adimlar"], plan["degerler"], done, related=tweak["id"])
 
     def run_npi(self, tweak, settings, done, sha256=None):
         """Yedek yöntem: NVIDIA Profile Inspector ile içe aktarma (geri alınamaz; işlem geçmişine yazılır)."""
@@ -911,10 +1050,12 @@ class MainWindow(QMainWindow):
             return
 
         def task():
+            related = {i for tid in self.c.engine.changed_ids() for i in self._related_ids(tid)}
             results = self.c.engine.revert_all()
             for tweak_id, _ in results:
                 if tweak_id in self.c.by_id:
                     self.c.refresh_one(tweak_id)
+            self._recheck_reverted(related | {tid for tid, _ in results})
             return results
 
         self._batch(t("ui.tumunu_geri_al"), task, done)
@@ -1024,7 +1165,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         if self.tray is not None and not self.quitting:
-            # Tepsiye küçült: pencere gizlenir, oyun izleyici çalışmaya devam eder.
+            # Tepsiye küçült: pencere gizlenir, canlı FPS / oyun kaydı çalışmaya devam eder.
             event.ignore()
             self.hide()
             self.c.save_cache()
@@ -1038,8 +1179,11 @@ class MainWindow(QMainWindow):
         self._save_timer.stop()
         self._counts_timer.stop()
         self.live_monitor.stop()
-        if self.game_watcher is not None:
-            self.game_watcher.stop()  # açık oyunun oyun-sırası ayarları geri alınır
+        self._stop_live_fps()
+        if self.recorder is not None:
+            self.recorder.stop()
+        if self.game_detector is not None:
+            self.game_detector.stop()
         if not self.skip_save:
             self.c.save_cache()
         self.worker.shutdown()
@@ -1124,6 +1268,19 @@ def _hold_timer_resolution(mode):
         _log.warning("Zamanlayıcı çözünürlüğü istenemedi: %s", exc)
 
 
+def _ask_update_check(mode, ask=None):
+    """Tek soru, bir kez: `guncelleme_soruldu` yoksa ayar değeri ne olursa olsun (None/True/False) sorulur ve bayrak yazılır.
+    Ayar zaten True ise sorulmaz, yalnızca bayrak işaretlenir. Pencere kapatılırsa "hayır" sayılır. Önizlemede sormaz."""
+    if mode == MODE_PREVIEW or settings.get("guncelleme_soruldu"):
+        return
+    if settings.get("guncelleme_denetle") is not True:
+        ask = ask or (lambda: dialogs.ask_yes_no(None, t("ui.guncelleme.ilk_baslik"), t("ui.guncelleme.ilk_soru"),
+                                                  yes_text=t("ui.guncelleme.ilk_evet"), no_text=t("ui.guncelleme.ilk_hayir"),
+                                                  kind="bilgi"))
+        settings.set("guncelleme_denetle", bool(ask()))
+    settings.set("guncelleme_soruldu", True)
+
+
 def run(mode, in_tray=False):
     if mode != MODE_PREVIEW and not tek_ornek.claim():
         _log.info("Uygulama zaten açık: var olan pencere öne getirildi, bu kopya kapanıyor")
@@ -1145,6 +1302,7 @@ def run(mode, in_tray=False):
             _log.info("Başlangıç onayı reddedildi; uygulama kapatılıyor")
             return 1
         consent.accept()
+    _ask_update_check(mode)
     window = MainWindow(Controller(mode))
     tek_ornek.allow_from_unelevated(int(window.winId()))
     _hold_timer_resolution(mode)

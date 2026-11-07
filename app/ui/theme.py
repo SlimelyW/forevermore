@@ -50,7 +50,7 @@ CATEGORY_COLORS = {
     "PWR": "#f2c230", "NET": "#26b5a8", "INP": "#b07cff", "AUD": "#ff6fae", "QOL": "#7b6cff",
     "PLC": "#8a8a96", "oyunlar": "#f0565b", "ozet": "#7b6cff", "pc_detay": "#45b7e8",
     "profiller": "#7b6cff", "baslangic": "#8e93a8", "degisiklikler": "#8e93a8", "rapor": "#8e93a8",
-    "olcum": "#26b5a8", "boost": "#ff8a3d", "kaldirici": "#e5566d", "ayarlar": "#8e93a8", "bilgi": "#7b6cff", "elle": "#e09a2b", "lisans": "#f2c230",
+    "olcum": "#26b5a8", "boost": "#ff8a3d", "kaldirici": "#e5566d", "temizlik": "#3fb6e0", "ayarlar": "#8e93a8", "bilgi": "#7b6cff", "elle": "#e09a2b", "lisans": "#f2c230",
 }
 
 # Simge kod noktaları (Segoe Fluent Icons / MDL2 Assets)
@@ -63,7 +63,7 @@ ICONS = {
     "save": "", "chevron": "",
 }
 
-ICONS.update(edit="\ue70f", klavye="\ue765", elle="\ue70f", lisans="\ue8d7", boost=ICONS["PERF"], kaldirici="\ue74d")  # düzenle (kalem), klavye
+ICONS.update(edit="\ue70f", klavye="\ue765", elle="\ue70f", lisans="\ue8d7", boost=ICONS["PERF"], kaldirici="\ue74d", temizlik="\ue74c")  # düzenle (kalem), klavye
 
 TITLE_SIZE, SECTION_SIZE, BODY_SIZE, SMALL_SIZE = 24, 16, 13, 12
 # Tek ölçü sistemi (docs/TASARIM_ESASLARI.md §13): boşluk 4'ün katları, köşe yarıçapı üç basamak.
@@ -204,6 +204,7 @@ def stylesheet(p=None):
     QProgressBar#Thin {{ background: {p['border']}; border: none; border-radius: 3px; min-height: 6px; max-height: 6px; }}
     QProgressBar#Thin::chunk {{ background: {p['accent']}; border-radius: 3px; }}
     #HeroDone {{ color: {p['accent']}; font-weight: 600; }}
+    #FpsWidget {{ background: {p['card']}; border: 1px solid {p['border']}; padding: 3px 9px; font-weight: 600; }}
     #Hero {{ font-size: 30px; font-weight: 700; }}
     QPushButton {{ background: {p['input']}; border: 1px solid {p['border']}; border-radius: {r['md']}px;
                    padding: 9px 14px; min-height: 20px; }}

@@ -6,9 +6,12 @@ gönderdiğinde içinde kişisel bilgi olmaz.
 """
 
 import atexit
+import faulthandler
 import logging
 import logging.handlers
 import queue
+import sys
+import threading
 
 from app.core import paths, privacy
 
@@ -43,7 +46,25 @@ def setup():
     root = logging.getLogger("pcopt")
     root.setLevel(logging.INFO)
     root.addHandler(logging.handlers.QueueHandler(records))
+    _capture_crashes(root)
     _configured = True
+
+
+def _capture_crashes(root):
+    """Pencereli .exe'de stderr yok: yakalanmamış hatalar (iş parçacıkları ve Qt geri çağrıları dahil) hiçbir yere
+    yazılmıyordu. Artık log'a gider. Yerel çökmede (ctypes/Qt) Python yığını cokme.txt'ye düşer; ham yol içerebileceği
+    için bir sonraki açılışta gizlilik filtresinden geçip log'a taşınır ve dosya boşaltılır."""
+    crash = paths.logs_dir() / "cokme.txt"
+    try:
+        previous = crash.read_text(encoding="utf-8", errors="replace").strip() if crash.exists() else ""
+        if previous:
+            root.error("Önceki açılış çöktü:\n%s", previous[-4000:])
+        faulthandler.enable(open(crash, "w", encoding="utf-8"), all_threads=True)  # noqa: SIM115 - süreç boyunca açık
+    except OSError:
+        pass
+    sys.excepthook = lambda *exc: root.critical("Yakalanmamış hata", exc_info=exc)
+    threading.excepthook = lambda a: root.critical("Yakalanmamış hata (%s)", getattr(a.thread, "name", "?"),
+                                                   exc_info=(a.exc_type, a.exc_value, a.exc_traceback))
 
 
 def get(name):

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QHBoxLayout, QInputDialog, 
                                QSlider, QVBoxLayout, QWidget)
 
 from app.core import settings
-from app.engine import timer_resolution
+from app.engine import driver_tools, timer_resolution, varsayilan
 from app.core.i18n import t, value_label
 from app.ui import dialogs, managers_ui, theme, widgets as w
 
@@ -38,6 +38,11 @@ def title_block(tweak):
     lay.setContentsMargins(0, 0, 0, 0)
     lay.setSpacing(2)
     lay.addWidget(_name_label(tweak))
+    if tweak.get("sade_ad"):
+        technical = QLabel(tweak["ad"])
+        technical.setObjectName("Summary")
+        technical.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        lay.addWidget(technical)
     summary = QLabel(w.summary_text(tweak.get("ne_ise_yarar"), limit=90))
     summary.setObjectName("Summary")
     summary.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)  # dar pencerede kırpılır
@@ -129,6 +134,10 @@ class TweakRow(w.Card):
         changed = self.c.engine.store.has(self.tweak["id"])
         if changed:
             meta.addWidget(w.badge(t("ui.degistirildi"), "bilgi"))
+        if self.c.engine.needs_update(self.tweak):
+            meta.addWidget(w.badge(t("ui.guncellendi"), "uyari"))
+            if self.c.can_modify and not self.busy:
+                meta.addWidget(w.button(t("ui.yeniden_uygula"), self._reapply))
         avail = self.c.availability.get(self.tweak["id"])
         for key, params in (avail.warnings if avail else []):
             meta.addWidget(w.colored(t(key, **params), "uyari", wrap=False))
@@ -186,6 +195,12 @@ class TweakRow(w.Card):
         self.busy = False
         self.pending = None
         self.refresh()
+
+    def _reapply(self):
+        """Katalogda güncellenen ayarı kullanıcı isteğiyle, aynı onay/yedek/geri alma yoluyla yeniden uygular."""
+        self.busy, self.pending = True, True
+        self.refresh()
+        self.app.toggle(self.tweak, True, self._done)
 
     def _revert(self):
         self.busy = True
@@ -359,11 +374,31 @@ class InfoCard(w.Card):
             self.lay.addWidget(w.label(info["yapilamaz_nedeni"], muted=True, size=12))
         if detected and tweak.get("tespit"):
             self.lay.addWidget(w.colored(tweak["tespit"]["mesaj"], "sorun"))
+            if tweak["id"] in varsayilan.MANUAL:
+                self.lay.addWidget(w.label(t(f"ui.varsayilan.elle.{tweak['id']}"), size=12))
             opener = (tweak.get("rehber") or {}).get("ac")
             if opener:
                 self.lay.addWidget(w.hbox(w.button(t("ui.ayari_ac"), lambda: w.open_target(opener)), None))
+            if tweak["id"] in varsayilan.SUPPORTED:
+                self.default_button = w.button(t("ui.varsayilan.dugme"), self._restore_default, primary=True)
+                self.default_button.setEnabled(app.c.can_modify)
+                self.default_button.setToolTip(t("ui.varsayilan.ipucu"))
+                self.lay.addWidget(w.hbox(self.default_button, None))
+        self.app, self.tweak = app, tweak
         if tweak.get("ilgili") and tweak["ilgili"] in app.c.by_id:
             self.lay.addWidget(w.hbox(w.button(t("ui.ayara_git"), lambda: app.go_to_tweak(tweak["ilgili"])), None))
+
+    def _restore_default(self):
+        self.default_button.setEnabled(False)
+        tweak_id = self.tweak["id"]
+        # Bitince yalnız bu madde yeniden okunur; tespit kalkarsa Placebo sayfası "uygulanmış" bölümünü yeniden kurar.
+        self.app.restore_default(self.tweak, lambda: self.app.recheck_fix(tweak_id, self._restored))
+
+    def _restored(self, _changed):
+        try:  # Vazgeç ya da hata: kart duruyorsa düğme yeniden açılır
+            self.default_button.setEnabled(self.app.c.can_modify)
+        except RuntimeError:  # sayfa bu arada yeniden kuruldu
+            pass
 
 
 class InputDevicesCard(w.Card):
@@ -405,9 +440,19 @@ class InputDevicesCard(w.Card):
             row_lay.setSpacing(12)
             row_lay.addWidget(w.IconTile(glyph, theme.category_color("INP"), 32), 0, Qt.AlignmentFlag.AlignTop)
             row_lay.addLayout(text, 1)
+            page = driver_tools.INPUT_VENDOR_PAGES.get(device.get("uretici"))
+            if page:
+                row_lay.addWidget(w.button(t("ui.giris.yazilim_ac"), lambda _=False, u=page: self._open(u)))
             row_lay.addWidget(w.icon_button(theme.ICONS["edit"], t("ui.giris.yeniden_adlandir"),
                                             lambda _=False, d=device: self._rename(d)))
             self.lay.addWidget(row)
+        self.lay.addWidget(w.label(t("ui.giris.dpi_not"), muted=True, size=12))
+
+    def _open(self, url):
+        try:
+            self.app.c.engine.system.open_path(url)
+        except OSError as exc:
+            self.app.set_status(t("ui.surucu_arac.acilamadi", hata=exc), "sorun")
 
     @staticmethod
     def key(device):

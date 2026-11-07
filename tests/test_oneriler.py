@@ -56,6 +56,16 @@ class TestRecommend(unittest.TestCase):
         result = run(tweaks, limit=3)
         self.assertEqual([r["id"] for r in result], ["T0", "T1", "T2"])
 
+    def test_driver_vsync_has_no_recommended_value_and_is_never_suggested(self):
+        """GPU-006 (sürücü V-Sync): varsayılan öneri yok; toplu öneri/Özet kartına da girmez (REHBER sınıfı)."""
+        import json
+        from pathlib import Path
+        data = json.loads((Path(__file__).resolve().parent.parent / "data" / "tweaks_app.json").read_text(encoding="utf-8"))
+        vsync = next(t for t in data["ayarlar"] if t["id"] == "GPU-006")
+        self.assertIsNone(vsync["nvidia"].get("onerilen"))
+        result = run(data["ayarlar"], gpus=("NVIDIA",), limit=10000)
+        self.assertNotIn("GPU-006", [r["id"] for r in result])
+
 
 if __name__ == "__main__":
     unittest.main()

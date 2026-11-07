@@ -7,13 +7,13 @@
  ],
  "_kaynak_ozeti": {
   "DISP-001": "16b13057eb10",
-  "DISP-002": "faf1e1b8c14f",
+  "DISP-002": "416c7fb5aa85",
   "DISP-003": "84482a893bfb",
-  "DISP-004": "038565f4df1c",
-  "DISP-005": "d9c4bf0384d3",
+  "DISP-004": "58379688ac25",
+  "DISP-005": "143790527125",
   "DISP-006": "1bc8b832406e",
   "DISP-007": "ebf26bd080ac",
-  "DISP-008": "29e7c84b7f21",
+  "DISP-008": "a4f934aac992",
   "DISP-009": "2801fb42c45e",
   "SYS-001": "ceae756d558a",
   "SYS-002": "c2af45483e50",
@@ -21,8 +21,8 @@
   "SYS-004": "f984bff0ecbb",
   "SYS-005": "246fdc25ae32",
   "SYS-006": "a851a0fda53f",
-  "SYS-007": "349255cb26c8",
-  "SYS-008": "c0502d275473",
+  "SYS-007": "8a2235adedcd",
+  "SYS-008": "d1310fb1d70a",
   "SYS-009": "f08489a49f41",
   "SYS-010": "9f77551cd0e0",
   "SYS-011": "5226661758b4",
@@ -31,49 +31,49 @@
   "SYS-014": "210edaf4cb6b",
   "SYS-015": "bb91379097ec",
   "PERF-001": "d8c90d2e5dab",
-  "PERF-002": "d25507b76ba2",
-  "PERF-003": "6b78a1ab7aa5",
-  "PERF-004": "9a03bbc07640",
+  "PERF-002": "248e161a89b9",
+  "PERF-003": "02e960343a96",
+  "PERF-004": "a2b218a848b2",
   "PERF-005": "5bed86d1c605",
   "PERF-006": "f1900d8ba019",
   "PERF-007": "b546d242c111",
-  "PERF-008": "05b9d7d21597",
-  "PERF-009": "1bfceba80b2f",
-  "PERF-010": "b139c05ff591",
-  "PERF-011": "f552c4d0bd6f",
-  "GPU-001": "5c585bb4d73f",
+  "PERF-008": "455cf49bbc10",
+  "PERF-009": "279d86c89830",
+  "PERF-010": "e6ef822232de",
+  "PERF-011": "ff68eae07686",
+  "GPU-001": "d0bbbb33f837",
   "GPU-002": "bbfa61c2ec03",
   "GPU-003": "429a7eb89f01",
   "GPU-004": "7ef1729950d3",
   "GPU-005": "f79b41f16fbf",
-  "GPU-006": "3203790bd14f",
-  "GPU-007": "9067cef167e5",
+  "GPU-006": "a18902a450b0",
+  "GPU-007": "d87fc9e084b8",
   "GPU-008": "50587c3a3949",
   "GPU-009": "db2f1fa325c7",
-  "GPU-010": "90c9fc087577",
+  "GPU-010": "0b8cc3810d2c",
   "GPU-011": "46b0f2a5857b",
-  "GPU-012": "0f74ffc79171",
+  "GPU-012": "075af0229966",
   "GPU-013": "0f9296756b6b",
   "GPU-014": "3a37a0e2c75d",
-  "GPU-015": "81ac8ac3051f",
-  "GPU-016": "f6adf4e2a85c",
-  "GPU-017": "a2c99ed3f272",
-  "GPU-018": "fc5517bf8aa3",
+  "GPU-015": "563990404a42",
+  "GPU-016": "130cfc8ba11a",
+  "GPU-017": "fdc9132b6a6f",
+  "GPU-018": "8f26dffe2a72",
   "GPU-019": "2dcbea58afa1",
-  "CPU-001": "4b16bd392531",
-  "CPU-002": "166800aa1e32",
-  "CPU-003": "6c36c1e66973",
+  "CPU-001": "34c3d2b1f58b",
+  "CPU-002": "bbbe78a81cd5",
+  "CPU-003": "d34808cc8bac",
   "CPU-004": "560f8a744620",
   "CPU-005": "d25870bcfaab",
   "CPU-006": "b3355532b5fa",
-  "CPU-007": "0cb771feccf0",
-  "CPU-008": "8ea10331bfe0",
+  "CPU-007": "d57aeafcab35",
+  "CPU-008": "9e4a9a8d4a05",
   "CPU-009": "1555cc2505a3",
-  "CPU-010": "ed54953cb351",
+  "CPU-010": "8e0d4db12666",
   "PWR-001": "d09be063dad2",
   "PWR-002": "6a07cd28f704",
-  "PWR-003": "3936d0acda7c",
-  "PWR-004": "8971c496e552",
+  "PWR-003": "4fcd4f70f695",
+  "PWR-004": "c03a71eac6e8",
   "PWR-005": "10b3f65b52f3",
   "PWR-006": "6c07cc126ca5",
   "PWR-007": "7c01284b3830",
@@ -81,31 +81,31 @@
   "NET-001": "24e9f163bae3",
   "NET-002": "cd36c86b9c93",
   "NET-003": "85750ec192be",
-  "NET-004": "767272039832",
+  "NET-004": "cdae6d00ea02",
   "NET-005": "5326d7145cf4",
-  "NET-006": "07830dcf752d",
+  "NET-006": "d0bf48ac0586",
   "NET-007": "c68fa24cf020",
-  "NET-008": "c32ca2fbf44a",
-  "NET-009": "566eab3d4f0d",
+  "NET-008": "6e3169248076",
+  "NET-009": "fb13a52cfbf0",
   "INP-001": "33c7b57916e8",
-  "INP-002": "d353a0467294",
-  "INP-003": "60169e190099",
+  "INP-002": "7efd8ea14167",
+  "INP-003": "c2830642f140",
   "INP-004": "e8d9a66d7f92",
   "INP-005": "f19bd73846c3",
   "INP-006": "2c49c4b73f5a",
   "INP-007": "17a3958d441d",
   "INP-008": "6585dbc9f803",
   "INP-009": "25604a42490a",
-  "INP-010": "229a6ba3afe5",
-  "AUD-001": "5aff09bfc243",
+  "INP-010": "21da4ba20818",
+  "AUD-001": "e6b219468d80",
   "AUD-002": "57a085f3602b",
   "AUD-003": "64c62c18aeb5",
-  "AUD-004": "6c51db97a210",
+  "AUD-004": "2111b90aa05b",
   "AUD-005": "18a2faba7f98",
   "AUD-006": "3d75c45f33bf",
   "AUD-007": "c2e344f18081",
-  "AUD-008": "eb5307275ddb",
-  "AUD-009": "38cadf4c824c",
+  "AUD-008": "1a956afaf71f",
+  "AUD-009": "798c56f24017",
   "QOL-001": "dbe42adbb8d4",
   "QOL-002": "36d8600bc010",
   "QOL-003": "10fb72a8d452",
@@ -118,23 +118,23 @@
   "QOL-010": "37840e4260af",
   "PLC-001": "f05869e072f4",
   "PLC-002": "1bf1b6c0ac90",
-  "PLC-003": "f35208273942",
-  "PLC-004": "c83623e570de",
+  "PLC-003": "76d19db9aafe",
+  "PLC-004": "cdf22e37ec61",
   "PLC-005": "1f910ccf265c",
   "PLC-006": "d92062e4b083",
-  "PLC-007": "34c706bd9248",
+  "PLC-007": "1be1a65fc4a2",
   "PLC-008": "5edcd28c35e4",
   "PLC-009": "6c3543c6268c",
-  "PLC-010": "a22b21225cb3",
-  "PLC-011": "067cbd3aa04e",
-  "PLC-012": "6ac88e0401c6",
-  "PLC-013": "8ed7041e3f30",
+  "PLC-010": "d0ed051861ab",
+  "PLC-011": "af2cd208ee8b",
+  "PLC-012": "345e1270bebc",
+  "PLC-013": "398c4a8ec64e",
   "PLC-014": "da04788ef337",
   "PLC-015": "3fbaa6b40815",
-  "PLC-016": "7392f300c133",
+  "PLC-016": "51c219f8fbff",
   "PLC-017": "e16f1246c4d4",
   "PLC-018": "91714a0397c4",
-  "PLC-019": "3a44ae848511",
+  "PLC-019": "3dfead198ba9",
   "PLC-020": "efe370232d77",
   "PLC-021": "11f94c76a6e6",
   "PLC-022": "86a00e08c372",
@@ -145,19 +145,19 @@
   "PLC-027": "20e06c4311a8",
   "PLC-028": "8d0dc11cd267",
   "PLC-029": "9fe25d87fd8e",
-  "GPU-020": "613c1d72512a",
+  "GPU-020": "889ba83ce8ae",
   "PLC-030": "0c2fbb97e9dc",
   "PLC-031": "65ce4a7c1f44",
   "PLC-032": "890b88e5faa4",
   "PLC-033": "8a7d7b604f28",
   "PLC-034": "5caf49c1f3f6",
-  "PLC-035": "0b975d2e01d3",
+  "PLC-035": "bfcbbdaffc49",
   "SYS-016": "0522acaae445",
   "SYS-017": "b9f2995feaaf",
   "GPU-021": "8eb4971b709c",
   "GPU-022": "5c0f89900f82",
   "SYS-018": "a4699966d1a9",
-  "SYS-019": "34298c5195b7",
+  "SYS-019": "cf59ffbd22bc",
   "SYS-020": "6091e161fe08",
   "SYS-021": "a1079f1e8457"
  },
@@ -244,7 +244,8 @@
    "rehber.geri_alma": "Turn it off in the same places. For the registry, remove 'VRROptimizeEnable=1;' from the DirectXUserGlobalSettings value.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences' -Name DirectXUserGlobalSettings -ErrorAction SilentlyContinue  (look for 'VRROptimizeEnable=1;' in the value). G-SYNC: NVIDIA Control Panel > Set up G-SYNC. FreeSync: AMD Adrenalin > Display > AMD FreeSync.",
    "uyumluluk.kaynak_metin.windows": "Windows 10 1903+ (Windows VRR switch), Windows 11",
-   "gerceklik.celiski": "Blur Busters finds G-SYNC + an FPS cap low-latency compared with V-Sync; in competitive FPS games (CS2, Valorant), which lack a controlled measurement, some players keep VRR off. One CS2 measurement (Reflex on) gave 5.44 ms with G-SYNC + V-SYNC off versus 7.88 ms with them on; variables were not separated and it is a single setup."
+   "gerceklik.celiski": "Blur Busters finds G-SYNC + an FPS cap low-latency compared with V-Sync; in competitive FPS games (CS2, Valorant), which lack a controlled measurement, some players keep VRR off. One CS2 measurement (Reflex on) gave 5.44 ms with G-SYNC + V-SYNC off versus 7.88 ms with them on; variables were not separated and it is a single setup.",
+   "sade_ad": "Variable refresh rate (G-SYNC / FreeSync)"
   },
   "DISP-003": {
    "ad": "Optimizations for windowed games (Windows 11)",
@@ -300,7 +301,8 @@
    ],
    "rehber.geri_alma": "Untick the compatibility box or run Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers' -Name '<C:\\path\\game.exe>'. For the global values, GameDVR_FSEBehaviorMode=0 and GameDVR_HonorUserFSEBehaviorMode=0.",
    "rehber.kontrol": "Per game: Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'  ('DISABLEDXMAXIMIZEDWINDOWEDMODE' flag on the exe path). Global: Get-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' | Select-Object GameDVR_FSEBehaviorMode, GameDVR_HonorUserFSEBehaviorMode",
-   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+, Windows 11",
+   "sade_ad": "Turning off fullscreen optimizations"
   },
   "DISP-005": {
    "ad": "Disable Multiplane Overlay (MPO)",
@@ -328,7 +330,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11 (effectiveness on 24H2 is disputed)"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11 (effectiveness on 24H2 is disputed)",
+   "sade_ad": "Turning off display layer merging (MPO)"
   },
   "DISP-006": {
    "ad": "Auto HDR and HDR",
@@ -399,7 +402,8 @@
    ],
    "rehber.geri_alma": "Go back to the previous option.",
    "rehber.kontrol": "NVIDIA Control Panel > Adjust desktop size and position > Perform scaling on: GPU/Display. AMD: Adrenalin > Display > GPU Scaling.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Image scaling: graphics card or monitor"
   },
   "DISP-009": {
    "ad": "Multiple monitors with different refresh rates and video on a second screen",
@@ -609,7 +613,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Store apps running in the background"
   },
   "SYS-008": {
    "ad": "Fast Startup (Hiberboot)",
@@ -633,7 +638,8 @@
    ],
    "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled -Value 1",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Fast Startup"
   },
   "SYS-009": {
    "ad": "Turn off hibernation (hiberfil.sys)",
@@ -857,7 +863,8 @@
    ],
    "rehber.geri_alma": "GameDVR_Enabled=1 and AppCaptureEnabled=1; delete the policy value: Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR' -Name AllowGameDVR",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' -Name GameDVR_Enabled; Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR' -Name AppCaptureEnabled -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off background game recording"
   },
   "PERF-003": {
    "ad": "Memory Integrity (HVCI) / Core isolation",
@@ -888,7 +895,8 @@
    ],
    "rehber.geri_alma": "On in the same menu or Enabled=1, then restart.",
    "rehber.kontrol": "Get-CimInstance -Namespace root\\Microsoft\\Windows\\DeviceGuard -ClassName Win32_DeviceGuard | Select-Object VirtualizationBasedSecurityStatus, SecurityServicesRunning  (2 in SecurityServicesRunning = HVCI running). Registry: HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity Enabled",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Core isolation (Memory Integrity)"
   },
   "PERF-004": {
    "ad": "Turn off Virtual Machine Platform (VMP) / Hyper-V",
@@ -917,7 +925,8 @@
    ],
    "rehber.geri_alma": "Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform; Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All",
    "rehber.kontrol": "Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Hyper-V-All | Select-Object FeatureName, State; bcdedit /enum '{current}' | Select-String hypervisorlaunchtype",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off virtualization features (Hyper-V)"
   },
   "PERF-005": {
    "ad": "Visual effects: 'Adjust for best performance'",
@@ -1017,7 +1026,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10 1709+, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1709+, Windows 11",
+   "sade_ad": "Turning off power-saving throttling"
   },
   "PERF-009": {
    "ad": "Win32PrioritySeparation (foreground quantum priority)",
@@ -1042,7 +1052,8 @@
    ],
    "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation -Value 2",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Time share given to the foreground program"
   },
   "PERF-010": {
    "ad": "Permanent 'High' CPU priority for the game process (IFEO PerfOptions)",
@@ -1066,7 +1077,8 @@
    ],
    "rehber.geri_alma": "Remove-Item -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -Recurse",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Permanent high CPU priority for a game"
   },
   "PERF-011": {
    "ad": "Turn off in-game overlays (Discord, Steam, NVIDIA, Xbox, RGB software)",
@@ -1089,7 +1101,8 @@
    ],
    "rehber.geri_alma": "Turn them on in the same settings.",
    "rehber.kontrol": "Each app's own setting: Discord > Settings > Game Overlay; Steam > Settings > In Game; NVIDIA App > Settings > In-game overlay.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off in-game overlays"
   },
   "GPU-001": {
    "ad": "Hardware-accelerated GPU scheduling (HAGS)",
@@ -1114,7 +1127,8 @@
    ],
    "rehber.geri_alma": "Set HwSchMode back to the previous value (1) and restart.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name HwSchMode -ErrorAction SilentlyContinue  (2 = on, 1 = off)",
-   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+, Windows 11",
+   "sade_ad": "Letting the graphics card schedule its own work (HAGS)"
   },
   "GPU-002": {
    "ad": "Low Latency Mode",
@@ -1260,7 +1274,8 @@
    "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
    "nvidia.secenekler.0.etiket": "Use the application setting (default)",
    "nvidia.secenekler.1.etiket": "On",
-   "nvidia.secenekler.2.etiket": "Off"
+   "nvidia.secenekler.2.etiket": "Off",
+   "sade_ad": "G-SYNC, V-Sync and FPS limit together"
   },
   "GPU-007": {
    "ad": "Max frame rate (driver FPS limiter)",
@@ -1291,7 +1306,8 @@
    "nvidia.secenekler.2.etiket": "117 FPS",
    "nvidia.secenekler.3.etiket": "141 FPS",
    "nvidia.secenekler.4.etiket": "162 FPS",
-   "nvidia.secenekler.5.etiket": "237 FPS"
+   "nvidia.secenekler.5.etiket": "237 FPS",
+   "sade_ad": "Setting an FPS limit in the driver"
   },
   "GPU-008": {
    "ad": "Threaded optimization",
@@ -1358,7 +1374,8 @@
    ],
    "rehber.geri_alma": "Off.",
    "rehber.kontrol": "In-game graphics settings > NVIDIA Reflex Low Latency.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "NVIDIA Reflex (low latency)"
   },
   "GPU-011": {
    "ad": "Instant Replay and RTX Video Super Resolution",
@@ -1406,7 +1423,8 @@
    ],
    "rehber.geri_alma": "Off.",
    "rehber.kontrol": "NVIDIA Control Panel > Manage 3D settings > DSR - Factors; Image Scaling.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Downscaling from a higher resolution (DLDSR)"
   },
   "GPU-013": {
    "ad": "Radeon Anti-Lag / Anti-Lag 2",
@@ -1490,7 +1508,8 @@
    "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
    "notlar": [
     "AFMF (driver frame generation) and per-game settings are set in AMD Software."
-   ]
+   ],
+   "sade_ad": "AMD frame generation and Boost"
   },
   "GPU-016": {
    "ad": "Disable ULPS (Ultra Low Power State)",
@@ -1515,7 +1534,8 @@
    ],
    "rehber.geri_alma": "Set EnableUlps to 1.",
    "rehber.kontrol": "Get-ChildItem 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}' -ErrorAction SilentlyContinue | ForEach-Object { Get-ItemProperty $_.PSPath -Name EnableUlps -ErrorAction SilentlyContinue } | Select-Object PSChildName, EnableUlps",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off the AMD card's deep power-saving sleep"
   },
   "GPU-017": {
    "ad": "Resizable BAR / Smart Access Memory",
@@ -1539,7 +1559,8 @@
    ],
    "rehber.geri_alma": "Turn off Re-Size BAR in the BIOS.",
    "rehber.kontrol": "NVIDIA Control Panel > System Information > Resizable BAR: Yes/No. AMD Adrenalin > Performance > Hardware > Smart Access Memory. GPU-Z also shows it.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+, Windows 11",
+   "sade_ad": "Full graphics memory access (Resizable BAR)"
   },
   "GPU-018": {
    "ad": "MSI (Message Signaled Interrupts) mode",
@@ -1564,7 +1585,8 @@
    ],
    "rehber.geri_alma": "MSISupported=0 or delete the value; restart. If it does not boot, undo it from Safe Mode.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\PCI\\<device-id>\\<instance>\\Device Parameters\\Interrupt Management\\MessageSignaledInterruptProperties' -Name MSISupported -ErrorAction SilentlyContinue. Device Manager > View > Resources by connection > if the IRQ value is negative, MSI is used.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Graphics card interrupt mode (MSI)"
   },
   "GPU-019": {
    "ad": "Clean driver install (DDU) and an up-to-date driver",
@@ -1617,7 +1639,8 @@
    ],
    "rehber.geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES <previous value, usually 5-10 in the Balanced plan>; powercfg /setactive SCHEME_CURRENT  (or: powercfg -restoredefaultschemes — deletes ALL custom plans)",
    "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR CPMINCORES  (if hidden, first: powercfg -attributes SUB_PROCESSOR CPMINCORES -ATTRIB_HIDE)",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off CPU core parking"
   },
   "CPU-002": {
    "ad": "Minimum processor state (PROCTHROTTLEMIN)",
@@ -1640,7 +1663,8 @@
    ],
    "rehber.geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5; powercfg /setactive SCHEME_CURRENT  (the Balanced plan default is usually 5%)",
    "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Raising the CPU's minimum speed"
   },
   "CPU-003": {
    "ad": "Processor performance boost mode (PERFBOOSTMODE) – laptop heat control",
@@ -1666,7 +1690,8 @@
    ],
    "rehber.geri_alma": "Go back to the previous value (usually 2) and run powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE +ATTRIB_HIDE",
    "rehber.kontrol": "powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE -ATTRIB_HIDE; powercfg /query SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "CPU boost (turbo) mode"
   },
   "CPU-004": {
    "ad": "Turn off Spectre/Meltdown software mitigations",
@@ -1773,7 +1798,8 @@
    ],
    "rehber.geri_alma": "Enabled in the BIOS.",
    "rehber.kontrol": "Get-CimInstance Win32_Processor | Select-Object NumberOfCores, NumberOfLogicalProcessors  (if equal, SMT is off)",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off Hyper-Threading / SMT"
   },
   "CPU-008": {
    "ad": "Turn off C-States (BIOS)",
@@ -1800,7 +1826,8 @@
    ],
    "rehber.geri_alma": "Auto/Enabled in the BIOS.",
    "rehber.kontrol": "BIOS > CPU power management > C-States / Global C-state Control. Indirectly from Windows: the powercfg /energy report.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off CPU sleep states (BIOS)"
   },
   "CPU-009": {
    "ad": "Timer resolution tools and GlobalTimerResolutionRequests",
@@ -1849,7 +1876,8 @@
    ],
    "rehber.geri_alma": "Delete the rule; select all cores.",
    "rehber.kontrol": "Task Manager > Details > process > Set affinity; Get-Process <name> | Select-Object ProcessorAffinity",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Pinning programs to specific CPU cores"
   },
   "PWR-001": {
    "ad": "Power plan: High Performance / Ultimate Performance",
@@ -1928,7 +1956,8 @@
    ],
    "rehber.geri_alma": "Set the value to 1 and activate the plan again.",
    "rehber.kontrol": "powercfg /query SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off USB power saving"
   },
   "PWR-004": {
    "ad": "PCI Express Link State Power Management (ASPM)",
@@ -1950,7 +1979,8 @@
    ],
    "rehber.geri_alma": "Go back to the previous value (usually 1 or 2 in Balanced).",
    "rehber.kontrol": "powercfg /query SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "PCI Express power saving"
   },
   "PWR-005": {
    "ad": "Device Manager: 'Allow the computer to turn off this device to save power'",
@@ -2131,7 +2161,8 @@
    ],
    "rehber.geri_alma": "Turn off SQM/QoS.",
    "rehber.kontrol": "Bufferbloat test (e.g. Waveform Bufferbloat Test): measures the latency increase under load.",
-   "uyumluluk.kaynak_metin.windows": "Independent of the operating system"
+   "uyumluluk.kaynak_metin.windows": "Independent of the operating system",
+   "sade_ad": "Latency control on the router (bufferbloat)"
   },
   "NET-005": {
    "ad": "Turn off Delivery Optimization peer-to-peer uploads",
@@ -2182,7 +2213,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' -Name TcpAckFrequency, TCPNoDelay",
    "rehber.kontrol": "Get-NetAdapter | Select-Object Name, InterfaceGuid; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' | Select-Object TcpAckFrequency, TCPNoDelay",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off network packet batching (Nagle)"
   },
   "NET-007": {
    "ad": "Network card: Interrupt Moderation",
@@ -2229,7 +2261,8 @@
    ],
    "rehber.geri_alma": "Set the same property to 'Enabled'.",
    "rehber.kontrol": "Get-NetAdapterAdvancedProperty -Name '<Ethernet>' | Where-Object DisplayName -match 'Energy|Green|EEE'",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off Ethernet power saving"
   },
   "NET-009": {
    "ad": "Receive Side Scaling (RSS) and offload settings",
@@ -2255,7 +2288,8 @@
    ],
    "rehber.geri_alma": "Reset-NetAdapterAdvancedProperty -Name '<Ethernet>' -DisplayName '*'",
    "rehber.kontrol": "Get-NetAdapterRss -Name '<Ethernet>'; netsh int tcp show global; Get-NetAdapterLso -Name '<Ethernet>'",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Network card load sharing (RSS / offload)"
   },
   "INP-001": {
    "ad": "Polling rate (report rate) – reading and setting",
@@ -2306,7 +2340,8 @@
    ],
    "rehber.geri_alma": "Tick the box or set the values to '1', '6', '10'.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' | Select-Object MouseSpeed, MouseThreshold1, MouseThreshold2  (1/6/10 = on, 0/0/0 = off)",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off mouse acceleration"
   },
   "INP-003": {
    "ad": "Pointer speed 10/20 (6/11 in the old UI) – 1:1 mapping",
@@ -2328,7 +2363,8 @@
    "rehber.geri_alma": "Go back to the previous value.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseSensitivity",
    "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
-   "islem.alanlar.0.etiket": "Pointer speed"
+   "islem.alanlar.0.etiket": "Pointer speed",
+   "sade_ad": "Making mouse speed 1:1"
   },
   "INP-004": {
    "ad": "In-game Raw Input option",
@@ -2480,7 +2516,8 @@
    "bilgi.yapilamaz_nedeni": "Requires installing a separate, unsigned driver; this app does not install third-party drivers.",
    "gerceklik.aciklama": "Shown to work on some old mice by community measurements; the security and compatibility cost is high.",
    "performans_etkisi.gerekce": "Depends on the mouse; unnecessary with modern gaming mice.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11 (hard because of driver signing requirements)"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11 (hard because of driver signing requirements)",
+   "sade_ad": "Raising USB mouse polling rate (hidusbf)"
   },
   "AUD-001": {
    "ad": "Turn off audio enhancements (system effects)",
@@ -2512,7 +2549,8 @@
    ],
    "rehber.geri_alma": "Turn enhancements on in the UI or set the value to 0 / delete it, then Restart-Service Audiosrv -Force",
    "rehber.kontrol": "UI: Settings > System > Sound > <device> > Audio enhancements. Endpoint GUIDs: Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render'. Value: Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render\\{endpoint-guid}\\FxProperties' -Name '{1da5d803-d492-4edd-8c23-e0c0ffee7f0e},5' -ErrorAction SilentlyContinue  (1 = off). API: IPropertyStore::GetValue(PKEY_AudioEndpoint_Disable_SysFx).",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off audio effects"
   },
   "AUD-002": {
    "ad": "Sample rate and bit depth (Default format)",
@@ -2585,7 +2623,8 @@
    ],
    "rehber.geri_alma": "UserDuckingPreference=1 or delete the value.",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Multimedia\\Audio' -Name UserDuckingPreference -ErrorAction SilentlyContinue  (0=mute, 1=reduce by 80%, 2=reduce by 50%, 3=do nothing)",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off volume ducking during calls"
   },
   "AUD-005": {
    "ad": "Spatial sound (Windows Sonic / Dolby Atmos for Headphones / DTS)",
@@ -2678,7 +2717,8 @@
    ],
    "rehber.geri_alma": "Roll the driver back to the previous version.",
    "rehber.kontrol": "Run LatencyMon for 10+ minutes under game/audio load; find the driver with the highest DPC/ISR time in the 'Drivers' tab.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Diagnosing audio crackle and stutter (DPC)"
   },
   "AUD-009": {
    "ad": "Turn off the Hands-Free (HFP) profile on Bluetooth headphones",
@@ -2700,7 +2740,8 @@
    ],
    "rehber.geri_alma": "Tick the box again.",
    "rehber.kontrol": "Control Panel > Devices and Printers > headset > Properties > Services; mmsys.cpl shows two separate endpoints ('Stereo' and 'Hands-Free').",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off headset (Hands-Free) mode on Bluetooth headphones"
   },
   "QOL-001": {
    "ad": "Show file extensions",
@@ -2986,7 +3027,8 @@
    "rehber.geri_alma": "bcdedit /deletevalue useplatformclock; re-enable the device in Device Manager.",
    "rehber.kontrol": "bcdedit /enum '{current}'  (if there is no useplatformclock line, the default behavior applies)",
    "tespit.mesaj": "The 'useplatformclock' boot setting is defined on this computer. On most modern systems this setting increases latency.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Changing the system clock (HPET)"
   },
   "PLC-004": {
    "ad": "bcdedit: disabledynamictick / useplatformtick / tscsyncpolicy",
@@ -3015,7 +3057,8 @@
    "rehber.geri_alma": "bcdedit /deletevalue disabledynamictick; bcdedit /deletevalue useplatformtick; bcdedit /deletevalue tscsyncpolicy",
    "rehber.kontrol": "bcdedit /enum '{current}'",
    "tespit.mesaj": "One of the boot (bcdedit) settings that are common online has been applied on this computer.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Changing timer behavior"
   },
   "PLC-005": {
    "ad": "msconfig: 'Number of processors' and 'Maximum memory'",
@@ -3091,7 +3134,8 @@
    "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name LargeSystemCache -Value 0; Set-ItemProperty -Path '...\\Memory Management' -Name DisablePagingExecutive -Value 0",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' | Select-Object LargeSystemCache, DisablePagingExecutive",
    "tespit.mesaj": "LargeSystemCache or DisablePagingExecutive has been changed (a 'tweak' may have been applied before).",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Windows memory cache settings"
   },
   "PLC-008": {
    "ad": "Turn off the page file (pagefile)",
@@ -3164,7 +3208,8 @@
    ],
    "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness -Value 20",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Removing the CPU share reserved for background tasks"
   },
   "PLC-011": {
    "ad": "NetworkThrottlingIndex=ffffffff",
@@ -3184,7 +3229,8 @@
    ],
    "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex -Value 10",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Removing network traffic throttling"
   },
   "PLC-012": {
    "ad": "MMCSS 'Games' task profile (GPU Priority=8, Priority=6, Scheduling Category=High)",
@@ -3203,7 +3249,8 @@
    ],
    "rehber.geri_alma": "Default values: GPU Priority=8, Priority=2, Scheduling Category='Medium', SFIO Priority='Normal'",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games'",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Game task priority setting"
   },
   "PLC-013": {
    "ad": "'The QoS packet scheduler reserves 20% of bandwidth' (NonBestEffortLimit=0)",
@@ -3222,7 +3269,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit -ErrorAction SilentlyContinue",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "The 'network 20% reserved' setting"
   },
   "PLC-014": {
    "ad": "'Changing DNS lowers ping'",
@@ -3300,7 +3348,8 @@
    "rehber.geri_alma": "netsh int tcp set global autotuninglevel=normal",
    "rehber.kontrol": "netsh int tcp show global  ('Receive Window Auto-Tuning Level')",
    "tespit.mesaj": "TCP receive window auto-tuning has been turned off. This can seriously lower download speed.",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Turning off automatic network receive tuning"
   },
   "PLC-017": {
    "ad": "Shrinking MouseDataQueueSize / KeyboardDataQueueSize",
@@ -3370,7 +3419,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name IRQ8Priority, IRQ16Priority",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' | Select-Object IRQ8Priority, IRQ16Priority",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Hardware interrupt priority values"
   },
   "PLC-020": {
    "ad": "Turning off Windows Defender completely",
@@ -3631,7 +3681,8 @@
    "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
    "nvidia.secenekler.0.etiket": "Off",
    "nvidia.secenekler.1.etiket": "Full screen only (default)",
-   "nvidia.secenekler.2.etiket": "Full screen and windowed"
+   "nvidia.secenekler.2.etiket": "Full screen and windowed",
+   "sade_ad": "G-SYNC scope"
   },
   "PLC-030": {
    "ad": "Turning off 8.3 short file names 'speeds up games'",
@@ -3745,7 +3796,8 @@
    ],
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
-   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Changing network packet lifetime (TTL)"
   },
   "SYS-016": {
    "ad": "User Account Control (UAC) level",
@@ -3903,7 +3955,8 @@
     "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 1; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 1"
    ],
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters,DisableEmoticon -ErrorAction SilentlyContinue",
-   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 0; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 0"
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 0; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 0",
+   "sade_ad": "Showing details on the blue screen"
   },
   "SYS-020": {
    "ad": "Turn off publishing and uploading activity history",

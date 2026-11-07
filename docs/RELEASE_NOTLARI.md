@@ -2,6 +2,60 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.4.0 (8 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.4.0 (etiket v2.4.0).** SHA-256 (Forevermore.zip): `9017D7A90E1EDD6270BCA67B18405456BFDE9F639F4B3E5A2C45D5109897DC11`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+
+> **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
+> SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
+
+### Yeni neler var
+Bunlar yeni; her Windows sürümünde, her bilgisayarda ve her oyunda denenmedi. Sorun görürsen GitHub Konular'dan bildir.
+- Temizlik sayfası: önbellek ve döküm dosyaları silinmez, kenara taşınır; "Geri getir" tek tıkla geri koyar, "Son taşımalar" listesi.
+- Bakım araçları: sistem dosyalarını onar (sfc + DISM) ve sürücü optimizasyonu.
+- Canlı FPS (PresentMon) ve oyun üstü FPS kutusu (Alt+H, varsayılan kapalı).
+- Canlı FPS ve FPS kutusu hile korumalı (anti-cheat) oyunlarda çalışmaz; bu oyunlarda kendiliğinden kapalıdır.
+- Oyun izleyici kaldırıldı: oyun açılınca ayarlar artık kendiliğinden uygulanmaz.
+- Oyunlar: favori yıldızı ve "Oyunu başlat" (Steam/Epic kısayolu varsa onunla açar).
+- Oyun ayar dosyasını sakla / geri yükle (Valorant, LoL, Fortnite, R6).
+- Kendi ayar paketlerini kaydet, dışa ve içe aktar.
+- Ayarlar üç sekme oldu (Genel, Sistem, Bakım); sürüm notları ve geri yükleme noktaları burada.
+- Güncelleme denetimi ilk açılışta bir kez sorulur; "evet" dersen günde en çok bir kez GitHub'a bakar, veri göndermez.
+- Geri aldıktan sonra Özet ve sayfalar kendiliğinden yenilenir; yeşil "Geri alındı" satırı.
+- Yedekler artık yalnızca yöneticinin yazabildiği korumalı klasörde.
+- Boost: Discord gibi iletişim programları varsayılan kapatma listesinde değil.
+- Ekran kartı belleği gösterilir; resmi NVIDIA/AMD sürücü sayfasını açan düğme.
+- Metinler sadeleşti; tarayıcı eklentilerinde "Tarayıcıda kaldır" düğmesi.
+
+## English
+
+**Version: 2.4.0 (tag v2.4.0).** SHA-256 (Forevermore.zip): `9017D7A90E1EDD6270BCA67B18405456BFDE9F639F4B3E5A2C45D5109897DC11`
+Signature fingerprint: `5FE5-D786-0B89-A56E`
+
+> **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
+> Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
+
+### What's new
+These are new and have not been tried on every Windows version, every PC or every game. Please report problems on GitHub Issues.
+- Cleanup page: cache and dump files are not deleted but moved aside; "Restore" puts them back in one click, plus a "Recent moves" list.
+- Maintenance tools: repair system files (sfc + DISM) and drive optimization.
+- Live FPS (PresentMon) and an in-game FPS box (Alt+H, off by default).
+- Live FPS and the FPS box do not work in games with anti-cheat; they stay off there automatically.
+- The game watcher was removed: settings are no longer applied automatically when a game starts.
+- Games: favorite star and "Launch game" (uses the Steam/Epic shortcut when there is one).
+- Save / restore a game's settings file (Valorant, LoL, Fortnite, R6).
+- Save, export and import your own setting presets.
+- Settings now has three tabs (General, System, Maintenance); release notes and restore points live there.
+- The update check is asked once on first launch; if you say yes it checks GitHub at most once a day and sends no data.
+- After an undo, Overview and the pages refresh by themselves, with a green "Undone" line.
+- Backups now live in a protected folder only administrators can write to.
+- Boost: chat apps such as Discord are no longer in the default close list.
+- Graphics memory is shown; a button opens the official NVIDIA/AMD driver page.
+- Simpler wording; "Remove in browser" button next to browser extensions.
+
 # 2.3.2 (5 Kasım 2026)
 
 ## Türkçe

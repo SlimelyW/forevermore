@@ -1,12 +1,14 @@
 """Profiller, Değişiklikler ve Rapor sayfaları."""
 
 import os
+import re
 
-from PySide6.QtWidgets import QButtonGroup, QCheckBox, QLabel, QPlainTextEdit, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (QButtonGroup, QCheckBox, QFileDialog, QInputDialog, QLabel, QPlainTextEdit, QVBoxLayout,
+                               QWidget)
 
 from app.core import paths, privacy
 from app.core.i18n import fmt_date, t
-from app.engine import profiles as profile_module
+from app.engine import profiles as profile_module, user_presets
 from app.scan import report
 from app.ui import dialogs, widgets as w
 
@@ -22,17 +24,22 @@ class ProfilesPage(w.Page):
         super().build()
         self.header.addWidget(w.title(t("ui.menu.profiller")))
         self.header.addWidget(w.label(t("ui.profil_giris"), muted=True))
+        if self.selected not in {p["id"] for p in self.c.profiles} and self.app.preset_store.get(self.selected) is None:
+            self.selected = "guvenli"  # silinen preset
         self.segments = QButtonGroup(self)
         buttons = []
-        for profile in self.c.profiles:
-            button = w.button(t(f"profil.{profile['id']}.ad"))
+        entries = [(p["id"], t(f"profil.{p['id']}.ad")) for p in self.c.profiles]
+        entries += [(p["id"], p["ad"].replace("&", "&&")) for p in self.app.preset_store.presets]  # "&": kısayol sayılmasın
+        for entry_id, text in entries:
+            button = w.button(text)
             button.setCheckable(True)
             button.setProperty("segment", True)
-            button.setChecked(profile["id"] == self.selected)
-            button.clicked.connect(lambda _=False, pid=profile["id"]: self._select(pid))
+            button.setChecked(entry_id == self.selected)
+            button.clicked.connect(lambda _=False, pid=entry_id: self._select(pid))
             self.segments.addButton(button)
             buttons.append(button)
-        self.body.addWidget(w.hbox(*buttons, None))
+        self.body.addWidget(w.flow(*buttons))
+        self.body.addWidget(self._preset_bar())
         self.list_widget = QWidget()
         self.list_lay = QVBoxLayout(self.list_widget)
         self.list_lay.setContentsMargins(0, 0, 0, 0)
@@ -42,12 +49,21 @@ class ProfilesPage(w.Page):
 
     def _select(self, profile_id):
         self.selected = profile_id
-        self._show()
+        self._rebuild()  # preset düğmeleri (dışa aktar/sil...) seçime göre değişir
+
+    def _rebuild(self):
+        w.Page.data_reloaded(self)
+        self.scroll_top()
+
+    def _user_preset(self):
+        return self.app.preset_store.get(self.selected)
 
     def _show(self):
         """Profil listesi önbellekteki durumlarla hemen çizilir (sistemi yeniden okumaz)."""
         w.clear_layout(self.list_lay)
-        self.list_lay.addWidget(w.label(t(f"profil.{self.selected}.aciklama")))
+        preset = self._user_preset()
+        self.list_lay.addWidget(w.label(t("ui.preset.aciklama", adet=len(preset["ayarlar"])) if preset
+                                        else t(f"profil.{self.selected}.aciklama")))
         if self.c.meta.get("anti_cheat_uyarisi"):
             self.list_lay.addWidget(w.colored(t("ui.anti_cheat_kisa"), "uyari"))
         self.rows = self._plan()
@@ -81,7 +97,11 @@ class ProfilesPage(w.Page):
 
     def _plan(self):
         rows = []
-        for item in profile_module.expand(self.c.profiles, self.selected):
+        preset = self._user_preset()
+        items = ([{"id": i, "secili": not self.c.by_id[i]["onay_gerekli"]} for i in preset["ayarlar"]  # dikkatli: asla işaretli gelmez
+                  if i in self.c.by_id and user_presets.usable(self.c.by_id[i])]
+                 if preset else profile_module.expand(self.c.profiles, self.selected))
+        for item in items:
             tweak = self.c.by_id[item["id"]]
             avail = self.c.availability.get(tweak["id"])
             if avail is None or not avail.visible:
@@ -95,6 +115,101 @@ class ProfilesPage(w.Page):
     def data_reloaded(self):
         if self.built:
             self._show()
+
+    # ------------------------------------------------------------------ kullanıcı presetleri
+    def _preset_bar(self):
+        buttons = [w.button(t("ui.preset.kaydet_secili"), self._save_checked),
+                   w.button(t("ui.preset.kaydet_acik"), self._save_on),
+                   w.button(t("ui.preset.ice_aktar"), self._import_preset)]
+        if self._user_preset():
+            buttons += [w.button(t("ui.preset.disa_aktar"), self._export_preset),
+                        w.button(t("ui.preset.ad_degistir"), self._rename_preset),
+                        w.button(t("ui.preset.sil"), self._delete_preset, warn=True)]
+        return w.flow(*buttons)
+
+    def _error(self, exc):
+        dialogs.show_message(self.app, t("ui.hata_baslik"), t(f"ui.preset.hata.{exc.code}"), "sorun")
+
+    def _saved(self, preset, dropped):
+        self.selected = preset["id"]
+        self._rebuild()
+        if dropped:
+            dialogs.show_message(self.app, t("ui.preset.baslik"), t("ui.preset.atilan", ad=preset["ad"], adet=dropped), "uyari")
+        else:
+            self.app.set_status(t("ui.preset.kaydedildi", ad=preset["ad"], adet=len(preset["ayarlar"])), "iyi")
+
+    def _ask_name(self, default=""):
+        name, ok = QInputDialog.getText(self.app, t("ui.preset.baslik"), t("ui.preset.ad_sor", en=user_presets.MAX_NAME), text=default)
+        return name if ok else None
+
+    def _save_ids(self, ids):
+        name = self._ask_name()
+        if name is None:
+            return
+        try:
+            self._saved(*self.app.preset_store.add(name, ids, self.c.by_id))
+        except user_presets.PresetError as exc:
+            self._error(exc)
+
+    def _save_checked(self):
+        """Listede işaretli (ve zaten açık) ayarlar."""
+        self._save_ids([r["id"] for r in self.rows
+                        if r["zaten_acik"] or (r["id"] in self.checks and self.checks[r["id"]].isChecked())])
+
+    def _save_on(self):
+        """Bu bilgisayarda şu an açık olan, preset'e girebilen ayarlar."""
+        self._save_ids([tid for tid, state in self.c.states.items()
+                        if state and state.is_on and tid in self.c.by_id and user_presets.usable(self.c.by_id[tid])])
+
+    def _rename_preset(self):
+        preset = self._user_preset()
+        name = self._ask_name(preset["ad"]) if preset else None
+        if name is None:
+            return
+        try:
+            self.app.preset_store.rename(preset["id"], name)
+        except user_presets.PresetError as exc:
+            self._error(exc)
+            return
+        self._rebuild()
+
+    def _delete_preset(self):
+        preset = self._user_preset()
+        if preset and dialogs.ask_yes_no(self.app, t("ui.preset.sil"), t("ui.preset.sil_soru", ad=preset["ad"])):
+            self.app.preset_store.remove(preset["id"])
+            self.selected = "guvenli"
+            self._rebuild()
+
+    def _export_preset(self):
+        preset = self._user_preset()
+        if preset is None:
+            return
+        safe = re.sub(r"[^\w.-]+", "_", preset["ad"]).strip("_") or "preset"
+        path, _ = QFileDialog.getSaveFileName(self.app, t("ui.preset.disa_aktar"),
+                                              str(paths.user_data_dir() / f"{safe}.json"), "JSON (*.json)")
+        if not path:
+            return
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(self.app.preset_store.export_text(preset["id"]))
+        except OSError:
+            dialogs.show_message(self.app, t("ui.hata_baslik"), t("ui.bakim.dosya_yazilamadi"), "sorun")
+            return
+        self.app.set_status(t("ui.preset.disa_aktarildi"), "iyi")
+
+    def _import_preset(self):
+        """Dosya yalnızca listeye eklenir; hiçbir ayar kendiliğinden uygulanmaz."""
+        path, _ = QFileDialog.getOpenFileName(self.app, t("ui.preset.ice_aktar"), str(paths.user_data_dir()), "JSON (*.json)")
+        if not path:
+            return
+        try:
+            with open(path, "rb") as f:
+                raw = f.read(user_presets.MAX_BYTES + 1)
+            self._saved(*self.app.preset_store.import_bytes(raw, self.c.by_id))
+        except OSError:
+            dialogs.show_message(self.app, t("ui.hata_baslik"), t("ui.preset.hata.gecersiz"), "sorun")
+        except user_presets.PresetError as exc:
+            self._error(exc)
 
     def _apply(self):
         chosen = [row for row in self.rows if row["id"] in self.checks and self.checks[row["id"]].isChecked()]

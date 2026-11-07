@@ -7,7 +7,7 @@ import threading
 from app.core import log
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QCheckBox, QComboBox, QCompleter, QLabel, QProgressBar
+from PySide6.QtWidgets import QApplication, QCheckBox, QComboBox, QCompleter, QLabel, QProgressBar, QVBoxLayout, QWidget
 
 from app.core import paths
 from app.core.i18n import fmt_date, fmt_number, fmt_percent, t
@@ -423,7 +423,19 @@ class MeasurePage(w.Page):
             card.lay.addWidget(w.colored(t("olcum.farkli_tur"), "uyari"))
         header = [w.label(t("olcum.sutun.metrik"), bold=True), w.label(t("olcum.sutun.once"), bold=True),
                   w.label(t("olcum.sutun.sonra"), bold=True), w.label(t("olcum.sutun.fark"), bold=True)]
-        card.lay.addWidget(self._row(header))
+        if rows:
+            card.lay.addWidget(w.label(self._verdict(rows), bold=True))
+        table = QWidget()
+        table_lay = QVBoxLayout(table)
+        table_lay.setContentsMargins(0, 0, 0, 0)
+        table_lay.setSpacing(4)
+        table.setVisible(False)  # sonuç cümlesi önde, rakamlar isteyene
+        toggle = w.button(t("olcum.detay_goster"), lambda: None)
+        toggle.clicked.connect(lambda: (table.setVisible(not table.isVisible()), toggle.setText(
+            t("olcum.detay_gizle") if table.isVisible() else t("olcum.detay_goster"))))
+        card.lay.addWidget(w.hbox(toggle, None))
+        card.lay.addWidget(table)
+        table_lay.addWidget(self._row(header))
         for metric, a, b, diff, pct, better in rows:
             tone = {True: "iyi", False: "sorun", None: None}[better]
             change = (_fmt(metric, round(diff, 2)) if diff else "0") + ("" if pct is None else f"  ({'+' if pct > 0 else ''}{fmt_percent(pct, 1)})")
@@ -431,11 +443,24 @@ class MeasurePage(w.Page):
                      w.colored(change, tone) if tone else w.label(change, muted=True)]
             for cell in cells[1:]:
                 theme.tabular(cell)  # FPS / ms sütunları hizalı kalır
-            card.lay.addWidget(self._row(cells))
+            table_lay.addWidget(self._row(cells))
         if not rows:
             card.lay.addWidget(w.label(t("olcum.ortak_yok"), muted=True))
         card.lay.addWidget(w.hbox(None, w.button(t("olcum.rapor_kaydet"), lambda: self._save_report(before, after))))
         self.body.addWidget(card)
+
+    @staticmethod
+    def _verdict(rows):
+        """Tek cümlelik sonuç; %3'ten küçük değişim ölçüm gürültüsü sayılır."""
+        good = sum(1 for r in rows if r[5] is True and r[4] is not None and abs(r[4]) >= 3)
+        bad = sum(1 for r in rows if r[5] is False and r[4] is not None and abs(r[4]) >= 3)
+        if good and bad:
+            return t("olcum.sonuc.karisik", iyi=good, kotu=bad)
+        if good:
+            return t("olcum.sonuc.iyi", n=good)
+        if bad:
+            return t("olcum.sonuc.kotu", n=bad)
+        return t("olcum.sonuc.fark_yok")
 
     @staticmethod
     def _row(cells):

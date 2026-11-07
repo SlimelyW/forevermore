@@ -1,8 +1,8 @@
 """Yedek deposu.
 
 Bir ayar uygulama tarafından ilk kez değiştirilmeden ÖNCE, dokunulacak her
-değerin o anki hâli %LOCALAPPDATA%\\Forevermore\\backups\\yedekler.json
-dosyasına yazılır. "Eski haline getir" bu ilk hâle döner; aynı ayar birkaç
+değerin o anki hâli %ProgramData%\\Forevermore\\<SID>\\backups\\yedekler.json
+dosyasına yazılır (paths: yalnızca Yöneticiler/SYSTEM yazabilir). "Eski haline getir" bu ilk hâle döner; aynı ayar birkaç
 kez açılıp kapatılsa bile ilk yedek korunur.
 
 Dosya her yazımda önce geçici dosyaya yazılıp sonra yerine konur; yazma
@@ -18,6 +18,8 @@ geri almadan önce adımların şemadan geçirilmesidir (engine.revert).
 
 Ayrıca registry anahtarları ilk değişiklikten önce .reg dosyası olarak
 backups\\reg klasörüne aktarılır (uygulama açılamazsa elle geri yükleme için).
+
+Salt okunur depo (`readonly`, yönetici izni yokken) klasöre hiç yazmaz: korumalı klasöre zaten yazamaz.
 """
 
 import datetime
@@ -34,12 +36,14 @@ _log = log.get("backup")
 
 
 class BackupStore:
-    def __init__(self, folder=None):
+    def __init__(self, folder=None, readonly=False):
         self.folder = folder or paths.backups_dir()
-        self.folder.mkdir(parents=True, exist_ok=True)
+        self.readonly = readonly
+        if not readonly:
+            self.folder.mkdir(parents=True, exist_ok=True)
         self.path = self.folder / "yedekler.json"
         self.history_path = self.folder / "islem_gecmisi.jsonl"
-        self.key_path = self.folder / "yedek_anahtar.dat"
+        self.key_path = self.folder / paths.BACKUP_KEY
         self._lock = threading.Lock()
         self.tampered = False   # dosya imzası tutmadı / anahtar okunamadı: yedekler yüklenmedi
         self.recoverable = None  # yüklenmeyen ama okunabilen yedek verisi (kullanıcı onayıyla kurtarılır)
@@ -84,8 +88,9 @@ class BackupStore:
 
     def _quarantine(self, reason, readable=None):
         # Dosyayı silme; yanına al ki elle kurtarılabilsin.
-        broken = self._set_aside(self.path)
-        _log.error("Yedek dosyası yüklenmedi (%s); %s olarak saklandı", reason, broken.name)
+        if not self.readonly:
+            broken = self._set_aside(self.path)
+            _log.error("Yedek dosyası yüklenmedi (%s); %s olarak saklandı", reason, broken.name)
         if isinstance(readable, dict):
             self.recoverable = readable
 
@@ -113,6 +118,8 @@ class BackupStore:
         return raw
 
     def _save(self):
+        if self.readonly:
+            return
         key = self._key(create=True)
         # anahtar yoksa imzasız (eski biçim) yazılır; sonraki açılışta eski sürüm gibi ele alınır
         document = {"surum": 2, "veri": self._data, "hmac": self._mac(key, self._data)} if key else self._data
@@ -156,6 +163,21 @@ class BackupStore:
             _log.info("Yedek alındı: %s (%d adım)", tweak_id, len(entries))
             return True
 
+    def stamp_rev(self, tweak_id, rev, entries=()):
+        """Kayda hangi katalog sürümüyle uygulandığını yazar. entries: yedekte henüz olmayan yeni adımlar
+        ({"adim","anlik"}); eklenir ki geri alma onları da kapsasın. Kayıt yoksa bir şey yapmaz."""
+        with self._lock:
+            entry = self._data.get(tweak_id)
+            if entry is None:
+                return
+            have = [e["adim"] for e in entry["adimlar"] if "adim" in e]
+            new = [e for e in entries if e["adim"] not in have]
+            if new:
+                meta = [e for e in entry["adimlar"] if "meta" in e]
+                entry["adimlar"] = [e for e in entry["adimlar"] if "meta" not in e] + new + meta
+            entry["rev"] = rev
+            self._save()
+
     def remove(self, tweak_id):
         with self._lock:
             if self._data.pop(tweak_id, None) is not None:
@@ -167,6 +189,8 @@ class BackupStore:
     def history(self, action, tweak_id, success, detail=""):
         record = {"zaman": datetime.datetime.now().isoformat(timespec="seconds"),
                   "islem": action, "id": tweak_id, "basarili": success, "ayrinti": detail}
+        if self.readonly:
+            return
         with self._lock, open(self.history_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 

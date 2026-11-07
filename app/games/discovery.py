@@ -55,9 +55,12 @@ def _vdf(text):
     return current
 
 
-def _game(name, folder, source, exe=None):
-    return {"ad": name, "klasor": os.path.normpath(folder), "kaynak": source,
+def _game(name, folder, source, exe=None, baslat=None):
+    game = {"ad": name, "klasor": os.path.normpath(folder), "kaynak": source,
             "exe": os.path.normpath(exe) if exe else None}
+    if baslat:
+        game["baslat"] = baslat  # başlatıcının kendi kısayolu (steam:// vb.); profiles.launch_target doğrular
+    return game
 
 
 def real_game_exe(path):
@@ -105,7 +108,9 @@ def _steam():
                 continue
             folder = os.path.join(library, "steamapps", "common", state["installdir"])
             if os.path.isdir(folder):
-                games.append(_game(state.get("name") or state["installdir"], folder, "Steam"))
+                appid = state.get("appid", "")
+                games.append(_game(state.get("name") or state["installdir"], folder, "Steam",
+                                   baslat=f"steam://rungameid/{appid}" if str(appid).isdigit() else None))
     return games
 
 
@@ -124,8 +129,28 @@ def _epic():
             continue
         exe = data.get("LaunchExecutable")
         games.append(_game(data.get("DisplayName") or os.path.basename(location), location, "Epic",
-                           os.path.join(location, exe) if exe else None))
+                           os.path.join(location, exe) if exe else None,
+                           baslat=(f"com.epicgames.launcher://apps/{data['AppName']}?action=launch&silent=true"
+                                   if re.fullmatch(r"[\w.-]+", str(data.get("AppName", ""))) else None)))
     return games
+
+
+def launcher_uri(path):
+    """Kısayolu kaydedilmemiş (eski/elle eklenmiş) oyun için: yolun içinde kaldığı Steam/Epic oyununun kısayolu,
+    yoksa None. Yalnızca yerel appmanifest / .item dosyalarını okur; ağ yok."""
+    if not path:
+        return None
+    target = os.path.normcase(os.path.normpath(path))
+    try:
+        found = _steam() + _epic()
+    except Exception:  # okunamayan başlatıcı dosyası başlatmayı engellemesin: exe ile açılır
+        _log.exception("Başlatıcı kısayolu aranamadı")
+        return None
+    for game in found:
+        folder = os.path.normcase(game["klasor"])
+        if game.get("baslat") and (target == folder or target.startswith(folder.rstrip(os.sep) + os.sep)):
+            return game["baslat"]
+    return None
 
 
 def _gog():

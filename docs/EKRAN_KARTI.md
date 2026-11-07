@@ -119,3 +119,26 @@ Kimlikler NVIDIA Profile Inspector'ın Reference.xml sözlüğünden (resmi baş
   ile yazıldı, geri okundu (1) ve başlangıç değerine geri alındı (Kullanıcı yönetici terminalinde çalıştırdı, 27 Ekim 2026).
   Katmanın gerçekten kalktığı (Alt+Z) ve FPS etkisi **ölçülmedi**.
 
+
+## Bellek (VRAM): yalnızca OKUMA (6 Kasım 2026)
+
+Hiçbir şey yazılmaz; güç sınırı DEĞİŞTİRİLMEZ (yazma ancak Kubilay onayıyla ayrı iş) ve artık OKUNMAZ da (aşağıda).
+
+| Değer | Kaynak | Nerede görünür | Bu bilgisayarda (RTX 5070 Laptop + Radeon 880M) |
+|---|---|---|---|
+| Toplam ekran belleği | DXGI `DedicatedVideoMemory` | PC Detayları kart satırı (eskiden de vardı), Özet "Ekran kartı" kutusu | okundu: 7,7 GB (RTX), 0,5 GB (880M) |
+| Kullanılan ekran belleği | Windows sayacı `GPU Adapter Memory > Dedicated Usage` (kart, LUID ile DXGI'ye eşlenir) | Özet > Canlı sistem durumu > Ekran kartı: "Ekran kartı belleği: 1,5 / 7,7 GB" | okundu (RTX'te 1,43 GB; nvidia-smi 1453 MiB ile uyuştu) |
+| Güç sınırı | ÇIKARILDI (6 Kasım 2026): `nvidia-smi enforced.power.limit` | satır yok | aynı kartta 83 → 79 → 77 W okundu (pil/ısı/Dynamic Boost); gerçek sınır olmayabilir, yanlış bilgi vermemek için kaldırıldı |
+| Güç kullanımı (anlık W) | uygulamada OKUNMUYOR | satır yok | nvidia-smi `power.draw` bu kartta çalışıyor (32 W) ama saniyede bir süreç açmak doğru değil; NVML (nvml.dll) ile okunabilir, kodlanmadı (karar bekler) |
+
+**Okunamadı / kodlanmadı (satır gizlenir, uydurma yok):**
+- **AMD Radeon 880M (ADLX, AMD Software 32.0.22042.1):** güç sınırı ve güç kullanımı OKUNMUYOR. Bu iş için ADLX'te performans izleme (IADLXGPUMetrics) ve elle ayar arabirimleri gerekir; bu fazda eklenmedi ve vtable sıraları doğrulanmadı. PC Detayları'nda AMD kartında güç satırı çıkmaz.
+- **NVIDIA `power.limit`** (yazılabilir sınır) bu kartta `[N/A]`; uygulama hiçbir güç sınırı değeri okumuyor. Sürücü 621.01.
+- **Tümleşik kartlar (Radeon 880M, 512 MB ayrılmış):** bellek paylaşımlıdır; kullanım ayrılmış miktarı aşabilir. Kullanılan > toplam ise Özet yalnızca kullanılanı yazar; toplamı 1 GB'tan küçük kartta "dolmak üzere" uyarısı HİÇ verilmez.
+- **Intel / diğer kartlar:** denenmedi (bu bilgisayarda yok). Sayaç ve DXGI genel olduğu için çalışması beklenir ama doğrulanmadı.
+
+**Oyun içi uyarı ("Ekran kartı belleği dolmak üzere (%NN)"):** Ayarlar'da tek anahtar "Ekran kartı belleği uyarısı",
+varsayılan KAPALI. Yalnızca canlı FPS çalışırken (oyun sürüyor ve Canlı FPS açık) Oyunlar sayfasındaki canlı FPS
+satırının altına tek satır eklenir; %90'ın ÜSTÜNDE (kart bellek kullanımı / ayrılmış bellek). Açılır pencere, ses,
+bildirim, dosyaya yazma, ağ yok. Okuma yalnızca bu oturumda, tek sayaçla, saniyede bir; oturum bitince kapanır.
+Gerçek oyunda DENENMEDİ (EL_TESTLERI "Ekran kartı belleği").

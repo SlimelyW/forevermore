@@ -34,7 +34,7 @@ PR göndermeden önce testlerin geçtiğinden emin olun. Arayüz değişikliğin
    belgesi ya da ölçüm). Forum düzeyindeki iddialar yalnızca "tartışmalı/placebo" olarak etiketlenebilir. Katalog
    `data/islemler.json` içindedir; `tools/convert_tweaks.py` ile `data/tweaks_app.json` üretilir
    ([docs/islem_semasi.md](docs/islem_semasi.md)).
-4. **Telemetri, kişisel veri toplama ve yeni ağ bağlantısı yok.** Uygulama yalnızca kullanıcının açtığı güncelleme
+4. **Telemetri, kişisel veri toplama ve yeni ağ bağlantısı yok.** Uygulama yalnızca kullanıcının ilk soruda "evet" dediği güncelleme
    denetiminde (GitHub) internete bağlanır; `tests/test_gizlilik.py` bunu denetler.
 5. **Yasaklı işlemler:** Windows Defender'ı tamamen kapatmak, anti-cheat süreçlerine dokunmak, "bellek temizleyici" gibi
    placebo/zararlı işlemler, gerçek zamanlı öncelik. Bunları eklemeyin.

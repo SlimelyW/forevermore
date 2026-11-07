@@ -30,7 +30,7 @@ SOURCE_LANGUAGE = "tr"
 # Ayar içinde çevrilebilen (ekranda görünen) alanlar. Liste sıra numaraları "*" ile yazılır;
 # metin listeleri (artilar vb.) bütün olarak da verilebilir.
 TRANSLATABLE_WHOLE = (
-    "ad", "ne_ise_yarar", "artilar", "eksiler", "dokunmamali", "notlar", "varsayilan", "bilgi.neden",
+    "ad", "sade_ad", "ne_ise_yarar", "artilar", "eksiler", "dokunmamali", "notlar", "varsayilan", "bilgi.neden",
     "bilgi.yapilamaz_nedeni", "gerceklik.aciklama", "gerceklik.celiski", "performans_etkisi.gerekce",
     "rehber.adimlar", "rehber.geri_alma", "rehber.kontrol", "tespit.mesaj", "uyumluluk.kaynak_metin.windows",
     "islem.alanlar.*.etiket", "islem.alanlar.*.secenekler.*.etiket", "islem.eylemler.*.etiket",

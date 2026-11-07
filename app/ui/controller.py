@@ -26,13 +26,14 @@ from app.engine import catalog, compat, profiles, recommend, resolvers
 from app.engine.backup import BackupStore
 from app.engine.engine import Engine, TweakState
 from app.engine.system import ReadOnlySystem, WindowsSystem
-from app.scan import checks, run_scan
+from app.scan import checks, findings, run_scan
 
 _log = log.get("ui")
 
 MODE_NORMAL = "normal"          # yönetici, ayarlar değiştirilebilir
 MODE_READ_ONLY = "salt_okunur"  # yönetici izni verilmedi
 MODE_PREVIEW = "onizleme"       # deneme modu: hiçbir şey değiştirilmez, yedek geçici klasörde
+MODE_BACKUPS_NOT_MOVED = "yedek_tasinamadi"  # yönetici ama yedekler korumalı klasöre geçirilemedi: yazma yok
 
 RESTART_PRIORITY = ["bilgisayar", "oturum", "gezgin", "uygulama", "ses_servisi", "durumsal", "yok"]
 STATE_WORKERS = 8
@@ -70,7 +71,7 @@ class Controller:
                 self._tmp = tempfile.TemporaryDirectory()
                 store = BackupStore(Path(self._tmp.name))
             else:
-                store = BackupStore()
+                store = BackupStore(readonly=mode != MODE_NORMAL)
             system = WindowsSystem() if mode == MODE_NORMAL else ReadOnlySystem(WindowsSystem())
             is_admin = admin.is_admin if mode == MODE_NORMAL else (lambda: False)
             engine = Engine(system=system, store=store, is_admin=is_admin)
@@ -143,22 +144,26 @@ class Controller:
         return scan
 
     def recheck(self, tweak_id):
-        """Çözümden sonra yalnız bu maddeyi yeniden okur (tam tarama 15-25 sn sürer ve tüm sayfaları yeniden kurar).
-        Sorunlu ayar tespiti artık yoksa ilgili bulgu listeden çıkar (True döner). Arka plan iş parçacığında çağrılır."""
+        """Çözümden / geri almadan sonra yalnız bu maddeyi yeniden okur (tam tarama 15-25 sn sürer ve tüm sayfaları yeniden
+        kurar). Sorunlu ayar tespiti kalktıysa ilgili bulgu listeden çıkar, geri alma tespiti yeniden getirdiyse
+        bulgu geri eklenir; bulgu listesi değiştiyse True döner. Arka plan iş parçacığında çağrılır."""
         checks.clear_cache()
         tweak = self.by_id.get(tweak_id)
         if tweak is not None:
             self.refresh_one(tweak_id)
         if self.scan is None or tweak is None or not tweak.get("tespit"):
             return False
-        if checks.evaluate([tweak], self.scan.get("bolumler") or {}):
-            return False
+        found = checks.evaluate([tweak], self.scan.get("bolumler") or {})
         with self._lock:
-            self.scan["tespitler"] = [d for d in self.scan.get("tespitler") or [] if d["id"] != tweak_id]
-            self.scan["bulgular"] = [f for f in self.scan.get("bulgular") or []
-                                     if not (f["kod"] == "tespit" and f["ilgili"] == [tweak_id])]
+            known = (any(d["id"] == tweak_id for d in self.scan.get("tespitler") or [])
+                     or any(f["kod"] == "tespit" and f["ilgili"] == [tweak_id] for f in self.scan.get("bulgular") or []))
+            if bool(found) == known:
+                return False
+            self.scan["tespitler"] = [d for d in self.scan.get("tespitler") or [] if d["id"] != tweak_id] + found
+            rest = [f for f in self.scan.get("bulgular") or [] if not (f["kod"] == "tespit" and f["ilgili"] == [tweak_id])]
+            self.scan["bulgular"] = sorted(rest + [findings.tespit_bulgusu(d) for d in found],
+                                           key=lambda f: findings.SEVERITY_ORDER[f["seviye"]])
         return True  # bulgu listesi değişti
-
     def recommendations(self, limit=recommend.LIMIT):
         """Bu bilgisayar için öneriler (bkz. app/engine/recommend.py); tarama yoksa boş."""
         hw = ((self.scan or {}).get("bolumler") or {}).get("donanim") or {}

@@ -1,34 +1,32 @@
 """Oyunlar menüsü: üstte oyun seçimi, altında seçilen oyun için tek, sade bir sayfa.
 
-Ana kontroller (öncelik, çekirdekler, bildirimleri sustur, iki ekran kartı varsa GPU tercihi ve
-"oyun açılınca otomatik uygula") büyük düğmelerle; diğerleri varsayılan olarak kapalı "Gelişmiş
-ayarlar" bölümünde. Her terimin yanında tek cümlelik açıklama veren (i) düğmesi var.
+İlk bakışta "Oyunu başlat" ve "Önerilen ayarları uygula"; diğerleri varsayılan olarak kapalı "Gelişmiş ayarlar"
+bölümünde. Her terimin yanında tek cümlelik açıklama veren (i) düğmesi var.
 
-Kalıcı ayarlar (öncelik, GPU tercihi, tam ekran optimizasyonları) kaydedince yazılır ve
-Değişiklikler sayfasından geri alınır. Oyun sırasında ayarları (çekirdekler, bildirimler...)
-uygulama açıkken, oyun açılınca uygulanır ve oyun kapanınca geri alınır. Anti-cheat süreçlerine
-hiçbir ayar uygulanmaz (profiles.PROTECTED_EXES).
+Ayarlar yalnızca kalıcıdır (öncelik, GPU tercihi, tam ekran optimizasyonları): kaydedince motordan yazılır ve
+Değişiklikler sayfasından geri alınır. Çalışan oyunla otomatik uygulama/geri alma YOK (oyun izleyici 7 Kasım 2026'da
+kaldırıldı). Anti-cheat süreçlerine hiçbir ayar uygulanmaz (profiles.PROTECTED_EXES).
 """
 
 import os
 import time
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import (QButtonGroup, QCheckBox, QComboBox, QFileDialog, QGridLayout, QLabel, QProgressBar,
-                               QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import QButtonGroup, QComboBox, QFileDialog, QLabel, QProgressBar, QVBoxLayout, QWidget
 
-from app.core import i18n
+from app.core import i18n, settings
 from app.core.i18n import t, value_label
-from app.engine import cpu_topology
-from app.games import discovery, guides, presets, profiles
+from app.games import canli_surec, discovery, guides, oyun_ayar, presets, profiles, recorder
 from app.ui import dialogs, motion, theme, widgets as w
 from app.ui.page_settings import about_data
 
 PRIORITIES = ("Normal", "AboveNormal", "High")
 GPU_PREFS = ("varsayilan", "guc_tasarrufu", "yuksek_performans")
-CORE_PRESETS = ("tum", "performans", "fiziksel", "vcache", "ozel")
-# Gelişmiş bölümdeki oyun sırasında ayarları (bildirimler ana bölümde)
-ADVANCED_RUNTIME = tuple(k for k in profiles.RUNTIME_KEYS if k != "bildirimleri_kapat")
+
+
+def _when(iso):
+    """"2026-11-07T12:00:05" -> "2026-11-07 12:00"."""
+    return (iso or "").replace("T", " ")[:16]
 
 
 class GamesPage(w.Page):
@@ -46,8 +44,17 @@ class GamesPage(w.Page):
         self.editing = None        # seçili oyunun kimliği
         self.draft = None          # seçili oyunun düzenlenen profili
         self.candidates = {}       # oyun kimliği -> .exe adayları
-        self.topology = None
         self.advanced_open = False
+        self._live = None          # "Şu an" satırı (canlı FPS); yalnızca bu oyun sürerken ve canlı FPS çalışırken
+        self._live_timer = QTimer(self)
+        self._live_timer.setInterval(1000)
+        self._live_timer.timeout.connect(self._refresh_live)
+        self._procs = None         # canlı süreç listesi (C8): yalnızca oyun sürerken, sayfa görünürken ve kayıt ayarı açıkken
+        self._procs_game = None
+        self._proc_labels = {}
+        self._proc_timer = QTimer(self)
+        self._proc_timer.setInterval(1000)  # yalnızca koşulları denetler/ekranı tazeler; ölçüm iş parçacığı ayrı
+        self._proc_timer.timeout.connect(self._procs_tick)
 
     def on_show(self, highlight=None):
         self.ensure_built()
@@ -63,7 +70,8 @@ class GamesPage(w.Page):
                                      self._scan_button(),
                                      w.button(t("ui.oyun_elle_ekle"), self._add_manual)))
         self.header.addWidget(w.label(t("ui.oyunlar_aciklama"), muted=True))
-        self.body.addWidget(self._watcher_banner())
+        if not self.c.can_modify:
+            self.body.addWidget(w.banner(t("ui.oyun_izleyici_mod"), "uyari"))
         if self.store.load_error:  # oyun listesi dosyası bozuktu (ör. zorla kapatma): sessizce boş liste gösterilmez
             self.body.addWidget(w.banner(t(f"ui.oyun_liste_{self.store.load_error}"), "uyari"))
         if not self.scanned and not self.scanning:
@@ -77,9 +85,6 @@ class GamesPage(w.Page):
         game = self.store.get(self.editing) if self.editing else None
         if game is not None:
             self.body.addWidget(self._game_page(game))
-        useful = about_data()["faydali"]
-        if useful:
-            self.body.addWidget(self._useful_card(useful))
 
     def _useful_card(self, items):
         """Bilgi sayfasından taşınan faydalı dış bağlantılar (data/hakkinda.json 'faydali'); tarayıcıda açılır."""
@@ -95,24 +100,14 @@ class GamesPage(w.Page):
             card.lay.addWidget(w.hbox(*parts))
         return card
 
-    def _watcher_banner(self):
-        watcher = self.app.game_watcher
-        if not self.c.can_modify:
-            return w.banner(t("ui.oyun_izleyici_mod"), "uyari")
-        if watcher is not None and watcher.active:
-            return w.banner(t("ui.oyun_izleyici_aktif", ad=watcher.active[0]["ad"]), "iyi")
-        if self.store.runtime_games():
-            return w.banner(t("ui.oyun_izleyici_hazir"), "bilgi")
-        return w.banner(t("ui.oyun_izleyici_kapali"), "bilgi")
-
     def _picker(self):
         """Tek açılır liste: önce listemdeki oyunlar, sonra bilgisayarda bulunup henüz eklenmemiş olanlar."""
         card = w.Card()
         combo = QComboBox()
-        for game in self.store.games:
-            combo.addItem(game["ad"], ("oyun", game["id"]))
-        added = {g["klasor"].lower() for g in self.store.games}
-        remaining = [g for g in self.found or [] if g["klasor"].lower() not in added]
+        favorites = set(settings.get("favori_oyunlar") or [])
+        for game in sorted(self.store.games, key=lambda g: g["id"] not in favorites):  # kararlı sıralama: favoriler üstte
+            combo.addItem(("★ " if game["id"] in favorites else "") + game["ad"], ("oyun", game["id"]))
+        remaining = self._remaining()
         if remaining:
             if self.store.games:
                 combo.insertSeparator(combo.count())
@@ -126,11 +121,21 @@ class GamesPage(w.Page):
         caption = QLabel(t("ui.oyun_sec"))
         caption.setObjectName("CardTitle")
         card.lay.addWidget(w.hbox(caption, combo, None, spacing=12))
-        card.lay.addWidget(self._scan_status(len(remaining)))
-        if not self.store.games:
+        if not self.store.games:  # liste varken tarama durumu Gelişmiş'te
+            card.lay.addWidget(self._scan_status(len(remaining)))
             card.lay.addWidget(w.label(t("ui.oyun_yok"), muted=True))
-        card.lay.addWidget(w.colored(t("ui.anti_cheat_genel"), "uyari"))
         return card
+
+    def _remaining(self):
+        """Bilgisayarda bulunup henüz listeye eklenmemiş oyunlar."""
+        added = {g["klasor"].lower() for g in self.store.games}
+        return [g for g in self.found or [] if g["klasor"].lower() not in added]
+
+    def _toggle_favorite(self, game_id):
+        favorites = list(settings.get("favori_oyunlar") or [])
+        favorites.remove(game_id) if game_id in favorites else favorites.append(game_id)
+        settings.set("favori_oyunlar", favorites)
+        QTimer.singleShot(0, self.data_reloaded)
 
     def _picked(self, data):
         if not data:
@@ -203,7 +208,7 @@ class GamesPage(w.Page):
         if not game:
             return
         try:
-            added = self.store.add(game["ad"], game["klasor"], game["kaynak"], game.get("exe"))
+            added = self.store.add(game["ad"], game["klasor"], game["kaynak"], game.get("exe"), game.get("baslat"))
         except ValueError:
             dialogs.show_message(self.app, t("ui.dikkat"), t("ui.oyun_korumali"), "uyari")
             return
@@ -231,7 +236,7 @@ class GamesPage(w.Page):
             self.store.remove(game["id"])
             if self.editing == game["id"]:
                 self.editing, self.draft = None, None
-            self.app.update_game_watcher()
+            self.app.update_game_detector()
             self.data_reloaded()
 
     # ------------------------------------------------------------------ seçili oyunun sayfası
@@ -241,47 +246,156 @@ class GamesPage(w.Page):
             if game.get("exe") and self.draft.get("otomatik", True):
                 # kalıcı ayarlarda sisteme güvenilir, profil dosyasına değil
                 self.draft.update(profiles.read_persistent(game, self._read_reg))
-        if self.topology is None:
-            try:
-                self.topology = cpu_topology.read()
-            except Exception:
-                self.topology = {"cpular": [], "hibrit": False, "smt": False, "l3_gruplari": [], "vcache_l3": None}
         card = w.Card(spacing=12)
         card.lay.addWidget(self._game_header(game))
-        if game.get("anti_cheat"):
-            card.lay.addWidget(w.colored(t("ui.anti_cheat_oyun", liste=", ".join(game["anti_cheat"])), "uyari"))
-        else:
-            card.lay.addWidget(w.label(t("ui.anti_cheat_bulunamadi"), muted=True, size=12))
-        card.lay.addWidget(self._exe_row(game))
         if not game.get("exe"):
+            card.lay.addWidget(self._exe_row(game))  # exe seçilmeden başka bir şey yapılamaz
             return card
-
-        card.lay.addWidget(self._preset_row())
-        card.lay.addWidget(self._guide_row(game))
-        card.lay.addWidget(self._switch_row("otomatik", t("ui.oyun_otomatik"), "otomatik", bold=True))
-        if not self.draft.get("otomatik", True):
-            card.lay.addWidget(w.label(t("ui.oyun_otomatik_kapali"), muted=True, size=12))
-        card.lay.addWidget(self._segment_row(t("ui.oyun_oncelik"), "oncelik", "oncelik", PRIORITIES,
-                                             lambda v: t(f"ui.oncelik.{v}")))
-        card.lay.addWidget(self._cores_row())
-        card.lay.addWidget(self._switch_row("bildirimleri_kapat", t("ui.oyun_ayar.bildirimleri_kapat"), "bildirim"))
-        if self._dual_gpu():
-            card.lay.addWidget(self._segment_row(t("ui.oyun_gpu"), "gpu_tercihi", "gpu", GPU_PREFS,
-                                                 lambda v: t(f"ui.gpu_tercihi.{v}")))
-
+        card.lay.addWidget(self._main_row(game))
+        if game.get("anti_cheat"):
+            card.lay.addWidget(w.colored(t("ui.oyun_anticheat_var", liste=", ".join(game["anti_cheat"])), "uyari"))
         # sayfa yeniden kurulmaz: bölüm yerinde açılır, kaydırma konumu korunur
-        advanced = self._advanced()
-        advanced.setVisible(self.advanced_open)
+        advanced = self._advanced(game)
+        advanced.setVisible(False) if not self.advanced_open else None  # açıkken görünürlüğe dokunulmaz (ebeveynsiz setVisible(True) üst pencere olur)
         toggle = w.button(t("ui.oyun_gelismis_gizle") if self.advanced_open else t("ui.oyun_gelismis_goster"),
                           lambda: self._toggle_advanced(toggle, advanced))
         card.lay.addWidget(w.hbox(toggle, None))
         card.lay.addWidget(advanced)
-
-        save = w.button(t("ui.oyun_kaydet"), lambda: self._save(game), primary=True)
-        save.setEnabled(self.c.can_modify)
-        save.setMinimumHeight(36)
-        card.lay.addWidget(w.hbox((w.label(t("ui.oyun_kaydet_aciklama"), muted=True, size=12), 1), save))
         return card
+
+    def _main_row(self, game):
+        """Ana düğmeler: Oyunu başlat + Önerilen ayarları uygula (N/M). Başka bir şey ilk bakışta yok."""
+        parts = []
+        target = profiles.launch_target(game)
+        if target:
+            # tıklayınca: eski kayıtta Steam/Epic kısayolu yoksa yeniden bulunur (TEST_FAZI A7: oyun Steam'siz açılıyordu)
+            start = w.button(t("ui.oyun_baslat"),
+                             lambda: os.startfile(profiles.launch_target(game, rediscover=True) or target), primary=True)
+            start.setMinimumHeight(44)
+            parts.append(start)
+        done, total = presets.recommended_count(game["profil"], self._two_gpus())
+        if total and done == total:
+            parts.append(w.badge(t("ui.oyun_oner_tamam", n=done, m=total), "iyi"))
+        elif total:
+            apply = w.button(t("ui.oyun_onerilen", n=done, m=total), lambda: self._apply_recommended(game))
+            apply.setMinimumHeight(44)
+            apply.setToolTip(t("ui.oyun_onerilen_ipucu"))
+            apply.setEnabled(self.c.can_modify)
+            parts.append(apply)
+        return w.hbox(*parts, None, spacing=12)
+
+    def _apply_recommended(self, game):
+        """'Dengeli' hazır ayarı taslağa yazar ve kaydeder (mevcut Kaydet yolu: onay, yedek, geri alma)."""
+        self.draft.update(presets.build("dengeli", self._two_gpus()))
+        self._save(game)
+
+    def _anti_cheat_fps_note(self, game):
+        """Anti-cheat'li oyunda canlı FPS ve FPS kutusu hiç çalışmaz (izin yok): ayar açıksa tek satır neden."""
+        if not ((settings.get("canli_fps") or settings.get("fps_widget")) and game.get("anti_cheat")):
+            return None
+        return w.label(t("ui.canli_fps.oyunda_kapali"), muted=True, size=12)
+
+    def _live_line(self, game):
+        if not (self.app.live_fps is not None and self._running(game)):
+            self._live = None
+            return None
+        self._live = w.label("", size=12)
+        self._live_timer.start()
+        self._refresh_live()
+        return self._live
+
+    def _running(self, game):
+        """Bu oyun şu an açık mı ("oyun açık mı" algılayıcısı; yalnızca canlı FPS / oyun kaydı açıkken çalışır)."""
+        detector = self.app.game_detector
+        return bool(detector is not None and detector.active and detector.active[0]["id"] == game["id"])
+
+    def _refresh_live(self):
+        live, label = self.app.live_fps, self._live
+        if live is None or label is None:
+            self._live_timer.stop()
+            return
+        try:
+            if not label.isVisible():
+                return
+            snap = live.snapshot()
+            key = snap["durum"]
+            if key == "olculuyor" and snap["dusus"]:
+                text = t("ui.canli_fps.dusus", fps=snap["fps"], onceki=snap["dusus"]["onceki_fps"])
+            elif key == "olculuyor":
+                text = t("ui.canli_fps.olculuyor", fps=snap["fps"])
+            else:
+                text = t(f"ui.canli_fps.{key}")
+            full = self.app.vram_dolu()
+            if full:
+                text += chr(10) + t("ui.canli_fps.vram_dolu", yuzde=full)
+            label.setText(text)
+        except RuntimeError:  # sayfa yeniden kurulurken satır silinmiş olabilir
+            self._live = None
+            self._live_timer.stop()
+
+    # ------------------------------------------------------------------ canlı süreç listesi (C8)
+    def _procs_wanted(self):
+        game = self._procs_game
+        return bool(game is not None and settings.get("oyun_kaydi") and self._running(game))
+
+    def _procs_card(self, game):
+        """İki grup (Uygulamalar / Arka plan): toplam CPU% + en çok kullanan 5 program. "Oyun oturumu kaydı" kapalıysa yok."""
+        self._procs_game = game
+        if not self._procs_wanted():
+            self._procs_stop()
+            return None
+        box = QWidget()
+        lay = QVBoxLayout(box)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.addWidget(w.label(t("ui.canli_surec.baslik"), bold=True, size=12))
+        columns, grid = w.grid(2, spacing=16)
+        self._proc_labels = {}
+        for i, group in enumerate(("uygulamalar", "arka_plan")):
+            head = w.label(t(f"ui.canli_surec.{group}"), bold=True, size=12)
+            body = w.label(t("ui.canli_surec.olculuyor"), muted=True, size=12, plain=True)
+            grid.addWidget(head, 0, i)
+            grid.addWidget(body, 1, i)
+            grid.setRowStretch(1, 1)
+            self._proc_labels[group] = (head, body)
+        lay.addWidget(columns)
+        lay.addWidget(w.label(t("ui.canli_surec.not"), muted=True, size=11))
+        self._procs_fill()  # sayfa yeniden kurulunca "Ölçülüyor…" yanıp sönmesin
+        self._proc_timer.start()
+        return box
+
+    def _procs_stop(self):
+        self._proc_timer.stop()
+        procs, self._procs = self._procs, None
+        if procs is not None:
+            procs.stop()
+
+    def _procs_tick(self):
+        if not self._procs_wanted():  # oyun bitti ya da ayar kapandı: iş parçacığı da sayaç da kapanır
+            self._procs_stop()
+            return
+        if not (self.isVisible() and not self.window().isMinimized()):  # sayfa görünmüyor: ölçüm HİÇ çalışmaz
+            if self._procs is not None:
+                self._procs.stop()
+                self._procs = None
+            return
+        if self._procs is None:
+            self._procs = canli_surec.LiveProcesses(os.path.basename(self._procs_game.get("exe") or ""))
+            self._procs.start()
+        self._procs_fill()
+
+    def _procs_fill(self):
+        snap = self._procs.snapshot() if self._procs is not None else None
+        if snap is None:
+            return
+        try:
+            for group, (head, body) in self._proc_labels.items():
+                data = snap[group]
+                head.setText(t("ui.canli_surec.grup", ad=t(f"ui.canli_surec.{group}"),
+                               yuzde=i18n.fmt_percent(data["toplam"], 1)))
+                lines = [f"{p['ad']}  {i18n.fmt_percent(p['cpu'], 1)}" for p in data["liste"]]
+                body.setText(chr(10).join(lines) or t("ui.canli_surec.bos"))
+        except RuntimeError:  # sayfa yeniden kurulurken etiketler silinmiş olabilir
+            self._proc_labels = {}
 
     def _game_header(self, game):
         name = QLabel(game["ad"])
@@ -292,17 +406,66 @@ class GamesPage(w.Page):
             badge = w.badge(t("ui.anti_cheat_rozet", liste=", ".join(game["anti_cheat"])), "uyari")
             badge.setToolTip(t("ui.anti_cheat_oyun", liste=", ".join(game["anti_cheat"])))
             parts.append(badge)
-        watcher = self.app.game_watcher
-        if watcher is not None and watcher.active and watcher.active[0]["id"] == game["id"]:
+        if self._running(game):
             parts.append(w.badge(t("ui.oyun_calisiyor"), "iyi"))
-        if game.get("exe") and os.path.exists(game["exe"]):
-            parts.append(w.button(t("ui.oyun_baslat"), lambda: os.startfile(game["exe"])))
-        parts.append(w.button(t("ui.oyun_kaldir"), lambda: self._remove(game)))
+        favorites = settings.get("favori_oyunlar") or []
+        star = w.button("★" if game["id"] in favorites else "☆", lambda: self._toggle_favorite(game["id"]))
+        star.setToolTip(t("ui.oyun_favori_kaldir" if game["id"] in favorites else "ui.oyun_favori_ekle"))
+        parts.append(star)
         return w.hbox(*parts, spacing=10)
+
+    @staticmethod
+    def _duration(seconds):
+        return t("ui.oyun_kayit.dk", n=round(seconds / 60)) if seconds >= 90 else t("ui.oyun_kayit.sn", n=seconds)
+
+    def _usage_lines(self, card, usage):
+        """Kaynak kullanımı (yalnızca kayıt açıkken alınmış oturumlarda). Uyarı penceresi yok: sakin satırlar."""
+        self._fps_lines(card, usage)
+        if usage.get("ornek", 0) < 2:
+            if not usage.get("fps"):  # yalnızca FPS alınan oturumda "kayıt yetersiz" denmez
+                card.lay.addWidget(w.label(t("ui.oyun_kayit.yetersiz"), muted=True, size=12))
+            return
+        card.lay.addWidget(w.label(t("ui.oyun_kayit.baslik", sure=self._duration(usage["sure"])), bold=True, size=12))
+        for key in ("cpu", "gpu", "ram", "disk"):
+            if usage.get(key):
+                card.lay.addWidget(w.label(t("ui.oyun_kayit.satir", ad=t(f"ui.oyun_kayit.{key}"), ort=usage[key]["ort"],
+                                             maks=usage[key]["maks"]), size=12))
+        for key in ("cpu", "ram"):
+            if usage.get(f"{key}_yuksek_sn", 0) >= 10:
+                card.lay.addWidget(w.label(t(f"ui.oyun_kayit.esik_{key}", sure=self._duration(usage[f"{key}_yuksek_sn"])),
+                                           muted=True, size=12))
+        if usage.get("arka_plan"):
+            card.lay.addWidget(w.label(t("ui.oyun_kayit.arka", liste=", ".join(f"{p['ad']} %{p['cpu']}" for p in usage["arka_plan"])),
+                                       muted=True, size=12, plain=True))
+
+    def _fps_lines(self, card, usage):
+        """Canlı FPS özeti ve düşüşler (yalnızca canlı FPS çalışmış oturumda). Sakin satırlar, uyarı penceresi yok."""
+        fps = usage.get("fps")
+        if not fps:
+            return
+        card.lay.addWidget(w.label(t("ui.canli_fps.ozet", min=round(fps["min"]), ort=round(fps["ort"]), maks=round(fps["maks"])),
+                                   bold=True, size=12))
+        drops = usage.get("fps_dususleri") or []
+        if not drops:
+            card.lay.addWidget(w.label(t("ui.canli_fps.dusus_yok"), muted=True, size=12))
+        for drop in drops[:5]:
+            card.lay.addWidget(w.label(t("ui.canli_fps.dusus_satir", dk=drop["sn"] // 60 + 1, sure=drop["sure_sn"],
+                                         onceki=drop["onceki_fps"], dusuk=drop["en_dusuk_fps"]), muted=True, size=12))
+        if len(drops) > 5:
+            card.lay.addWidget(w.label(t("ui.canli_fps.dusus_daha", n=len(drops) - 5), muted=True, size=12))
+
+    def _session_card(self, name, usage):
+        """Son oyun oturumu: kaynak kullanımı ve canlı FPS özeti (kayıt veya canlı FPS açıkken alınmış oturumlarda)."""
+        card = w.Card(spacing=4)
+        head = QLabel(t("ui.oyun_oturum.baslik", ad=name))
+        head.setObjectName("CardTitle")
+        card.lay.addWidget(head)
+        self._usage_lines(card, usage)
+        return card
 
     def _preset_row(self):
         """Görsel öncelik / Dengeli / Performans: profil taslağını doldurur, "Kaydet"e kadar uygulanmaz."""
-        now = presets.current(self.draft, self.topology, self._two_gpus())
+        now = presets.current(self.draft, self._two_gpus())
         group = QButtonGroup(self)
         buttons = []
         for key in presets.PRESETS:
@@ -356,6 +519,9 @@ class GamesPage(w.Page):
         state = {True: "var", False: "yok", None: "bilinmiyor"}[support]
         card.lay.addWidget(w.hbox(w.label(t("ui.oyun_ici.reflex_destek"), bold=True, wrap=False),
                                   w.badge(t(f"ui.oyun_ici.destek.{state}"), "iyi" if support else "notr"), None))
+        game_id = oyun_ayar.find(game["ad"])
+        if game_id:
+            card.lay.addWidget(self._file_section(game_id))
         for item in guides.ingame_items(i18n.current()):
             card.lay.addWidget(w.hbox((w.label(item["baslik"], bold=True), 1), w.badge(t(f"ui.oyun_ici.kanit.{item['kanit']}"),
                                                                                         "iyi" if item["kanit"] in ("belgeli", "olculmus") else "notr")))
@@ -364,8 +530,67 @@ class GamesPage(w.Page):
                 card.lay.addWidget(w.label(t("ui.oyun_ici.kaynak", kaynak=item["kaynak"]), muted=True, size=11))
         return card
 
+    def _file_section(self, game_id):
+        """Oyunun kendi ayar dosyası: sakla / geri yükle / sıfırla / geri al (app/games/oyun_ayar.py). Durum arka planda okunur."""
+        holder = QWidget()
+        lay = QVBoxLayout(holder)
+        lay.setContentsMargins(0, 4, 0, 4)
+        lay.setSpacing(4)
+        lay.addWidget(w.label(t("ui.oyun_ayar.baslik"), bold=True))
+        lay.addWidget(w.label(t("ui.oyun_ayar.aciklama"), muted=True, size=12))
+        lay.addWidget(w.label(t(f"ui.oyun_ayar.risk.{game_id}"), muted=True, size=12))
+        state = w.label(t("ui.oyun_ayar.okunuyor"), muted=True, size=12)
+        lay.addWidget(state)
+
+        def loaded(info):
+            try:
+                self._file_buttons(lay, state, game_id, info)
+            except RuntimeError:  # sayfa bu arada yeniden kuruldu, eski kart silindi
+                pass
+
+        self.app.worker.run(lambda: oyun_ayar.status(game_id), loaded, lambda _exc: None, serial=False)
+        return holder
+
+    def _file_buttons(self, lay, state, game_id, info):
+        copies = info["kopyalar"]
+        if info["calisiyor"]:
+            state.setText(t("ui.oyun_ayar.acik"))
+        elif not (info["var"] or copies or info["geri_al"]):
+            state.setText(t("ui.oyun_ayar.yok"))
+        else:
+            state.setText(t("ui.oyun_ayar.son_kopya", tarih=_when(copies[0]["tarih"])) if copies else t("ui.oyun_ayar.kopya_yok"))
+        actions = [("sakla", info["var"], None, None),
+                   ("geri_yukle", copies, copies and copies[0]["ad"], copies and _when(copies[0]["tarih"])),
+                   ("sifirla", info["sifirla"] and info["var"], None, None),
+                   ("geri_al", info["geri_al"], info["geri_al"], None)]
+        buttons = []
+        for kind, shown, arg, when in actions:
+            if shown:
+                button = w.button(t(f"ui.oyun_ayar.{kind}"), lambda _=False, k=kind, a=arg, d=when: self._file_action(game_id, k, a, d))
+                button.setEnabled(self.c.can_modify and not info["calisiyor"])
+                buttons.append(button)
+        if buttons:
+            lay.addWidget(w.flow(*buttons))
+
+    def _file_action(self, game_id, kind, arg, when):
+        if kind != "sakla" and not dialogs.ask_yes_no(self.app, t("ui.dikkat"), t(f"ui.oyun_ayar.soru.{kind}", tarih=when)):
+            return
+        func = {"sakla": lambda: oyun_ayar.save(game_id), "geri_yukle": lambda: oyun_ayar.restore(game_id, arg),
+                "sifirla": lambda: oyun_ayar.reset(game_id), "geri_al": lambda: oyun_ayar.undo(game_id, arg)}[kind]
+
+        def done(_result):
+            self.app.set_status(t(f"ui.oyun_ayar.tamam.{kind}"), "iyi")
+            QTimer.singleShot(0, self.data_reloaded)
+
+        def failed(exc):
+            open_ = isinstance(exc, RuntimeError) and str(exc) == "calisiyor"
+            self.app.set_status(t("ui.oyun_ayar.hata_acik" if open_ else "ui.oyun_ayar.hata"), "sorun")
+            QTimer.singleShot(0, self.data_reloaded)
+
+        self.app.worker.run(func, done, failed, serial=False)
+
     def _apply_preset(self, preset):
-        self.draft.update(presets.build(preset, self.topology, self._two_gpus()))
+        self.draft.update(presets.build(preset, self._two_gpus()))
         QTimer.singleShot(0, self.data_reloaded)
 
     def _two_gpus(self):
@@ -416,16 +641,53 @@ class GamesPage(w.Page):
         toggle.setText(t("ui.oyun_gelismis_gizle") if self.advanced_open else t("ui.oyun_gelismis_goster"))
         motion.expand(box, self.advanced_open)
 
-    def _advanced(self):
+    def _advanced(self, game):
+        """Katlanır bölüm: ayarlar, Kaydet, ölçüm/kayıt, oyun dosyası ve liste, rehberler. İlk bakışta kapalı."""
         box = QWidget()
         lay = QVBoxLayout(box)
         lay.setContentsMargins(0, 0, 0, 0)
         lay.setSpacing(8)
         lay.addWidget(w.label(t("ui.oyun_gelismis_aciklama"), muted=True, size=12))
+        lay.addWidget(w.section_title(t("ui.oyun_grp.ayar")))
+        lay.addWidget(self._preset_row())
+        lay.addWidget(self._switch_row("otomatik", t("ui.oyun_otomatik"), "otomatik", bold=True))
+        if not self.draft.get("otomatik", True):
+            lay.addWidget(w.label(t("ui.oyun_otomatik_kapali"), muted=True, size=12))
+        lay.addWidget(self._segment_row(t("ui.oyun_oncelik"), "oncelik", "oncelik", PRIORITIES,
+                                        lambda v: t(f"ui.oncelik.{v}")))
+        if self._dual_gpu():
+            lay.addWidget(self._segment_row(t("ui.oyun_gpu"), "gpu_tercihi", "gpu", GPU_PREFS,
+                                            lambda v: t(f"ui.gpu_tercihi.{v}")))
         lay.addWidget(self._switch_row("fso_kapali", t("ui.oyun_fso"), "fso", bold=False))
-        for key in ADVANCED_RUNTIME:
-            lay.addWidget(self._switch_row(key, t(f"ui.oyun_ayar.{key}"), key, bold=False))
-        lay.addWidget(w.label(t("ui.oyun_smt_bios"), muted=True, size=12))
+        save = w.button(t("ui.oyun_kaydet"), lambda: self._save(game), primary=True)
+        save.setEnabled(self.c.can_modify)
+        save.setMinimumHeight(36)
+        lay.addWidget(w.hbox((w.label(t("ui.oyun_kaydet_aciklama"), muted=True, size=12), 1), save))
+
+        measured = [x for x in (self._anti_cheat_fps_note(game), self._live_line(game),
+                                self._procs_card(game)) if x is not None]
+        summary = self.app.last_sessions.get(game["id"])
+        usage = (summary or {}).get("kaynak") or recorder.latest_for(game["id"])  # yeniden açıldıysa son kayıtlı oturum
+        if usage:
+            measured.append(self._session_card(game["ad"], usage))
+        if measured:
+            lay.addWidget(w.section_title(t("ui.oyun_grp.olcum")))
+            for widget in measured:
+                lay.addWidget(widget)
+
+        lay.addWidget(w.section_title(t("ui.oyun_grp.dosya")))
+        lay.addWidget(self._exe_row(game))
+        lay.addWidget(w.colored(t("ui.anti_cheat_oyun", liste=", ".join(game["anti_cheat"])), "uyari") if game.get("anti_cheat")
+                      else w.label(t("ui.anti_cheat_bulunamadi"), muted=True, size=12))
+        lay.addWidget(w.colored(t("ui.anti_cheat_genel"), "uyari"))
+        lay.addWidget(self._scan_status(len(self._remaining())))
+        lay.addWidget(w.hbox(w.button(t("ui.oyun_kaldir"), lambda: self._remove(game)), None))
+
+        lay.addWidget(w.section_title(t("ui.oyun_grp.rehber")))
+        lay.addWidget(self._guide_row(game))
+        useful = about_data()["faydali"]
+        if useful:
+            lay.addWidget(self._useful_card(useful))
         return box
 
     def _exe_row(self, game):
@@ -478,123 +740,9 @@ class GamesPage(w.Page):
             return None
         return value[0] if value else None
 
-    # ------------------------------------------------------------------ çekirdekler
-    def _cores_row(self):
-        topo = self.topology
-        widget = QWidget()
-        lay = QVBoxLayout(widget)
-        lay.setContentsMargins(0, 0, 0, 0)
-        lay.setSpacing(6)
-        available = ["tum"]
-        if topo["hibrit"]:
-            available.append("performans")
-        if topo["smt"]:
-            available.append("fiziksel")
-        if topo["vcache_l3"] is not None:
-            available.append("vcache")
-        available.append("ozel")
-        group = QButtonGroup(widget)
-        buttons = []
-        for preset in available:
-            button = w.button(t(f"ui.cekirdek.{preset}"), lambda _=False, p=preset: self._preset(p))
-            button.setCheckable(True)
-            button.setProperty("segment", True)
-            button.setMinimumHeight(34)
-            button.setChecked(self.draft["cekirdek_secimi"] == preset)
-            button.setEnabled(self.c.can_modify)
-            group.addButton(button)
-            buttons.append(button)
-        lay.addWidget(w.hbox(self._caption(t("ui.oyun_cekirdek"), "cekirdek"), (w.flow(*buttons), 1), spacing=12))
-        selected = set(self.draft.get("cekirdekler") or [])
-        if self.draft["cekirdek_secimi"] == "ozel":
-            tools = [("ui.cekirdek_tumu", self._grid_all), ("ui.cekirdek_hicbiri", self._grid_none)]
-            if topo["smt"]:
-                tools += [("ui.cekirdek_smt_acik", self._grid_smt_on), ("ui.cekirdek_smt_kapali", self._grid_smt_off)]
-            if len(topo["l3_gruplari"]) > 1:
-                tools.append(("ui.cekirdek_ccd1_kapat", self._grid_no_ccd1))
-            if topo["hibrit"]:
-                tools.append(("ui.cekirdek_e_kapat", self._grid_no_e))
-            lay.addWidget(w.flow(*[w.button(t(k), f) for k, f in tools]))
-            for index, group_info in enumerate(topo["l3_gruplari"]):
-                members = [c for c in topo["cpular"] if c["no"] in group_info["cpular"]]
-                kind = ""
-                if topo["hibrit"]:
-                    kind = " — " + (t("ui.cekirdek_p") if members and members[0]["p"] else t("ui.cekirdek_e"))
-                lay.addWidget(w.label(t("ui.cekirdek_grup", no=index, mb=group_info["boyut_mb"]) + kind,
-                                      bold=True, size=12))
-                grid_widget = QWidget()
-                grid = QGridLayout(grid_widget)
-                grid.setContentsMargins(0, 0, 0, 0)
-                for i, cpu in enumerate(members):
-                    box = QCheckBox(f"CPU {cpu['no']}")
-                    box.setChecked(cpu["no"] in selected)
-                    box.toggled.connect(lambda on, n=cpu["no"]: self._toggle_cpu(n, on))
-                    grid.addWidget(box, i // 8, i % 8)
-                lay.addWidget(grid_widget)
-            lay.addWidget(w.label(t("ui.cekirdek_secili", adet=len(selected), toplam=len(topo["cpular"])),
-                                  muted=True, size=12))
-        else:
-            numbers = cpu_topology.preset_ids(topo, self.draft["cekirdek_secimi"]) if topo["cpular"] else []
-            preview = w.label(t("ui.cekirdek_onizleme", liste=self._ranges(numbers)), muted=True, size=12)
-            preview.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-            lay.addWidget(preview)
-        return widget
-
-    @staticmethod
-    def _ranges(numbers):
-        numbers = sorted(numbers)
-        parts, start = [], None
-        for i, n in enumerate(numbers):
-            if start is None:
-                start = n
-            if i + 1 == len(numbers) or numbers[i + 1] != n + 1:
-                parts.append(f"{start}–{n}" if n != start else str(n))
-                start = None
-        return ", ".join(parts) or "—"
-
-    def _preset(self, preset):
-        self.draft["cekirdek_secimi"] = preset
-        if preset == "ozel" and not self.draft.get("cekirdekler"):
-            self.draft["cekirdekler"] = [c["no"] for c in self.topology["cpular"]]
-        QTimer.singleShot(0, self.data_reloaded)
-
-    def _set_cpus(self, numbers):
-        self.draft["cekirdekler"] = sorted(set(numbers))
-        QTimer.singleShot(0, self.data_reloaded)
-
-    def _toggle_cpu(self, number, on):
-        current = set(self.draft.get("cekirdekler") or [])
-        current.add(number) if on else current.discard(number)
-        self.draft["cekirdekler"] = sorted(current)
-
-    def _grid_all(self):
-        self._set_cpus([c["no"] for c in self.topology["cpular"]])
-
-    def _grid_none(self):
-        self._set_cpus([])
-
-    def _grid_smt_on(self):
-        cores = {c["cekirdek"] for c in self.topology["cpular"] if c["no"] in set(self.draft.get("cekirdekler") or [])}
-        self._set_cpus([c["no"] for c in self.topology["cpular"] if c["cekirdek"] in cores])
-
-    def _grid_smt_off(self):
-        selected = set(self.draft.get("cekirdekler") or [])
-        self._set_cpus([c["no"] for c in self.topology["cpular"] if c["no"] in selected and c["ilk_is_parcacigi"]])
-
-    def _grid_no_ccd1(self):
-        second = self.topology["l3_gruplari"][1]["cpular"]
-        self._set_cpus([n for n in (self.draft.get("cekirdekler") or []) if n not in second])
-
-    def _grid_no_e(self):
-        e_cores = {c["no"] for c in self.topology["cpular"] if not c["p"]}
-        self._set_cpus([n for n in (self.draft.get("cekirdekler") or []) if n not in e_cores])
-
     # ------------------------------------------------------------------ kaydet
     def _save(self, game):
         draft = dict(self.draft)
-        if draft["cekirdek_secimi"] == "ozel" and not draft.get("cekirdekler"):
-            dialogs.show_message(self.app, t("ui.dikkat"), t("ui.cekirdek_bos"), "uyari")
-            return
         if draft.get("otomatik", True) and draft["oncelik"] == "High" and \
                 not dialogs.ask_yes_no(self.app, t("ui.dikkat"), t("ui.oncelik_yuksek_onay")):
             return
@@ -605,7 +753,7 @@ class GamesPage(w.Page):
 
         def next_change():
             if not changes:
-                self.app.update_game_watcher()
+                self.app.update_game_detector()
                 self.app.set_status(t("ui.oyun_kaydedildi", ad=game["ad"]), "iyi")
                 self.draft = None
                 self.data_reloaded()

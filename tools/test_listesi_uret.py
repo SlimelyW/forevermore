@@ -126,7 +126,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
   - ☐ **Sistem Korumasını kapat** (sanal makinede) → bir ayar aç → "oluşturulamadı" sorusu çıkıyor.
     "Vazgeç" deyince hiçbir şey değişmiyor, "Yine de devam et" deyince değişiyor.
 - ☐ **Yedekler**
-  - ☐ `%LOCALAPPDATA%\\Forevermore\\backups\\yedekler.json` oluştu.
+  - ☐ `%ProgramData%\\Forevermore\\<SID>\\backups\\yedekler.json` oluştu.
   - ☐ `backups\\reg\\` klasöründe `.reg` dosyaları var.
 - ☐ **Geri alma**
   - ☐ Bir ayarı aç → "Eski haline getir" → değer tam olarak eskisine döndü (regedit ile bak).
@@ -258,7 +258,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 - ☐ **Durumu yeniden algıla:** Bir ayarı Windows Ayarları'ndan değiştir → düğmeye bas → uygulama yeni durumu gösteriyor.
 - ☐ **Geri yükleme noktası oluştur:** `rstrui`'de nokta görünüyor (veya "son 24 saatte var" mesajı).
 - ☐ **Dışa / içe aktar:** Dışa aktar → başka kullanıcıda/sanal makinede içe aktar → oyun profilleri geldi.
-- ☐ **Bilgi:** Sürüm ve "Discord: [kaldirildi]" görünüyor; "Kopyala" panoya kopyalıyor; başka bağlantı yok;
+- ☐ **Bilgi:** Sürüm görünüyor; "Kopyala" panoya kopyalıyor; başka bağlantı yok;
   "Üçüncü taraf lisansları" listeyi açıyor. `data/hakkinda.json`'a bir satır ekleyince yeni bağlantı görünüyor.
 
 ## 5h. Önce / Sonra ölçümü (Revizyon Faz 7)
@@ -359,10 +359,10 @@ dilini değiştirip oturumu kapat-aç yeterli):
   menülerinde oyun başına yapılan ayarlar (öncelik, GPU seçimi, çekirdek atama, bildirim) artık YOK ve
   "taşındı" yazan kart da yok. Bunlar Başlangıç ve servisler / Oyunlar menülerinde.
 - ☐ **Bilgi menüsü:** Kenar menüde Ekstra ayarlar'ın altında "Bilgi". En üstte büyük "Kubilay Paşa", altında
-  "Discord: [kaldirildi]" ve Kopyala düğmesi; sürüm, gizlilik notu, üçüncü taraf lisansları. Bağış bölümü yok.
+  Kopyala düğmesi; sürüm, gizlilik notu, üçüncü taraf lisansları. Bağış bölümü yok.
   Ekstra ayarlar'da artık bilgi bölümü yok.
 - ☐ **Bilgi dosyası:** `data\\hakkinda.json` içinde `satirlar` listesine yeni bir satır ekle (ör.
-  `{"etiket": "E-posta", "deger": "..."}`) → uygulamayı yeniden aç → Bilgi sayfasında görünüyor.
+  `{"etiket": "Not", "deger": "..."}`) → uygulamayı yeniden aç → Bilgi sayfasında görünüyor.
 - ☐ **Rapor:** Kaydedilen raporda her ekran kartının altında "Windows rolü: Yüksek performans / Güç
   tasarrufu" ve her ekranın altında "süren kart" satırı var.
 
@@ -584,7 +584,7 @@ UNCERTAIN = """
 | Ses biçim listesi | Kullanımda olan cihaz (ör. çalan Bluetooth kulaklık) yalnızca şu anki biçimi destekliyor gibi görünebilir. |
 | IFEO önceliği | `PerfOptions\\CpuPriorityClass` resmi olarak belgelenmemiş; değerler topluluk kaynağından. Vanguard/EAC'li oyunlarda uygulanıp uygulanmadığı bilinmiyor. |
 | Bildirim susturma | `PushNotifications\\ToastEnabled=0` anında etkili oluyor mu, yoksa Gezgin yeniden başlatılmalı mı? |
-| Oyun izleyici | Oyun başlatıcıdan açılınca (Steam/Riot) asıl oyun sürecini doğru yakalıyor mu? Aynı adlı başka exe'ler karışıyor mu? |
+| Oyun algılama (Canlı FPS, oyun kaydı) | Oyun başlatıcıdan açılınca (Steam/Riot) asıl oyun sürecini doğru yakalıyor mu? Aynı adlı başka exe'ler karışıyor mu? |
 | Tepside başlatma | Windows'la başlatmada uygulama tepsi alanı hazır olmadan açılırsa simge görünmeyebilir (Qt bunu genelde bekler, doğrulanmadı). |
 | PresentMon sürümü | `--v1_metrics` ile `MsBetweenPresents` sütunu okunuyor; PresentMon 2.x'in bu seçeneği desteklediği README'de yazıyor ama indirdiğin sürümle denenmedi. Ölçüm "yeterli kare yok" derse CSV'yi bana gönder. |
 | Açılış süresi (olay 100) | Bu bilgisayarda yönetici olmadan Diagnostics-Performance günlüğünde kayıt bulunamadı; yönetici olarak var mı bilinmiyor. |

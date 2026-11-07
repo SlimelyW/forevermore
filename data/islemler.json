@@ -899,7 +899,7 @@
             "etiket": "Kapalı"
           }
         ],
-        "onerilen": 1199655232
+        "onerilen": null
       },
       "uyumluluk": {
         "gpu": [
@@ -2188,7 +2188,8 @@
         "herhangi": [{"tur": "yerlesik", "kontrol": "defender_gercek_zamanli_kapali", "parametreler": {}}],
         "mesaj": "Windows Defender gerçek zamanlı koruması kapalı görünüyor. Başka bir antivirüs kullanmıyorsanız bilgisayarınız korumasız."
       },
-      "bilgi_nedeni": "Defender'ı tamamen kapatmak (servisler, ilkeler) uygulamadan yapılmaz. Yalnızca gerçek zamanlı koruma, Sistem menüsündeki Defender kartından uyarı ve onayla kapatılabilir."
+      "bilgi_nedeni": "Defender'ı tamamen kapatmak (servisler, ilkeler) uygulamadan yapılmaz. Yalnızca gerçek zamanlı koruma, Sistem menüsündeki Defender kartından uyarı ve onayla kapatılabilir.",
+      "ilgili": "SYS-017"
     },
     "PLC-021": {
       "tespit": {

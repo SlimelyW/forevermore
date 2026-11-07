@@ -25,7 +25,7 @@ def search(tweaks, pages, query, limit=MAX_RESULTS):
         if all(w in name for w in words):
             hits.append((0 if name.startswith(words[0]) else 1, "page", key, label, ""))
     for tw in tweaks:
-        tid, name, desc = fold(tw["id"]), fold(tw["ad"]), fold(tw.get("ne_ise_yarar", ""))
+        tid, name, desc = fold(tw["id"]), fold(f'{tw["ad"]} {tw.get("sade_ad", "")}'), fold(tw.get("ne_ise_yarar", ""))
         if not all(w in f"{tid} {name} {desc}" for w in words):
             continue
         first = words[0]
@@ -37,7 +37,7 @@ def search(tweaks, pages, query, limit=MAX_RESULTS):
             rank = 2
         else:
             rank = 3
-        hits.append((rank, "tweak", tw["id"], tw["ad"], f"{tw['id']} · {t('kategori.' + tw['kategori_id'])}"))
+        hits.append((rank, "tweak", tw["id"], tw.get("sade_ad") or tw["ad"], f"{tw['id']} · {t('kategori.' + tw['kategori_id'])}"))
     hits.sort(key=lambda h: h[0])
     return [h[1:] for h in hits[:limit]]
 

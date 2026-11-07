@@ -816,7 +816,7 @@ class AmdSettingCard(w.Card):
 
 
 class DriverToolsCard(w.Card):
-    """GPU-019: DDU ve NVCleanstall tools klasöründen açılır (yoksa resmi indirme sayfası). DDU'nun önerdiği
+    """GPU-019: resmi sürücü sayfası tarayıcıda açılır. DDU ve NVCleanstall tools klasöründen açılır (yoksa resmi indirme sayfası). DDU'nun önerdiği
     Güvenli Mod iki ayrı uyarıdan sonra açılır ve geri alınabilir (bcdedit safeboot)."""
 
     def __init__(self, app, tweak):
@@ -834,6 +834,13 @@ class DriverToolsCard(w.Card):
 
     def refresh(self):
         w.clear_layout(self.rows_lay)
+        hw = ((self.c.scan or {}).get("bolumler") or {}).get("donanim") or {}
+        pages = driver_tools.driver_pages(hw.get("gpu") or [])
+        for vendor, url in pages:
+            self.rows_lay.addWidget(w.hbox((w.label(t("ui.surucu_sayfa.ad", uretici=vendor), wrap=False), 1),
+                                           w.button(t("ui.surucu_sayfa.ac"), lambda _=False, u=url: self._open(u))))
+        if pages and (hw.get("bilgisayar") or {}).get("tur") == "laptop":
+            self.rows_lay.addWidget(w.label(t("ui.surucu_sayfa.dizustu"), muted=True, size=12))
         for tool in driver_tools.TOOLS:
             self.rows_lay.addWidget(self._tool_row(tool))
         self.rows_lay.addWidget(self._safe_mode_row())

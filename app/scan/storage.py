@@ -11,6 +11,8 @@ import time
 
 from app.core import powershell, registry
 
+MEDIA_TUR = {"3": "HDD", "4": "SSD", "HDD": "HDD", "SSD": "SSD"}  # Get-PhysicalDisk MediaType -> tür
+
 _STORAGE_PS = r"""
 $pd = @(Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, @{n='Media';e={[string]$_.MediaType}}, @{n='Bus';e={[string]$_.BusType}}, Size, @{n='Health';e={[string]$_.HealthStatus}})
 $rel = @()
@@ -95,7 +97,7 @@ def collect_storage():
         rel = reliability.get(d.get("DeviceId"), {})
         disks.append({
             "ad": d.get("FriendlyName"),
-            "tur": {"3": "HDD", "4": "SSD", "HDD": "HDD", "SSD": "SSD"}.get(str(d.get("Media")), "bilinmiyor"),
+            "tur": MEDIA_TUR.get(str(d.get("Media")), "bilinmiyor"),
             "baglanti": d.get("Bus"),
             "boyut_gb": round((d.get("Size") or 0) / 1000 ** 3),
             "saglik": d.get("Health"),

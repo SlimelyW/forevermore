@@ -80,7 +80,7 @@
     "anti_cheat_uyarisi": "Rekabetçi oyunlarda anti-cheat sistemleri (Vanguard, EAC, BattlEye, FACEIT, VAC) sürücü imza zorlamasını kapatan, oyun DLL'ine enjekte eden veya oyun sürecini değiştiren araçları engelleyebilir ya da ban sebebi sayabilir.",
     "donusum": {
       "uretici": "tools/convert_tweaks.py",
-      "tarih": "2026-11-04",
+      "tarih": "2026-11-08",
       "kaynak": "tweaks.json + data/islemler.json",
       "uyari": "Bu dosya otomatik üretilir. Elle düzenlemeyin; tweaks.json veya data/islemler.json'u değiştirip betiği yeniden çalıştırın."
     }
@@ -668,7 +668,8 @@
           "tur": "ms-settings",
           "hedef": "ms-settings:display-advancedgraphics"
         }
-      }
+      },
+      "sade_ad": "Değişken yenileme hızı (G-SYNC / FreeSync)"
     },
     {
       "id": "DISP-003",
@@ -873,7 +874,8 @@
         "kontrol": "Oyun başına: Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'  (exe yolunda 'DISABLEDXMAXIMIZEDWINDOWEDMODE' bayrağı). Genel: Get-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' | Select-Object GameDVR_FSEBehaviorMode, GameDVR_HonorUserFSEBehaviorMode",
         "geri_alma": "Uyumluluk kutucuğunu kaldır veya Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers' -Name '<C:\\yol\\oyun.exe>'. Genel değerler için GameDVR_FSEBehaviorMode=0 ve GameDVR_HonorUserFSEBehaviorMode=0.",
         "ac": null
-      }
+      },
+      "sade_ad": "Tam ekran iyileştirmelerini kapatma"
     },
     {
       "id": "DISP-005",
@@ -973,7 +975,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode -ErrorAction SilentlyContinue",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode",
         "ac": null
-      }
+      },
+      "sade_ad": "Ekran katmanı birleştirmeyi (MPO) kapatma"
     },
     {
       "id": "DISP-006",
@@ -1213,7 +1216,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > Masaüstü boyutunu ve konumunu ayarla > Ölçeklendirmeyi şurada gerçekleştir: GPU/Ekran. AMD: Adrenalin > Ekran > GPU Ölçekleme.",
         "geri_alma": "Önceki seçeneğe dön.",
         "ac": null
-      }
+      },
+      "sade_ad": "Görüntü ölçekleme: ekran kartı mı, monitör mü"
     },
     {
       "id": "DISP-009",
@@ -2003,7 +2007,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground -ErrorAction SilentlyContinue",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground",
         "ac": null
-      }
+      },
+      "sade_ad": "Arka planda çalışan Store uygulamaları"
     },
     {
       "id": "SYS-008",
@@ -2096,7 +2101,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled",
         "geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled -Value 1",
         "ac": null
-      }
+      },
+      "sade_ad": "Hızlı Başlatma"
     },
     {
       "id": "SYS-009",
@@ -3085,7 +3091,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters,DisableEmoticon -ErrorAction SilentlyContinue",
         "geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 0; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 0",
         "ac": null
-      }
+      },
+      "sade_ad": "Mavi ekranda ayrıntı gösterme"
     },
     {
       "id": "SYS-020",
@@ -3491,7 +3498,8 @@
           "hedef": "ms-settings:gaming-gamedvr",
           "dogrulanmadi": true
         }
-      }
+      },
+      "sade_ad": "Arka planda oyun kaydını kapatma"
     },
     {
       "id": "PERF-003",
@@ -3591,7 +3599,8 @@
         "kontrol": "Get-CimInstance -Namespace root\\Microsoft\\Windows\\DeviceGuard -ClassName Win32_DeviceGuard | Select-Object VirtualizationBasedSecurityStatus, SecurityServicesRunning  (SecurityServicesRunning içinde 2 = HVCI çalışıyor). Kayıt: HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity Enabled",
         "geri_alma": "Aynı menüden Açık veya Enabled=1, ardından yeniden başlat.",
         "ac": null
-      }
+      },
+      "sade_ad": "Çekirdek yalıtımı (Bellek Bütünlüğü)"
     },
     {
       "id": "PERF-004",
@@ -3710,7 +3719,8 @@
         "kontrol": "Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Hyper-V-All | Select-Object FeatureName, State; bcdedit /enum '{current}' | Select-String hypervisorlaunchtype",
         "geri_alma": "Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform; Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All",
         "ac": null
-      }
+      },
+      "sade_ad": "Sanallaştırma özelliklerini kapatma (Hyper-V)"
     },
     {
       "id": "PERF-005",
@@ -4209,7 +4219,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff -ErrorAction SilentlyContinue",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff",
         "ac": null
-      }
+      },
+      "sade_ad": "Güç tasarrufu kısmasını kapatma"
     },
     {
       "id": "PERF-009",
@@ -4303,7 +4314,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation",
         "geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation -Value 2",
         "ac": null
-      }
+      },
+      "sade_ad": "Ön plandaki programa verilen zaman payı"
     },
     {
       "id": "PERF-010",
@@ -4382,7 +4394,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<oyun.exe>\\PerfOptions' -ErrorAction SilentlyContinue",
         "geri_alma": "Remove-Item -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<oyun.exe>\\PerfOptions' -Recurse",
         "ac": null
-      }
+      },
+      "sade_ad": "Oyuna kalıcı yüksek işlemci önceliği"
     },
     {
       "id": "PERF-011",
@@ -4460,7 +4473,8 @@
         "kontrol": "Her uygulamanın kendi ayarı: Discord > Ayarlar > Oyun Katmanı; Steam > Ayarlar > Oyun İçi; NVIDIA App > Ayarlar > Oyun içi katman.",
         "geri_alma": "Aynı ayarlardan aç.",
         "ac": null
-      }
+      },
+      "sade_ad": "Oyun içi bindirmeleri kapatma"
     },
     {
       "id": "GPU-001",
@@ -4557,7 +4571,8 @@
           "tur": "ms-settings",
           "hedef": "ms-settings:display-advancedgraphics"
         }
-      }
+      },
+      "sade_ad": "Ekran kartı zamanlamasını karta bırakma (HAGS)"
     },
     {
       "id": "GPU-002",
@@ -5048,7 +5063,7 @@
             "etiket": "Kapalı"
           }
         ],
-        "onerilen": 1199655232
+        "onerilen": null
       },
       "liste_yoneticisi": "nvidia",
       "rehber": {
@@ -5061,7 +5076,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > G-SYNC'i ayarla; 3D ayarlarını yönet > Dikey senkronizasyon ve Maksimum kare hızı.",
         "geri_alma": "Ayarları önceki durumuna getir.",
         "ac": null
-      }
+      },
+      "sade_ad": "G-SYNC, V-Sync ve FPS sınırı birlikte"
     },
     {
       "id": "GPU-007",
@@ -5174,7 +5190,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > 3D ayarlarını yönet > Maksimum kare hızı.",
         "geri_alma": "Kapalı.",
         "ac": null
-      }
+      },
+      "sade_ad": "Sürücüden FPS sınırı koyma"
     },
     {
       "id": "GPU-008",
@@ -5443,7 +5460,8 @@
         "kontrol": "Oyun içi grafik ayarları > NVIDIA Reflex Low Latency.",
         "geri_alma": "Kapalı.",
         "ac": null
-      }
+      },
+      "sade_ad": "NVIDIA Reflex (düşük gecikme)"
     },
     {
       "id": "GPU-011",
@@ -5606,7 +5624,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > 3D ayarlarını yönet > DSR - Faktörler; Görüntü Ölçekleme.",
         "geri_alma": "Kapalı.",
         "ac": null
-      }
+      },
+      "sade_ad": "Görüntüyü büyük çözünürlükten küçültme (DLDSR)"
     },
     {
       "id": "GPU-013",
@@ -5874,7 +5893,8 @@
         "kontrol": "AMD Software: Adrenalin > Oyun > Grafik.",
         "geri_alma": "Kapalı.",
         "ac": null
-      }
+      },
+      "sade_ad": "AMD kare üretimi ve Boost"
     },
     {
       "id": "GPU-016",
@@ -5973,7 +5993,8 @@
         "kontrol": "Get-ChildItem 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}' -ErrorAction SilentlyContinue | ForEach-Object { Get-ItemProperty $_.PSPath -Name EnableUlps -ErrorAction SilentlyContinue } | Select-Object PSChildName, EnableUlps",
         "geri_alma": "EnableUlps değerini 1 yap.",
         "ac": null
-      }
+      },
+      "sade_ad": "AMD kartın derin güç tasarrufu uykusunu kapatma"
     },
     {
       "id": "GPU-017",
@@ -6053,7 +6074,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > Sistem Bilgileri > Resizable BAR: Evet/Hayır. AMD Adrenalin > Performans > Donanım > Smart Access Memory. GPU-Z de gösterir.",
         "geri_alma": "BIOS'ta Re-Size BAR'ı kapat.",
         "ac": null
-      }
+      },
+      "sade_ad": "Ekran kartının belleğe tam erişimi (Resizable BAR)"
     },
     {
       "id": "GPU-018",
@@ -6132,7 +6154,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\PCI\\<cihaz-id>\\<örnek>\\Device Parameters\\Interrupt Management\\MessageSignaledInterruptProperties' -Name MSISupported -ErrorAction SilentlyContinue. Cihaz Yöneticisi > Görünüm > Bağlantıya göre kaynaklar > IRQ değeri negatifse MSI kullanılıyordur.",
         "geri_alma": "MSISupported=0 veya değeri sil; yeniden başlat. Açılmazsa Güvenli Mod'dan geri al.",
         "ac": null
-      }
+      },
+      "sade_ad": "Ekran kartı kesme biçimi (MSI)"
     },
     {
       "id": "GPU-019",
@@ -6316,7 +6339,8 @@
         "kontrol": "NVIDIA Kontrol Paneli > G-SYNC'i ayarla > 'Tam ekran modu için etkinleştir' / 'Pencere ve tam ekran modu için etkinleştir'.",
         "geri_alma": "Yalnızca tam ekran (sürücü varsayılanı).",
         "ac": null
-      }
+      },
+      "sade_ad": "G-SYNC çalışma kapsamı"
     },
     {
       "id": "GPU-021",
@@ -6609,7 +6633,8 @@
         "kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR CPMINCORES  (gizliyse önce: powercfg -attributes SUB_PROCESSOR CPMINCORES -ATTRIB_HIDE)",
         "geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES <önceki değer, Dengeli planda genelde 5-10>; powercfg /setactive SCHEME_CURRENT  (veya: powercfg -restoredefaultschemes — TÜM özel planları siler)",
         "ac": null
-      }
+      },
+      "sade_ad": "İşlemci çekirdeklerini uyutmayı kapatma"
     },
     {
       "id": "CPU-002",
@@ -6698,7 +6723,8 @@
         "kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN",
         "geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5; powercfg /setactive SCHEME_CURRENT  (Dengeli plan varsayılanı genelde %5)",
         "ac": null
-      }
+      },
+      "sade_ad": "İşlemcinin en düşük hızını yükseltme"
     },
     {
       "id": "CPU-003",
@@ -6789,7 +6815,8 @@
         "kontrol": "powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE -ATTRIB_HIDE; powercfg /query SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE",
         "geri_alma": "Önceki değere dön (genelde 2) ve powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE +ATTRIB_HIDE",
         "ac": null
-      }
+      },
+      "sade_ad": "İşlemci hız artırma (turbo) modu"
     },
     {
       "id": "CPU-004",
@@ -7155,7 +7182,8 @@
         "kontrol": "Get-CimInstance Win32_Processor | Select-Object NumberOfCores, NumberOfLogicalProcessors  (eşitse SMT kapalı)",
         "geri_alma": "BIOS'ta Enabled.",
         "ac": null
-      }
+      },
+      "sade_ad": "Hyper-Threading / SMT kapatma"
     },
     {
       "id": "CPU-008",
@@ -7236,7 +7264,8 @@
         "kontrol": "BIOS > CPU güç yönetimi > C-States / Global C-state Control. Windows'tan dolaylı: powercfg /energy raporu.",
         "geri_alma": "BIOS'ta Auto/Enabled.",
         "ac": null
-      }
+      },
+      "sade_ad": "İşlemci uyku durumlarını kapatma (BIOS)"
     },
     {
       "id": "CPU-009",
@@ -7408,7 +7437,8 @@
         "kontrol": "Görev Yöneticisi > Ayrıntılar > süreç > Benzeşimi ayarla; Get-Process <ad> | Select-Object ProcessorAffinity",
         "geri_alma": "Kuralı sil; tüm çekirdekleri seç.",
         "ac": null
-      }
+      },
+      "sade_ad": "Programları belirli çekirdeklere bağlama"
     },
     {
       "id": "PWR-001",
@@ -7701,7 +7731,8 @@
         "kontrol": "powercfg /query SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
         "geri_alma": "Değeri 1 yap ve planı yeniden etkinleştir.",
         "ac": null
-      }
+      },
+      "sade_ad": "USB güç tasarrufunu kapatma"
     },
     {
       "id": "PWR-004",
@@ -7789,7 +7820,8 @@
         "kontrol": "powercfg /query SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5",
         "geri_alma": "Önceki değere (Dengeli'de genelde 1 veya 2) dön.",
         "ac": null
-      }
+      },
+      "sade_ad": "PCI Express güç tasarrufu"
     },
     {
       "id": "PWR-005",
@@ -8469,7 +8501,8 @@
         "kontrol": "Bufferbloat testi (ör. Waveform Bufferbloat Test): yük altında gecikme artışı ölçülür.",
         "geri_alma": "SQM/QoS'u kapat.",
         "ac": null
-      }
+      },
+      "sade_ad": "Yönlendiricide gecikme kontrolü (bufferbloat)"
     },
     {
       "id": "NET-005",
@@ -8673,7 +8706,8 @@
         "kontrol": "Get-NetAdapter | Select-Object Name, InterfaceGuid; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' | Select-Object TcpAckFrequency, TCPNoDelay",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' -Name TcpAckFrequency, TCPNoDelay",
         "ac": null
-      }
+      },
+      "sade_ad": "Ağ paketi birleştirmeyi (Nagle) kapatma"
     },
     {
       "id": "NET-007",
@@ -8881,7 +8915,8 @@
         "kontrol": "Get-NetAdapterAdvancedProperty -Name '<Ethernet>' | Where-Object DisplayName -match 'Energy|Green|EEE|Enerji'",
         "geri_alma": "Aynı özelliği 'Enabled' yap.",
         "ac": null
-      }
+      },
+      "sade_ad": "Ethernet güç tasarrufunu kapatma"
     },
     {
       "id": "NET-009",
@@ -8987,7 +9022,8 @@
         "kontrol": "Get-NetAdapterRss -Name '<Ethernet>'; netsh int tcp show global; Get-NetAdapterLso -Name '<Ethernet>'",
         "geri_alma": "Reset-NetAdapterAdvancedProperty -Name '<Ethernet>' -DisplayName '*'",
         "ac": null
-      }
+      },
+      "sade_ad": "Ağ kartı yük dağıtımı (RSS / offload)"
     },
     {
       "id": "INP-001",
@@ -9190,7 +9226,8 @@
           "tur": "program",
           "hedef": "main.cpl"
         }
-      }
+      },
+      "sade_ad": "Fare ivmesini kapatma"
     },
     {
       "id": "INP-003",
@@ -9294,7 +9331,8 @@
           "tur": "ms-settings",
           "hedef": "ms-settings:mousetouchpad"
         }
-      }
+      },
+      "sade_ad": "Fare hızını 1:1 yapma"
     },
     {
       "id": "INP-004",
@@ -9924,7 +9962,8 @@
       "bilgi": {
         "neden": "Bazı eski farelerde çalıştığı topluluk ölçümleriyle gösterilmiştir; güvenlik ve uyumluluk maliyeti yüksektir.",
         "yapilamaz_nedeni": "Ayrı ve imzasız bir sürücü kurmayı gerektirir; bu uygulama üçüncü parti sürücü kurmaz."
-      }
+      },
+      "sade_ad": "USB fare tarama hızını artırma (hidusbf)"
     },
     {
       "id": "AUD-001",
@@ -10035,7 +10074,8 @@
           "tur": "denetim_masasi",
           "hedef": "mmsys.cpl"
         }
-      }
+      },
+      "sade_ad": "Ses efektlerini kapatma"
     },
     {
       "id": "AUD-002",
@@ -10297,7 +10337,8 @@
           "tur": "denetim_masasi",
           "hedef": "mmsys.cpl"
         }
-      }
+      },
+      "sade_ad": "Aramada sesin kısılmasını kapatma"
     },
     {
       "id": "AUD-005",
@@ -10618,7 +10659,8 @@
         "kontrol": "LatencyMon'u 10+ dakika oyun/ses yükü altında çalıştır; 'Drivers' sekmesinde en yüksek DPC/ISR süresine sahip sürücüyü bul.",
         "geri_alma": "Sürücüyü önceki sürüme döndür.",
         "ac": null
-      }
+      },
+      "sade_ad": "Ses çıtırtısı ve takılma teşhisi (DPC)"
     },
     {
       "id": "AUD-009",
@@ -10697,7 +10739,8 @@
           "hedef": "printers",
           "dogrulanmadi": true
         }
-      }
+      },
+      "sade_ad": "Bluetooth kulaklıkta mikrofon (Eller Serbest) modunu kapatma"
     },
     {
       "id": "QOL-001",
@@ -11895,7 +11938,8 @@
           }
         ],
         "mesaj": "Bu bilgisayarda 'useplatformclock' önyükleme ayarı tanımlı. Bu ayar çoğu modern sistemde gecikmeyi artırır."
-      }
+      },
+      "sade_ad": "Sistem saati ayarını değiştirme (HPET)"
     },
     {
       "id": "PLC-004",
@@ -12023,7 +12067,8 @@
           }
         ],
         "mesaj": "Bu bilgisayarda internette yaygın olan önyükleme (bcdedit) ayarlarından biri uygulanmış."
-      }
+      },
+      "sade_ad": "Zamanlayıcı davranışını değiştirme"
     },
     {
       "id": "PLC-005",
@@ -12375,7 +12420,8 @@
           }
         ],
         "mesaj": "LargeSystemCache veya DisablePagingExecutive değiştirilmiş (daha önce bir 'tweak' uygulanmış olabilir)."
-      }
+      },
+      "sade_ad": "Windows'un bellek önbelleği ayarları"
     },
     {
       "id": "PLC-008",
@@ -12654,7 +12700,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness",
         "geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness -Value 20",
         "ac": null
-      }
+      },
+      "sade_ad": "Arka plan işlerine ayrılan işlemci payını sıfırlama"
     },
     {
       "id": "PLC-011",
@@ -12743,7 +12790,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex",
         "geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex -Value 10",
         "ac": null
-      }
+      },
+      "sade_ad": "Ağ trafiği sınırlamasını kaldırma"
     },
     {
       "id": "PLC-012",
@@ -12843,7 +12891,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games'",
         "geri_alma": "Varsayılan değerler: GPU Priority=8, Priority=2, Scheduling Category='Medium', SFIO Priority='Normal'",
         "ac": null
-      }
+      },
+      "sade_ad": "Oyun görev önceliği ayarı"
     },
     {
       "id": "PLC-013",
@@ -12932,7 +12981,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit -ErrorAction SilentlyContinue",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit",
         "ac": null
-      }
+      },
+      "sade_ad": "'Ağın %20'si ayrılıyor' ayarı"
     },
     {
       "id": "PLC-014",
@@ -13256,7 +13306,8 @@
           }
         ],
         "mesaj": "TCP alma penceresi otomatik ayarı kapatılmış. Bu, indirme hızını ciddi düşürebilir."
-      }
+      },
+      "sade_ad": "Ağ veri alma penceresi otomatik ayarını kapatma"
     },
     {
       "id": "PLC-017",
@@ -13574,7 +13625,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' | Select-Object IRQ8Priority, IRQ16Priority",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name IRQ8Priority, IRQ16Priority",
         "ac": null
-      }
+      },
+      "sade_ad": "Donanım kesme önceliği değerleri"
     },
     {
       "id": "PLC-020",
@@ -13645,6 +13697,7 @@
         "uygulama": "Yapma. Bunun yerine: oyun klasörü dışlamaları (SYS-013) ve büyük kurulumlar sırasında geçici gerçek zamanlı koruma kapatma (Windows kendisi bir süre sonra geri açar).",
         "geri_alma": "Windows Güvenliği > Virüs ve tehdit koruması > Gerçek zamanlı koruma: Açık; Kurcalama Koruması: Açık."
       },
+      "ilgili": "SYS-017",
       "bilgi": {
         "neden": "Oyun içi kazanç ölçüm hatası düzeyinde; güvenlik maliyeti çok yüksek.",
         "yapilamaz_nedeni": "Defender'ı tamamen kapatmak (servisler, ilkeler) uygulamadan yapılmaz. Yalnızca gerçek zamanlı koruma, Sistem menüsündeki Defender kartından uyarı ve onayla kapatılabilir."
@@ -14992,7 +15045,8 @@
         "kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
         "geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
         "ac": null
-      }
+      },
+      "sade_ad": "Ağ paketi ömrünü (TTL) değiştirme"
     }
   ]
 }

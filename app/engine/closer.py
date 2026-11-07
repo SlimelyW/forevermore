@@ -86,6 +86,8 @@ def pids_of(name, ops):
 
 def close_gently(name, ops=None, timeout=6.0, poll=0.25):
     """"korumali" | "yok" | "kapandi" | "calisiyor" (pencere yok veya kullanıcı kapatmadı; zorla kapatma ayrı onay ister)."""
+    # Discord gibi "kapatınca tepsiye küçül" programlarda kapat isteği pencereyi yalnızca gizler, süreç kalır (tepsideyse
+    # görünür pencere de yoktur): sonuç "calisiyor" olur ve arayüz zorla sonlandırmayı ayrıca sorar (docs/BOOST_DISCORD.md).
     if is_protected(name):
         return "korumali"
     ops = ops or WindowsOps()

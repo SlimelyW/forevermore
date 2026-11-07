@@ -55,6 +55,52 @@ class TestBrowserExtensions(unittest.TestCase):
                 self.assertEqual(browser_ext.collect(), [])
 
 
+class TestManageLaunch(unittest.TestCase):
+    """'Tarayıcıda kaldır': yalnızca yönetim sayfasını açan komut; hiçbir şey silinmez/yazılmaz."""
+    ID = "a" * 32
+
+    def test_chrome_and_edge_open_extension_page_in_its_profile(self):
+        self.assertEqual(browser_ext.manage_launch("Chrome", "Profile 2", self.ID),
+                         ("chrome.exe", f'--profile-directory="Profile 2" chrome://extensions/?id={self.ID}'))
+        self.assertEqual(browser_ext.manage_launch("Edge", "Default", self.ID),
+                         ("msedge.exe", f'--profile-directory="Default" edge://extensions/?id={self.ID}'))
+
+    def test_firefox_opens_general_addons_page(self):
+        self.assertEqual(browser_ext.manage_launch("Firefox", "default-release", "u@x"), ("firefox.exe", "about:addons"))
+
+    def test_other_browsers_and_bad_ids_give_no_command(self):
+        self.assertIsNone(browser_ext.manage_launch("Brave", "Default", self.ID))
+        self.assertIsNone(browser_ext.manage_launch("Chrome", "Default", "abc"))
+        self.assertIsNone(browser_ext.manage_launch("Chrome", "Default", self.ID[:-1] + '" --x'))
+        self.assertEqual(browser_ext.manage_launch("Chrome", 'x" --y', self.ID)[1], f"chrome://extensions/?id={self.ID}")  # bozuk profil adı eklenmez
+
+    def test_button_opens_page_only_and_failure_is_a_quiet_status_line(self):
+        import os
+        import types
+        from PySide6.QtWidgets import QApplication, QPushButton
+        from app.core import i18n
+        from app.ui import page_details
+        i18n.load("tr")
+        app = QApplication.instance() or QApplication([])  # noqa: F841
+        status = []
+        page = types.SimpleNamespace(app=types.SimpleNamespace(set_status=lambda text, tone: status.append((text, tone))))
+        group = {"tarayici": "Chrome", "profil": "Default"}
+        ext = {"id": self.ID, "ad": "Reklam Engel", "etkin": True, "tum_siteler": True}
+        row = page_details.PcDetailsPage._extension_row(page, group, ext)
+        button = row.findChild(QPushButton)
+        self.assertIsNotNone(button)
+        page._open_manage = lambda *a: page_details.PcDetailsPage._open_manage(page, *a)
+        with mock.patch.object(os, "startfile") as start:
+            button.click()
+        start.assert_called_once_with("chrome.exe", arguments=f'--profile-directory="Default" chrome://extensions/?id={self.ID}')
+        self.assertEqual(status, [])
+        with mock.patch.object(os, "startfile", side_effect=OSError):
+            button.click()
+        self.assertEqual(len(status), 1)  # tarayıcı açılamadı: pencere yok, tek satır
+        brave = page_details.PcDetailsPage._extension_row(page, {"tarayici": "Brave", "profil": "Default"}, ext)
+        self.assertEqual(brave.findChildren(QPushButton), [])  # Brave/Vivaldi/Opera: düğme yok
+
+
 class TestPlainLabel(unittest.TestCase):
     def test_third_party_text_is_not_rendered_as_html(self):
         from PySide6.QtCore import Qt

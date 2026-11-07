@@ -64,8 +64,8 @@ class TestScrub(unittest.TestCase):
 
 
 class TestNoNetwork(unittest.TestCase):
-    """Uygulama kodu internete bağlanmamalı. Tek istisna: uygulama güncellemesi (guncelleme.py; varsayılan kapalı,
-    veri göndermez)."""
+    """Uygulama kodu internete bağlanmamalı. Tek istisna: uygulama güncellemesi (guncelleme.py; kullanıcı ilk soruda
+    "evet" demedikçe bağlanmaz, veri göndermez)."""
 
     FORBIDDEN = re.compile(r"^\s*(?:import|from)\s+(socket|urllib|http|requests|ftplib|smtplib|httpx|aiohttp)\b", re.M)
     ALLOWED = {"app/core/guncelleme.py"}
@@ -85,9 +85,9 @@ class TestNoNetwork(unittest.TestCase):
         self.assertIn('API_URL = f"https://api.github.com/repos/{REPO}/releases/latest"', text)
         self.assertEqual(set(re.findall(r"https?://([^/\s\"'{]+)", text)), {"api.github.com", "github.com"})
 
-    def test_update_is_off_by_default(self):
+    def test_update_never_connects_before_the_user_chose(self):
         from app.core import settings
-        self.assertFalse(settings.DEFAULTS["guncelleme_denetle"])
+        self.assertIsNone(settings.DEFAULTS["guncelleme_denetle"])  # None = sorulmadı; yalnızca True bağlanır
 
 
 if __name__ == "__main__":

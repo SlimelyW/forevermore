@@ -47,15 +47,9 @@ class TestTexts(unittest.TestCase):
         expected += [f"ui.baslangic_turu.{k}" for k in ("Automatic", "AutomaticDelayed", "Manual", "Disabled")]
         expected += [f"ui.servis_kilit{s}.{k}" for s in ("", "_neden") for k in ("kritik", "anti_cheat")]
         expected += ["ui.msi_sutun", "ui.cihaz_guc_sutun"]
-        from app.games.profiles import RUNTIME_KEYS
-        expected += [f"ui.oyun_ayar.{k}" for k in RUNTIME_KEYS]
-        expected += [f"ui.oyun_kisa.{k}" for k in ("cekirdekler", "servis") + RUNTIME_KEYS
-                     if k not in ("pencereyi_kucult", "servisleri_duraklat", "windows_search_durdur")]
-        expected += [f"ui.cekirdek.{k}" for k in ("tum", "performans", "fiziksel", "vcache", "ozel")]
         expected += [f"ui.oncelik.{k}" for k in ("Normal", "AboveNormal", "High")]
         expected += [f"ui.gpu_tercihi.{k}" for k in ("varsayilan", "guc_tasarrufu", "yuksek_performans")]
         expected += [f"oyun.degisiklik.{k}" for k in ("oncelik", "gpu", "fso")]
-        expected += ["ui.oyun_kisa.servis"]
         from app.measure import METRICS
         expected += [f"olcum.{kind}.{m}" for kind in ("metrik", "kisa") for m in METRICS]
         expected += [f"olcum.etiket.{k}" for k in ("once", "sonra", "diger")]

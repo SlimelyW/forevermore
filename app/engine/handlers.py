@@ -658,6 +658,8 @@ def write_value(sys, step, value, snap=None):
         _builtin_set(sys, step, value, snap)
     elif step["tur"] == "servis":
         sys.set_service(step["ad"], value["baslangic"], value.get("calisiyor"))
+    elif step["tur"] == "registry_anahtar":  # value: "acik" (oluştur) / "kapali" (sil)
+        _key_apply(sys, step, value, snap)
     else:
         _reg_write_value(sys, step, value)
 
