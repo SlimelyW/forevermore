@@ -41,8 +41,9 @@ class MeasurementStore:
     def __init__(self, path=None):
         self.path = path or (paths.user_data_dir() / "olcumler.json")
         try:
-            self.items = json.loads(self.path.read_text(encoding="utf-8")).get("olcumler", [])
-        except (OSError, ValueError):
+            items = json.loads(self.path.read_text(encoding="utf-8")).get("olcumler", [])
+            self.items = [m for m in items if isinstance(m, dict)]
+        except (OSError, ValueError, AttributeError, TypeError):  # null / [] / bozuk şekil: boş liste
             self.items = []
 
     def save(self):

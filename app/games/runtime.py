@@ -1,12 +1,12 @@
-"""Oyun süreçleri: "oyun açık mı" algılayıcısı ve eski oyun oturumu günlüğünün geri alınması.
+"""Oyun süreçleri: "oyun açık mı" algılayıcısı ve oyun-sırası seçenekleri (GameSession).
 
 Oyun izleyici (oyun açılınca ayar uygulayıp kapanınca geri alan GameWatcher) 7 Kasım 2026'da KALDIRILDI
-(docs/KARAR_GUNLUGU.md). Kalan:
-- GameDetector: yalnızca Canlı FPS veya oyun oturumu kaydı açıkken, 2 saniyede bir süreç listesine bakar
-  (CreateToolhelp32Snapshot; çok hafif) ve listedeki oyunun açılıp kapandığını haber verir. HİÇBİR ayar uygulamaz.
-  Anti-cheat süreçleri (profiles.PROTECTED_EXES) oyun sayılmaz.
-- GameSession.recover: eski sürümde oyun sırasında kapanan uygulamanın bıraktığı günlüğü (oyun_oturumu.json)
-  açılışta ve kaldırırken geri alır (servisler, Steam önceliği, güç planı, bildirimler).
+(docs/KARAR_GUNLUGU.md). Bu dosyada ARKA PLANDA KENDİLİĞİNDEN ayar uygulayan bir şey yoktur:
+- GameDetector: yalnızca Canlı FPS / oyun oturumu kaydı açıkken ya da "Hazırla"dan sonra oyun kapanana kadar,
+  2 saniyede bir süreç listesine bakar (CreateToolhelp32Snapshot; çok hafif) ve oyunun açılıp kapandığını haber verir.
+  HİÇBİR ayar uygulamaz. Anti-cheat süreçleri (profiles.PROTECTED_EXES) oyun sayılmaz.
+- GameSession: oyun-sırası seçenekleri YALNIZCA kullanıcı düğmeye basınca uygulanır (start), oyun kapanınca ya da "Geri al"
+  ile geri alınır (stop); uygulama çökerse artakalanı açılışta recover geri alır.
 """
 
 import ctypes
@@ -16,13 +16,21 @@ import threading
 from ctypes import wintypes
 
 from app.core import log, paths
+from app.core.i18n import t
+from app.games import discovery, profiles
 from app.games.profiles import PROTECTED_EXES
 
 _log = log.get("games")
 
 PAUSE_SERVICES = ("SysMain", "DiagTrack", "MapsBroker", "WerSvc")
 SEARCH_SERVICE = "WSearch"
-TOAST_KEY = r"Software\Microsoft\Windows\CurrentVersion\PushNotifications"
+TOAST_KEY = r"Software\Microsoft\Windows\CurrentVersion\PushNotifications"  # eski sürümün anahtarı (yalnızca geri alma)
+DND_KEY = r"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings"
+DND_VALUE = "NOC_GLOBAL_SETTING_TOASTS_ENABLED"  # Windows 11 Rahatsız etme düğmesi (0 = açık); gerçek PC'de DENENMEDİ
+HIGH_PERFORMANCE_PLAN = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+STEAM_HELPERS = ("steamwebhelper.exe",)
+MOTOR_IDS = ("oyunsirasi-rahatsiz", "oyunsirasi-guc",
+             *(f"oyunsirasi-servis-{name}" for name in (*PAUSE_SERVICES, SEARCH_SERVICE)))
 BELOW_NORMAL_PRIORITY_CLASS = 0x4000
 NORMAL_PRIORITY_CLASS = 0x20
 JOURNAL_PRIORITIES = (None, 0, NORMAL_PRIORITY_CLASS, BELOW_NORMAL_PRIORITY_CLASS, 0x40, 0x80, 0x8000)  # gerçek zamanlı yok
@@ -85,6 +93,13 @@ class ProcessOps:
         finally:
             self.k.CloseHandle(handle)
 
+    def get_priority(self, pid):
+        handle = self._open(pid, self.QUERY_LIMITED)
+        try:
+            return self.k.GetPriorityClass(ctypes.c_void_p(handle))
+        finally:
+            self.k.CloseHandle(handle)
+
     def set_priority(self, pid, priority_class):
         handle = self._open(pid, self.SET_INFORMATION | self.QUERY_LIMITED)
         try:
@@ -96,31 +111,150 @@ class ProcessOps:
 
 
 def journal_ok(journal):
-    """Günlük kullanıcının yazabildiği klasörde: yalnızca start()'ın yazabileceği değerler kabul edilir."""
+    """Günlük kullanıcının yazabildiği klasörde: yalnızca uygulamanın yazabileceği değerler kabul edilir."""
     if not isinstance(journal, dict):
         return False
-    services, steam, plan, toast = (journal.get(k) for k in ("servisler", "steam", "guc_plani", "bildirim"))
+    services, steam, plan, toast, motor = (journal.get(k) for k in ("servisler", "steam", "guc_plani", "bildirim", "motor"))
     return (isinstance(services or [], list) and all(name in (*PAUSE_SERVICES, SEARCH_SERVICE) for name in services or [])
             and (plan is None or re.fullmatch(r"[0-9a-fA-F-]{36}", str(plan)) is not None)
             and (toast is None or (isinstance(toast, dict) and {"var", "deger"} <= toast.keys()))
+            and isinstance(motor or [], list) and all(cid in MOTOR_IDS for cid in motor or [])
             and isinstance(steam or [], list)
             and all(isinstance(e, list) and len(e) == 2 and isinstance(e[0], int) and e[1] in JOURNAL_PRIORITIES for e in steam or []))
 
 
-class GameSession:
-    """Eski sürümün oyun-sırası ayar günlüğünü geri alır (yeni ayar UYGULAMAZ)."""
+def _reg_step(root, path, name, kind):
+    return {"tur": "registry", "kok": root, "yol": path, "ad": name, "veri_turu": kind,
+            "acik": None, "kapali": None, "yoksa": None}
 
-    def __init__(self, system, ops, journal_path=None):
-        self.system, self.ops = system, ops
+
+class GameSession:
+    """Oyun-sırası seçenekleri: yalnızca kullanıcı "Hazırla" / "Oyunu başlat"a basınca `start`, oyun kapanınca ya da "Geri al"
+    ile `stop`. Arka planda kendi başına çalışan hiçbir şey yoktur.
+
+    Kayıt defteri, güç planı ve servis değişiklikleri MOTORDAN geçer (`engine.apply_custom`: yedek, Değişiklikler, geri
+    alma); süreç işlemleri (Steam yardımcı önceliği) yalnızca günlüğe yazılır. Her değişiklikten ÖNCE günlük
+    (oyun_oturumu.json) yazılır: uygulama oyun sırasında çökerse sonraki açılışta `recover` hepsini geri alır.
+    Eski sürümün günlük alanları (servisler, guc_plani, bildirim) da geri alınır."""
+
+    def __init__(self, system, ops, journal_path=None, engine=None):
+        self.system, self.ops, self.engine = system, ops, engine
         self.journal_path = journal_path or (paths.user_data_dir() / "oyun_oturumu.json")
         self.journal = None
 
+    @property
+    def active(self):
+        """Geri alınacak bir şey var mı (hazırlanmış oturum)."""
+        return self.journal is not None
+
+    def _save(self):
+        paths.atomic_write(self.journal_path, json.dumps(self.journal, ensure_ascii=False))
+
+    def _apply(self, change_id, name, step, value):
+        self.journal["motor"].append(change_id)
+        self._save()  # önce günlük: değişiklik yarım kalsa da geri alınır
+        result = self.engine.apply_custom(change_id, name, [step], [value], confirmed=True)
+        if not result.ok:
+            self.journal["motor"].remove(change_id)
+            self._save()
+            raise RuntimeError(result.key)
+
+    def start(self, game):
+        """Oyunda AÇIK ve izin verilen seçenekleri uygular; [(anahtar, başarılı, açıklama)] döner. Açıklama: "" /
+        "zaten" (değişiklik gerekmedi) / "indiriyor" (Steam indirmesi sürüyor) / hata metni."""
+        if self.engine is None:
+            raise RuntimeError("motor yok")
+        if self.journal is not None:
+            self.stop()
+        elif self.journal_path.exists():
+            self.recover()
+        if self.journal is not None or self.journal_path.exists():
+            return [("onceki_oturum", False, "geri alinamadi")]
+        keys = profiles.runtime_selected(game)  # anti-cheat süzgeci burada da: arayüze güvenilmez
+        results = []
+        self.journal = {"oyun": game["id"], "ad": game["ad"], "motor": [], "steam": []}
+
+        def attempt(key, func):
+            try:
+                results.append((key, True, func() or ""))
+            except Exception as exc:
+                _log.warning("Oyun-sırası seçeneği uygulanamadı (%s, %s): %s", game["ad"], key, exc)
+                results.append((key, False, str(exc)))
+
+        def dnd():
+            current = self.system.read_reg("HKCU", DND_KEY, DND_VALUE)
+            if current and current[0] == 0:
+                return "zaten"
+            self._apply("oyunsirasi-rahatsiz", t("oyun.degisiklik.rahatsiz", ad=game["ad"]),
+                        _reg_step("HKCU", DND_KEY, DND_VALUE, "REG_DWORD"), 0)
+
+        def plan():
+            if self.system.get_active_scheme().lower() == HIGH_PERFORMANCE_PLAN:
+                return "zaten"
+            self._apply("oyunsirasi-guc", t("oyun.degisiklik.guc", ad=game["ad"]),
+                        {"tur": "guc_plani", "acik": HIGH_PERFORMANCE_PLAN, "kapali": HIGH_PERFORMANCE_PLAN},
+                        HIGH_PERFORMANCE_PLAN)
+
+        def services(names):
+            def run():
+                stopped = 0
+                for name in names:
+                    info = self.system.get_service(name)
+                    if info and info["calisiyor"]:
+                        self._apply(f"oyunsirasi-servis-{name}", t("oyun.degisiklik.servis", ad=game["ad"], servis=name),
+                                    {"tur": "servis", "ad": name}, {"baslangic": info["baslangic"], "calisiyor": False})
+                        stopped += 1
+                return "" if stopped else "zaten"
+            return run
+
+        def helper_priority():
+            for pid, exe in self.ops.list_processes():
+                if exe in STEAM_HELPERS:
+                    previous = self.ops.get_priority(pid)
+                    self.journal["steam"].append([pid, previous])
+                    self._save()
+                    self.ops.set_priority(pid, BELOW_NORMAL_PRIORITY_CLASS)
+
+        def steam_warning():
+            return "indiriyor" if discovery.steam_downloading() else "zaten"
+
+        if "hazirla_rahatsiz_etme" in keys:
+            attempt("hazirla_rahatsiz_etme", dnd)
+        if "hazirla_guc_plani" in keys:
+            attempt("hazirla_guc_plani", plan)
+        if "hazirla_servisler" in keys:
+            attempt("hazirla_servisler", services(PAUSE_SERVICES))
+        if "hazirla_search" in keys:
+            attempt("hazirla_search", services((SEARCH_SERVICE,)))
+        if "hazirla_steam_oncelik" in keys:
+            attempt("hazirla_steam_oncelik", helper_priority)
+        if "hazirla_steam_uyari" in keys:
+            attempt("hazirla_steam_uyari", steam_warning)
+        if not (self.journal["motor"] or self.journal["steam"]):  # geri alınacak bir şey yok
+            self.journal = None
+            try:
+                self.journal_path.unlink()
+            except OSError:
+                pass
+        return results
+
     def stop(self):
-        """Günlükteki her şeyi geri alır."""
+        """Günlükteki her şeyi geri alır. Biri geri alınamazsa günlük kalır; `recover` sonraki açılışta yeniden dener."""
         journal = self.journal
         if journal is None:
             return
         failed = False
+        for change_id in journal.get("motor") or []:
+            try:
+                if self.engine is None:
+                    raise RuntimeError("motor yok")
+                if self.engine.store.has(change_id):
+                    result = self.engine.revert(change_id, confirmed=True)
+                    if not result.ok:
+                        raise RuntimeError(result.key)
+            except Exception as exc:
+                failed = True
+                _log.warning("Oyun-sırası değişikliği geri alınamadı (%s): %s", change_id, exc)
         for name in journal.get("servisler") or []:
             try:
                 info = self.system.get_service(name)
@@ -128,7 +262,14 @@ class GameSession:
             except Exception as exc:
                 failed = True
                 _log.warning("Servis yeniden başlatılamadı (%s): %s", name, exc)
-        for helper_pid, previous in journal.get("steam") or []:
+        steam = journal.get("steam") or []
+        try:  # PID yeniden başlatmadan sonra başka sürece geçmiş olabilir: yalnızca hâlâ Steam yardımcısıysa (Denetim A B4)
+            helpers = {pid for pid, exe in self.ops.list_processes() if exe in STEAM_HELPERS} if steam else set()
+        except Exception:
+            helpers = set()
+        for helper_pid, previous in steam:
+            if helper_pid not in helpers:
+                continue  # Steam kapanmış ya da PID başka sürecin
             try:
                 self.ops.set_priority(helper_pid, previous or NORMAL_PRIORITY_CLASS)
             except Exception:
@@ -151,15 +292,18 @@ class GameSession:
                 _log.warning("Bildirim ayarı geri alınamadı: %s", exc)
         self.journal = None
         if failed:
-            return  # günlük dosyası kalır: recover() sonraki açılışta yeniden dener
+            return  # günlük dosyası kalır
         try:
             self.journal_path.unlink()
         except OSError:
             pass
 
-    def recover(self):
-        """Önceki oturumdan kalan günlük varsa (uygulama oyun sırasında kapanmış): geri al."""
+    def recover(self, before=None):
+        """Önceki oturumdan kalan günlük varsa (uygulama oyun sırasında kapanmış): geri al. before (time.time() değeri) verilirse
+        yalnızca o andan ÖNCE yazılmış günlük geri alınır; sonradan başlayan oturuma (kullanıcının yeni "Hazırla"sı) dokunulmaz."""
         try:
+            if before is not None and self.journal_path.stat().st_mtime > before:
+                return False
             self.journal = json.loads(self.journal_path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return False

@@ -70,8 +70,9 @@ def load():
         _cache = dict(DEFAULTS)
         try:
             stored = json.loads(_path().read_text(encoding="utf-8"))
-            _cache.update({k: v for k, v in stored.items() if k in DEFAULTS})
-        except (OSError, ValueError):
+            if isinstance(stored, dict):  # null / [] / metin: varsayılanlar (Denetim A B6)
+                _cache.update({k: v for k, v in stored.items() if k in DEFAULTS})
+        except (OSError, ValueError, AttributeError):
             pass
     return _cache
 

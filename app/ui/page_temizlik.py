@@ -32,6 +32,7 @@ class CleanerPage(w.Page):
     def __init__(self, app):
         super().__init__(app)
         self.found = None   # None: taranıyor
+        self.error = False  # tarama başarısız oldu: "temizlenecek bir şey yok" denmez
         self.checks = {}
         self.olcum = None   # haftalık ölçüm görevi: None okunuyor
         self.moves = []     # "Son taşımalar": bu sayfanın taşıdıkları, yeni önce (en çok MAX_MOVES)
@@ -51,10 +52,13 @@ class CleanerPage(w.Page):
         self.data_reloaded()
 
     def refresh(self):
-        self.found = None
-        self.app.worker.run(lambda: (cleaners.scan(), _list_moves()), self._loaded, lambda _exc: self._loaded(([], [])),
-                            serial=False)
+        self.found, self.error = None, False
+        self.app.worker.run(lambda: (cleaners.scan(), _list_moves()), self._loaded, self._failed, serial=False)
         self.data_reloaded()
+
+    def _failed(self, _exc):
+        self.error = True
+        self._loaded(([], []))
 
     def _loaded(self, result):
         self.found, self.moves = result
@@ -72,7 +76,9 @@ class CleanerPage(w.Page):
             for card in self.bakim.widgets():  # bakım araçları temizlik taramasını beklemez
                 self.body.addWidget(card)
             return
-        if not any(i["adet"] for i in self.found):
+        if self.error:
+            self.body.addWidget(w.colored(t("ui.liste_okunamadi"), "sorun"))
+        elif not any(i["adet"] for i in self.found):
             self.body.addWidget(w.label(t("ui.temizlik.bos"), muted=True))
         else:
             self.body.addWidget(w.label(t("ui.temizlik.toplam", mb=_mb(sum(i["boyut"] for i in self.found))), bold=True))

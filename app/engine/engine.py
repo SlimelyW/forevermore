@@ -314,8 +314,13 @@ class Engine:
             return Result(False, key, params)
 
         warnings, explorer = self._post_actions(tweak["islem"].get("sonrasinda", []))
-        after = [handlers.state(s, handlers.snapshot(self.system, s)) for s in steps]
-        if any(state not in (which, "yok") for state in after):
+        try:  # ayar yazıldı ve yedeği var: doğrulama okuması hata verse de sonuç "uygulandı" (Denetim A B3)
+            after = [handlers.state(s, handlers.snapshot(self.system, s)) for s in steps]
+            verified = all(state in (which, "yok") for state in after)
+        except Exception as exc:
+            _log.warning("Doğrulama okuması başarısız (%s): %s", tweak["id"], exc)
+            verified = False
+        if not verified:
             warnings.append(("uyari.dogrulanamadi", {}))
         self.store.history(action, tweak["id"], True)
         return Result(True, "sonuc.uygulandi" if on else "sonuc.kapatildi",
@@ -345,7 +350,7 @@ class Engine:
             created = self._backup(tweak, steps, snaps)
             for (field_id, step), snap in zip(pairs, snaps):
                 written.append((step, snap))
-                handlers.write_value(self.system, step, str(values[field_id]))
+                handlers.write_value(self.system, step, str(values[field_id]), snap)
             self._stamp(tweak, steps, snaps)
         except Exception as exc:
             key, params = friendly(exc)

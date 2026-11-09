@@ -15,6 +15,7 @@ Icons, Windows 10: Segoe MDL2 Assets). Uygulamaya dosya gömülmez.
 """
 
 import os
+import zlib
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QFont, QFontDatabase, QGuiApplication
@@ -23,20 +24,25 @@ from app.core import i18n, settings
 
 DARK = {
     "bg": "#0f1420", "side": "#0b101a", "card": "#171e2e", "card_hover": "#1e2739", "border": "#263046",
-    "text": "#e9eef8", "muted": "#8d98b0", "accent": "#2fd3a1", "accent_hover": "#52e0b5",
+    "text": "#e9eef8", "muted": "#a3aec6", "accent": "#2fd3a1", "accent_hover": "#52e0b5",
     "accent_soft": "#133a33", "input": "#1c2538", "highlight": "#17423a", "track_off": "#33405a",
     "knob": "#ffffff", "on_accent": "#06281e", "edge": "#35405a", "purple": "#8b7cff", "purple_wash": "#211f45",
 }
 LIGHT = {
     "bg": "#f4f6f9", "side": "#e9edf3", "card": "#ffffff", "card_hover": "#f3f6fa", "border": "#dde3ec",
-    "text": "#141a26", "muted": "#566177", "accent": "#0b7a5a", "accent_hover": "#0e8f6a",
+    "text": "#141a26", "muted": "#48546b", "accent": "#0b7a5a", "accent_hover": "#0e8f6a",
     "accent_soft": "#dcf3ea", "input": "#edf1f6", "highlight": "#cdebdf", "track_off": "#c3cad6",
     "knob": "#ffffff", "on_accent": "#ffffff", "edge": "#ffffff", "purple": "#6a5af0", "purple_wash": "#e8e5fb",
 }
-# İki temada da okunan anlam renkleri (rozet, şerit, bulgu çizgisi)
+# Anlam renkleri. TONES: rozet/şerit zemini ve açık temada yazı (beyaz yazı ve açık zemin üstünde ≥ 4,5:1, 8 Kasım 2026'da
+# ölçüldü: docs/TASARIM_ESASLARI.md §10). TONES_BRIGHT: grafik çizgileri ve koyu temada yazı (koyu zeminde ≥ 4,6:1).
 TONES = {
-    "sorun": "#e5484d", "uyari": "#e09a2b", "bilgi": "#4c8dff", "iyi": "#2fb26d",
-    "notr": "#6e7180", "mor": "#8b6cf0", "turkuaz": "#26a69a",
+    "sorun": "#d41e24", "uyari": "#926215", "bilgi": "#005cfe", "iyi": "#207a4a",
+    "notr": "#696c7b", "mor": "#714ced", "turkuaz": "#1c7870",
+}
+TONES_BRIGHT = {
+    "sorun": "#e96569", "uyari": "#e09a2b", "bilgi": "#4c8dff", "iyi": "#2fb26d",
+    "notr": "#8c8f9c", "mor": "#987cf2", "turkuaz": "#26a69a",
 }
 IMPACT_TONE = {"yüksek": "iyi", "orta": "turkuaz", "düşük": "notr", "çok düşük": "notr",
                "yok": "notr", "belirsiz": "mor", "durumsal": "mor"}
@@ -47,10 +53,10 @@ REALITY_TONE = {"gerçek": "iyi", "kısmen gerçek": "turkuaz", "durumsal": "mor
 # Kategori ve menü renkleri (simge kutuları ve kenar menü simgeleri)
 CATEGORY_COLORS = {
     "DISP": "#4c8dff", "SYS": "#8e93a8", "PERF": "#ff8a3d", "GPU": "#3ccb7f", "CPU": "#45b7e8",
-    "PWR": "#f2c230", "NET": "#26b5a8", "INP": "#b07cff", "AUD": "#ff6fae", "QOL": "#7b6cff",
+    "PWR": "#f2c230", "NET": "#26b5a8", "INP": "#b07cff", "AUD": "#ff6fae", "QOL": "#7b6cff", "EXP": "#d4a45a", "SND": "#ff6fae",
     "PLC": "#8a8a96", "oyunlar": "#f0565b", "ozet": "#7b6cff", "pc_detay": "#45b7e8",
     "profiller": "#7b6cff", "baslangic": "#8e93a8", "degisiklikler": "#8e93a8", "rapor": "#8e93a8",
-    "olcum": "#26b5a8", "boost": "#ff8a3d", "kaldirici": "#e5566d", "temizlik": "#3fb6e0", "ayarlar": "#8e93a8", "bilgi": "#7b6cff", "elle": "#e09a2b", "lisans": "#f2c230",
+    "olcum": "#26b5a8", "boost": "#ff8a3d", "kaldirici": "#e5566d", "temizlik": "#3fb6e0", "ayarlar": "#8e93a8", "araclar": "#8e93a8", "bilgi": "#7b6cff", "elle": "#e09a2b", "rehber": "#45b7e8", "lisans": "#f2c230",
 }
 
 # Simge kod noktaları (Segoe Fluent Icons / MDL2 Assets)
@@ -63,7 +69,7 @@ ICONS = {
     "save": "", "chevron": "",
 }
 
-ICONS.update(edit="\ue70f", klavye="\ue765", elle="\ue70f", lisans="\ue8d7", boost=ICONS["PERF"], kaldirici="\ue74d", temizlik="\ue74c")  # düzenle (kalem), klavye
+ICONS.update(EXP="", SND="", optimizasyonlar="\ue9e9", ozellestirmeler="\ue771", edit="\ue70f", klavye="\ue765", elle="\ue70f", rehber="\ue82d", lisans="\ue8d7", boost=ICONS["PERF"], kaldirici="\ue74d", temizlik="\ue74c")  # düzenle (kalem), klavye
 
 TITLE_SIZE, SECTION_SIZE, BODY_SIZE, SMALL_SIZE = 24, 16, 13, 12
 # Tek ölçü sistemi (docs/TASARIM_ESASLARI.md §13): boşluk 4'ün katları, köşe yarıçapı üç basamak.
@@ -71,12 +77,34 @@ TITLE_SIZE, SECTION_SIZE, BODY_SIZE, SMALL_SIZE = 24, 16, 13, 12
 SPACE = (4, 8, 12, 16, 24, 32)
 RADIUS = {"sm": 6, "md": 8, "lg": 12}
 
+# Kapaksız oyun kartının harfi: renk oyun adından SABİT seçilir (açılışlar arası değişmez). Zemin = kart rengine %12
+# karışım. Hepsi iki temada da ≥ 4,5:1 (tests/test_oyun_kapak.py ölçer). Exe simgesi her iki temada aynı koyu zeminde.
+LETTER_TONES_DARK = ("#ec777b", "#e09a2b", "#619bff", "#2fb26d", "#a48cf4", "#26a69a", "#ff6fae", "#45b7e8")
+LETTER_TONES_LIGHT = ("#b3171c", "#80560f", "#0049c9", "#1a6a3f", "#5a37c4", "#17625b", "#a02060", "#0b6a94")
+LETTER_WASH = 0.12
+ICON_GROUND = "#1a2234"
+
 _icon_family = None
 
 
 def category_color(key):
     """Kategori/menü simgelerinin rengi (tek renk fazla cansız bulundu: Ekim 2026 geri bildirimi)."""
     return CATEGORY_COLORS.get(key, palette()["accent"])
+
+
+def mix(top, bottom, amount):
+    """`top` rengini `bottom` üstüne `amount` (0-1) oranında karıştırır -> "#rrggbb"."""
+    a, b = QColor(top), QColor(bottom)
+    return "#%02x%02x%02x" % tuple(round(y + (x - y) * amount) for x, y in
+                                   ((a.red(), b.red()), (a.green(), b.green()), (a.blue(), b.blue())))
+
+
+def letter_style(name, dark=None, card=None):
+    """Oyun adına göre (harf rengi, zemin rengi). Aynı ad her zaman aynı rengi verir (crc32; Python'un tuzlu hash'i değil)."""
+    dark = is_dark() if dark is None else dark
+    tones = LETTER_TONES_DARK if dark else LETTER_TONES_LIGHT
+    tone = tones[zlib.crc32((name or "").strip().casefold().encode("utf-8")) % len(tones)]
+    return tone, mix(tone, card or palette()["card"], LETTER_WASH)
 
 
 def soft(color, alpha=40):
@@ -155,10 +183,11 @@ def palette():
 def stylesheet(p=None):
     p = p or palette()
     r = RADIUS
+    fg = TONES_BRIGHT if is_dark() else TONES  # yazı rengi: koyu zeminde açık ton, açık zeminde koyu ton
     tones = "\n".join(
         f'QLabel[tone="{name}"] {{ background: {color}; color: white; border-radius: {r['sm']}px; padding: 1px 7px; }}\n'
         f'QFrame[stripe="{name}"] {{ background: {color}; border-radius: 2px; }}\n'
-        f'QLabel[fg="{name}"] {{ color: {color}; }}\n'
+        f'QLabel[fg="{name}"] {{ color: {fg[name]}; }}\n'
         f'QFrame[banner="{name}"] {{ background: {color}; border-radius: {r['lg']}px; }}'
         for name, color in TONES.items()
     )
@@ -166,22 +195,31 @@ def stylesheet(p=None):
     QWidget {{ color: {p['text']}; }}
     QMainWindow, QDialog, #Root {{ background: {p['bg']}; }}
     QScrollArea, #PageBody {{ background: transparent; border: none; }}
-    #Sidebar {{ background: {p['side']}; }}
-    #Brand {{ font-size: 23px; font-weight: 700; }}
+    #TopStrip {{ background: {p['side']}; }}
+    #Brand {{ font-size: 18px; font-weight: 700; }}
     #BrandSub {{ color: {p['muted']}; font-size: 11px; }}
     #NavItem {{ border-radius: {r['md']}px; }}
     #NavItem[selected="true"] {{ background: {p['accent_soft']}; }}
     #NavMarker {{ background: transparent; border-radius: 2px; }}
     #NavItem[selected="true"] #NavMarker {{ background: {p['accent']}; }}
+    #NavBar, #NavStrip, #NavPanel {{ background: {p['card']}; border: 1px solid {p['border']}; border-top-color: {p['edge']}; border-radius: {r['lg']}px; }}
+    #NavText {{ font-size: 11px; }}
+    #NavItem[selected="true"] #NavText {{ color: {p['accent']}; }}
     #NavCount {{ background: {p['input']}; color: {p['muted']}; border-radius: 8px; padding: 0 6px; font-size: 11px; }}
     #NavGroup {{ color: {p['muted']}; font-size: 10px; font-weight: 700; padding: 0 0 2px 6px; }}
-    #NavMore {{ color: {p['muted']}; font-size: 12px; padding: 4px 0 0 36px; }}
-    #NavMore:hover {{ color: {p['accent']}; }}
-    #DonateBtn {{ margin: 6px 10px 12px 10px; padding: 9px 12px; background: {p['accent_soft']}; color: {p['accent']}; border: 1px solid {p['accent']}; border-radius: {r['md']}px; font-weight: 600; }}
-    #DonateBtn:hover {{ background: {p['accent']}; color: {p['bg']}; }}
+    #NavChev {{ color: {p['muted']}; }}
+    #NavFold[hot="true"] #NavGroup, #NavFold[hot="true"] #NavChev {{ color: {p['accent']}; }}
+    #AddCard {{ background: transparent; color: {p['muted']}; border: 2px dashed {p['muted']}; border-radius: {r['lg']}px; }}
+    #AddCard:hover {{ color: {p['accent']}; border-color: {p['accent']}; }}
+    #AddCard:focus {{ border-color: {p['purple']}; }}
+    #DonateBtn {{ margin: 0; padding: 6px 4px; background: transparent; color: {p['muted']}; border: none; text-align: left; text-decoration: underline; }}
+    #DonateBtn:hover {{ background: transparent; color: {p['accent']}; border: none; }}
+    #DonateBtn:focus {{ background: transparent; border: 1px solid {p['purple']}; border-radius: {r['md']}px; }}
     #Card {{ background: {p['card']}; border: 1px solid {p['border']}; border-top-color: {p['edge']}; border-radius: {r['lg']}px; }}
     #List {{ background: {p['card']}; border: 1px solid {p['border']}; border-top-color: {p['edge']}; border-radius: {r['lg']}px; }}
+    #List[flat="true"] {{ background: transparent; border: none; border-radius: 0; }}
     #Card[inlist="true"] {{ background: transparent; border: none; border-radius: {r['md']}px; }}
+    #Card[tile="true"] {{ background: {p['card']}; border: 1px solid {p['border']}; border-radius: {r['lg']}px; }}
     #Divider {{ background: {p['border']}; margin: 0 16px; }}
     #Skeleton {{ background: {p['input']}; border-radius: {r['md']}px; }}
     #Card[highlight="true"] {{ background: {p['highlight']}; }}
@@ -232,19 +270,19 @@ def stylesheet(p=None):
                       font-family: Consolas; font-size: 12px; }}
     QProgressBar {{ background: {p['input']}; border: none; border-radius: 4px; max-height: 8px; }}
     QProgressBar::chunk {{ background: {p['accent']}; border-radius: 4px; }}
-    #Sidebar QLineEdit {{ background: {p['card']}; border: 1px solid {p['border']}; border-radius: {r['md']}px; padding: 6px 8px; }}
-    #Sidebar QLineEdit:focus {{ border-color: {p['purple']}; }}
-    #Sidebar QListWidget {{ background: {p['card']}; border: 1px solid {p['border']}; border-radius: {r['md']}px; outline: 0; }}
-    #Sidebar QListWidget::item {{ padding: 4px 6px; }}
-    #Sidebar QListWidget::item:selected, #Sidebar QListWidget::item:hover {{ background: {p['card_hover']}; }}
+    #TopStrip QLineEdit {{ background: {p['card']}; border: 1px solid {p['border']}; border-radius: {r['md']}px; padding: 6px 8px; }}
+    #TopStrip QLineEdit:focus {{ border-color: {p['purple']}; }}
+    #SearchResults {{ background: {p['card']}; border: 1px solid {p['border']}; border-radius: {r['md']}px; outline: 0; }}
+    #SearchResults::item {{ padding: 4px 6px; }}
+    #SearchResults::item:selected, #SearchResults::item:hover {{ background: {p['card_hover']}; }}
     QScrollBar:vertical {{ background: transparent; width: 10px; margin: 2px; }}
     QScrollBar::handle:vertical {{ background: {p['border']}; border-radius: 4px; min-height: 30px; }}
     QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; }}
     QSlider::groove:horizontal {{ height: 4px; background: {p['input']}; border-radius: 2px; }}
     QSlider::handle:horizontal {{ background: {p['accent']}; width: 14px; margin: -6px 0; border-radius: 7px; }}
     #StatusBar {{ color: {p['muted']}; padding: 4px 16px; }}
-    #StatusBar[fg="iyi"] {{ color: {TONES['iyi']}; }}
-    #StatusBar[fg="sorun"] {{ color: {TONES['sorun']}; }}
+    #StatusBar[fg="iyi"] {{ color: {fg['iyi']}; }}
+    #StatusBar[fg="sorun"] {{ color: {fg['sorun']}; }}
     {tones}
     QFrame[banner] QLabel {{ color: white; background: transparent; }}
     """

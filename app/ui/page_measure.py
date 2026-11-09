@@ -28,6 +28,12 @@ def _fmt(metric, value):
     return f"{text} {unit}".strip()
 
 
+def anti_cheat_game(games, exe):
+    """Seçilen exe, anti-cheat'li kayıtlı bir oyunsa True (kayıtsız süreçlerde bilgi yok: False)."""
+    name = (exe or "").lower()
+    return any(g.get("anti_cheat") and os.path.basename(g.get("exe") or "").lower() == name for g in games)
+
+
 def report_text(before, after):
     """Karşılaştırma raporu (düz metin)."""
     lines = [t("olcum.rapor_baslik"), "=" * 40,
@@ -230,12 +236,22 @@ class MeasurePage(w.Page):
                 return
             self.choice = name
             self.game_seconds = seconds.currentData()
-            check = driver_tools.verify(exe)
+            if anti_cheat_game(self.app.game_store.games, name):  # canlı FPS'i kapattıran aynı ETW yöntemi
+                self.app.set_status(t("ui.canli_fps.oyunda_kapali"), "sorun")
+                return
+            # imza denetimi (PowerShell) arayüzü dondurmasın: işçi iş parçacığında
+            etiket = label.currentData()  # sayfa o sırada yeniden kurulursa kutu silinmiş olabilir
+            self.app.worker.run(lambda: driver_tools.verify(exe), lambda check: signed(etiket, name, check),
+                                lambda e: self.app.set_status(str(e), "sorun"), serial=False)
+
+        def signed(etiket, name, check):
+            if self.running is not None:  # çift tıklama: ikinci ölçüm başlamasın
+                return
             if not check["imza_gecerli"] or driver_tools.tools_in_user_folder():
                 # yönetici olarak çalışacak üçüncü parti exe: imzasızsa veya tools kullanıcı klasöründeyse sor
                 if not dialogs.ask_yes_no(self.app, t("ui.dikkat"), tool_check_text(check)):
                     return
-            self._run_game(label.currentData(), name, self.game_seconds, check["sha256"], exe)
+            self._run_game(etiket, name, self.game_seconds, check["sha256"], exe)
 
         start = w.button(t("olcum.baslat"), start_game, primary=True)
         start.setEnabled(self.running is None and self.c.can_modify)

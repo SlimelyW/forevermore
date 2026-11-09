@@ -1,4 +1,4 @@
-"""Ekstra ayarlar testleri: içe/dışa aktarma, Windows'la başlatma komutu, Bilgi verisi.
+"""Ayarlar testleri: içe/dışa aktarma, Windows'la başlatma komutu, Bilgi verisi.
 
 Hiçbir test gerçek Görev Zamanlayıcı'ya yazmaz (PowerShell çağrıları yakalanır).
 
@@ -194,6 +194,21 @@ class TestDefenderAndUac(unittest.TestCase):
         self.assertEqual(result.key, "hata.defender_kurcalama")
         self.assertTrue(self.sys.defender["gercek_zamanli"])
         self.assertFalse(self.engine.store.has(defender.CHANGE_ID))
+
+    def test_defender_write_reads_status_at_most_five_times(self):
+        """Denetim A O6: Kurcalama koruması açıkken yazma 5 yoklama + 1 fazladan okuma = 6 PowerShell yapıyordu.
+        Gerçek PowerShell çalışmaz: run/run_json sahte."""
+        from unittest import mock
+        from app.engine import defender, handlers, system
+        rows = [{"RealTimeProtectionEnabled": True, "IsTamperProtected": True, "AMRunningMode": "Normal"}]
+        with mock.patch.object(system.powershell, "run") as run, \
+                mock.patch.object(system.powershell, "run_json", return_value=rows) as run_json, \
+                mock.patch.object(system.time, "sleep"):
+            with self.assertRaises(handlers.UserFacingError) as caught:
+                handlers.write_value(system.WindowsSystem(), defender.step(), False, {"deger": True})
+        self.assertEqual(caught.exception.key, "hata.defender_kurcalama")
+        self.assertEqual(run.call_count, 1)
+        self.assertEqual(run_json.call_count, 5)
 
     def test_uac_detect(self):
         from app.engine import uac

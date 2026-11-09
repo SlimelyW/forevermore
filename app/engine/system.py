@@ -288,14 +288,18 @@ class WindowsSystem:
                 "mod": row.get("AMRunningMode")}
 
     def set_defender_realtime(self, enabled):
-        """Kurcalama koruması açıkken Windows komutu hatasız kabul edip yok sayar; çağıran durumu yeniden okur."""
+        """Kurcalama koruması açıkken Windows komutu hatasız kabul edip yok sayar. Son okunan durumu döndürür
+        (çağıran yeniden okumasın: her okuma bir PowerShell, Denetim A O6)."""
         _log.info("Defender gerçek zamanlı koruma: %s", enabled)
         powershell.run(f"Set-MpPreference -DisableRealtimeMonitoring {'$false' if enabled else '$true'}", timeout=60)
-        for _ in range(5):  # durum birkaç saniye gecikmeli güncellenebilir
+        status = None
+        for attempt in range(5):  # durum birkaç saniye gecikmeli güncellenebilir
             status = self.get_defender_status()
             if status and bool(status["gercek_zamanli"]) == bool(enabled):
-                return
-            time.sleep(1)
+                break
+            if attempt < 4:
+                time.sleep(1)
+        return status
 
     def get_features(self, names):
         """{özellik: 'Enabled'|'Disabled'} (yalnızca sistemde bulunanlar)."""

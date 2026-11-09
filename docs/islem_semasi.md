@@ -140,7 +140,7 @@ bu bilgisayarda yoksa adım atlanır ("yok").
 `fare_ayarlarini_yenile`, `klavye_ayarlarini_yenile` (oturum kapatmadan anında uygular),
 `ses_servisini_yeniden_baslat` (ses geliştirmeleri için), `gezgin_yeniden_baslat_oner`.
 
-Bu, satış aşamasında önemlidir: biri `tweaks_app.json`'u değiştirse bile uygulama yönetici
+Bu, güvenlik açısından önemlidir: biri `tweaks_app.json`'u değiştirse bile uygulama yönetici
 yetkisiyle rastgele komut çalıştırmaz.
 
 ## Seçim (`kontrol: "secim"`)

@@ -100,15 +100,21 @@ her biri ayrı yedeklenir (ör. `PWR-003@pil`).
 - **Kalıcı ayarlar** (öncelik: IFEO PerfOptions, GPU tercihi: DirectX UserGpuPreferences, tam ekran
   optimizasyonları: AppCompatFlags\Layers) kaydedince yazılır, her biri ayrı yedeklenir ve
   Değişiklikler'den geri alınır. Uyumluluk bayraklarındaki diğer bayraklara dokunulmaz.
-- **Oyun sırasında ayarları ve oyun izleyici KALDIRILDI (7 Kasım 2026):** çalışan oyunla otomatik uygulama/geri alma
-  yok. Eski sürümün bıraktığı `oyun_oturumu.json` günlüğü hâlâ açılışta ve "Kaldırmaya hazırla"da geri alınır
-  (`runtime.GameSession.recover`; servisler, Steam önceliği, güç planı, bildirimler).
+- **Oyun izleyici KALDIRILDI (7 Kasım 2026); oyun sırasında seçenekleri düğmeye bağlı GERİ GELDİ (9 Kasım 2026):** çalışan oyunla
+  KENDİLİĞİNDEN uygulama yok. Seçenekler (Rahatsız etme, güç planı, servis duraklatma, Windows Search, steamwebhelper önceliği,
+  Steam indirme UYARISI) yalnızca "Hazırla"/"Oyunu başlat"a basınca `runtime.GameSession.start` ile uygulanır, oyun kapanınca ya
+  da "Geri al"la geri alınır. Kayıt defteri/güç planı/servis değişiklikleri `engine.apply_custom` ile (yedek, Değişiklikler,
+  geri alma, kimlik `oyunsirasi-*`); her değişiklikten önce `oyun_oturumu.json` günlüğü yazılır, çökmede açılışta
+  `GameSession.recover` geri alır (`journal_ok` yalnızca bilinen kimlikleri kabul eder: günlük kullanıcı klasöründe). Steam'e
+  yazılmaz: indirme uyarısı yalnızca steamapps/downloading dosya zamanlarına bakar. Geri GETİRİLMEDİ: çekirdek seçimi, güç kısması
+  muafiyeti (oyun sürecine tanıtıcı), standby temizliği, oyun içi Boost. Anti-cheat'li oyunda yalnızca Rahatsız etme, güç planı ve
+  Steam indirme uyarısı açılabilir; servis, Search ve süreç önceliği gizli ve uygulama katmanında da süzülür.
 - **Anti-cheat:** ayarlar yalnızca oyunun kendi exe'sine yazılır; anti-cheat ve başlatıcı süreçleri eklenemez ve hiç
   açılmaz. "Gerçek zamanlı" öncelik yok.
-- **Oyun algılama** (`runtime.GameDetector`): yalnızca Canlı FPS veya oyun oturumu kaydı açıkken ve exe'si bilinen oyun
-  varken 2 saniyede bir süreç listesine bakar (yaklaşık 7 ms); hiçbir ayar uygulamaz, yalnızca bu ikisini başlatıp bitirir.
+- **Oyun algılama** (`runtime.GameDetector`): yalnızca Canlı FPS veya oyun oturumu kaydı açıkken, ya da "Hazırla"dan sonra oyun
+  kapanana kadar (en çok 10 dk oyun açılmayı bekler), ve exe'si bilinen oyun varken 2 saniyede bir süreç listesine bakar (yaklaşık 7 ms); hiçbir ayar uygulamaz, yalnızca bu ikisini başlatıp bitirir.
 
-## Ekstra ayarlar
+## Ayarlar
 
 - **Tepsi** (varsayılan kapalı): Qt'nin kendi tepsi bileşeni; pencere kapatılınca uygulama tepside
   çalışır, "Çıkış" ile tamamen kapanır. Ek kütüphane yok.
@@ -122,7 +128,7 @@ her biri ayrı yedeklenir (ör. `PWR-003@pil`).
 
 ## Kaldırma
 
-Ekstra ayarlar > "Kaldırmaya hazırla" veya `Forevermore.exe --kaldir`: "Windows'la başlat" görevini
+Ayarlar > "Kaldırmaya hazırla" veya `Forevermore.exe --kaldir`: "Windows'la başlat" görevini
 siler, yarım kalan oyun oturumunu geri alır; istenirse tüm değişiklikleri eski haline getirir ve
 uygulama verilerini siler. Geri alınmamış değişiklik varken veriler silinmez (yedekler kaybolmasın).
 
@@ -151,7 +157,7 @@ gösterilir; dosyaya yazılmaz, hiçbir yere gönderilmez.
 İlk açılışta, sürüm veya onay metni değiştiğinde `lang/baslangic_onayi.tr.txt` gösterilir.
 Kabul edilmezse uygulama açılmaz. Kabul tarihi, sürüm ve metnin özeti yalnızca bu
 bilgisayarda `%LOCALAPPDATA%\Forevermore\onay.json` dosyasında tutulur.
-**Satış öncesi metin ve akış bir avukata kontrol ettirilmelidir** (bkz. `app/core/consent.py`).
+**Yayın öncesi metin ve akış bir avukata kontrol ettirilmelidir** (bkz. `app/core/consent.py`).
 
 ## Uygulama hiç açılmazsa (elle kurtarma)
 

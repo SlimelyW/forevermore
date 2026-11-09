@@ -16,7 +16,7 @@ class TestGuides(unittest.TestCase):
         data = json.loads((paths.data_dir() / "oyun_rehberi.json").read_text(encoding="utf-8"))["oyunlar"]
         self.assertTrue(data)
         for entry in data:
-            self.assertTrue(entry["kaynaklar"], entry["ad"])
+            self.assertTrue(entry["kaynaklar"] or entry.get("reflex"), entry["ad"])  # bağlantısı olmayan yalnızca Reflex bilgisi taşır
             for source in entry["kaynaklar"]:
                 self.assertTrue(guides._allowed(source["url"]), source["url"])
                 self.assertTrue(source["icerik"] and source["site"])
@@ -30,9 +30,16 @@ class TestGuides(unittest.TestCase):
         self.assertEqual(guides.find("®™"), [])
 
     def test_non_https_or_foreign_hosts_are_dropped(self):
-        self.assertFalse(guides._allowed("http://prosettings.net/x/"))
+        self.assertFalse(guides._allowed("http://pcgamecheck.com/x/"))
         self.assertFalse(guides._allowed("https://evil.example.com/x/"))
-        self.assertFalse(guides._allowed("https://prosettings.net.evil.com/x/"))
+        self.assertFalse(guides._allowed("https://pcgamecheck.com.evil.com/x/"))
+
+    def test_no_pro_player_settings_links_anywhere(self):
+        """Profesyonel oyuncu ayarı içeriği çıkarıldı: ne veri dosyasında ne izinli adreslerde prosettings var."""
+        text = (paths.data_dir() / "oyun_rehberi.json").read_text(encoding="utf-8").lower()
+        self.assertNotIn("https://prosettings", text)
+        self.assertFalse(any("prosettings" in host for host in guides.ALLOWED_HOSTS))
+        self.assertFalse(guides._allowed("https://prosettings.net/guides/x/"))
 
 
 if __name__ == "__main__":

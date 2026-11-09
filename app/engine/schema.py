@@ -26,8 +26,6 @@ FORBIDDEN_IDS = frozenset({"PLC-008", "PLC-018", "PLC-020", "PLC-021", "PLC-022"
 
 # Hesaplanan değerler: veri dosyası sabit sayı yerine bunlardan birini isteyebilir.
 COMPUTED_VALUES = {"toplam_ram_kb"}
-# Yalnızca kapatılabilen ayarlarda "açık" sayılma koşulu.
-STATE_CONDITIONS = {"var", "kucuk"}
 POST_ACTIONS = {
     "fare_ayarlarini_yenile",
     "klavye_ayarlarini_yenile",

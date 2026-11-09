@@ -16,7 +16,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from app.core import admin, guvenli_klasor, log, paths, registry
+from app.core import admin, guvenli_klasor, log, paths, powershell, registry
 
 _log = log.get("uninstaller")
 
@@ -149,8 +149,11 @@ def find_leftovers(program, env=None, reg=registry):
         for child in children:
             if _norm(child.name) in norms:
                 add({"tur": "klasor", "yol": str(child), "boyut": _size(child)})
-    if location and os.path.isdir(location) and Path(location) not in roots and len(Path(location).parts) >= 3:   # kurulum klasörü
-        windir = Path(env.get("SystemRoot") or r"C:\Windows")
+    # kurulum klasörü; köklerin atası (kullanıcı profili) ya da genel adlı (Common Files) değilse (Denetim A O2)
+    if location and os.path.isdir(location) and Path(location) not in roots and len(Path(location).parts) >= 3 \
+            and not any(Path(location) in root.parents for root in roots) \
+            and _norm(Path(location).name) not in {_norm(g) for g in GENERIC}:
+        windir = Path(os.path.dirname(powershell.SYSTEM32))  # ortam değişkeni HKCU'dan ezilebilir (Denetim A S1)
         # HKCU kaydını her program yazabilir: oradaki konum yalnızca bilinen program köklerinin altındaysa alınır
         trusted = program.get("kok") != "HKCU" or any(root in Path(location).parents for root in roots)
         if trusted and windir not in Path(location).parents and Path(location) != windir:
@@ -227,6 +230,9 @@ def remove_leftovers(program_name, items, base=None, ops=None, now=None, tur=Non
                 done.append({"tur": "kayit", "kok": item["kok"], "yol": item["yol"], "yedek": file.name})
         except (OSError, shutil.Error) as exc:
             failed.append({"yol": item["yol"], "neden": str(exc)})
+            if item["tur"] == "klasor" and target.exists():  # sürücüler arası taşıma yarıda: kopya listede kalsın (B5)
+                _reset_acl(target)
+                done.append({"tur": "klasor", "yol": item["yol"], "yedek": target.name, "kismen": True})
     manifest = {"program": program_name, "tarih": now.isoformat(timespec="seconds"), "ogeler": done}
     if tur:
         manifest.update(tur=tur, boyut=moved_size)
@@ -234,7 +240,8 @@ def remove_leftovers(program_name, items, base=None, ops=None, now=None, tur=Non
         (session / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     else:
         shutil.rmtree(session, ignore_errors=True)
-    return {"oturum": session.name if done else None, "kaldirilan": len(done), "basarisiz": failed}
+    return {"oturum": session.name if done else None, "kaldirilan": sum(not d.get("kismen") for d in done),
+            "basarisiz": failed}
 
 
 def list_sessions(base=None):

@@ -717,8 +717,14 @@ class NvidiaSettingCard(w.Card):
 
     def _npi(self):
         value = self.spec.get("onerilen")
-        check = self.c.engine.system.npi_check()
-        if value is None or check is None:
+        if value is None:
+            return
+        # imza denetimi (PowerShell) arayüzü dondurmasın: işçi iş parçacığında
+        self.app.worker.run(self.c.engine.system.npi_check, lambda check: self._npi_ask(value, check),
+                            lambda e: self.app.set_status(t("ui.surucu_arac.acilamadi", hata=e), "sorun"), serial=False)
+
+    def _npi_ask(self, value, check):
+        if check is None:
             return
         text = t("ui.npi_onay") + "\n\n" + tool_check_text(check)
         if not dialogs.ask_yes_no(self.app, t("ui.dikkat"), text):
@@ -729,11 +735,6 @@ class NvidiaSettingCard(w.Card):
         for page in self.app.pages.values():  # kart Ekran Kartı veya Placebo sayfasında olabilir
             if hasattr(page, "load_nvidia") and self.tweak["id"] in getattr(page, "rows", {}):
                 page.load_nvidia()
-
-
-def amd_card_names(scan):
-    hw = ((scan or {}).get("bolumler") or {}).get("donanim") or {}
-    return [g["ad"] for g in hw.get("gpu") or [] if g.get("uretici") == "AMD"]
 
 
 class AmdSettingCard(w.Card):
@@ -860,7 +861,10 @@ class DriverToolsCard(w.Card):
 
     def _open_tool(self, path):
         """Aracı açmadan önce SHA-256 ve imza denetimi; imza geçerli değilse kullanıcıya sorulur."""
-        check = driver_tools.verify(str(path))
+        self.app.worker.run(lambda: driver_tools.verify(str(path)), lambda check: self._tool_checked(path, check),
+                            lambda e: self.app.set_status(t("ui.surucu_arac.acilamadi", hata=e), "sorun"), serial=False)
+
+    def _tool_checked(self, path, check):
         text = tool_check_text(check)
         if not check["imza_gecerli"] or driver_tools.tools_in_user_folder():
             if not dialogs.ask_yes_no(self.app, t("ui.dikkat"), text):

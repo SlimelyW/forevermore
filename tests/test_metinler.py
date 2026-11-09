@@ -78,7 +78,7 @@ class TestTexts(unittest.TestCase):
         from app.engine import uac
         expected += [f"ui.uac.{kind}.{lv}" for kind in ("seviye", "aciklama", "eksi") for lv in uac.LEVELS]
         expected += [f"ui.uac.durum.{k}" for k in ("kapali", "ozel")]
-        expected += [f"ui.stat_liste{s}.{k}" for s in ("", "_aciklama") for k in ("uygun", "acik", "degisen")]
+        expected += [f"ui.stat_liste{s}.{k}" for s in ("", "_aciklama") for k in ("uygun", "oyun", "degisen")]
         self.assertEqual([k for k in expected if k not in TR], [])
 
     def test_placeholders_match(self):

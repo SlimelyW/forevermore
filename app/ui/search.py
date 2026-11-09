@@ -1,6 +1,6 @@
-"""Yan menüdeki arama kutusu: ayar (id, ad, açıklama) ve sayfa adı arar; sonuca tıklayınca oraya gider."""
+"""Üst şeritteki arama kutusu: ayar (id, ad, açıklama) ve sayfa adı arar; sonuca tıklayınca oraya gider."""
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QPoint, Qt
 from PySide6.QtWidgets import QLineEdit, QListWidget, QListWidgetItem, QVBoxLayout, QWidget
 
 from app.core.i18n import t
@@ -43,11 +43,13 @@ def search(tweaks, pages, query, limit=MAX_RESULTS):
 
 
 class SearchBox(QWidget):
-    """Kutu + açılan sonuç listesi. `on_tweak(id)` / `on_page(key)` ile yönlendirir."""
+    """Kutu + açılan sonuç listesi. `on_tweak(id)` / `on_page(key)` ile yönlendirir. `overlay` verilirse sonuç listesi
+    o pencerenin üstünde, kutunun altında yüzer (şeridi aşağı itmez); verilmezse kutunun altında satır içi durur."""
 
-    def __init__(self, tweaks, pages, on_tweak, on_page):
+    def __init__(self, tweaks, pages, on_tweak, on_page, overlay=None):
         super().__init__()
         self._tweaks, self._pages, self._on_tweak, self._on_page = tweaks, pages, on_tweak, on_page
+        self._overlay = overlay
         lay = QVBoxLayout(self)
         lay.setContentsMargins(0, 0, 0, 0)
         lay.setSpacing(2)
@@ -55,12 +57,18 @@ class SearchBox(QWidget):
         self.edit.setPlaceholderText(t("ui.arama.yer_tutucu"))
         self.edit.setClearButtonEnabled(True)
         self.edit.textChanged.connect(self._refresh)
-        self.edit.returnPressed.connect(self._open_first)
+        self.edit.returnPressed.connect(self._open_current)
+        self.edit.setAccessibleName(t("ui.arama.yer_tutucu"))
+        self.edit.installEventFilter(self)  # Aşağı/Yukarı/Tab sonuç listesinde gezer, odak kutuda kalır
         lay.addWidget(self.edit)
-        self.results = QListWidget()
+        self.results = QListWidget(overlay)
+        self.results.setObjectName("SearchResults")
+        self.results.setAccessibleName(t("ui.arama.yer_tutucu"))
+        self.results.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.results.setVisible(False)
         self.results.itemClicked.connect(self._open)
-        lay.addWidget(self.results)
+        if overlay is None:
+            lay.addWidget(self.results)
 
     def focus(self):
         self.edit.setFocus()
@@ -79,11 +87,28 @@ class SearchBox(QWidget):
             self.results.addItem(empty)
         self.results.setVisible(bool(text.strip()))
         if self.results.count():
-            self.results.setFixedHeight(min(self.results.count(), MAX_RESULTS) * 44 + 6)
+            height = min(self.results.count(), MAX_RESULTS) * 44 + 6
+            self.results.setFixedHeight(height)
+            if self._overlay is not None:
+                width = max(self.edit.width(), 340)
+                corner = self.edit.mapTo(self._overlay, QPoint(self.edit.width() - width, self.edit.height() + 2))
+                self.results.setGeometry(corner.x(), corner.y(), width, height)
+                self.results.raise_()
 
-    def _open_first(self):
-        if self.results.count() and self.results.item(0).data(Qt.ItemDataRole.UserRole):
-            self._open(self.results.item(0))
+    def eventFilter(self, obj, event):
+        if obj is self.edit and event.type() == QEvent.Type.KeyPress and not self.results.isHidden():
+            step = {Qt.Key.Key_Down: 1, Qt.Key.Key_Tab: 1, Qt.Key.Key_Up: -1, Qt.Key.Key_Backtab: -1}.get(event.key())
+            if step and self.results.item(0) is not None and self.results.item(0).data(Qt.ItemDataRole.UserRole):
+                row = min(max(self.results.currentRow() + step, 0), self.results.count() - 1)
+                self.results.setCurrentRow(row)
+                return True
+        return super().eventFilter(obj, event)
+
+    def _open_current(self):
+        """Enter: seçili sonuç, yoksa ilki."""
+        item = self.results.currentItem() or (self.results.item(0) if self.results.count() else None)
+        if item is not None and item.data(Qt.ItemDataRole.UserRole):
+            self._open(item)
 
     def _open(self, item):
         kind, key = item.data(Qt.ItemDataRole.UserRole)

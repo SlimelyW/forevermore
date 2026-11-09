@@ -6,7 +6,7 @@
 #
 # Neden klasör? Arayüz kütüphanesi Qt (PySide6) LGPLv3 lisanslıdır; Qt kitaplıklarının
 # ayrı dosyalar olarak dağıtılması lisans koşullarını karşılamanın en açık yoludur.
-# Arkadaşına dist\Forevermore.zip dosyasını gönder; zip'i açıp içindeki Forevermore.exe'yi çalıştırsın.
+# Kullanıcılara vermek için dist\Forevermore.zip dosyasını gönder; zip'i açıp içindeki Forevermore.exe'yi çalıştırsın.
 #
 # Ne yapar: ayrı bir derleme ortamı (.venv-derleme) kurar, veriyi yeniden üretir,
 # testleri çalıştırır (biri başarısızsa durur), derler ve programın dosyalarını
@@ -41,6 +41,12 @@ if ($LASTEXITCODE -ne 0) { throw 'Paketler kurulamadı (internet bağlantısın�
 Adim "Ayar veritabanı yeniden üretiliyor"
 Py tools\convert_tweaks.py
 if ($LASTEXITCODE -ne 0) { throw 'Veri dönüştürmede hata var; tools\donusum_raporu.md dosyasına bak.' }
+
+if (Test-Path 'site') {  # site/ yalnızca private depoda; public klasörde yok
+    Adim "Site sayıları yeniden üretiliyor"
+    Py tools\site_veri.py
+    if ($LASTEXITCODE -ne 0) { throw 'tools\site_veri.py hata verdi.' }
+}
 
 Adim "Testler çalışıyor"
 $env:QT_QPA_PLATFORM = 'offscreen'  # arayüz testleri pencere açmaz
@@ -112,4 +118,4 @@ $size = [math]::Round((Get-Item $paket).Length / 1MB, 1)
 Write-Host "Dosya : $paket ($size MB)"
 Write-Host "SHA256: $hash"
 Set-Content -Path "$paket.sha256.txt" -Value "$hash  $(Split-Path $paket -Leaf)" -Encoding ascii
-Write-Host "Arkadaşına gönderirken bu SHA256 değerini de paylaş; dosyanın yolda değişmediğini doğrulayabilir."
+Write-Host "Paylaşırken bu SHA256 değerini de yaz; dosyanın yolda değişmediğini doğrulayabilir."

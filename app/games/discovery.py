@@ -8,11 +8,13 @@ klasik konumlar (<sürücü>:\\Games\\*).
 Oyun yolları yalnızca bu bilgisayarda gösterilir ve saklanır; rapora yazılmaz.
 """
 
+import fnmatch
 import glob
 import json
 import os
 import re
 import string
+import time
 import datetime
 import json
 
@@ -80,12 +82,195 @@ def real_game_exe(path):
     return path
 
 
-def _steam():
+def steam_root():
+    """Steam'in kurulu olduğu klasör ya da None."""
     # Yönetici olarak başka hesapla çalışınca HKCU o hesabındır: Steam'in makine geneli kaydına da bakılır.
     root = (registry.read("HKCU", r"Software\Valve\Steam", "SteamPath")
             or registry.read("HKLM", r"SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath")
             or registry.read("HKLM", r"SOFTWARE\Valve\Steam", "InstallPath"))
-    if not root or not os.path.isdir(root):
+    return root if root and os.path.isdir(root) else None
+
+
+# Steam'in YEREL görsel önbelleği (appcache\librarycache\<appid>\...): yeni düzende dosya adı hash olabilir ve her
+# oyunda farklı türler bulunur (library_600x900, library_capsule, library_hero, header, logo, küçük simge...). Bu yüzden tür
+# adına değil, dosyanın BOYUTUNA bakılır: önce kapak oranına yakın (dikey) en çözünürlüklüsü, yoksa en yüksek (kırpılınca
+# en az büyütülen) yatay görsel; kart her ikisini de kırparak doldurur. Küçük kare simge kapak diye şişirilmez.
+# Ağdan hiçbir şey indirilmez.
+PORTRAIT_MAX = 0.85    # genişlik/yükseklik bundan küçükse dikey kapak, değilse yatay/kare sayılır
+MIN_PORTRAIT_W = 300   # dikey için en az genişlik (kart 156 px; 2x ekranda şişmesin)
+MIN_FIT_LONG = 400     # yatay/kare için en uzun kenar en az; 184x184 topluluk simgesi gibi küçükler elenir
+MIN_LANDSCAPE_H = 200  # yatay için en az yükseklik (kutu 208 px: daha alçak görsel kırpılınca fazla büyür)
+SKIP_IMAGE = ("logo", "blur", "marker")  # saydam logo ve bulanık arka plan kapak yerine geçmez
+USER_COVER_ID = re.compile(r"OYUN-[0-9a-f]{10}")
+
+
+def image_size(path):
+    """(genişlik, yükseklik) ya da None: yalnızca PNG ve JPEG başlığı okunur (görüntü çözülmez, Qt gerekmez)."""
+    try:
+        with open(path, "rb") as f:
+            head = f.read(26)
+            if head[:8] == b"\x89PNG\r\n\x1a\n" and head[12:16] == b"IHDR":
+                return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+            if head[:2] != b"\xff\xd8":
+                return None
+            f.seek(2)
+            for _ in range(64):  # işaretçiler arasında gez: SOFn (C0-CF, C4/C8/CC hariç) boyutu taşır
+                marker = f.read(2)
+                if len(marker) < 2 or marker[0] != 0xFF:
+                    return None
+                while marker[1] == 0xFF:  # dolgu baytları
+                    marker = b"\xff" + f.read(1)
+                    if len(marker) < 2:
+                        return None
+                if marker[1] in (0xD8, 0x01) or 0xD0 <= marker[1] <= 0xD7:
+                    continue
+                length = int.from_bytes(f.read(2), "big")
+                if 0xC0 <= marker[1] <= 0xCF and marker[1] not in (0xC4, 0xC8, 0xCC):
+                    data = f.read(5)
+                    height, width = int.from_bytes(data[1:3], "big"), int.from_bytes(data[3:5], "big")
+                    return (width, height) if width and height else None
+                f.seek(length - 2, 1)
+    except OSError:
+        pass
+    return None
+
+
+def steam_cover(appid, root=None):
+    """Steam'in yerel önbelleğindeki en uygun görsel (bkz. yukarıdaki kural); yoksa None.
+    appid yalnızca rakam olabilir (yol karıştırılamaz)."""
+    appid = str(appid or "")
+    root = root or steam_root()
+    if not appid.isdigit() or not root:
+        return None
+    cache = os.path.join(root, "appcache", "librarycache")
+    files = glob.glob(os.path.join(glob.escape(cache), f"{appid}_*"))  # eski düzen
+    for folder, _dirs, names in os.walk(os.path.join(cache, appid)):  # yeni düzen: <appid>\<hash>\dosya
+        files += [os.path.join(folder, n) for n in names]
+    best = None
+    for path in files:
+        name = os.path.basename(path).lower()
+        if not name.endswith((".jpg", ".jpeg", ".png")) or any(k in name for k in SKIP_IMAGE):
+            continue
+        size = image_size(path)
+        if not size:
+            continue
+        width, height = size
+        portrait = width / height <= PORTRAIT_MAX
+        if width < MIN_PORTRAIT_W if portrait else (max(width, height) < MIN_FIT_LONG or height < MIN_LANDSCAPE_H):
+            continue
+        key = (portrait, 0 if portrait else height, width * height, name)
+        if best is None or key > best[0]:
+            best = (key, path)
+    return best[1] if best else None
+
+
+def user_cover_dir():
+    """Kullanıcının seçtiği oyun resimlerinin klasörü (yalnızca yerel; OLUŞTURMAZ)."""
+    return paths.user_data_path() / "kapaklar"
+
+
+def user_cover(game_id):
+    """Kullanıcının bu oyun için seçtiği (kopyalanıp ölçeklenmiş) resim ya da None."""
+    if not USER_COVER_ID.fullmatch(str(game_id or "")):
+        return None
+    path = user_cover_dir() / f"{game_id}.jpg"
+    return str(path) if path.is_file() else None
+
+
+def remove_user_cover(game_id):
+    """Kullanıcının seçtiği resmi siler (oyun kaydı ya da 'Resmi kaldır'); yoksa sessizce geçer."""
+    path = user_cover(game_id)
+    if path:
+        try:
+            os.remove(path)
+        except OSError as exc:
+            _log.warning("Oyun resmi silinemedi: %s", exc)
+
+
+_cover_index = {}  # (json yolu, değişme zamanı) -> girdiler: her kart çizilişinde dosya yeniden okunup ayrıştırılmasın
+
+
+def _cover_entries(path):
+    try:
+        key = (str(path), path.stat().st_mtime_ns)
+    except OSError:
+        return []
+    if key not in _cover_index:
+        try:
+            entries = json.loads(path.read_text(encoding="utf-8")).get("kapaklar") or []
+        except (OSError, ValueError):
+            entries = []
+        _cover_index.clear()
+        _cover_index[key] = entries
+    return _cover_index[key]
+
+
+def embedded_cover(game, appid=None):
+    """Pakete gömülü kapak (data/oyun_kapaklari/) ya da None. Eşleştirme sırası: exe adı -> Steam appid -> klasör/takma ad
+    (harf-rakam dışı karakterler yok sayılır, TAM eşitlik; 'Rust' yalnızca 'Rust' olan oyunla eşleşir). Yalnızca oyun
+    kaydındaki alanlara bakar (yeni tarama yok), ağa bağlanmaz."""
+    base = paths.data_dir()
+    entries = _cover_entries(base / "oyun_kapaklari.json")
+    exe = os.path.basename(game.get("exe") or "").lower()
+    names = {_compact(os.path.basename(os.path.normpath(game["klasor"]))) if game.get("klasor") else "",
+             _compact(game.get("ad") or "")} - {""}
+
+    def keys(entry):
+        return {_compact(x) for x in [entry.get("ad")] + (entry.get("klasor") or []) + (entry.get("takma") or [])} - {""}
+
+    for matches in (lambda e: exe and any(fnmatch.fnmatchcase(exe, p.lower()) for p in e.get("exe") or []),
+                    lambda e: appid and str(appid) in (e.get("appid") or []),
+                    lambda e: names & keys(e)):
+        for entry in entries:
+            if matches(entry):
+                path = base / "oyun_kapaklari" / os.path.basename(entry.get("dosya") or "")
+                return str(path) if path.is_file() else None
+    return None
+
+
+def cover_path(game, root=None):
+    """Oyunun yerel görseli. Sıra: kullanıcının seçtiği resim -> (Steam kısayolu olan oyunlarda) Steam yerel önbelleği ->
+    pakete gömülü kapak; yoksa None (arayüz exe simgesine, o da yoksa harfe düşer). Epic için yerel önbellekte
+    kullanılabilir görsel bulunamadı; gömülü kapak bu boşluğu (ve Steam dışı kopyaları) doldurur."""
+    own = user_cover(game.get("id"))
+    if own:
+        return own
+    match = re.fullmatch(r"steam://rungameid/(\d+)", game.get("baslat") or "")
+    appid = match.group(1) if match else steam_appid(game.get("klasor"))
+    return (steam_cover(appid, root) if appid else None) or embedded_cover(game, appid)
+
+
+_appids = {}  # (steamapps klasörü, installdir) -> appid (yalnızca bulunanlar; manifest her çizimde yeniden okunmasın)
+
+
+def steam_appid(folder):
+    """steamapps/common/<installdir> altındaki oyun klasöründen Steam appid'si (yerel appmanifest_*.acf okunur) ya da None.
+    Listemdeki oyunun kaydında Steam kısayolu (baslat) yoksa kapak yine de bulunsun diye (eski/elle eklenen kayıtlar)."""
+    parts = os.path.normpath(folder or "").split(os.sep)
+    low = [p.lower() for p in parts]
+    for i in range(len(parts) - 2, 0, -1):
+        if low[i] == "common" and low[i - 1] == "steamapps":
+            steamapps, installdir = os.sep.join(parts[:i]), parts[i + 1].lower()
+            break
+    else:
+        return None
+    if (steamapps, installdir) not in _appids:
+        for manifest in glob.glob(os.path.join(glob.escape(steamapps), "appmanifest_*.acf")):
+            try:
+                with open(manifest, encoding="utf-8", errors="replace") as f:
+                    state = _vdf(f.read()).get("AppState", {})
+            except OSError:
+                continue
+            if str(state.get("installdir", "")).lower() == installdir and str(state.get("appid", "")).isdigit():
+                _appids[(steamapps, installdir)] = state["appid"]
+                break
+    return _appids.get((steamapps, installdir))
+
+
+def steam_libraries():
+    """Steam kitaplık klasörleri (yerel libraryfolders.vdf; salt okunur). Steam yoksa []."""
+    root = steam_root()
+    if not root:
         return []
     libraries = {os.path.normpath(root)}
     try:
@@ -96,6 +281,30 @@ def _steam():
                 libraries.add(os.path.normpath(entry["path"]))
     except OSError:
         pass
+    return sorted(libraries)
+
+
+def steam_downloading(window=120, now=None):
+    """Steam şu an indirme/güncelleme yapıyor mu? YAKLAŞIK ve salt okunur: bir kitaplığın steamapps/downloading
+    klasöründeki bir dosya son `window` saniyede değişmişse True (duraklatılmış indirme dosya yazmaz: False).
+    Steam'e hiçbir şey yazılmaz, ağa bağlanılmaz. Gerçek bir indirmeyle DENENMEDİ."""
+    now = time.time() if now is None else now
+    for library in steam_libraries():
+        folder = os.path.join(library, "steamapps", "downloading")
+        try:
+            for base, _dirs, files in os.walk(folder):
+                if base[len(folder):].count(os.sep) >= 2:
+                    continue
+                for name in files:
+                    if now - os.stat(os.path.join(base, name)).st_mtime <= window:
+                        return True
+        except OSError:
+            continue
+    return False
+
+
+def _steam():
+    libraries = steam_libraries()
     games = []
     for library in libraries:
         for manifest in glob.glob(os.path.join(library, "steamapps", "appmanifest_*.acf")):
@@ -234,7 +443,7 @@ def _xbox():
 
 def _classic():
     games = []
-    for letter in string.ascii_uppercase:
+    for letter in string.ascii_uppercase[2:]:  # A:/B: disket sürücüleri yoklanmaz (boşken yavaş yanıt verir)
         root = f"{letter}:\\Games"
         if not os.path.isdir(root):
             continue

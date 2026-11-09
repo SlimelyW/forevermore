@@ -5,13 +5,13 @@ Donanım ayrıntıları ve en çok işlemci kullanan süreçler PC Detayları sa
 import datetime
 from collections import deque
 
-from PySide6.QtCore import QPoint, QPointF, QSize, Qt, QTimer, Signal
+from PySide6.QtCore import QPointF, QRectF, QSize, Qt, Signal
 from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QProgressBar, QVBoxLayout, QWidget
 
 from app.core import settings
 from app.core.i18n import fmt_number, fmt_percent, t
-from app.engine import fixes, varsayilan
+from app.engine import fixes, skor, varsayilan
 from app.scan.report import finding_text
 from app.ui import dialogs, motion, theme, widgets as w
 
@@ -44,7 +44,7 @@ class Sparkline(QWidget):
     def __init__(self, history, tone, scale=100.0):
         super().__init__()
         self.history, self.scale = history, scale
-        self.color = QColor(theme.TONES.get(tone, theme.TONES["bilgi"]))
+        self.color = QColor(theme.TONES_BRIGHT.get(tone, theme.TONES_BRIGHT["bilgi"]))
         self.setMinimumHeight(38)
 
     def sizeHint(self):
@@ -100,17 +100,28 @@ class LiveTile(w.Card):
         self.chart.update()
 
 
+# Bulgu simgesi: önem rengi + şekil (renk tek başına anlam taşımasın; ad ayrıca erişilebilir adda ve grup başlığında yazılı)
+FINDING_GLYPH = {"sorun": chr(0xE783), "uyari": theme.ICONS["warning"], "bilgi": theme.ICONS["info"], "iyi": theme.ICONS["check"]}
+
+
 class FindingCard(w.Card):
-    """Bir bulgu; uygulama çözebiliyorsa "Çöz" düğmesi (ayara yönlendirmez, kendisi yapar)."""
+    """Bir bulgu: solda önem simgesi, başlık ve tek satır açıklama, sağda tek eylem. Uygulama çözebiliyorsa "Düzelt"
+    (ayara yönlendirmez, kendisi yapar); yoksa ilgili ayar varsa "Ayara git"."""
 
     def __init__(self, page, finding):
-        super().__init__(layout="h", spacing=12)
+        super().__init__(layout="h", margins=(16, 12, 16, 12), spacing=14)
+        self.setProperty("tile", True)  # düz yüzey + ince çerçeve (kart içinde kart yok)
         self.page, self.app, self.c = page, page.app, page.c
         self.finding = finding
         self.fix = fixes.fix_for(finding, self.c.by_id)
         avail = self.c.availability.get(self.fix["id"]) if self.fix else None
         if self.fix and avail is not None and not avail.visible:
             self.fix = None
+        level = finding["seviye"]
+        tones = theme.TONES_BRIGHT if theme.is_dark() else theme.TONES
+        icon = w.IconTile(FINDING_GLYPH[level], tones[level], 36)
+        icon.setAccessibleName(t(f"seviye.{level}"))
+        self.lay.addWidget(icon, 0, Qt.AlignmentFlag.AlignTop)
         text = QVBoxLayout()
         text.setSpacing(2)
         heading, body = finding_text(finding)
@@ -118,12 +129,14 @@ class FindingCard(w.Card):
         head.setObjectName("CardTitle")
         head.setWordWrap(True)
         text.addWidget(head)
-        text.addWidget(w.label(body, muted=True))
+        line = w.ClampLabel(body, 1)  # tek satır; sığmayan "…" ile biter, tam metin ipucunda
+        line.setProperty("muted", True)
+        text.addWidget(line)
         if finding["kod"] == "tespit" and finding["ilgili"][0] in varsayilan.MANUAL:
             text.addWidget(w.label(t(f"ui.varsayilan.elle.{finding['ilgili'][0]}"), size=12))
         self.lay.addLayout(text, 1)
         self.actions = w.hbox(spacing=6)
-        self.lay.addWidget(self.actions)
+        self.lay.addWidget(self.actions, 0, Qt.AlignmentFlag.AlignVCenter)
         self.refresh()
 
     @property
@@ -208,7 +221,7 @@ class RecommendationsCard(w.Card):
         pick = picks[self.pos]
         tweak = self.c.by_id[pick["id"]]
         reason = {"gpu": lambda: t("ui.oneri.neden.gpu", deger=pick["deger"]),
-                  "form": lambda: t(f"ui.oneri.neden.{pick['deger']}")}.get(pick["neden"], lambda: t("ui.oneri.neden.genel"))()
+                  "form": lambda: t(f"ui.oneri.neden.{pick['deger']}")}.get(pick["neden"], lambda: "")()
         self.body.addWidget(w.label(t("ui.oneri.baslik"), muted=True, wrap=False))
         title = w.label(dialogs.display_name(tweak))
         title.setObjectName("HeroTitle")
@@ -216,8 +229,12 @@ class RecommendationsCard(w.Card):
         summary = (tweak.get("ne_ise_yarar") or "").split(". ")[0].strip()
         if summary:
             self.body.addWidget(w.label(summary if summary.endswith(".") else summary + ".", muted=True))
-        self.body.addWidget(w.hbox(w.impact_badge(tweak["performans_etkisi"]["seviye"]),
-                                   w.label(reason, muted=True, size=12, wrap=False), None))
+        from app.ui.page_category import LOUD_IMPACT  # satırlarla aynı kural: etki rozeti yalnızca yüksek/orta
+        level = tweak["performans_etkisi"]["seviye"]
+        meta = ([w.impact_badge(level)] if level in LOUD_IMPACT else []) + \
+               ([w.label(reason, muted=True, size=12, wrap=False)] if reason else [])
+        if meta:  # "Etki: donanıma bağlı" ve "Genel öneri" bilgi taşımaz: gösterilmez
+            self.body.addWidget(w.hbox(*meta, None))
         apply_button = w.button(t("ui.uygula"), lambda _=False, tw=tweak: self._apply(tw), primary=True)
         apply_button.setEnabled(self.c.can_modify)
         buttons = [apply_button]
@@ -241,16 +258,47 @@ class RecommendationsCard(w.Card):
         self.app.toggle(tweak, True, self.fill)
 
 
-class StatTile(w.Card):
-    """Tarama özeti kutusu: tıklanınca (veya Enter / Boşluk) ilgili listeyi açar."""
+class Ring(QWidget):
+    """Düz halka: iz + yay (gradient, parlama, gölge yok). Yüzde yalnızca ortada yazılır."""
+
+    SIZE, WIDTH = 84, 8
+
+    def __init__(self):
+        super().__init__()
+        self.percent = 0
+        self.setFixedSize(self.SIZE, self.SIZE)
+
+    def set_percent(self, percent):
+        self.percent = percent
+        self.update()
+
+    def paintEvent(self, _event):
+        p = theme.palette()
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        rect = QRectF(self.rect()).adjusted(self.WIDTH / 2, self.WIDTH / 2, -self.WIDTH / 2, -self.WIDTH / 2)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.setPen(QPen(QColor(p["track_off"]), self.WIDTH))
+        painter.drawEllipse(rect)
+        if self.percent > 0:
+            pen = QPen(QColor(p["accent"]), self.WIDTH)
+            pen.setCapStyle(Qt.PenCapStyle.FlatCap)
+            painter.setPen(pen)
+            painter.drawArc(rect, 90 * 16, -round(self.percent * 3.6 * 16))
+        painter.setPen(QColor(p["text"]))
+        painter.setFont(theme.ui_font(15, bold=True))
+        painter.drawText(self.rect(), int(Qt.AlignmentFlag.AlignCenter), fmt_percent(self.percent))
+
+
+class ClickCard(w.Card):
+    """Tıklanınca (veya Enter / Boşluk) `clicked` yayan kart: halka kutuları ve kısayol kutuları."""
 
     clicked = Signal()
 
-    def __init__(self):
-        super().__init__(layout="h", margins=(14, 8, 14, 8), spacing=12, hover=True)
+    def __init__(self, margins, spacing):
+        super().__init__(layout="h", margins=margins, spacing=spacing, hover=True)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        self.setToolTip(t("ui.stat_ipucu"))
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton and self.rect().contains(event.position().toPoint()):
@@ -264,9 +312,47 @@ class StatTile(w.Card):
         super().keyPressEvent(event)
 
 
-class SummaryPage(w.Page):
-    STATS = ("uygun", "acik", "degisen", "bulgu")
+class ScoreTile(ClickCard):
+    """Halka + ad + tek cümle. Tıklanınca (veya Enter / Boşluk) halkanın dayandığı ayar listesini açar."""
 
+    def __init__(self, caption):
+        super().__init__((16, 14, 16, 14), 16)
+        self.caption = caption
+        self.setToolTip(t("ui.stat_ipucu"))
+        self.ring = Ring()
+        self.sentence = w.label("", muted=True, size=12)
+        text = QVBoxLayout()
+        text.setSpacing(2)
+        text.addStretch(1)
+        text.addWidget(w.label(caption, bold=True, size=14, wrap=False))
+        text.addWidget(self.sentence)
+        text.addStretch(1)
+        self.lay.addWidget(self.ring)
+        self.lay.addLayout(text, 1)
+
+    def show_score(self, percent, sentence):
+        self.ring.set_percent(percent)
+        self.sentence.setText(sentence)
+        self.setAccessibleName(f"{self.caption}: {fmt_percent(percent)}. {sentence}")
+
+
+class ShortcutTile(ClickCard):
+    """Büyük kısayol kutusu: simge, ad, tek satır açıklama; tıklanınca sayfayı açar."""
+
+    def __init__(self, key, title, line):
+        super().__init__((18, 16, 18, 16), 14)
+        self.setAccessibleName(f"{title}: {line}")
+        self.lay.addWidget(w.IconTile(theme.ICONS[key], theme.category_color(key), 46))
+        text = QVBoxLayout()
+        text.setSpacing(2)
+        text.addWidget(w.label(title, bold=True, size=15, wrap=False))
+        sub = w.ClampLabel(line, 1)
+        sub.setProperty("muted", True)  # dar kutuda '…' ile biter, tam metin ipucunda
+        text.addWidget(sub)
+        self.lay.addLayout(text, 1)
+
+
+class SummaryPage(w.Page):
     def __init__(self, app):
         super().__init__(app)
         self._progress = None
@@ -277,9 +363,9 @@ class SummaryPage(w.Page):
         self.done_actions = set()  # bu oturumda "Çöz" ile çalıştırılan tek seferlik eylemler
         self.busy_fixes = set()
         self.verifying = set()  # çözüldü, yalnız bu madde yeniden okunuyor
-        self.stat_labels = []
         self.stat_tiles = {}
-        self.detail_kind = None    # açık liste: "uygun", "acik", "degisen" (bulgular sayfada zaten var)
+        self.change_button = None
+        self.detail_kind = None    # açık liste: "uygun", "oyun", "degisen" (bulgular sayfada zaten var)
         self.detail_lay = None
         self.findings_title = None
         self.finding_groups = {}   # seviye -> (satır listesi, aç/kapa düğmesi)
@@ -324,9 +410,8 @@ class SummaryPage(w.Page):
         return finished
 
     def tweak_updated(self, tweak_id):
-        if self.built and self.c.scan is not None and self.stat_labels:
-            for label, value in zip(self.stat_labels, self._stat_values()):
-                label.setText(str(value))
+        if self.built and self.c.scan is not None and self.stat_tiles:
+            self._refresh_scores()
             if self.detail_kind:
                 self._fill_detail()
         for card in self.finding_cards:
@@ -338,37 +423,42 @@ class SummaryPage(w.Page):
     def build(self):
         super().build()
         self.finding_cards = []
-        self.stat_labels = []
         self.stat_tiles = {}
+        self.change_button = None
+        self.change_row = None
         self.detail_lay = None
         self.findings_title = None
         self.finding_groups = {}
+        self.header.addWidget(w.label(t("ui.merhaba"), muted=True, size=12, wrap=False))  # ad okunmaz: gizlilik
         top = w.hbox(w.title(t("ui.ozet_baslik")), None,
                      w.button(t("ui.menu.rapor"), lambda: self.app.navigate("rapor")),
-                     w.button(t("ui.yeniden_tara"), self.app.start_scan, primary=True))
+                     w.button(t("ui.yeniden_tara"), self.app.start_scan))  # tek birincil düğme: kahraman kartın "Uygula"sı
         self.header.addWidget(top)
-        self.status_label = w.label("", muted=True)
+        self.header.addWidget(w.label(t("ui.ozet_aciklama"), muted=True))
+        self.status_label = w.label("", muted=True)  # tarama sürerken ilerleme metni; biter bitmez gizlenir (alt çubukta zaten var)
+        self.status_label.setVisible(False)
         self.header.addWidget(self.status_label)
         self._progress = QProgressBar()
         self._progress.setRange(0, 0)
         self._progress.setVisible(False)
         self.header.addWidget(self._progress)
+        self._live_panel()  # en üstte: tek ölçüm kaynağı (LiveMonitor), sayfada başka yerde tekrarı yok
         if self.c.scan is not None:
             self._stats()
             self._content()
-        self._live_panel()
-        if self.c.scan is None:  # ilk açılış (önbellek yok): boş ekran yerine sayfanın iskeleti
+        else:  # ilk açılış (önbellek yok): boş ekran yerine sayfanın iskeleti
             box = w.Card()
             box.lay.addWidget(w.label(t("ui.taraniyor"), bold=True))
             box.lay.addWidget(w.label(t("ui.tarama_salt_okunur"), muted=True))
             box.lay.addWidget(w.skeleton(22, 420))
             box.lay.addWidget(w.skeleton(14, 260))
-            self.body.insertWidget(0, box)
-            self.body.insertWidget(1, w.hbox(*(w.skeleton(40) for _ in range(4)), spacing=8))
+            self.body.addWidget(box)
+            self.body.addWidget(w.hbox(*(w.skeleton(40) for _ in range(2)), spacing=8))
 
     def set_progress(self, text, running=True):
         self.ensure_built()
         self.status_label.setText(text)
+        self.status_label.setVisible(running and bool(text))
         self._progress.setVisible(running)
 
     def _content(self):
@@ -383,14 +473,20 @@ class SummaryPage(w.Page):
             if not items:
                 continue
             toggle = w.button("", lambda _=False, lv=level: self._toggle_group(lv))
+            # Açıklama yalnızca rozetin söylemediği gruplarda (sorun: ne yapmalı; iyi: neden daralı)
+            note = (w.label(t(f"ui.bulgu_grup.{level}"), muted=True), 1) if level in ("sorun", "iyi") else None
             self.body.addWidget(w.hbox(w.badge(f"{t('seviye.' + level)} ({len(items)})", level),
-                                       (w.label(t(f"ui.bulgu_grup.{level}"), muted=True), 1), toggle, spacing=12))
-            rows = w.RowList()
+                                       note, toggle, spacing=12))  # note None = boşluk: Gizle sağa yaslanır
+            rows = QWidget()
+            rows_lay = QVBoxLayout(rows)
+            rows_lay.setContentsMargins(0, 0, 0, 0)
+            rows_lay.setSpacing(8)
             for finding in items:
                 card = FindingCard(self, finding)
                 self.finding_cards.append(card)
-                rows.add(card)
+                rows_lay.addWidget(card)
             self.body.addWidget(rows)
+            self.body.addSpacing(12)  # gruplar çerçeveyle değil boşlukla ayrılır
             self.finding_groups[level] = (rows, toggle)
             self._show_group(level, level not in collapsed)
         if scan.get("hatalar"):
@@ -493,30 +589,58 @@ class SummaryPage(w.Page):
         state = self.c.states.get(tweak["id"])
         return bool(state and state.is_on)
 
-    def _stat_values(self):
-        visible = self._suitable()
-        on = sum(1 for tw in visible if self._is_on(tw))
-        return len(visible), on, len(self.c.changed()), len(self.c.scan["bulgular"])
+    def _scores(self):
+        """Halkaların dayandığı ayarlar: uygun (Optimizasyon) ve bunlardan "oyun" profilinde işaretli olanlar (Oyun)."""
+        suitable = self._suitable()
+        game = skor.oyun_kimlikleri(self.c.profiles)
+        return {"uygun": suitable, "oyun": [tw for tw in suitable if tw["id"] in game]}
+
+    def _score(self, kind):
+        """(yüzde, cümle) ya da hesaplanamıyorsa None (halka konmaz)."""
+        rows = self._scores()[kind]
+        result = skor.skor(sum(1 for tw in rows if self._is_on(tw)), len(rows))
+        return None if result is None else (result[0], t(f"ui.skor.{kind}", acik=result[1], uygun=result[2]))
+
+    def _refresh_scores(self):
+        for kind, tile in self.stat_tiles.items():
+            score = self._score(kind)
+            if score:
+                tile.show_score(*score)
+        n = len(self.c.changed())
+        self.change_button.setText(t("ui.ozet.degisiklik", n=n))
+        self.change_button.setVisible(n > 0)
+        self.change_row.setVisible(n > 0)  # düğme yoksa boş satır boşluk bırakmasın
 
     def _stats(self):
-        self.recommendations = RecommendationsCard(self)  # kahraman kart: istatistiklerin üstünde
-        self.body.addWidget(self.recommendations)
+        top = QHBoxLayout()  # solda kahraman kart, sağda iki halka; dar pencerede de yan yana (en küçük pencere 900 px)
+        top.setSpacing(8)
+        self.body.addLayout(top)
+        self.recommendations = RecommendationsCard(self)
+        top.addWidget(self.recommendations, 3)
         self.recommendations.fill()
-        row = QHBoxLayout()
-        row.setSpacing(8)
-        texts = (t("ui.stat_uygun"), t("ui.stat_acik"), t("ui.stat_degistirilen"), t("ui.stat_bulgu"))
-        for kind, value, text in zip(self.STATS, self._stat_values(), texts):
-            card = StatTile()
-            card.clicked.connect(lambda k=kind: self._stat_clicked(k))
-            self.stat_tiles[kind] = card
-            big = QLabel(str(value))  # sayı ve adı tek satırda: dört büyük rakam yarışmasın
-            big.setObjectName("StatNum")
-            theme.tabular(big)
-            self.stat_labels.append(big)
-            card.lay.addWidget(big)
-            card.lay.addWidget(w.label(text, muted=True, size=theme.SMALL_SIZE), 1)
-            row.addWidget(card)
-        self.body.addLayout(row)
+        rings = QVBoxLayout()
+        rings.setSpacing(8)
+        for kind in ("uygun", "oyun"):
+            if self._score(kind) is None:  # uygun ayar yoksa halka konmaz (sıfıra bölünmez, uydurma sayı yok)
+                continue
+            tile = ScoreTile(t(f"ui.skor.baslik.{kind}"))
+            tile.clicked.connect(lambda k=kind: self._stat_clicked(k))
+            self.stat_tiles[kind] = tile
+            rings.addWidget(tile, 1)
+        if self.stat_tiles:
+            top.addLayout(rings, 2)
+        shortcuts = QHBoxLayout()
+        shortcuts.setSpacing(8)
+        for key, title in (("oyunlar", t("ui.menu.oyunlar")), ("boost", t("ui.menu.boost").split(" (")[0]),
+                           ("temizlik", t("ui.menu.temizlik"))):
+            tile = ShortcutTile(key, title, t(f"ui.ozet.kisayol.{key}"))
+            tile.clicked.connect(lambda k=key: self.app.navigate(k))
+            shortcuts.addWidget(tile, 1)
+        self.body.addLayout(shortcuts)
+        self.change_button = w.button("", lambda: self._stat_clicked("degisen"))
+        self.change_row = w.hbox(None, self.change_button)
+        self.body.addWidget(self.change_row)
+        self._refresh_scores()
         box = QWidget()
         self.detail_lay = QVBoxLayout(box)
         self.detail_lay.setContentsMargins(0, 0, 0, 0)
@@ -525,11 +649,6 @@ class SummaryPage(w.Page):
 
     # ------------------------------------------------------------------ özet kutularının listeleri
     def _stat_clicked(self, kind):
-        if kind == "bulgu":  # bulgular bu sayfada: o bölüme kaydır
-            if self.findings_title is not None:
-                QTimer.singleShot(0, lambda: self.scroll.verticalScrollBar().setValue(
-                    self.findings_title.mapTo(self.body_widget, QPoint(0, 0)).y()))
-            return
         self.detail_kind = None if self.detail_kind == kind else kind
         self._fill_detail()
 
@@ -549,9 +668,7 @@ class SummaryPage(w.Page):
         if kind == "degisen":
             rows = self.c.changed()
         else:
-            rows = self._suitable()
-            if kind == "acik":
-                rows = [tw for tw in rows if self._is_on(tw)]
+            rows = self._scores()[kind]
         title = QLabel(t(f"ui.stat_liste.{kind}", adet=len(rows)))
         title.setObjectName("CardTitle")
         card.lay.addWidget(w.hbox((title, 1), w.button(t("ui.kapat"), lambda: self._stat_clicked(kind))))
@@ -574,7 +691,7 @@ class SummaryPage(w.Page):
                 card.lay.addWidget(w.label(f"{t('kategori.' + category['id'])} ({len(items)})", bold=True, size=12))
                 for tweak in items:
                     parts = [(w.label(tweak["ad"]), 1)]
-                    if kind == "uygun" and self._is_on(tweak):
+                    if self._is_on(tweak):
                         parts.append(w.badge(t("ui.stat_rozet_acik"), "iyi"))
                     parts.append(w.button(t("ui.ayara_git"), lambda _=False, i=tweak["id"]: self.app.go_to_tweak(i)))
                     card.lay.addWidget(w.hbox(*parts, spacing=10))

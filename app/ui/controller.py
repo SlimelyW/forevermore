@@ -94,6 +94,8 @@ class Controller:
             data = json.loads(self.cache_file.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return False
+        if not isinstance(data, dict):  # null / [] gibi bozuk dosya: yok say
+            return False
         if data.get("surum") != __version__ or data.get("veri") != _catalog_fingerprint():
             return False
         self.scan = data.get("tarama")
@@ -304,7 +306,3 @@ class Controller:
             if code in self.restart_codes and code not in ("yok", "ses_servisi"):
                 return f"yeniden.{code}"
         return None
-
-    def category_of(self, tweak_id):
-        tweak = self.by_id.get(tweak_id)
-        return tweak["kategori"] if tweak else None

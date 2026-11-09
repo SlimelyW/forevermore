@@ -1,6 +1,8 @@
 """Ortak görsel parçalar: aç/kapa düğmesi, rozetler, kartlar, sayfa tabanı."""
 
+import html
 import os
+import re
 import subprocess
 
 from PySide6.QtCore import QCoreApplication, QEvent, QObject, QPoint, QRect, QRectF, QSize, Qt, QTimer, Signal
@@ -185,13 +187,6 @@ def summary_text(text, limit=150):
     return text if len(text) <= limit else text[:limit].rsplit(" ", 1)[0] + "…"
 
 
-def summary_label(text):
-    widget = QLabel(summary_text(text))
-    widget.setObjectName("Summary")
-    widget.setWordWrap(True)
-    return widget
-
-
 def label(text, muted=False, wrap=True, bold=False, size=None, selectable=False, plain=False):
     """plain=True: üçüncü taraftan gelen metin (eklenti adı vb.) HTML sayılmaz."""
     widget = QLabel(text)
@@ -207,8 +202,20 @@ def label(text, muted=False, wrap=True, bold=False, size=None, selectable=False,
     return widget
 
 
+def title_parts(text):
+    """Sayfa başlığı -> (ön, vurgulu, not): vurgulu kısım SON kelimedir; sondaki "(...)" notu vurgulanmaz
+    ("Boost (bellek)" -> "Boost" yeşil). Tek kelimeyse hepsi vurgulu."""
+    match = re.fullmatch(r"(.*?)(\S+)(\s*\([^)]*\))?", text.strip())
+    return (match.group(1), match.group(2), match.group(3) or "") if match else ("", text, "")
+
+
 def title(text):
-    widget = QLabel(text)
+    """Sayfa başlığı: iki tonlu (son kelime yeşil vurgu). Ekran okuyucuya tam metin verilir."""
+    head, accent, note = title_parts(text)
+    color = theme.palette()["accent"]
+    widget = QLabel(f'{html.escape(head)}<span style="color:{color}">{html.escape(accent)}</span>{html.escape(note)}')
+    widget.setTextFormat(Qt.TextFormat.RichText)
+    widget.setAccessibleName(text)
     widget.setObjectName("Title")
     return widget
 
@@ -271,10 +278,17 @@ class Toast(QFrame):
         self.hide()
         self._timer = QTimer(self)
         self._timer.setSingleShot(True)
-        self._timer.timeout.connect(self.hide)
+        self._timer.timeout.connect(self._expire)
 
     def text(self):
         return self.label.text()
+
+    def _expire(self):
+        """"Geri al" düğmeli bildirim fare ya da odak üstündeyken kapanmaz (okumak/basmak için süre); ayrılınca kapanır."""
+        if self._action is not None and (self.underMouse() or self.button.hasFocus()):
+            self._timer.start(1500)
+        else:
+            self.hide()
 
     def _clicked(self):
         action, self._action = self._action, None
@@ -327,11 +341,14 @@ class RowList(QFrame):
     """Ayar satırlarını tek kartta toplar, aralarına ince çizgi koyar. Her satırın ayrı çerçeveli kart olması
     sayfayı aynı anda boş (kartların içi) ve kalabalık (üst üste çerçeveler) gösteriyordu (tasarım yönü A)."""
 
-    def __init__(self):
+    def __init__(self, flat=False):
+        """flat=True: dış çerçeve ve zemin yok; satırlar düz, aralarında yalnızca ince çizgi (özet ve kategori sayfaları)."""
         super().__init__()
         self.setObjectName("List")
+        self.setProperty("flat", flat)
         self.lay = QVBoxLayout(self)
-        self.lay.setContentsMargins(4, 4, 4, 4)
+        pad = 0 if flat else 4
+        self.lay.setContentsMargins(pad, pad, pad, pad)
         self.lay.setSpacing(0)
 
     def add(self, row):
@@ -532,14 +549,72 @@ class Page(QWidget):
         self.scroll.verticalScrollBar().setValue(0)
 
 
-class FlowLayout(QLayout):
-    """Öğeleri yan yana dizer, sığmayanı alt satıra kaydırır (dar pencerede yatay taşma olmaz)."""
+class ClampLabel(QLabel):
+    """En çok `lines` satırlık metin: sığmayan kısım "…" ile biter, tam metin ipucunda ve erişilebilir adda.
+    Yüksekliği her zaman `lines` satırdır (kartlar eşit boyda kalsın); genişliğe uyar, kart büyütmez."""
 
-    def __init__(self, parent=None, spacing=6):
+    def __init__(self, text, lines=2, name=None, center=False):
+        super().__init__()
+        self._full, self._lines = text or "", lines
+        if name:
+            self.setObjectName(name)
+        self.setTextFormat(Qt.TextFormat.PlainText)
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft | (Qt.AlignmentFlag.AlignVCenter if center else Qt.AlignmentFlag.AlignTop))
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
+        self.setMinimumWidth(0)
+        self.setAccessibleName(self._full)
+        self._fit()
+
+    def _fit(self):
+        metrics = self.fontMetrics()
+        self.setFixedHeight(self._lines * metrics.lineSpacing() + 2)
+        width = max(self.width(), 60)
+        rest, out, cut = self._full.split(), [], False
+        for n in range(self._lines):
+            if not rest:
+                break
+            if n == self._lines - 1:
+                joined = " ".join(rest)
+                shown = metrics.elidedText(joined, Qt.TextElideMode.ElideRight, width)
+                cut = cut or shown != joined
+                out.append(shown)
+                break
+            line, taken = rest[0], 1
+            while taken < len(rest) and metrics.horizontalAdvance(line + " " + rest[taken]) <= width:
+                line += " " + rest[taken]
+                taken += 1
+            if metrics.horizontalAdvance(line) > width:  # tek sözcük satıra sığmıyor
+                line = metrics.elidedText(line, Qt.TextElideMode.ElideRight, width)
+                cut = True
+            out.append(line)
+            rest = rest[taken:]
+        text = "\n".join(out)
+        if text != self.text():
+            self.setText(text)
+        self.setToolTip(self._full if cut else "")
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._fit()
+
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        if event.type() in (QEvent.Type.FontChange, QEvent.Type.StyleChange):
+            self._fit()
+
+
+class FlowLayout(QLayout):
+    """Öğeleri yan yana dizer, sığmayanı alt satıra kaydırır (dar pencerede yatay taşma olmaz).
+
+    grid=(en_az_genislik, en_cok_sutun): eşit genişlikli sütunlar (genişliğe göre 1..en_cok_sutun) ve satır başına
+    eşit yükseklik; kart ızgarası için. Verilmezse öğeler kendi önerilen boyutunda akar."""
+
+    def __init__(self, parent=None, spacing=6, grid=None):
         super().__init__(parent)
         self.setContentsMargins(0, 0, 0, 0)
         self.setSpacing(spacing)
         self._items = []
+        self._grid = grid
 
     def addItem(self, item):
         self._items.append(item)
@@ -567,16 +642,41 @@ class FlowLayout(QLayout):
         self._place(rect, move=True)
 
     def sizeHint(self):
+        if self._grid:
+            return QSize(self._grid[0], self.heightForWidth(self._grid[0]))
         width = sum(i.sizeHint().width() for i in self._items) + self.spacing() * max(0, len(self._items) - 1)
         return QSize(width, max((i.sizeHint().height() for i in self._items), default=0))
 
     def minimumSize(self):
+        if self._grid:  # tek sütuna kadar daralır; kartın içi kırpılır, sayfa yatay taşmaz
+            return QSize(self._grid[0], self.heightForWidth(self._grid[0]))
         size = QSize()
         for item in self._items:
             size = size.expandedTo(item.minimumSize())
         return size
 
+    def columns(self, width):
+        """Izgara kipinde bu genişlikte kaç sütun var (1..en_çok)."""
+        least, most = self._grid
+        return max(1, min(most, (width + self.spacing()) // (least + self.spacing())))
+
+    def _place_grid(self, rect, move):
+        space = self.spacing()
+        cols = self.columns(rect.width())
+        cell = (rect.width() - space * (cols - 1)) // cols
+        y = rect.y()
+        for start in range(0, len(self._items), cols):
+            line = self._items[start:start + cols]
+            height = max((i.heightForWidth(cell) if i.hasHeightForWidth() else i.sizeHint().height()) for i in line)
+            if move:
+                for n, item in enumerate(line):
+                    item.setGeometry(QRect(rect.x() + n * (cell + space), y, cell, height))
+            y += height + space
+        return max(0, y - space - rect.y())
+
     def _place(self, rect, move):
+        if self._grid:
+            return self._place_grid(rect, move)
         x, y, line = rect.x(), rect.y(), 0
         for item in self._items:
             hint = item.sizeHint()
@@ -589,9 +689,9 @@ class FlowLayout(QLayout):
         return y + line - rect.y()
 
 
-def flow(*widgets, spacing=6):
+def flow(*widgets, spacing=6, grid=None):
     widget = QWidget()
-    lay = FlowLayout(widget, spacing)
+    lay = FlowLayout(widget, spacing, grid)
     for item in widgets:
         lay.addWidget(item)
     return widget

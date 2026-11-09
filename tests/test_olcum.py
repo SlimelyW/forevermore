@@ -251,6 +251,25 @@ class TestStoreAndReport(unittest.TestCase):
             store.remove(a["id"])
             self.assertEqual([m["id"] for m in MeasurementStore(store.path).items], [b["id"]])
 
+    def test_garbage_file_gives_empty_list(self):
+        """Denetim B B3: null / [] / "x" / öğesi sözlük olmayan dosya Ölçüm sayfasını çökertmez."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "olcumler.json"
+            for text in ("null", "[]", "\"x\"", "{bozuk", '{"olcumler": null}'):
+                path.write_text(text, encoding="utf-8")
+                self.assertEqual(MeasurementStore(path).items, [], text)
+            path.write_text('{"olcumler": [1, {"id": "a"}]}', encoding="utf-8")
+            self.assertEqual([m["id"] for m in MeasurementStore(path).items], ["a"])
+
+    def test_measure_refuses_registered_anti_cheat_game(self):
+        """Denetim B B2: kayıtlı anti-cheat'li oyunda PresentMon başlatılmaz (canlı FPS ile aynı ETW yöntemi)."""
+        from app.ui.page_measure import anti_cheat_game
+        games = [{"exe": r"C:\Oyun\TFD.exe", "ad": "TFD", "anti_cheat": ["Nexon BlackCipher"]},
+                 {"exe": r"C:\Oyun	emiz.exe", "ad": "Temiz", "anti_cheat": []}]
+        self.assertTrue(anti_cheat_game(games, "tfd.exe"))
+        self.assertFalse(anti_cheat_game(games, "temiz.exe"))
+        self.assertFalse(anti_cheat_game(games, "bilinmeyen.exe"))
+
 
 if __name__ == "__main__":
     unittest.main()

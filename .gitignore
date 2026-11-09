@@ -79,8 +79,9 @@ id_ed25519*
 secrets.*
 credentials*.json
 
-# Telifli içerik: oyun kapak görselleri, mağaza (Steam/Epic vb.) görselleri, marka logoları ve indirilen üçüncü taraf
-# simgeler depoda OLMAZ; uygulama/site bunları çalışma anında yayıncının sunucusundan alır, önbellek kullanıcı klasöründedir.
+# Telifli içerik: mağaza (Steam/Epic vb.) görselleri, marka logoları ve indirilen üçüncü taraf simgeler depoda OLMAZ;
+# site bunları çalışma anında yayıncının sunucusundan alır, önbellek kullanıcı klasöründedir.
+# TEK İSTİSNA: data/oyun_kapaklari/ altındaki 15 gömülü kapak (yayıncıya ait; docs/KAPAK_KAYNAKLARI.md, tools/kapak_kaldir.py).
 kapaklar/
 covers/
 cover_cache/
@@ -92,4 +93,8 @@ third_party_assets/
 **/library_600x900*.jpg
 **/header.jpg
 docs/arsiv/
+
+# Kullanıcının kapak resmi bırakma klasörü (kaynaklar docs/KAPAK_KAYNAKLARI.md); depoya girmez, data/oyun_kapaklari/ girer
+kapak_gelen/
+
 .claude/

@@ -1,4 +1,4 @@
-"""Ekstra ayarlar (uygulamanın kendi ayarları, bakım araçları) ve Bilgi sayfası.
+"""Ayarlar (uygulamanın kendi ayarları, bakım araçları) ve Bilgi sayfası.
 
 Windows ayarlarına dokunan tek seçenek "Windows'la başlat"tır (zamanlanmış görev;
 varsayılan kapalı). Bilgi sayfasındaki ad, iletişim ve bağlantılar data/hakkinda.json

@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -91,6 +92,15 @@ class GercekAcl(unittest.TestCase):
         with mock.patch.object(g, "TRUSTED_OWNERS", {self.sid}):
             g.ensure(folder, g.sddl(None, owner=None))
         self.assertTrue((folder / "a.txt").is_file())
+
+    def test_reset_acl_ignores_systemroot_env(self):
+        """Denetim A S1: HKCU Environment'taki SystemRoot yönetici olmayan süreçlerce yazılabilir."""
+        from app.core import powershell
+        done = subprocess.CompletedProcess([], 0)
+        with mock.patch.dict(os.environ, {"SystemRoot": r"C:\Users\x\kotu"}), \
+                mock.patch.object(g.subprocess, "run", return_value=done) as run:
+            g.reset_acl(self.root)
+        self.assertEqual(run.call_args[0][0][0], str(Path(powershell.SYSTEM32) / "icacls.exe"))
 
     def test_reset_acl_real_tree(self):
         (self.root / "k" / "alt").mkdir(parents=True)
@@ -343,6 +353,23 @@ class Baslangic(unittest.TestCase):
             self.assertFalse(_protect_backups(logging.getLogger("test")))
         with mock.patch.object(paths, "migrate_to_protected", return_value=False):
             self.assertTrue(_protect_backups(logging.getLogger("test")))
+
+    def test_uninstall_cleanup_is_readonly_when_backups_not_moved(self):
+        """Denetim A O3: --kaldir yolunda taşıma başarısızsa kullanıcı klasöründeki yedeklerle yazma yapılmaz."""
+        import app.__main__ as entry
+        from app.core import uninstall
+        from app.engine import backup, engine
+        for moved, readonly in ((False, True), (True, False)):
+            with self.subTest(moved=moved), mock.patch.object(sys, "argv", ["app", "--kaldir"]), \
+                    mock.patch.object(entry.admin, "is_admin", return_value=True), \
+                    mock.patch.object(entry, "_protect_backups", return_value=moved), \
+                    mock.patch.object(entry.log, "setup"), \
+                    mock.patch.object(backup, "BackupStore") as store, mock.patch.object(engine, "Engine") as made, \
+                    mock.patch.object(uninstall, "cleanup", return_value={"geri_alinamayan": []}):
+                self.assertEqual(entry.main(), 0)
+                store.assert_called_once_with(readonly=readonly)
+                # salt okunur depo geri almayı durdurmaz; normal açılıştaki gibi motor da yönetici saymaz
+                self.assertIs(made.call_args.kwargs["is_admin"](), moved)
 
 
 if __name__ == "__main__":

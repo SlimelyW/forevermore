@@ -1,32 +1,161 @@
-"""Oyunlar menüsü: üstte oyun seçimi, altında seçilen oyun için tek, sade bir sayfa.
+"""Oyunlar menüsü: oyun kartları ızgarası; bir karta basınca o oyunun kendi alt sayfası açılır (üstte "← Oyunlar").
 
 İlk bakışta "Oyunu başlat" ve "Önerilen ayarları uygula"; diğerleri varsayılan olarak kapalı "Gelişmiş ayarlar"
 bölümünde. Her terimin yanında tek cümlelik açıklama veren (i) düğmesi var.
 
-Ayarlar yalnızca kalıcıdır (öncelik, GPU tercihi, tam ekran optimizasyonları): kaydedince motordan yazılır ve
-Değişiklikler sayfasından geri alınır. Çalışan oyunla otomatik uygulama/geri alma YOK (oyun izleyici 7 Kasım 2026'da
-kaldırıldı). Anti-cheat süreçlerine hiçbir ayar uygulanmaz (profiles.PROTECTED_EXES).
+Kalıcı ayarlar (öncelik, GPU tercihi, tam ekran optimizasyonları): kaydedince motordan yazılır ve Değişiklikler'den geri
+alınır. "Oyun sırasında" seçenekleri (Rahatsız etme, güç planı, Steam indirme uyarısı…) düz anahtarlardır, varsayılan
+KAPALI, oyun başına saklanır; YALNIZCA "Hazırla" / "Oyunu başlat"a basınca uygulanır, oyun kapanınca ya da "Geri al"la
+geri alınır. Arka planda izleyici YOK (oyun izleyici 7 Kasım 2026'da kaldırıldı). Anti-cheat'li oyunda yalnızca oyun
+sürecine dokunmayanlar görünür (profiles.runtime_options); anti-cheat süreçlerine hiçbir ayar uygulanmaz.
 """
 
 import os
 import time
 
-from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QButtonGroup, QComboBox, QFileDialog, QLabel, QProgressBar, QVBoxLayout, QWidget
+from PySide6.QtCore import QFileInfo, QRectF, QSize, Qt, QTimer, Signal
+from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPixmap
+from PySide6.QtWidgets import (QButtonGroup, QComboBox, QFileDialog, QFileIconProvider, QLabel, QMenu, QProgressBar, QPushButton,
+                               QVBoxLayout, QWidget)
 
 from app.core import i18n, settings
 from app.core.i18n import t, value_label
-from app.games import canli_surec, discovery, guides, oyun_ayar, presets, profiles, recorder
+from app.games import canli_surec, discovery, oyun_ayar, presets, profiles, recorder
 from app.ui import dialogs, motion, theme, widgets as w
-from app.ui.page_settings import about_data
 
 PRIORITIES = ("Normal", "AboveNormal", "High")
 GPU_PREFS = ("varsayilan", "guc_tasarrufu", "yuksek_performans")
+MAX_IMAGE_BYTES = 30 * 1024 * 1024  # bundan büyük dosya resim olarak açılmaya çalışılmaz
 
 
 def _when(iso):
     """"2026-11-07T12:00:05" -> "2026-11-07 12:00"."""
     return (iso or "").replace("T", " ")[:16]
+
+
+class Cover(QWidget):
+    """Oyun kapağı (3:4 kutu). Sıra: kullanıcının seçtiği resim -> Steam'in yerel önbelleğindeki en uygun görsel (HER görsel
+    kutuyu kırparak doldurur; yatay olan ortadan kırpılır) -> oyunun exe simgesi (koyu zeminde ortada) -> adın ilk harfi
+    (renk oyun adından sabit). Ağdan hiçbir şey indirilmez. Resim ve exe simgesi kart ilk çizilirken okunur (ekrana gelmeyen kartlar
+    için hiç okunmaz) ve yola göre saklanır."""
+
+    W, H = 156, 208
+    ICON = 88  # exe simgesinin kart içindeki kenarı (mantıksal px)
+    _cache = {}  # (dosya yolu, değişme zamanı) -> QPixmap (sayfa her yenilendiğinde yeniden çözülmesin)
+    _icons = {}  # exe yolu -> QPixmap ya da None
+
+    def __init__(self, game, path):
+        super().__init__()
+        self.setFixedSize(self.W, self.H)
+        self.name = game["ad"]
+        self.letter = (game["ad"].strip()[:1] or "?").upper()
+        self.exe = game.get("exe")
+        self.path = path
+        self._pixmap, self._loaded = None, False
+
+    @property
+    def pixmap(self):
+        """Kapak resmi (QPixmap ya da None). Dosya kart İLK ÇİZİLİRKEN çözülür/ölçeklenir: ekrana gelmeyen kartlar için hiç
+        okunmaz (Oyunlar sayfası açılışı kapak sayısıyla uzamasın); çözülmüş resim sınıf önbelleğinde durur."""
+        if not self._loaded:
+            self._loaded = True
+            self._pixmap = self._load(self.path) if self.path else None
+        return self._pixmap
+
+    @classmethod
+    def _load(cls, path):
+        """QPixmap ya da None: görsel kutuyu doldurur, taşan kısım ortadan kırpılır (yatay görselde yanlar gider)."""
+        try:
+            key = (path, os.stat(path).st_mtime_ns)  # kullanıcı aynı yola yeni resim koyunca eskisi kalmasın
+        except OSError:
+            return None
+        if key not in cls._cache:
+            source = QPixmap(path)
+            result = None
+            if not source.isNull():
+                scaled = source.scaled(cls.W * 2, cls.H * 2, Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                                       Qt.TransformationMode.SmoothTransformation)
+                x, y = (scaled.width() - cls.W * 2) // 2, (scaled.height() - cls.H * 2) // 2
+                result = scaled.copy(x, y, cls.W * 2, cls.H * 2)
+            cls._cache[key] = result
+        return cls._cache[key]
+
+    @classmethod
+    def import_image(cls, game_id, source):
+        """Kullanıcının dosyasını uygulama veri klasörüne kopyalar: kutuya göre ortadan kırpılıp 2x boyuta ölçeklenir ve
+        JPEG olarak yazılır (özgün dosyaya dokunulmaz, yola bağlı kalınmaz). Başarılıysa True."""
+        image = QImage(source)
+        if image.isNull() or not discovery.USER_COVER_ID.fullmatch(game_id):
+            return False
+        scaled = image.scaled(cls.W * 2, cls.H * 2, Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                              Qt.TransformationMode.SmoothTransformation)
+        crop = scaled.copy((scaled.width() - cls.W * 2) // 2, (scaled.height() - cls.H * 2) // 2, cls.W * 2, cls.H * 2)
+        folder = discovery.user_cover_dir()
+        folder.mkdir(parents=True, exist_ok=True)
+        target = folder / f"{game_id}.jpg"
+        temp = folder / f"{game_id}.tmp.jpg"
+        if not crop.convertToFormat(QImage.Format.Format_RGB32).save(str(temp), "JPEG", 90):
+            return False
+        os.replace(temp, target)
+        return True
+
+    @classmethod
+    def exe_icon(cls, exe):
+        """Windows'un exe için verdiği büyük simge (yoksa/okunamazsa None)."""
+        if exe not in cls._icons:
+            pixmap = None
+            if exe and os.path.isfile(exe):
+                pixmap = QFileIconProvider().icon(QFileInfo(exe)).pixmap(QSize(128, 128))
+                pixmap = None if pixmap.isNull() else pixmap
+            cls._icons[exe] = pixmap
+        return cls._icons[exe]
+
+    def paintEvent(self, _event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        rect = QRectF(self.rect())
+        clip = QPainterPath()
+        clip.addRoundedRect(rect, 8, 8)
+        painter.setClipPath(clip)
+        if self.pixmap is not None:
+            painter.drawPixmap(rect, self.pixmap, QRectF(self.pixmap.rect()))
+            return
+        icon = self.exe_icon(self.exe)
+        if icon is not None:
+            painter.fillRect(rect, QColor(theme.ICON_GROUND))
+            side = self.ICON
+            target = QRectF((self.W - side) / 2, (self.H - side) / 2, side, side)
+            painter.drawPixmap(target, icon, QRectF(icon.rect()))
+            return
+        color, ground = theme.letter_style(self.name)
+        painter.fillRect(rect, QColor(ground))
+        painter.setPen(QColor(color))
+        painter.setFont(theme.ui_font(56, bold=True))
+        painter.drawText(self.rect(), int(Qt.AlignmentFlag.AlignCenter), self.letter)
+
+
+class AddCard(QPushButton):
+    """Izgaranın sonundaki kesikli çerçeveli "+ Oyun ekle": kapakla aynı boyda. (Stil sayfasının min-height'ı sabit
+    boyu ezdiğinden boyut sizeHint ile verilir.)"""
+
+    def sizeHint(self):
+        return QSize(Cover.W + 20, Cover.H + 20)
+
+
+class GameCard(w.Card):
+    """Tıklanınca (kartın herhangi bir yeri; düğmeler kendi işini yapar) `opened` yayan oyun kartı."""
+
+    opened = Signal()
+
+    def __init__(self):
+        super().__init__(spacing=8, margins=(10, 10, 10, 12), hover=True)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton and self.rect().contains(event.position().toPoint()):
+            self.opened.emit()
+        super().mouseReleaseEvent(event)
 
 
 class GamesPage(w.Page):
@@ -42,9 +171,11 @@ class GamesPage(w.Page):
         self.scanned = False       # bu oturumda tarandı mı (her açılışta bir kez arka planda taranır)
         self.scan_finished = 0.0
         self.editing = None        # seçili oyunun kimliği
+        self.opened = False        # seçili oyunun alt sayfası açık mı (liste ve "Bulunan" bölümü o sırada gizli)
         self.draft = None          # seçili oyunun düzenlenen profili
         self.candidates = {}       # oyun kimliği -> .exe adayları
         self.advanced_open = False
+        self.found_all = False     # bulunan oyunlar listesi tamamen açık mı
         self._live = None          # "Şu an" satırı (canlı FPS); yalnızca bu oyun sürerken ve canlı FPS çalışırken
         self._live_timer = QTimer(self)
         self._live_timer.setInterval(1000)
@@ -57,6 +188,11 @@ class GamesPage(w.Page):
         self._proc_timer.timeout.connect(self._procs_tick)
 
     def on_show(self, highlight=None):
+        if self.opened:  # menüden (yeniden) gelince liste görünür; alt sayfada açık kalmaz
+            self.opened = False
+            self.draft = None
+            if self.built:
+                self.data_reloaded()
         self.ensure_built()
         # Oturum açılışında tepside başlayınca ilk tarama sürücüler hazır olmadan yapılmış olabilir: boş sonuç kalıcı olmasın.
         empty_and_old = self.scanned and not self.found and time.monotonic() - self.scan_finished > 60
@@ -66,65 +202,162 @@ class GamesPage(w.Page):
     # ------------------------------------------------------------------ kurulum
     def build(self):
         super().build()
-        self.header.addWidget(w.hbox(w.title(t("ui.menu.oyunlar")), None,
-                                     self._scan_button(),
-                                     w.button(t("ui.oyun_elle_ekle"), self._add_manual)))
+        if not self.scanned and not self.scanning:
+            self._discover()  # uygulama açılınca (sayfa önceden kurulurken) arka planda
+        self.store.ensure_anti_cheat()
+        game = self.store.get(self.editing) if self.editing else None
+        if game is None:
+            self.editing, self.draft, self.opened = None, None, False
+        if self.opened:  # oyunun alt sayfası: liste ve "Bulunan" bölümü gizli, geri düğmesi + Esc
+            back = w.button(t("ui.oyun_geri"), self._back)
+            back.setAccessibleName(t("ui.oyun_geri_ad"))
+            self.header.addWidget(w.hbox(back, None))
+            if not self.c.can_modify:
+                self.body.addWidget(w.banner(t("ui.oyun_izleyici_mod"), "uyari"))
+            self.body.addWidget(self._game_page(game))
+            return
+        self.header.addWidget(w.hbox(w.title(t("ui.menu.oyunlar")), None, self._scan_button()))
         self.header.addWidget(w.label(t("ui.oyunlar_aciklama"), muted=True))
         if not self.c.can_modify:
             self.body.addWidget(w.banner(t("ui.oyun_izleyici_mod"), "uyari"))
         if self.store.load_error:  # oyun listesi dosyası bozuktu (ör. zorla kapatma): sessizce boş liste gösterilmez
             self.body.addWidget(w.banner(t(f"ui.oyun_liste_{self.store.load_error}"), "uyari"))
-        if not self.scanned and not self.scanning:
-            self._discover()  # uygulama açılınca (sayfa önceden kurulurken) arka planda
-        self.store.ensure_anti_cheat()
-        if self.editing is None or self.store.get(self.editing) is None:
-            first = (self.store.games or [None])[0]
-            self.editing = first["id"] if first else None
-            self.draft = None
         self.body.addWidget(self._picker())
-        game = self.store.get(self.editing) if self.editing else None
-        if game is not None:
-            self.body.addWidget(self._game_page(game))
 
-    def _useful_card(self, items):
-        """Bilgi sayfasından taşınan faydalı dış bağlantılar (data/hakkinda.json 'faydali'); tarayıcıda açılır."""
-        card = w.Card(spacing=6)
-        head = QLabel(t("ui.oyun_faydali.baslik"))
-        head.setObjectName("CardTitle")
-        card.lay.addWidget(head)
-        card.lay.addWidget(w.label(t("ui.oyun_faydali.not"), muted=True, size=12))
-        for item in items:
-            parts = [(w.label(f"{item.get('etiket', '').removeprefix('Faydalı: ')}: {item.get('deger', '')}", selectable=True, wrap=False), 1)]
-            if str(item.get("url", "")).startswith("https://"):
-                parts.append(w.button(t("ui.bilgi.ac"), lambda _=False, u=item["url"]: os.startfile(u)))
-            card.lay.addWidget(w.hbox(*parts))
-        return card
+    def _back(self):
+        """Alt sayfadan oyun listesine dönüş (düğme ve Esc)."""
+        self.opened, self.draft = False, None
+        self.data_reloaded()
+        QTimer.singleShot(10, self.scroll_top)
+
+    def handle_escape(self):
+        """Pencerenin Esc'i önce sayfaya sorar: alt sayfa açıksa listeye döner (önceki sayfaya değil)."""
+        if self.opened:
+            self._back()
+            return True
+        return False
+
+    def _open(self, game_id):
+        self.editing, self.draft, self.opened = game_id, None, True
+        QTimer.singleShot(0, self.data_reloaded)
+        QTimer.singleShot(20, self.scroll_top)
+
+    FOUND_LIMIT = 6  # bulunan oyunlar listesi bunu aşarsa "Tümünü göster"
+
+    def _empty(self):
+        """Hiç oyun yok ve bulunan da yok (tarama bitmiş): boş durum cümlesi + 'Elle ekle'."""
+        return not self.store.games and not self._remaining() and not self.scanning
 
     def _picker(self):
-        """Tek açılır liste: önce listemdeki oyunlar, sonra bilgisayarda bulunup henüz eklenmemiş olanlar."""
-        card = w.Card()
-        combo = QComboBox()
+        """Oyun kapak kartları ızgarası (kapak, ad, "Hazırla"): önce listemdeki oyunlar (favoriler üstte), sonra bilgisayarda
+        bulunup henüz eklenmemişler; ızgaranın sonunda kesikli çerçeveli "+ Oyun ekle". İkincil işlemler '…' menüsünde.
+        Karta basınca oyunun alt sayfası açılır. Kapaklar yalnızca Steam'in yerel önbelleğinden okunur (ağ yok)."""
+        box = QWidget()
+        lay = QVBoxLayout(box)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(10)
+        root = discovery.steam_root()
         favorites = set(settings.get("favori_oyunlar") or [])
-        for game in sorted(self.store.games, key=lambda g: g["id"] not in favorites):  # kararlı sıralama: favoriler üstte
-            combo.addItem(("★ " if game["id"] in favorites else "") + game["ad"], ("oyun", game["id"]))
+        mine = sorted(self.store.games, key=lambda g: g["id"] not in favorites)  # kararlı sıralama: favoriler üstte
         remaining = self._remaining()
+        add = self._add_card()  # ilk uygun ızgaranın sonuna konur
+        if mine:
+            lay.addWidget(w.section_title(t("ui.oyun_liste_benim")))
+            lay.addWidget(w.flow(*(self._card(g, g["id"] in favorites, root, True) for g in mine), add, spacing=12))
+            add = None
         if remaining:
-            if self.store.games:
-                combo.insertSeparator(combo.count())
-            for game in remaining:
-                combo.addItem(t("ui.oyun_ekle_secenek", ad=game["ad"], kaynak=game["kaynak"]), ("bulunan", game))
-        # findData Python demetlerinde güvenilir değil (uygulamada -1 dönüyordu; kutu hep ilk oyunu gösteriyordu)
-        combo.setCurrentIndex(next((i for i in range(combo.count()) if combo.itemData(i) == ("oyun", self.editing)), 0))
-        combo.setMinimumWidth(420)
-        combo.setMinimumHeight(36)
-        combo.activated.connect(lambda _i: self._picked(combo.currentData()))
-        caption = QLabel(t("ui.oyun_sec"))
-        caption.setObjectName("CardTitle")
-        card.lay.addWidget(w.hbox(caption, combo, None, spacing=12))
+            lay.addWidget(w.section_title(t("ui.oyun_liste_bulunan")))
+            shown = remaining if self.found_all else remaining[:self.FOUND_LIMIT]
+            lay.addWidget(w.flow(*(self._card(g, False, root, False) for g in shown), *([add] if add else []), spacing=12))
+            add = None
+            if len(remaining) > self.FOUND_LIMIT:
+                more = w.button(t("ui.oyun_az_goster") if self.found_all else t("ui.oyun_hepsi_goster", n=len(remaining)),
+                                self._toggle_found_all)
+                lay.addWidget(w.hbox(more, None))
         if not self.store.games:  # liste varken tarama durumu Gelişmiş'te
-            card.lay.addWidget(self._scan_status(len(remaining)))
-            card.lay.addWidget(w.label(t("ui.oyun_yok"), muted=True))
+            lay.addWidget(self._scan_status(len(remaining)))
+        if self._empty():
+            lay.addWidget(w.label(t("ui.oyun_yok"), muted=True))
+        if add is not None:
+            lay.addWidget(w.flow(add))
+        return box
+
+    def _add_card(self):
+        card = AddCard(t("ui.oyun_ekle_kart"))
+        card.setObjectName("AddCard")
+        card.setCursor(Qt.CursorShape.PointingHandCursor)
+        card.setFocusPolicy(Qt.FocusPolicy.TabFocus)
+        card.clicked.connect(lambda _=False: self._add_manual())
         return card
+
+    def _toggle_found_all(self):
+        self.found_all = not self.found_all
+        QTimer.singleShot(0, self.data_reloaded)
+
+    def _card(self, game, favorite, root, own):
+        card = GameCard()
+        card.setFixedWidth(Cover.W + 20)
+        card.opened.connect(lambda g=game, o=own: self._picked(("oyun", g["id"]) if o else ("bulunan", g)))
+        card.lay.addWidget(Cover(game, discovery.cover_path(game, root)))
+        name = QLabel(("★ " if favorite else "") + game["ad"])
+        name.setObjectName("CardTitle")
+        name.setWordWrap(True)
+        name.setMinimumHeight(40)  # iki satıra kadar: kartların düğmeleri hizalı kalır
+        name.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        name.setToolTip(game["ad"])
+        card.lay.addWidget(name)
+        card.lay.addWidget(w.label(value_label("ui.oyun_kaynak", game["kaynak"]), muted=True, size=12, wrap=False))
+        if not own:
+            # ikincil görünüm: birincil yeşil yalnızca listemdeki oyunlarda (yoksa sayfa yeşil bloklarla dolar)
+            setup = w.button(t("ui.oyun_hazirla"), lambda _=False, g=game: self._picked(("bulunan", g)))
+        else:
+            setup = w.button(t("ui.oyun_hazirla"), lambda _=False, gid=game["id"]: self._picked(("oyun", gid)), primary=True)
+        if isinstance(setup, QPushButton):
+            setup.setAccessibleName(f"{t('ui.oyun_hazirla')}: {game['ad']}")
+        if not own:
+            card.lay.addWidget(setup)
+            return card
+        more = w.button("…", None, width=44)
+        more.setToolTip(t("ui.oyun_menu"))
+        more.setAccessibleName(f"{t('ui.oyun_menu')}: {game['ad']}")
+        more.clicked.connect(lambda _=False, b=more, g=game, f=favorite: self._row_menu(b, g, f))
+        card.lay.addWidget(w.hbox((setup, 1), more, spacing=6))
+        return card
+
+    def _row_menu(self, button, game, favorite):
+        """İkincil işlemler: favori ve oyunu başlat (satırın birincil düğmesi yalnızca 'Hazırla')."""
+        menu = QMenu(button)
+        menu.addAction(t("ui.oyun_favori_kaldir" if favorite else "ui.oyun_favori_ekle"),
+                       lambda: self._toggle_favorite(game["id"]))
+        target = profiles.launch_target(game)
+        if target:
+            menu.addAction(t("ui.oyun_baslat"),
+                           lambda: os.startfile(profiles.launch_target(game, rediscover=True) or target))
+        menu.addSeparator()
+        menu.addAction(t("ui.oyun_resim_sec"), lambda: self._pick_image(game))
+        if discovery.user_cover(game["id"]):
+            menu.addAction(t("ui.oyun_resim_kaldir"), lambda: self._remove_image(game))
+        menu.exec(button.mapToGlobal(button.rect().bottomLeft()))
+
+    def _pick_image(self, game):
+        """Kullanıcının kendi resim dosyası: yerel olarak kopyalanır ve ölçeklenir (ağ yok)."""
+        path, _ = QFileDialog.getOpenFileName(self, t("ui.oyun_resim_baslik"), "", t("ui.oyun_resim_filtre"))
+        if not path:
+            return
+        try:
+            ok = os.path.getsize(path) <= MAX_IMAGE_BYTES and Cover.import_image(game["id"], path)
+        except OSError:
+            ok = False
+        if not ok:
+            self.app.set_status(t("ui.oyun_resim_hata"), "uyari")
+            return
+        self.app.set_status(t("ui.oyun_resim_tamam", ad=game["ad"]), "iyi")
+        QTimer.singleShot(0, self.data_reloaded)
+
+    def _remove_image(self, game):
+        discovery.remove_user_cover(game["id"])
+        self.app.set_status(t("ui.oyun_resim_kaldirildi", ad=game["ad"]), "iyi")
+        QTimer.singleShot(0, self.data_reloaded)
 
     def _remaining(self):
         """Bilgisayarda bulunup henüz listeye eklenmemiş oyunlar."""
@@ -143,9 +376,8 @@ class GamesPage(w.Page):
         kind, value = data
         if kind == "bulunan":
             self._add_found(value)
-        elif value != self.editing:
-            self.editing, self.draft = value, None
-            QTimer.singleShot(0, self.data_reloaded)
+        else:
+            self._open(value)
 
     # ------------------------------------------------------------------ oyun bulma ve ekleme
     def _scan_button(self):
@@ -212,9 +444,7 @@ class GamesPage(w.Page):
         except ValueError:
             dialogs.show_message(self.app, t("ui.dikkat"), t("ui.oyun_korumali"), "uyari")
             return
-        self.editing = added["id"]
-        self.draft = None
-        QTimer.singleShot(0, self.data_reloaded)
+        self._open(added["id"])
 
     def _add_manual(self):
         path, _ = QFileDialog.getOpenFileName(self.app, t("ui.oyun_elle_ekle"), "", "Oyun (*.exe)")
@@ -227,15 +457,13 @@ class GamesPage(w.Page):
         except ValueError:
             dialogs.show_message(self.app, t("ui.dikkat"), t("ui.oyun_korumali"), "uyari")
             return
-        self.editing = added["id"]
-        self.draft = None
-        self.data_reloaded()
+        self._open(added["id"])
 
     def _remove(self, game):
         if dialogs.ask_yes_no(self.app, t("ui.oyun_kaldir"), t("ui.oyun_kaldir_soru", ad=game["ad"])):
             self.store.remove(game["id"])
             if self.editing == game["id"]:
-                self.editing, self.draft = None, None
+                self.editing, self.draft, self.opened = None, None, False
             self.app.update_game_detector()
             self.data_reloaded()
 
@@ -252,6 +480,7 @@ class GamesPage(w.Page):
             card.lay.addWidget(self._exe_row(game))  # exe seçilmeden başka bir şey yapılamaz
             return card
         card.lay.addWidget(self._main_row(game))
+        card.lay.addWidget(self._runtime_section(game))
         if game.get("anti_cheat"):
             card.lay.addWidget(w.colored(t("ui.oyun_anticheat_var", liste=", ".join(game["anti_cheat"])), "uyari"))
         # sayfa yeniden kurulmaz: bölüm yerinde açılır, kaydırma konumu korunur
@@ -267,12 +496,33 @@ class GamesPage(w.Page):
         """Ana düğmeler: Oyunu başlat + Önerilen ayarları uygula (N/M). Başka bir şey ilk bakışta yok."""
         parts = []
         target = profiles.launch_target(game)
+        prepared = self.app.prepared_game is not None and self.app.prepared_game["id"] == game["id"]
+        wanted = bool(profiles.runtime_selected(game))
         if target:
             # tıklayınca: eski kayıtta Steam/Epic kısayolu yoksa yeniden bulunur (TEST_FAZI A7: oyun Steam'siz açılıyordu)
+            def launch():
+                try:
+                    os.startfile(profiles.launch_target(game, rediscover=True) or target)
+                except OSError:  # Steam kaldırılmış / exe silinmiş: sessiz kalmasın
+                    self.app.set_status(t("ui.oyun_baslatilamadi"), "sorun")
             start = w.button(t("ui.oyun_baslat"),
-                             lambda: os.startfile(profiles.launch_target(game, rediscover=True) or target), primary=True)
+                             lambda: self.app.prepare_game(game, launch=launch), primary=True)
             start.setMinimumHeight(44)
+            if wanted:
+                start.setToolTip(t("ui.hazirla.baslat_ipucu"))
             parts.append(start)
+        if prepared:
+            self._prepare_button = None  # sayfa yeniden kurulurken eski (silinmiş) düğmeye dokunulmasın
+            undo = w.button(t("ui.hazirla.geri_al"), lambda: self.app.unprepare_game())
+            undo.setMinimumHeight(44)
+            parts.append(undo)
+        else:
+            prepare = w.button(t("ui.hazirla.dugme"), lambda: self.app.prepare_game(game))
+            prepare.setMinimumHeight(44)
+            prepare.setToolTip(t("ui.hazirla.dugme_ipucu"))
+            prepare.setEnabled(self.c.can_modify)
+            self._prepare_button = prepare
+            parts.append(prepare)
         done, total = presets.recommended_count(game["profil"], self._two_gpus())
         if total and done == total:
             parts.append(w.badge(t("ui.oyun_oner_tamam", n=done, m=total), "iyi"))
@@ -282,7 +532,49 @@ class GamesPage(w.Page):
             apply.setToolTip(t("ui.oyun_onerilen_ipucu"))
             apply.setEnabled(self.c.can_modify)
             parts.append(apply)
-        return w.hbox(*parts, None, spacing=12)
+        row = w.hbox(*parts, None, spacing=12)
+        if not prepared:
+            self._prepare_button.setVisible(wanted)  # çocuk olduktan sonra: ebeveynsiz setVisible(True) üst pencere olur
+        return row
+
+    def _runtime_section(self, game):
+        """"Oyun sırasında": düz anahtarlar (varsayılan KAPALI, oyun başına saklanır; sisteme hiçbir şey yazılmaz). Seçenekler
+        yalnızca "Hazırla" / "Oyunu başlat"ta uygulanır. Anti-cheat'li oyunda yalnızca oyun sürecine dokunmayanlar görünür."""
+        box = QWidget()
+        lay = QVBoxLayout(box)
+        lay.setContentsMargins(0, 4, 0, 0)
+        lay.setSpacing(8)
+        lay.addWidget(w.section_title(t("ui.hazirla.baslik")))
+        lay.addWidget(w.label(t("ui.hazirla.aciklama"), muted=True, size=12))
+        profile = game["profil"]
+        for key in profiles.runtime_options(game):
+            switch = w.ToggleSwitch()
+            switch.setChecked(bool(profile.get(key)))
+            switch.setEnabled(self.c.can_modify)
+            switch.setAccessibleName(t(f"ui.hazirla.ad.{key}"))
+            switch.toggled.connect(lambda on, k=key: self._set_runtime(game, k, on))
+            text = QVBoxLayout()
+            text.setSpacing(0)
+            text.addWidget(w.label(t(f"ui.hazirla.ad.{key}"), bold=True))
+            text.addWidget(w.label(t(f"ui.hazirla.acik.{key}"), muted=True, size=12))
+            holder = QWidget()
+            holder.setLayout(text)
+            text.setContentsMargins(0, 0, 0, 0)
+            lay.addWidget(w.hbox((holder, 1), switch, spacing=12))
+        if game.get("anti_cheat"):
+            lay.addWidget(w.label(t("ui.hazirla.anticheat"), muted=True, size=12))
+        if self.app.steam_note and self.app.prepared_game and self.app.prepared_game["id"] == game["id"]:
+            lay.addWidget(w.hbox(w.colored(t("ui.hazirla.steam_indiriyor"), "uyari"),
+                                 w.button(t("ui.hazirla.steam_ac"), lambda: os.startfile("steam://open/downloads")), None))
+        return box
+
+    def _set_runtime(self, game, key, on):
+        self.store.set_runtime(game["id"], key, on)
+        if self.draft is not None:
+            self.draft[key] = bool(on)  # taslakta eski değer kalıp "Kaydet"te ezmesin
+        button = getattr(self, "_prepare_button", None)
+        if button is not None:
+            button.setVisible(bool(profiles.runtime_selected(game)))
 
     def _apply_recommended(self, game):
         """'Dengeli' hazır ayarı taslağa yazar ve kaydeder (mevcut Kaydet yolu: onay, yedek, geri alma)."""
@@ -435,7 +727,7 @@ class GamesPage(w.Page):
                 card.lay.addWidget(w.label(t(f"ui.oyun_kayit.esik_{key}", sure=self._duration(usage[f"{key}_yuksek_sn"])),
                                            muted=True, size=12))
         if usage.get("arka_plan"):
-            card.lay.addWidget(w.label(t("ui.oyun_kayit.arka", liste=", ".join(f"{p['ad']} %{p['cpu']}" for p in usage["arka_plan"])),
+            card.lay.addWidget(w.label(t("ui.oyun_kayit.arka", liste=", ".join(f"{p['ad']} {i18n.fmt_percent(p['cpu'])}" for p in usage["arka_plan"])),
                                        muted=True, size=12, plain=True))
 
     def _fps_lines(self, card, usage):
@@ -485,50 +777,6 @@ class GamesPage(w.Page):
         lay.addWidget(row)
         lay.addWidget(w.label(t("ui.oyun_hazir.not"), muted=True, size=12))
         return box
-
-    def _guide_row(self, game):
-        """Oyun içi grafik ayarı için dış rehber bağlantıları (tarayıcıda açılır; uygulama bağlanmaz)."""
-        box = QWidget()
-        lay = QVBoxLayout(box)
-        lay.setContentsMargins(0, 0, 0, 0)
-        lay.setSpacing(4)
-        sources = guides.find(game["ad"])
-        lay.addWidget(self._ingame_card(game))
-        lay.addWidget(w.hbox(self._caption(t("ui.oyun_rehber"), "rehber"), None))
-        if not sources:
-            lay.addWidget(w.label(t("ui.oyun_rehber.yok"), muted=True, size=12))
-            return box
-        buttons = []
-        for source in sources:
-            text = f"{source['site']}: {source['icerik']}"
-            button = w.button(text if len(text) <= 56 else text[:55] + "…", lambda _=False, u=source["url"]: os.startfile(u))
-            button.setToolTip(source["icerik"])
-            buttons.append(button)
-        lay.addWidget(w.flow(*buttons))
-        lay.addWidget(w.label(t("ui.oyun_rehber.not"), muted=True, size=12))
-        return box
-
-    def _ingame_card(self, game):
-        """Oyun içi ayarlar: her oyunda aranacak genel maddeler (kanıt rozetiyle) ve bu oyunun doğrulanmış desteği."""
-        card = w.Card(spacing=6)
-        head = QLabel(t("ui.oyun_ici.baslik"))
-        head.setObjectName("CardTitle")
-        card.lay.addWidget(head)
-        card.lay.addWidget(w.label(t("ui.oyun_ici.aciklama"), muted=True, size=12))
-        support = guides.support(game["ad"])["reflex"]
-        state = {True: "var", False: "yok", None: "bilinmiyor"}[support]
-        card.lay.addWidget(w.hbox(w.label(t("ui.oyun_ici.reflex_destek"), bold=True, wrap=False),
-                                  w.badge(t(f"ui.oyun_ici.destek.{state}"), "iyi" if support else "notr"), None))
-        game_id = oyun_ayar.find(game["ad"])
-        if game_id:
-            card.lay.addWidget(self._file_section(game_id))
-        for item in guides.ingame_items(i18n.current()):
-            card.lay.addWidget(w.hbox((w.label(item["baslik"], bold=True), 1), w.badge(t(f"ui.oyun_ici.kanit.{item['kanit']}"),
-                                                                                        "iyi" if item["kanit"] in ("belgeli", "olculmus") else "notr")))
-            card.lay.addWidget(w.label(item["metin"], muted=True, size=12))
-            if item["kaynak"]:
-                card.lay.addWidget(w.label(t("ui.oyun_ici.kaynak", kaynak=item["kaynak"]), muted=True, size=11))
-        return card
 
     def _file_section(self, game_id):
         """Oyunun kendi ayar dosyası: sakla / geri yükle / sıfırla / geri al (app/games/oyun_ayar.py). Durum arka planda okunur."""
@@ -677,17 +925,15 @@ class GamesPage(w.Page):
 
         lay.addWidget(w.section_title(t("ui.oyun_grp.dosya")))
         lay.addWidget(self._exe_row(game))
+        file_id = oyun_ayar.find(game["ad"])  # oyunun KENDİ ayar dosyası: sakla / geri yükle (oyun içi ayar rehberi Rehber sayfasında)
+        if file_id:
+            lay.addWidget(self._file_section(file_id))
         lay.addWidget(w.colored(t("ui.anti_cheat_oyun", liste=", ".join(game["anti_cheat"])), "uyari") if game.get("anti_cheat")
                       else w.label(t("ui.anti_cheat_bulunamadi"), muted=True, size=12))
         lay.addWidget(w.colored(t("ui.anti_cheat_genel"), "uyari"))
         lay.addWidget(self._scan_status(len(self._remaining())))
         lay.addWidget(w.hbox(w.button(t("ui.oyun_kaldir"), lambda: self._remove(game)), None))
 
-        lay.addWidget(w.section_title(t("ui.oyun_grp.rehber")))
-        lay.addWidget(self._guide_row(game))
-        useful = about_data()["faydali"]
-        if useful:
-            lay.addWidget(self._useful_card(useful))
         return box
 
     def _exe_row(self, game):

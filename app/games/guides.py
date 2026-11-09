@@ -1,4 +1,4 @@
-"""Oyun başına dış ayar rehberi bağlantıları (data/oyun_rehberi.json).
+"""Oyun başına dış rehber bağlantıları (sistem gereksinimi / FPS beklentisi; profesyonel oyuncu ayarı sitelerine bağlantı YOK) (data/oyun_rehberi.json).
 
 Yalnızca bağlantı ve kısa tanım; sitelerin içeriği kopyalanmaz ve uygulama bu sitelere kendisi bağlanmaz
 (bağlantı kullanıcının tarayıcısında açılır). Adresler elle ziyaret edilerek doğrulanmıştır (docs/D2B_REHBER_KAYNAKLARI.md).
@@ -9,8 +9,7 @@ import re
 
 from app.core import paths
 
-ALLOWED_HOSTS = {"prosettings.net", "www.prosettings.net", "prosettings.gg", "www.prosettings.gg",
-                 "pcgamecheck.com", "www.pcgamecheck.com", "www.systemrequirementslab.com",
+ALLOWED_HOSTS = {"pcgamecheck.com", "www.pcgamecheck.com", "www.systemrequirementslab.com",
                  "systemrequirementslab.com", "smoothfps.com", "www.smoothfps.com"}
 
 
@@ -34,6 +33,11 @@ def _entry(game_name):
         if other and (other.startswith(key) or key.startswith(other)):
             return entry
     return None
+
+
+def names():
+    """Rehber verisindeki oyun adları (Rehber sayfasının oyun seçimi için)."""
+    return [e["ad"] for e in _load() if e.get("ad")]
 
 
 def find(game_name):

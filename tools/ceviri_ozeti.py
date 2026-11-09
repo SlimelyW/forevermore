@@ -19,6 +19,7 @@ from app.engine import catalog  # noqa: E402
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")  # boruya/dosyaya yönlenince cp1252 ile düşmesin
     parser = argparse.ArgumentParser()
     parser.add_argument("--yenile", metavar="DIL", help="bu dilin özetlerini mevcut Türkçe metne göre yeniler")
     args = parser.parse_args()

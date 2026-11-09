@@ -107,6 +107,9 @@ OTHER_COVER = {
 def patch(path, data):
     counts = data["n"]
     text = path.read_text(encoding="utf-8")
+    # meta açıklamasında yorum işareti olamaz: "N ayar" / "N settings" sayısı doğrudan yazılır
+    text = re.sub(r'(<meta name="description" content="[^"]*?)\d+(?= ayar| settings)',
+                  lambda m: f"{m.group(1)}{counts['toplam']}", text, count=1)
     text = re.sub(r"<!--n:(\w+)-->.*?<!--/n-->", lambda m: f"<!--n:{m.group(1)}-->{counts[m.group(1)]}<!--/n-->", text)
     def value(m):
         item = data

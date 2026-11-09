@@ -191,7 +191,7 @@ def _enum_services():
 
 def _is_windows_service(image_path):
     path = (image_path or "").lower().strip('"')
-    windir = os.environ.get("SystemRoot", r"C:\Windows").lower()
+    windir = os.path.dirname(powershell.SYSTEM32).lower()  # ortam değişkeni HKCU'dan ezilebilir
     return path.startswith(windir) or path.startswith("%systemroot%") or path.startswith("\\systemroot") \
         or path.startswith("system32") or "\\windows\\system32\\" in path
 

@@ -218,6 +218,7 @@ class FakeSystem:
         self._maybe_fail("set_defender_realtime")
         if not self.defender["kurcalama"]:  # Windows gibi: Kurcalama koruması açıksa sessizce yok sayılır
             self.defender["gercek_zamanli"] = enabled
+        return dict(self.defender)
 
     def get_features(self, names):
         return {n: self.features.get(n, "Enabled") for n in names}

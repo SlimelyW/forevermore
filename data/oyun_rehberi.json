@@ -1,14 +1,9 @@
 {
-  "_aciklama": "Oyun başına dış rehber bağlantıları. Yalnızca bağlantı + kısa tanım; site içeriği kopyalanmaz. Adresler 2026-10-28'de ziyaret edilip doğrulandı. smoothfps.com ve pcgamecheck.com/game-settings (oyuna özel sayfa yok) bu dosyada yok. 'reflex': true yalnızca NVIDIA'nın kendi duyurularında (nvidia.com/geforce/news: 2024 Reflex listesi, Deadlock) geçen oyunlarda; alan yoksa 'doğrulanmadı' (yok demek değil).",
+  "_aciklama": "Oyun başına dış rehber bağlantıları. Yalnızca bağlantı + kısa tanım; site içeriği kopyalanmaz. Adresler 2026-10-28'de ziyaret edilip doğrulandı. prosettings.net/.gg (profesyonel oyuncu ayarları; 9 Kasım 2026'da çıkarıldı), smoothfps.com ve pcgamecheck.com/game-settings (oyuna özel sayfa yok) bu dosyada yok. 'reflex': true yalnızca NVIDIA'nın kendi duyurularında (nvidia.com/geforce/news: 2024 Reflex listesi, Deadlock) geçen oyunlarda; alan yoksa 'doğrulanmadı' (yok demek değil).",
   "oyunlar": [
     {
       "ad": "ARC Raiders",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/arc-raiders-settings/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/arc-raiders/28039",
@@ -25,21 +20,6 @@
       "ad": "Counter-Strike 2",
       "reflex": true,
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/cs2-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/cs2/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
-          "site": "prosettings.gg",
-          "url": "https://www.prosettings.gg/counterstrike/",
-          "icerik": "Profesyonel oyuncu dizini; ayar ve donanım profillerine bağlantılar"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/counter-strike-2/22638",
@@ -70,16 +50,6 @@
     {
       "ad": "Marvel Rivals",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/marvel-rivals-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/marvel-rivals/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/marvel-rivals/23291",
@@ -112,16 +82,6 @@
       "reflex": true,
       "kaynaklar": [
         {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/overwatch-2-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/overwatch/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/overwatch-2/19225",
           "icerik": "Sistem gereksinimi ve bilgisayarınla uyumluluk kontrolü (Can You Run It)"
@@ -136,16 +96,6 @@
     {
       "ad": "PUBG: BATTLEGROUNDS",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/pubg-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/pubg/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/battlegrounds/15571",
@@ -171,11 +121,6 @@
     {
       "ad": "THE FINALS",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/the-finals-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/the-finals/22956",
@@ -207,16 +152,6 @@
       "ad": "Tom Clancy's Rainbow Six Siege",
       "kaynaklar": [
         {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/rainbow-six-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/rainbow-six/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/tom-clancy-s-rainbow-six-siege-x/27357",
           "icerik": "Sistem gereksinimi ve bilgisayarınla uyumluluk kontrolü (Can You Run It) (Siege X)"
@@ -247,21 +182,6 @@
       "ad": "League of Legends",
       "kaynaklar": [
         {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/league-of-legends-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/league-of-legends/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
-          "site": "prosettings.gg",
-          "url": "https://www.prosettings.gg/league-of-legends/",
-          "icerik": "Profesyonel oyuncu dizini; ayar ve donanım profillerine bağlantılar"
-        },
-        {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/league-of-legends/10933",
           "icerik": "Sistem gereksinimi ve bilgisayarınla uyumluluk kontrolü (Can You Run It)"
@@ -271,21 +191,6 @@
     {
       "ad": "Valorant",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/valorant-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/valorant/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
-          "site": "prosettings.gg",
-          "url": "https://www.prosettings.gg/valorant/",
-          "icerik": "Profesyonel oyuncu dizini; ayar ve donanım profillerine bağlantılar"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/valorant/19638",
@@ -308,16 +213,6 @@
       "reflex": true,
       "kaynaklar": [
         {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/fortnite-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/fortnite/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/fortnite/15349",
           "icerik": "Sistem gereksinimi ve bilgisayarınla uyumluluk kontrolü (Can You Run It)"
@@ -328,16 +223,6 @@
       "ad": "Apex Legends",
       "reflex": true,
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/apex-legends-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/apex-legends/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
         {
           "site": "pcgamecheck.com",
           "url": "https://pcgamecheck.com/game/apex-legends",
@@ -396,16 +281,6 @@
       "reflex": true,
       "kaynaklar": [
         {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/call-of-duty-warzone-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/call-of-duty-warzone/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
-        {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/call-of-duty-warzone/19566",
           "icerik": "Sistem gereksinimi ve bilgisayarınla uyumluluk kontrolü (Can You Run It)"
@@ -420,16 +295,6 @@
     {
       "ad": "Dota 2",
       "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/dota-2-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/dota-2/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        },
         {
           "site": "systemrequirementslab.com",
           "url": "https://www.systemrequirementslab.com/cyri/requirements/dota-2/11352",
@@ -475,18 +340,7 @@
     {
       "ad": "Deadlock",
       "reflex": true,
-      "kaynaklar": [
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/guides/deadlock-options/",
-          "icerik": "Oyun içi grafik ve seçenekler için profesyonel oyuncu ayarlarına dayalı rehber"
-        },
-        {
-          "site": "prosettings.net",
-          "url": "https://prosettings.net/games/deadlock/",
-          "icerik": "Profesyonel oyuncuların ayarları ve oyunla ilgili rehberler"
-        }
-      ]
+      "kaynaklar": []
     }
   ]
 }

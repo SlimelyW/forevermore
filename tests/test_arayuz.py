@@ -23,8 +23,9 @@ except ImportError:  # pragma: no cover
     QApplication = QLabel = QPlainTextEdit = QPushButton = QScrollArea = QWidget = None
 
 from app.core import i18n
-from app.core.i18n import t
+from app.core.i18n import fmt_percent, t
 from app.engine.backup import BackupStore
+from app.games import profiles
 from app.engine.engine import Engine
 from tests.fake_system import FakeResolver, FakeSystem
 from tests.test_motor import DESKTOP
@@ -143,11 +144,13 @@ class TestUserInterface(unittest.TestCase):
     # ------------------------------------------------------------------ testler
     def test_every_page_builds(self):
         self.window = self.make_window()
-        for key in ["ozet", "pc_detay", "profiller", "degisiklikler", "rapor", "ayarlar", "bilgi", "elle", "temizlik"] + \
-                [c["id"] for c in self.window.c.categories]:
-            self.window.navigate(key)
-            self.qt.processEvents()
-            self.assertTrue(self.window.pages[key].built, key)
+        keys = ["ozet", "pc_detay", "profiller", "degisiklikler", "rapor", "ayarlar", "bilgi", "elle", "temizlik",
+                "oyunlar", "boost", "kaldirici", "baslangic", "olcum", "rehber"] + [c["id"] for c in self.window.c.categories]
+        with self.assertNoLogs(level="ERROR"):  # Denetim B O8: kurulum sırasında yutulan hata olmasın
+            for key in keys:
+                self.window.navigate(key)
+                self.qt.processEvents()
+                self.assertTrue(self.window.pages[key].built, key)
 
     def test_post_scan_refresh_does_not_reread_states(self):
         """2.9: tarama sonrası tazeleme okunmuş durumları yeniden okumaz (açılışta ikinci tur PowerShell yok)."""
@@ -160,12 +163,74 @@ class TestUserInterface(unittest.TestCase):
         c.refresh_all()
         self.assertTrue(reads)
 
-    def test_sidebar_scrolls_when_short(self):
+    def test_nav_bar_fits_narrow_window(self):
+        """400-700 px: çubuk düğmeleri adsız kalır (ad ipucunda), üst şerit yalnızca logo + arama; çubuk pencereye sığar.
+        (Pencereyi gerçekten daraltmak sayfaların en küçük genişliğine takılır; bu yüzden genişlik mantığı doğrudan çağrılır.)"""
         self.window = window = self.make_window()
-        window._show_rare(True)
-        bar = window.findChild(QWidget, "Sidebar")
-        scroll = bar.findChild(QScrollArea)
-        self.assertLess(bar.minimumSizeHint().height(), scroll.widget().sizeHint().height())
+        for width in (500, 600, 700):  # uygulamanın en küçük penceresi 900; 9 öğeli çubuk adsız kipte ≥ ~440 px'e sığar
+            window._apply_width(width)
+            for item in (*window.nav_groups.values(), window.nav["ozet"], window.nav["GPU"]):
+                self.assertTrue(item.text.isHidden(), width)
+                self.assertTrue(item.toolTip())
+            self.assertTrue(window.brand_name.isHidden())
+            self.assertEqual(window.search_box.width(), 180)
+            self.assertLessEqual(window.nav_bar.minimumSizeHint().width(), width - 16, width)
+            self.assertLessEqual(window.nav_strips["optimizasyonlar"].minimumSizeHint().width(), width - 16, width)  # şerit de (en geniş grup)
+        window._apply_width(900)  # en küçük pencerede adlı çubuk ve şerit sığar
+        self.assertFalse(window.nav["ozet"].text.isHidden())
+        self.assertLessEqual(window.nav_bar.minimumSizeHint().width(), 900 - 32)
+        window.navigate("GPU")
+        self.assertLessEqual(window.nav_strips["optimizasyonlar"].minimumSizeHint().width(), 900 - 32)
+        window._apply_width(1000)
+        self.assertFalse(window.nav["ozet"].text.isHidden())  # geniş pencerede adlar geri gelir
+        self.assertFalse(window.brand_name.isHidden())
+        self.assertEqual(window.search_box.width(), 300)
+
+    def test_nav_bar_fits_900_english_readable_font(self):
+        """EN dili + okunabilir yazı (Verdana; yoksa yüklü en geniş yazı tipi): çubuk ve şerit 900 px pencereye sığar."""
+        from unittest import mock
+        from PySide6.QtGui import QFont, QFontDatabase, QFontMetrics
+        from app.core import i18n
+        from app.ui import theme
+        if "Verdana" not in QFontDatabase.families():  # ekran dışı kipte sistem yazı tipleri yüklü gelmez
+            import glob
+            for f in glob.glob(os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts", "verdana*.ttf")):
+                QFontDatabase.addApplicationFont(f)
+        families = QFontDatabase.families()
+        wide ="Verdana" if "Verdana" in families else max(
+            families, key=lambda f: QFontMetrics(QFont(f, 12)).horizontalAdvance("Optimizations Customizations"))
+        real_ui_font = theme.ui_font
+
+        def wide_font(size=theme.BODY_SIZE, bold=False):
+            font = real_ui_font(size + 1, bold)
+            font.setFamily(wide)
+            font.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, 0.3)
+            return font
+
+        i18n.load("en")
+        try:
+            with mock.patch.object(theme.settings, "get", lambda key: True if key == "okunabilir_yazi" else
+                                   theme.settings.DEFAULTS.get(key)), mock.patch.object(theme, "ui_font", wide_font):
+                self.window = window = self.make_window()
+                window._apply_width(900)
+                window.navigate("GPU")
+                self.assertEqual(window.nav["GPU"].text.font().family(), wide)  # yazı tipi gerçekten uygulandı
+                self.assertLessEqual(window.nav_bar.minimumSizeHint().width(), 900 - 32, wide)
+                self.assertLessEqual(window.nav_strips["optimizasyonlar"].minimumSizeHint().width(), 900 - 32, wide)
+        finally:
+            i18n.load("tr")
+
+    def test_group_button_closes_open_tools_panel(self):
+        """Zaten grubun içindeyken Araçlar paneli açıksa grup düğmesine basmak paneli kapatır; sayfa ve geçmiş değişmez."""
+        self.window = window = self.make_window()
+        window.navigate("GPU")
+        window._open_panel("araclar")
+        self.assertEqual(window._panel_open, "araclar")
+        current, history = window.current, list(window._history)
+        window._open_group("optimizasyonlar")
+        self.assertIsNone(window._panel_open)
+        self.assertEqual(window.current, current)
+        self.assertEqual(window._history, history)
 
     def test_search_finds_tweaks_and_pages(self):
         from app.ui.search import search
@@ -181,6 +246,39 @@ class TestUserInterface(unittest.TestCase):
         window.search_box.edit.returnPressed.emit()
         self.assertEqual(calls, ["PERF-003"])
         self.assertEqual(window.search_box.edit.text(), "")
+
+    def test_search_keyboard_moves_through_results_and_enter_opens_current(self):
+        """Denetim B B5: Aşağı/Yukarı sonuçlarda gezer, Tab bağış düğmesine atlamaz, Enter seçili sonucu açar."""
+        from PySide6.QtCore import Qt
+        from PySide6.QtTest import QTest
+        self.window = window = self.make_window()
+        box = window.search_box
+        calls = []
+        box._on_tweak = calls.append
+        box.edit.setText("ekran")
+        self.assertGreater(box.results.count(), 2)
+        QTest.keyClick(box.edit, Qt.Key.Key_Down)
+        QTest.keyClick(box.edit, Qt.Key.Key_Down)
+        self.assertEqual(box.results.currentRow(), 1)
+        QTest.keyClick(box.edit, Qt.Key.Key_Up)
+        self.assertEqual(box.results.currentRow(), 0)
+        QTest.keyClick(box.edit, Qt.Key.Key_Tab)   # Tab sonuç listesinde ilerler, odak kutuda kalır
+        self.assertEqual(box.results.currentRow(), 1)
+        self.assertEqual(box.results.focusPolicy(), Qt.FocusPolicy.NoFocus)
+        self.assertTrue(box.edit.accessibleName())
+        want = box.results.item(1).data(Qt.ItemDataRole.UserRole)
+        window.search_box._on_page = lambda key: calls.append(key)
+        QTest.keyClick(box.edit, Qt.Key.Key_Return)
+        self.assertEqual(calls, [want[1]])
+
+    def test_search_hit_for_tweak_not_fitting_this_pc_opens_hidden_list(self):
+        """Denetim B B6: masaüstünde yalnızca dizüstüne uyan ayar aranırsa sayfada gizli liste açılır, satır görünür."""
+        self.window = window = self.make_window()
+        self.assertFalse(window.c.availability["PWR-008"].visible)
+        window.go_to_tweak("PWR-008")
+        page = window.pages[window.current]
+        self.assertTrue(page.show_hidden)
+        self.assertIn("PWR-008", page.hidden_cards)  # soluk kart, nedeni yazılı ("bu bilgisayarda yok")
 
     def test_motion_respects_reduced_setting(self):
         from unittest import mock
@@ -439,7 +537,7 @@ class TestUserInterface(unittest.TestCase):
         self.window.show()
         checked = 0
         keys = ["ozet", "pc_detay", "profiller", "oyunlar", "DISP", "SYS", "baslangic", "PERF", "GPU", "CPU", "PWR",
-                "NET", "INP", "AUD", "QOL", "PLC", "elle", "degisiklikler", "olcum", "boost", "ayarlar", "bilgi"]
+                "NET", "INP", "AUD", "QOL", "EXP", "SND", "PLC", "elle", "degisiklikler", "olcum", "boost", "ayarlar", "bilgi"]
         for key in keys:
             self.window.navigate(key)
             self.qt.processEvents()
@@ -820,12 +918,12 @@ class TestUserInterface(unittest.TestCase):
     def test_toggle_on_off_and_revert_button(self):
         self.window = self.make_window()
         path = r"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
-        self.row("QOL", "QOL-001").switch.click()
+        self.row("EXP", "QOL-001").switch.click()
         self.wait_idle()
         self.assertEqual(self.sys.read_reg("HKCU", path, "HideFileExt"), (0, "REG_DWORD"))
         self.assertTrue(self.window.c.engine.store.has("QOL-001"))
-        self.assertTrue(self.row("QOL", "QOL-001").switch.isChecked())
-        self.row("QOL", "QOL-001").switch.click()
+        self.assertTrue(self.row("EXP", "QOL-001").switch.isChecked())
+        self.row("EXP", "QOL-001").switch.click()
         self.wait_idle()
         self.assertIsNone(self.sys.read_reg("HKCU", path, "HideFileExt"))
         self.assertFalse(self.window.c.engine.store.has("QOL-001"))
@@ -900,7 +998,7 @@ class TestUserInterface(unittest.TestCase):
 
     def test_preview_mode_blocks_changes(self):
         self.window = self.make_window(mode="onizleme")
-        row = self.row("QOL", "QOL-001")
+        row = self.row("EXP", "QOL-001")
         self.assertFalse(row.switch.isEnabled())
         self.window.toggle(self.window.c.by_id["QOL-001"], True, lambda: None)
         self.assertTrue(self.messages)  # "bu modda değiştirilemez" mesajı
@@ -979,8 +1077,8 @@ class TestUserInterface(unittest.TestCase):
         self.qt.processEvents()
         self.assertFalse(self.window.live_monitor._active.is_set())
 
-    def test_summary_tiles_open_lists(self):
-        """Özet kutuları: uygun / açık / değiştirilen listesini açar ve kapatır; sayılar kutudakiyle aynı."""
+    def test_summary_rings_open_lists(self):
+        """Özet: iki halka (Optimizasyon, Oyun) listesini açar ve kapatır; sayılar halkadakiyle aynı; Başlangıç/bulgu halkası YOK."""
         from PySide6.QtCore import QEvent
         from PySide6.QtWidgets import QPushButton
         self.window = self.make_window()
@@ -988,20 +1086,315 @@ class TestUserInterface(unittest.TestCase):
         self.wait_idle()
         page = self.window.pages["ozet"]
         page.data_reloaded()
-        counts = dict(zip(page.STATS, page._stat_values()))
-        self.assertEqual(counts["degisen"], 1)
-        for kind in ("uygun", "acik", "degisen"):
-            page.stat_tiles[kind].clicked.emit()
+        self.assertIn("uygun", page.stat_tiles)
+        self.assertLessEqual(set(page.stat_tiles), {"uygun", "oyun"})
+        scores = page._scores()
+        for kind, tile in page.stat_tiles.items():
+            on = sum(1 for tw in scores[kind] if page._is_on(tw))
+            self.assertEqual(tile.sentence.text(), t(f"ui.skor.{kind}", acik=on, uygun=len(scores[kind])))
+            self.assertEqual(tile.ring.percent, on * 100 // len(scores[kind]))
+            tile.clicked.emit()
             self.qt.processEvents()
             self.qt.sendPostedEvents(None, QEvent.Type.DeferredDelete.value)  # önceki liste silinsin
-            texts = [lbl.text() for lbl in page.detail_lay.parentWidget().findChildren(QLabel)]
-            self.assertIn(t(f"ui.stat_liste.{kind}", adet=counts[kind]), texts)
-            go = [b for b in page.detail_lay.parentWidget().findChildren(QPushButton) if b.text() == t("ui.ayara_git")]
-            self.assertEqual(len(go), counts[kind])
-        page.stat_tiles["degisen"].clicked.emit()  # aynı kutu: kapanır
+            box = page.detail_lay.parentWidget()
+            self.assertIn(t(f"ui.stat_liste.{kind}", adet=len(scores[kind])), [lbl.text() for lbl in box.findChildren(QLabel)])
+            go = [b for b in box.findChildren(QPushButton) if b.text() == t("ui.ayara_git")]
+            self.assertEqual(len(go), len(scores[kind]))
+        self.assertTrue(page.change_button.text().endswith("1") or "1" in page.change_button.text())
+        page.change_button.click()  # uygulamanın yaptığı değişiklikler listesi
+        self.qt.processEvents()
+        self.assertEqual(page.detail_kind, "degisen")
+        page.change_button.click()  # aynı düğme: kapanır
         self.qt.processEvents()
         self.assertIsNone(page.detail_kind)
         self.assertEqual(page.detail_lay.count(), 0)
+
+    def test_summary_live_cards_on_top_and_hub_order(self):
+        """Özet: en üstte gerçek 'Canlı sistem durumu' kartları (tek ölçüm kaynağı; aynı bilgi sayfada ikinci kez yok), altında
+        kahraman kart + halkalar, sonra Oyunlar/Boost/Temizlik kısayolları, bulgu listesi bunların altında."""
+        from PySide6.QtCore import QEvent
+        from app.ui import page_summary
+        from app.ui.page_summary import ShortcutTile
+        self.assertFalse(hasattr(page_summary, "PcStrip"))  # Tur 3C'nin ayrı CPU/GPU/RAM/Disk şeridi kalktı
+        self.window = window = self.make_window()
+        page = window.pages["ozet"]
+        page.data_reloaded()
+        self.qt.sendPostedEvents(None, QEvent.Type.DeferredDelete.value)  # önceki kurulumların kutuları silinsin
+        tiles = page.findChildren(ShortcutTile)
+        self.assertEqual(len(tiles), 3)
+        tiles[1].clicked.emit()  # Boost kısayolu sayfayı açar
+        self.assertEqual(window.current, "boost")
+        window.navigate("ozet")
+        live = page.tiles["cpu"].parentWidget()  # canlı kartların ızgarası
+
+        def slot(target):  # sayfa gövdesindeki sıra: doğrudan öğe ya da bir yerleşimin ilk öğesi
+            for i in range(page.body.count()):
+                item = page.body.itemAt(i)
+                first = item.layout().itemAt(0).widget() if item.layout() and item.layout().count() else None
+                if item.widget() is target or first is target:
+                    return i
+            self.fail("sayfada yok")
+
+        order = [slot(x) for x in (live, page.recommendations, tiles[0], page.findings_title)]
+        self.assertEqual(order, sorted(set(order)))  # canlı kartlar < kahraman < kısayollar < bulgular
+        self.assertEqual(len(page.tiles), 6)  # alttaki ikinci bir canlı bölüm yok
+
+    def test_summary_findings_are_cards_without_summary_line(self):
+        """Bulgular: özet yazısı ('1 uyarı var') yok; her bulgu simge + başlık + tek satır + eylem taşıyan kart."""
+        from PySide6.QtWidgets import QLabel
+        from app.ui import widgets as w
+        finding = {"kod": "ram_tek_kanal", "seviye": "uyari", "ilgili": [], "params": {}}
+        self.window = self.make_window(findings=[finding])
+        page = self.window.pages["ozet"]
+        page.data_reloaded()
+        self.assertFalse(hasattr(page, "_findings_line"))
+        self.assertNotIn("bulgu", page.stat_tiles)
+        self.assertNotIn("baslangic", page.stat_tiles)
+        self.assertEqual(len(page.finding_cards), 1)
+        card = page.finding_cards[0]
+        self.assertTrue(card.property("tile"))  # düz yüzey + ince çerçeve
+        self.assertEqual(card.findChildren(w.IconTile)[0].accessibleName(), t("seviye.uyari"))
+        self.assertEqual(len(card.findChildren(w.ClampLabel)), 1)  # tek satır açıklama
+        self.assertFalse(any("uyarı var" in lbl.text() for lbl in page.findChildren(QLabel)))
+
+    def test_nav_bar_and_panels_keep_every_page(self):
+        """Alt-orta çubuk: 5 sayfa + Optimizasyonlar/Özelleştirmeler (şerit) + Araçlar (panel) + Ayarlar; her sayfa kimliği yerinde;
+        her kategori tam bir şerit grubunda; Araçlar paneli açılınca/kapanınca doğru düğme seçili; sayfa açılınca panel kapanır."""
+        self.window = window = self.make_window()
+        categories = {c["id"] for c in window.c.categories}
+        pages = {"ozet", "pc_detay", "oyunlar", "boost", "temizlik", "kaldirici", "profiller", "olcum", "degisiklikler",
+                 "rapor", "baslangic", "elle", "rehber", "ayarlar", "bilgi"}
+        self.assertEqual(set(window.nav), categories | pages)
+        self.assertEqual({k for k, _ in window.search_box._pages}, categories | pages)  # Ctrl+K her sayfayı bulur
+        self.assertEqual(set(window.nav_groups), {"optimizasyonlar", "ozellestirmeler", "araclar"})
+        self.assertEqual(set(window.nav_panels), {"araclar"})  # kategoriler artık panelde değil, şeritte
+        self.assertEqual(set(window.nav_panels["araclar"].keys), set(window.NAV_TOOLS))
+        self.assertEqual(set(window.NAV_BAR) | set(window.NAV_TOOLS) | {"ayarlar"}, pages)
+        self.assertEqual(window.NAV_BAR[0], "profiller")  # Hazır profiller çubuğun en başında
+        self.assertIn("pc_detay", window.NAV_TOOLS)  # çubuğa sığmak için Araçlar'da
+        self.assertNotIn("ayarlar", window.NAV_TOOLS)  # uygulamanın kendi ayarları çubukta ayrı öğe, panelde değil
+        strips = window.strip_keys
+        self.assertEqual(set(strips["optimizasyonlar"]) | set(strips["ozellestirmeler"]), categories)
+        self.assertFalse(set(strips["optimizasyonlar"]) & set(strips["ozellestirmeler"]))  # her kategori tek grupta
+        self.assertEqual(strips["ozellestirmeler"], ["QOL", "EXP", "SND"])
+        self.assertIn("PLC", strips["optimizasyonlar"])  # Placebo Optimizasyonlar şeridinde (Kubilay kararı)
+        for category in categories:  # Ctrl+K sonucu / navigate: şerit doğru grupla açılır
+            self.assertEqual(window._group_of(category),
+                             "ozellestirmeler" if category in ("QOL", "EXP", "SND") else "optimizasyonlar")
+        for tid, cid in (("QOL-012", "EXP"), ("AUD-001", "SND"), ("SYS-011", "QOL"), ("AUD-003", "AUD")):
+            self.assertEqual(window.c.by_id[tid]["kategori_id"], cid, tid)  # taşınan ayar doğru kategoride
+        window.go_to_tweak("AUD-001")  # Ctrl+K sonucu: taşınan ayarın grubu ve sayfası
+        self.assertEqual((window.current, window._group_of(window.current)), ("SND", "ozellestirmeler"))
+        window.go_to_tweak("AUD-003")  # taşınmayan ses ayarı Optimizasyonlar'da kalır
+        self.assertEqual((window.current, window._group_of(window.current)), ("AUD", "optimizasyonlar"))
+        window.navigate("ozet")
+        self.assertEqual(t("ui.menu.grup.optimizasyonlar"), "Optimizasyonlar")
+        self.assertEqual(t("ui.menu.grup.ozellestirmeler"), "Özelleştirmeler")
+        self.assertEqual(t("ui.menu.ayarlar"), "Ayarlar")
+        self.assertTrue(window.nav_panels["araclar"].isHidden())
+        self.assertTrue(window.strip_holder.isHidden())  # sayfa grup dışındayken şerit yok
+        window.navigate("ozet")
+        self.assertIsNone(window._panel_open)
+        self.assertFalse(any(window.nav_groups[g].property("selected") for g in window.nav_groups))
+        window._toggle_panel("araclar")
+        self.assertFalse(window.nav_panels["araclar"].isHidden())
+        self.assertTrue(window.nav_groups["araclar"].property("selected"))  # açık panelin düğmesi seçili
+        window._escape()  # Esc önce paneli kapatır, sayfa değişmez
+        self.assertIsNone(window._panel_open)
+        self.assertEqual(window.current, "ozet")
+        window._toggle_panel("araclar")
+        window.nav["bilgi"]._on_click("bilgi")  # paneldeki düğmeye tıklama
+        self.assertEqual(window.current, "bilgi")
+        self.assertIsNone(window._panel_open)  # sayfa açılınca panel kapanır
+        self.assertTrue(window.nav_panels["araclar"].isHidden())
+        self.assertTrue(window.nav_groups["araclar"].property("selected"))
+        self.assertTrue(window.strip_holder.isHidden())
+        window.navigate("pc_detay")  # Araçlar'a taşınan sayfa: Araçlar seçili, şerit yok
+        self.assertTrue(window.nav_groups["araclar"].property("selected"))
+        window.navigate("ozet")
+        self.assertFalse(any(window.nav_groups[g].property("selected") for g in window.nav_groups))
+
+    def test_category_strip_follows_open_page(self):
+        """Şerit yalnızca grup sayfası açıkken görünür ve yalnızca o grubun düğmelerini taşır; grup düğmesi son açılan
+        kategoriye (yoksa ilkine) götürür; zaten içerideyken hiçbir şey yapmaz; seçili kategori şeritte işaretli."""
+        self.window = window = self.make_window()
+        strips = window.strip_keys
+        window.navigate("ozet")
+        self.assertTrue(window.strip_holder.isHidden())
+        window.nav_groups["optimizasyonlar"]._on_click("optimizasyonlar")  # grup düğmesi: ilk kategori
+        self.assertEqual(window.current, strips["optimizasyonlar"][0])
+        self.assertFalse(window.strip_holder.isHidden())
+        self.assertTrue(window.nav_groups["optimizasyonlar"].property("selected"))
+        self.assertFalse(window.nav_groups["ozellestirmeler"].property("selected"))
+        self.assertFalse(window.nav_strips["optimizasyonlar"].isHidden())  # şeritte yalnızca bu grubun düğmeleri
+        self.assertTrue(window.nav_strips["ozellestirmeler"].isHidden())
+        window.navigate("GPU")
+        window.navigate("ozet")
+        self.assertTrue(window.strip_holder.isHidden())
+        window.nav_groups["optimizasyonlar"]._on_click("optimizasyonlar")  # en son açılan kategoriye döner
+        self.assertEqual(window.current, "GPU")
+        self.assertTrue(window.nav["GPU"].property("selected"))
+        history = list(window._history)
+        window.nav_groups["optimizasyonlar"]._on_click("optimizasyonlar")  # zaten grubun içinde: değişmez
+        self.assertEqual(window.current, "GPU")
+        self.assertEqual(window._history, history)
+        window.nav_groups["ozellestirmeler"]._on_click("ozellestirmeler")
+        self.assertEqual(window.current, "QOL")
+        self.assertFalse(window.strip_holder.isHidden())
+        self.assertFalse(window.nav_strips["ozellestirmeler"].isHidden())
+        self.assertTrue(window.nav_strips["optimizasyonlar"].isHidden())
+        self.assertTrue(window.nav_groups["ozellestirmeler"].property("selected"))
+        self.assertFalse(window.nav_groups["optimizasyonlar"].property("selected"))
+        window.go_to_tweak("PERF-003")  # Ctrl+K sonucu: doğru grubun şeridi açılır
+        self.assertEqual(window.current, "PERF")
+        self.assertTrue(window.nav["PERF"].property("selected"))
+        self.assertTrue(window.nav_strips["ozellestirmeler"].isHidden())
+
+    def test_nav_group_open_by_keyboard_and_count_badge(self):
+        """Grup düğmesi klavyeyle (Enter) çalışır, Tab ile gezilir; kategori düğmesindeki "önerilen" sayısı ve grup
+        düğmesindeki toplam korunur."""
+        from PySide6.QtCore import QEvent, Qt
+        from PySide6.QtGui import QKeyEvent
+        self.window = window = self.make_window()
+        head = window.nav_groups["optimizasyonlar"]
+        self.assertEqual(head.focusPolicy(), Qt.FocusPolicy.TabFocus)
+        self.assertEqual(window.nav["GPU"].focusPolicy(), Qt.FocusPolicy.TabFocus)  # şerit düğmeleri de klavyeyle gezilir
+        window.navigate("ozet")
+        head.keyPressEvent(QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Return, Qt.KeyboardModifier.NoModifier))
+        self.assertEqual(window.current, window.strip_keys["optimizasyonlar"][0])
+        self.assertFalse(window.strip_holder.isHidden())
+        window.nav_groups["araclar"].keyPressEvent(QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Return, Qt.KeyboardModifier.NoModifier))
+        self.assertEqual(window._panel_open, "araclar")  # Araçlar hâlâ yukarı açılan panel
+        window._close_panel(refocus=False)
+        window._update_counts()
+        tags = {c["id"]: window.nav[c["id"]].count.text() for c in window.c.categories
+                if window.nav[c["id"]].count.text()}
+        for group, keys in window.strip_keys.items():
+            total = sum(int(v) for k, v in tags.items() if k != "PLC" and k in keys)
+            self.assertEqual(window.nav_groups[group].count.text(), str(total) if total else "", group)
+            self.assertEqual(window.nav_groups[group].count.isHidden(), not total, group)
+
+    def test_page_titles_are_two_tone(self):
+        """Başlıkta son kelime yeşil vurgu; sondaki "(not)" vurgulanmaz; ekran okuyucuya tam metin."""
+        from app.ui import theme, widgets as w
+        self.assertEqual(w.title_parts("Sistem özeti"), ("Sistem ", "özeti", ""))
+        self.assertEqual(w.title_parts("Boost (bellek)"), ("", "Boost", " (bellek)"))
+        self.assertEqual(w.title_parts("Temizlik"), ("", "Temizlik", ""))
+        label = w.title("Uygulama <kaldırıcı>")
+        self.assertIn(theme.palette()["accent"], label.text())
+        self.assertIn("&lt;kaldırıcı&gt;", label.text())  # metin HTML olarak yorumlanmaz
+        self.assertEqual(label.accessibleName(), "Uygulama <kaldırıcı>")
+
+    def test_summary_greeting_is_plain_without_user_name(self):
+        """Özet'te küçük sade "Merhaba"; kullanıcı adı işletim sisteminden okunmaz (gizlilik)."""
+        import inspect
+        from app.ui import page_summary
+        self.window = window = self.make_window()
+        page = window.pages["ozet"]
+        page.ensure_built()
+        texts = [lbl.text() for lbl in page.findChildren(QLabel)]
+        self.assertIn(t("ui.merhaba"), texts)
+        self.assertIn(t("ui.ozet_aciklama"), texts)
+        source = inspect.getsource(page_summary)
+        for forbidden in ("getpass", "getlogin", "USERNAME", "expanduser"):
+            self.assertNotIn(forbidden, source)
+
+    def test_games_cards_use_local_cover_or_letter(self):
+        """Oyun kartı: Steam yerel önbelleğinde kapak varsa o, yoksa (Epic dahil) adın harfi; sonda tek '+ Oyun ekle'."""
+        from pathlib import Path
+        from unittest import mock
+        from PySide6.QtGui import QImage
+        from PySide6.QtWidgets import QPushButton
+        from app.games import discovery
+        from app.ui.page_games import Cover
+        self.window = self.make_window()
+        store = self.window.game_store
+        for game in list(store.games):
+            store.remove(game["id"])
+        with tempfile.TemporaryDirectory() as steam:
+            image = Path(steam, "appcache", "librarycache", "42", "abc", "library_600x900.jpg")
+            image.parent.mkdir(parents=True)
+            self.assertTrue(QImage(600, 900, QImage.Format.Format_RGB32).save(str(image)))
+            page = self.window._page("oyunlar")
+            page.found = [{"ad": "Kapaklı", "klasor": r"C:\Kapakli", "kaynak": "Steam", "exe": None,
+                           "baslat": "steam://rungameid/42"},
+                          {"ad": "Epicli", "klasor": r"C:\Epicli", "kaynak": "Epic", "exe": None, "baslat": None}]
+            with mock.patch.object(discovery, "steam_root", return_value=steam):
+                page.ensure_built()
+                covers = page.findChildren(Cover)
+                shown = [c.pixmap is not None for c in covers]  # resim ilk erişimde (çizimde) çözülür: geçici klasör silinmeden
+        self.assertEqual(shown, [True, False])
+        self.assertEqual(covers[1].letter, "E")
+        # Sıra: yerel kapak -> exe simgesi -> harf. Exe'si olmayan ya da simgesi okunamayan oyun harfe düşer.
+        self.assertIsNone(Cover.exe_icon(None))
+        self.assertIsNone(Cover.exe_icon(r"C:\yok\yok.exe"))
+        add = [b for b in page.findChildren(QPushButton) if b.objectName() == "AddCard"]
+        self.assertEqual(len(add), 1)
+
+    def test_games_pick_and_remove_own_picture(self):
+        """'…' menüsü: Resim seç -> yerel kopya + ölçek, kart o resmi gösterir; Resmi kaldır -> eski sıraya döner; geçersiz dosya
+        durum çubuğunda uyarı verir ve hiçbir şey yazmaz."""
+        from pathlib import Path
+        from unittest import mock
+        from PySide6.QtGui import QImage
+        from app.games import discovery
+        from app.ui import page_games
+        from app.ui.page_games import Cover
+        self.window = self.make_window()
+        page = self.window._page("oyunlar")
+        game = {"id": "OYUN-0123456789", "ad": "Benim Oyunum"}
+        with tempfile.TemporaryDirectory() as data, tempfile.TemporaryDirectory() as src:
+            image = str(Path(src, "kapak.png"))
+            self.assertTrue(QImage(800, 500, QImage.Format.Format_RGB32).save(image))
+            junk = Path(src, "bozuk.png")
+            junk.write_bytes(b"resim degil")
+            statuses = []
+            with mock.patch.object(discovery.paths, "user_data_path", return_value=Path(data)), \
+                    mock.patch.object(self.window, "set_status", lambda text, tone="": statuses.append((text, tone))):
+                with mock.patch.object(page_games.QFileDialog, "getOpenFileName", return_value=(str(junk), "")):
+                    page._pick_image(game)
+                self.assertEqual(statuses[-1], (t("ui.oyun_resim_hata"), "uyari"))
+                self.assertIsNone(discovery.user_cover(game["id"]))
+                with mock.patch.object(page_games.QFileDialog, "getOpenFileName", return_value=(image, "")):
+                    page._pick_image(game)
+                self.assertEqual(statuses[-1][1], "iyi")
+                self.assertIsNotNone(discovery.user_cover(game["id"]))
+                self.assertIsNotNone(Cover(game, discovery.cover_path(game)).pixmap)
+                page._remove_image(game)
+                self.assertIsNone(discovery.user_cover(game["id"]))
+                with mock.patch.object(page_games.QFileDialog, "getOpenFileName", return_value=("", "")):
+                    page._pick_image(game)  # iptal: hiçbir şey olmaz
+                self.assertIsNone(discovery.user_cover(game["id"]))
+
+    def test_game_cover_falls_back_cover_then_exe_icon_then_letter(self):
+        """Kapak sırası: yerel Steam kapağı -> exe simgesi (koyu zeminde ortada) -> ad harfi. Üçü de gerçekten çizilir."""
+        from unittest import mock
+        from PySide6.QtGui import QColor, QImage, QPixmap
+        from app.ui import theme
+        from app.ui.page_games import Cover
+        self.window = self.make_window()
+        game = {"ad": "Örnek", "exe": r"C:\Oyun\oyun.exe"}
+        red = QPixmap(128, 128)
+        red.fill(QColor("#ff0000"))
+
+        def corner_and_centre(cover):
+            image = cover.grab().toImage()
+            return image.pixelColor(6, 6), image.pixelColor(image.width() // 2, image.height() // 2)
+
+        with mock.patch.object(Cover, "exe_icon", return_value=red) as icon:
+            corner, centre = corner_and_centre(Cover(game, None))
+            self.assertEqual(corner.name(), theme.ICON_GROUND)  # koyu zemin
+            self.assertEqual(centre.name(), "#ff0000")          # simge ortada
+            icon.assert_called_with(game["exe"])
+            Cover(game, None)  # kapak varsa exe simgesi hiç istenmez
+            icon.reset_mock()
+            image = Path(self.tmp.name, "kapak.png")
+            self.assertTrue(QImage(60, 90, QImage.Format.Format_RGB32).save(str(image)))
+            Cover(game, str(image)).grab()
+            icon.assert_not_called()
+        with mock.patch.object(Cover, "exe_icon", return_value=None):
+            corner, _ = corner_and_centre(Cover(game, None))
+            self.assertEqual(corner.name(), theme.letter_style("Örnek")[1])  # harf kartı zemini
 
     def test_summary_findings_open_grouped_and_collapsible(self):
         """2.10: bulgular açık gelir, önem sırasıyla gruplu; "iyi" daralı; daraltma tercihi kalıcı; Çöz görünür."""
@@ -1085,6 +1478,16 @@ class TestUserInterface(unittest.TestCase):
                     "guncelleme_denetle", "dil"):
             self.assertIn(key, settings.DEFAULTS)
 
+    def test_failed_update_swap_shown_once_at_startup(self):
+        """Denetim A S3: değişim geri döndüyse açılışta tek durum satırı; ağa bağlanılmaz."""
+        from unittest import mock
+        from app.core import guncelleme
+        with mock.patch.object(guncelleme, "onceki_degisim_hatasi", return_value=True), \
+                mock.patch.object(guncelleme, "kontrol", side_effect=AssertionError("ağ")):
+            self.window = self.make_window()
+            self.window._auto_update_check()
+        self.assertEqual(self.window.status.text(), t("ui.guncelleme.hata.degisim"))
+
     def test_settings_restore_points_listed_read_only(self):
         """Bakım sekmesi açılınca salt okunur liste okunur; en yeni önde; liste okunamazsa dürüst ileti."""
         page = self._settings_page()
@@ -1165,9 +1568,10 @@ class TestUserInterface(unittest.TestCase):
         self.assertIn("2.3.2", dialog.viewer.toPlainText())
         dialog.deleteLater()
 
-    def test_row_shows_impact_badge_only_when_loud(self):
+    def test_card_shows_recommended_label_only_for_recommended_and_no_impact_badge(self):
         from app.ui import page_category
         self.window = self.make_window()
+        recommended = {p["id"] for p in self.window.c.recommendations(99)}
         seen = set()
         pages = [self.window._page(c["id"]) for c in self.window.c.categories]
         for page in pages:
@@ -1175,10 +1579,11 @@ class TestUserInterface(unittest.TestCase):
         for tid, row in ((tid, row) for page in pages for tid, row in page.rows.items()):
             if not isinstance(row, page_category.TweakRow):
                 continue
+            texts = {lb.text() for lb in row.meta.findChildren(QLabel)}
             level = row.tweak["performans_etkisi"]["seviye"]
-            text = t("ui.etki", seviye=i18n.value_label("deger.etki", level))
-            shown = any(lb.text() == text for lb in row.meta.findChildren(QLabel))
-            self.assertEqual(shown, level in page_category.LOUD_IMPACT, tid)
+            self.assertNotIn(t("ui.etki", seviye=i18n.value_label("deger.etki", level)), texts, tid)  # etki (i) penceresinde
+            shown = t("ui.onerilen_etiket") in texts
+            self.assertEqual(shown, tid in recommended, tid)
             seen.add(shown)
         self.assertEqual(seen, {True, False})  # iki durum da sınandı
 
@@ -1552,9 +1957,42 @@ class TestUserInterface(unittest.TestCase):
         self.wait_for(lambda: card.value != "okunuyor")
         self.assertIsNone(card.value)
         card._npi()
+        self.wait_for(lambda: self.sys.npi_imports)
         self.wait_idle()
         self.assertEqual(self.sys.npi_imports, [[(0x0064B541, 1)]])
         self.assertEqual(self.sys.npi_hashes, ["ab" * 32])  # onaylanan dosyanın özeti çalıştırmadan önce yeniden denetlenir
+
+    def test_npi_and_tool_signature_checks_run_off_the_ui_thread(self):
+        """Denetim B B4: imza denetimi (PowerShell) arayüz iş parçacığında çalışmaz."""
+        import threading
+        from unittest import mock
+        from app.engine import driver_tools
+        from app.ui import managers_ui
+        self.window = self.make_window()
+        self.sys.nvidia_ok = False
+        page = self.window._page("GPU")
+        self.window.navigate("GPU")
+        card = page.rows["GPU-009"]
+        self.wait_for(lambda: card.value != "okunuyor")
+        threads = []
+        original_check = self.sys.npi_check
+        self.sys.npi_check = lambda: threads.append(threading.current_thread()) or original_check()
+        asked = []
+        original = self.dialogs.ask_yes_no
+        self.dialogs.ask_yes_no = lambda *a, **k: asked.append(a[2]) or False
+        try:
+            card._npi()
+            self.wait_for(lambda: asked)
+            tools = managers_ui.DriverToolsCard(self.window, self.window.c.by_id["GPU-019"])
+            fake = {"imza_gecerli": False, "sha256": "cd" * 32, "imzalayan": ""}
+            with mock.patch.object(driver_tools, "verify",
+                                   lambda p: threads.append(threading.current_thread()) or dict(fake)):
+                tools._open_tool(r"C:	ools\ddu.exe")
+                self.wait_for(lambda: len(asked) == 2)
+        finally:
+            self.dialogs.ask_yes_no = original
+        self.assertEqual(len(threads), 2)
+        self.assertNotIn(threading.main_thread(), threads)
 
     def test_npi_dialog_shows_hash_and_unsigned_warning_and_no_answer_runs_nothing(self):
         self.window = self.make_window()
@@ -1569,7 +2007,7 @@ class TestUserInterface(unittest.TestCase):
         self.dialogs.ask_yes_no = lambda *a, **k: asked.append(a[2]) or False
         try:
             card._npi()
-            self.wait_idle()
+            self.wait_for(lambda: asked)  # imza denetimi işçi iş parçacığında: soru geri çağrıda sorulur
         finally:
             self.dialogs.ask_yes_no = original
         self.assertIn("ab" * 32, asked[0])
@@ -1593,6 +2031,8 @@ class TestUserInterface(unittest.TestCase):
         from app.games import discovery
         discovery.save_cache([discovery._game("Önbellekteki Oyun", r"C:\Oyunlar\A", "Steam")], {})
         self.window = self.make_window()
+        for game in list(self.window.game_store.games):  # liste doluyken tarama durumu oyunun alt sayfasındadır
+            self.window.game_store.remove(game["id"])
 
         def broken(errors=None):
             raise OSError("disk okunamadı")
@@ -1693,7 +2133,7 @@ class TestUserInterface(unittest.TestCase):
         game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
         self.window.navigate("oyunlar")
         page = self.window._page("oyunlar")
-        page.found, page.editing = [], game["id"]
+        page.found, page.editing, page.opened = [], game["id"], True
         page.data_reloaded()
         for _ in range(20):
             self.qt.processEvents()
@@ -1713,6 +2153,89 @@ class TestUserInterface(unittest.TestCase):
             self.qt.processEvents()
         self.assertEqual(bar.value(), position)
         store.remove(game["id"])
+
+    def test_cleanup_scan_failure_says_unreadable_not_nothing_to_clean(self):
+        """Denetim B B8: tarama istisna verirse "temizlenecek bir şey yok" değil "liste okunamadı" yazar."""
+        from unittest import mock
+        from PySide6.QtWidgets import QLabel
+        from app.engine import cleaners
+        self.window = self.make_window()
+        with mock.patch.object(cleaners, "scan", side_effect=OSError("sahte")):
+            self.window.navigate("temizlik")
+            page = self.window._page("temizlik")
+            self.wait_for(lambda: page.found is not None)
+        self.qt.processEvents()
+        texts = [x.text() for x in page.findChildren(QLabel)]
+        self.assertIn(t("ui.liste_okunamadi"), texts)
+        self.assertNotIn(t("ui.temizlik.bos"), texts)
+
+    def test_revert_confirmation_names_the_change_and_start_failure_is_visible(self):
+        """Denetim B B7: katalogda karşılığı olmayan seviye-2 değişikliği geri alırken "{ad}" çiğ görünmez.
+        B9: "Oyunu başlat" başarısız olursa durum çubuğunda görünür hata çıkar."""
+        from unittest import mock
+        from PySide6.QtWidgets import QPushButton
+        self.window = win = self.make_window()
+        engine = win.c.engine
+        asked = []
+        with mock.patch.object(engine, "stored_confirm_level", return_value=2),                 mock.patch.object(engine, "stored_related", return_value=None),                 mock.patch.object(engine.store, "get", return_value={"ad": "Eski Ayar"}),                 mock.patch.object(self.dialogs, "ask_yes_no", lambda *a, **k: asked.append(a[2]) or False):
+            win.revert("ESKI-999", lambda: None)
+        self.assertIn("Eski Ayar", asked[0])
+        self.assertNotIn("{ad}", asked[0])
+        # B9
+        store = win.game_store
+        for game in list(store.games):
+            store.remove(game["id"])
+        game = store.add("Denemelik", "C:/Denemelik", "Steam", "C:/Denemelik/d.exe", baslat="steam://rungameid/42")
+        page = win._page("oyunlar")
+        page.ensure_built()
+        page.editing, page.opened = game["id"], True  # oyunun alt sayfası: ana düğmeler burada
+        page.data_reloaded()
+        buttons = [b for b in page.findChildren(QPushButton) if b.text() == t("ui.oyun_baslat")]
+        self.assertTrue(buttons)
+        with mock.patch("app.ui.page_games.os.startfile", side_effect=OSError("yok")):
+            buttons[0].click()
+            self.wait_idle()
+        self.assertEqual(win.status.text(), t("ui.oyun_baslatilamadi"))
+        store.remove(store.games[0]["id"])
+
+    def test_toast_with_undo_stays_while_mouse_or_focus_is_on_it(self):
+        """Denetim B O3: "Geri al" bildirimi fare ya da odak üstündeyken kapanmaz."""
+        from unittest import mock
+        self.window = win = self.make_window()
+        toast = win.toast
+        toast.show_text("Tamam", ms=60000, action=lambda: None, action_label="Geri al")
+        with mock.patch.object(toast, "underMouse", return_value=True):
+            toast._expire()
+        self.assertFalse(toast.isHidden())
+        self.assertTrue(toast._timer.isActive())
+        toast._expire()  # fare gitti
+        self.assertTrue(toast.isHidden())
+
+    def test_prepare_button_reference_is_dropped_when_game_is_prepared(self):
+        """Denetim B O2: hazır oyunda "Hazırla" düğmesi yoktur; eski (silinmiş) düğmeye başvuru kalmaz."""
+        self.window = win = self.make_window()
+        store = win.game_store
+        game = store.add("Hazir", "C:/Hazir", "Steam", "C:/Hazir/h.exe")
+        page = win._page("oyunlar")
+        page._prepare_button = object()
+        win.prepared_game = game
+        try:
+            page._main_row(game)
+        finally:
+            win.prepared_game = None
+            store.remove(game["id"])
+        self.assertIsNone(page._prepare_button)
+
+    def test_source_links_open_with_keyboard_too(self):
+        """Denetim B B10: (i) penceresindeki kaynak bağlantıları Tab + Enter ile de açılır."""
+        from PySide6.QtCore import Qt
+        from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+        from app.ui import dialogs
+        box = QWidget()
+        lay = QVBoxLayout(box)
+        dialogs._sources(lay, {"kaynaklar": ["https://example.com/kanit"]})
+        link = box.findChildren(QLabel)[-1]
+        self.assertTrue(link.textInteractionFlags() & Qt.TextInteractionFlag.LinksAccessibleByKeyboard)
 
     def test_cleanup_page_sends_only_ids_and_blocks_running_programs(self):
         from unittest import mock
@@ -1934,7 +2457,7 @@ class TestUserInterface(unittest.TestCase):
         self.window.last_sessions[game["id"]] = {"ad": "Oyun", "kaynak": {"ornek": 0}}
         self.window.navigate("oyunlar")
         page = self.window._page("oyunlar")
-        page.found, page.editing, page.advanced_open = [], game["id"], True
+        page.found, page.editing, page.opened, page.advanced_open = [], game["id"], True, True
         page.data_reloaded()
         self.qt.processEvents()
         visible = lambda cls: [x for x in page.findChildren(cls) if x.isVisibleTo(page)]  # noqa: E731
@@ -2005,7 +2528,7 @@ class TestUserInterface(unittest.TestCase):
                        "ram_yuksek_sn": 0, "arka_plan": [{"ad": "<b>chrome</b>", "cpu": 7.5}]}}
         self.window.navigate("oyunlar")
         page = self.window._page("oyunlar")
-        page.found, page.editing, page.advanced_open = [], game["id"], True  # kaynak özeti Gelişmiş'te
+        page.found, page.editing, page.opened, page.advanced_open = [], game["id"], True, True  # kaynak özeti Gelişmiş'te
         page.data_reloaded()
         self.qt.processEvents()
         texts = [lab.text() for lab in page.findChildren(QLabel) if lab.isVisibleTo(page)]
@@ -2032,8 +2555,8 @@ class TestUserInterface(unittest.TestCase):
         closed = t("ui.canli_fps.oyunda_kapali")
 
         def show(game):
-            page.found, page.editing, page.draft = [], game["id"], None
             self.window.navigate("oyunlar")
+            page.found, page.editing, page.opened, page.draft = [], game["id"], True, None
             page.data_reloaded()
             QApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)  # önceki kurulumun satırları silinsin
             return [lab for lab in page.findChildren(QLabel) if lab.text() == closed]
@@ -2093,8 +2616,8 @@ class TestUserInterface(unittest.TestCase):
             store.remove(game["id"])
         game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
         page = self.window._page("oyunlar")
-        page.found, page.editing = [], game["id"]
-        self.window.navigate("oyunlar")
+        self.window.navigate("oyunlar")  # menüden gelince liste açılır: alt sayfa navigate'ten SONRA açılır
+        page.found, page.editing, page.opened = [], game["id"], True
 
         def texts():
             return [lab.text() for lab in page.findChildren(QLabel)]
@@ -2174,7 +2697,7 @@ class TestUserInterface(unittest.TestCase):
         game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
         page = self.window._page("oyunlar")
         page.found = []
-        page.editing = game["id"]
+        page.editing, page.opened = game["id"], True
         page.ensure_built()
         page.draft.update(oncelik="AboveNormal", fso_kapali=True)
         page._save(game)
@@ -2198,7 +2721,7 @@ class TestUserInterface(unittest.TestCase):
         game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
         page = self.window._page("oyunlar")
         page.found = []
-        page.editing = game["id"]
+        page.editing, page.opened = game["id"], True
         page.ensure_built()
         page._apply_preset("performans")
         self.wait_idle()
@@ -2222,7 +2745,7 @@ class TestUserInterface(unittest.TestCase):
         game = store.add("Oyun", str(folder), "Elle", str(exe))
         self.window.navigate("oyunlar")
         page = self.window._page("oyunlar")
-        page.found, page.editing, page.advanced_open = [], game["id"], False
+        page.found, page.editing, page.opened, page.advanced_open = [], game["id"], True, False
         page.data_reloaded()
         for _ in range(10):
             self.qt.processEvents()
@@ -2232,7 +2755,7 @@ class TestUserInterface(unittest.TestCase):
         self.assertTrue(any(b.startswith(t("ui.oyun_onerilen", n=0, m=0).split("(")[0]) for b in buttons), buttons)
         for hidden in (t("ui.oyun_kaydet"), t("ui.oyun_kaldir"), t("ui.oyun_hazir.dengeli"), t("ui.oyun_hazir.performans")):
             self.assertNotIn(hidden, buttons)
-        self.assertLessEqual(len(buttons), 6, buttons)  # tara, elle ekle, favori, başlat, önerilen, Gelişmiş
+        self.assertLessEqual(len(buttons), 7, buttons)  # tara, elle ekle, satır '…', favori, başlat, önerilen, Gelişmiş
         texts = [lab.text() for lab in visible(QLabel)]
         self.assertFalse(any(t("ui.oyun_ici.baslik") == s for s in texts))  # 'Oyun içi ayarlar' kartı ilk bakışta yok
         self.assertFalse(any(t("ui.anti_cheat_genel") == s for s in texts))
@@ -2265,7 +2788,7 @@ class TestUserInterface(unittest.TestCase):
 
         def show(name, state):
             game = store.add(name, r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
-            page.found, page.editing, page.advanced_open = [], game["id"], True
+            page.found, page.editing, page.opened, page.advanced_open = [], game["id"], True, True
             with mock.patch.object(oyun_ayar, "status", return_value=state):
                 page.data_reloaded()
                 for _ in range(50):
@@ -2298,7 +2821,7 @@ class TestUserInterface(unittest.TestCase):
             store.remove(game["id"])
         game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
         page = self.window._page("oyunlar")
-        page.found, page.editing = [], game["id"]
+        page.found, page.editing, page.opened = [], game["id"], True
         page.ensure_built()
         with mock.patch.object(page, "_save") as save:
             page._apply_recommended(game)
@@ -2484,15 +3007,94 @@ class TestUserInterface(unittest.TestCase):
             settings.set("boost_listesi", [])
             settings.set("boost_ayarlari", [])
 
-    def test_games_page_guide_links(self):
-        from PySide6.QtWidgets import QPushButton
+    def test_games_card_opens_subpage_hides_list_and_back_or_esc_returns(self):
+        """Karta basınca oyunun alt sayfası hemen açılır ("Aşağıda açık" yok): liste ve 'Bulunan' bölümü gizli, üstte '← Oyunlar';
+        düğme ve Esc listeye döner (önceki sayfaya değil); menüden yeniden gelince liste görünür; oyun içi ayar kılavuzu yok."""
+        from PySide6.QtCore import QEvent
+        from PySide6.QtWidgets import QLabel, QPushButton
+        from app.ui.page_games import GameCard
         self.window = self.make_window()
+        self.window.resize(1100, 640)
+        self.window.show()
+        store = self.window.game_store
+        for game in list(store.games):
+            store.remove(game["id"])
+        game = store.add("Oyun", r"C:\Oyun", "Elle", r"C:\Oyun\oyun.exe")
+        self.window.navigate("oyunlar")
         page = self.window._page("oyunlar")
-        box = page._guide_row({"ad": "Valorant"})  # kutu tutulmazsa düğmeleri de silinir
-        links = lambda widget: [b for b in widget.findChildren(QPushButton) if b.text() != "i"]  # "i": bilgi düğmesi
-        self.assertGreaterEqual(len(links(box)), 1)
-        empty = page._guide_row({"ad": "Yok Oyun"})
-        self.assertEqual(links(empty), [])
+        self.wait_for(lambda: not page.scanning)  # açılışta başlayan tarama bitmeden bulunan liste elle verilirse ezilir
+        page.found = [{"ad": "Bulunan", "klasor": r"C:\Bulunan", "kaynak": "Steam", "exe": None}]
+        page.data_reloaded()
+        self.qt.processEvents()
+        def flush():  # önceki kurulumun silinen kartları gerçekten gitsin
+            for _ in range(5):
+                self.qt.processEvents()
+                time.sleep(0.03)
+            self.qt.sendPostedEvents(None, QEvent.Type.DeferredDelete.value)
+
+        texts = lambda: [lab.text() for lab in page.findChildren(QLabel)]  # noqa: E731
+        self.assertFalse(page.opened)
+        self.assertIn(t("ui.oyun_liste_bulunan"), texts())
+        flush()
+        cards = page.findChildren(GameCard)
+        self.assertEqual(len(cards), 2)
+        cards[0].opened.emit()  # kartın herhangi bir yerine basmak
+        flush()
+        self.assertTrue(page.opened)
+        self.assertEqual(page.editing, game["id"])
+        self.assertEqual(page.findChildren(GameCard), [])  # liste ve Bulunan gizli (yeniden kurulmadı: hiç yok)
+        self.assertNotIn(t("ui.oyun_liste_bulunan"), texts())
+        self.assertNotIn("Aşağıda açık", texts())
+        back = [b for b in page.findChildren(QPushButton) if b.text() == t("ui.oyun_geri")]
+        self.assertEqual(len(back), 1)
+        page.advanced_open = True
+        page.data_reloaded()
+        self.qt.processEvents()
+        for gone in (t("ui.oyun_ici.baslik"), t("ui.oyun_rehber"), t("ui.oyun_faydali.baslik")):  # kılavuz Rehber sayfasına taşındı
+            self.assertNotIn(gone, texts())
+        self.window.search_box.edit.clearFocus()  # odak aramada değil sayfada (aramadayken Esc önce aramayı temizler)
+        self.window._escape()  # Esc: alt sayfadan listeye, önceki sayfaya değil
+        flush()
+        self.assertEqual(self.window.current, "oyunlar")
+        self.assertFalse(page.opened)
+        self.assertEqual(len(page.findChildren(GameCard)), 2)
+        page._open(game["id"])
+        flush()
+        self.assertTrue(page.opened)
+        back = [b for b in page.findChildren(QPushButton) if b.text() == t("ui.oyun_geri")][0]
+        back.click()
+        self.assertFalse(page.opened)
+        page._open(game["id"])
+        self.qt.processEvents()
+        self.window.navigate("ozet")
+        self.window.navigate("oyunlar")  # menüden (yeniden) gelince alt sayfa açık kalmaz
+        self.assertFalse(page.opened)
+        store.remove(game["id"])
+
+    def test_guide_page_links_per_game_and_no_pro_player_content(self):
+        """Rehber sayfası: oyuna göre bağlantılar (sistem gereksinimi / FPS), genel oyun içi maddeler; profesyonel oyuncu içeriği
+        hiçbir oyunda yok; oyunun kendi sayfasında oyun içi ayar kılavuzu ve rehber bağlantıları artık görünmez."""
+        from PySide6.QtWidgets import QLabel, QPushButton
+        self.window = self.make_window()
+        self.window.navigate("rehber")
+        page = self.window.pages["rehber"]
+        links = lambda: [b for b in page.content.findChildren(QPushButton) if b.text() != "i"]  # "i": bilgi düğmesi
+        texts = lambda: [lab.text() for lab in page.content.findChildren(QLabel)]
+        self.assertIn(t("ui.oyun_ici.baslik"), texts())  # genel: oyun içi ayar maddeleri
+        general = len(links())                              # genelde yalnızca "Faydalı bağlantılar" kartının düğmeleri
+        page._choose("Valorant")
+        self.assertGreater(len(links()), general)
+        for button in links():
+            self.assertNotIn("prosettings", (button.text() + button.toolTip()).lower())
+        page._choose("Yok Oyun")
+        self.assertIn(t("ui.oyun_rehber.yok"), texts())
+        self.assertFalse(any("rofesyonel" in s for s in texts()))
+        names = page.names()
+        self.assertIn("Valorant", names)
+        self.assertEqual(len(names), len({n.lower() for n in names}))  # aynı oyun iki kez yok
+        games = self.window._page("oyunlar")
+        for bad in ("_guide_row", "_ingame_card", "_useful_card"):
+            self.assertFalse(hasattr(games, bad), bad)
 
     def test_games_page_picker_and_auto_apply_off(self):
         """Açılır listeden bulunan oyun eklenir; 'otomatik uygula' kapalıyken kalıcı ayar yazılmaz."""
@@ -2504,7 +3106,10 @@ class TestUserInterface(unittest.TestCase):
         page = self.window._page("oyunlar")
         page.found = [{"ad": "Bulunan", "klasor": r"C:\Bulunan", "kaynak": "Steam", "exe": r"C:\Bulunan\b.exe"}]
         page.ensure_built()
-        page._picked(("bulunan", page.found[0]))
+        from PySide6.QtWidgets import QPushButton
+        setup = [b for b in page.findChildren(QPushButton) if b.text() == t("ui.oyun_hazirla")]
+        self.assertEqual(len(setup), 1)  # bulunan oyun satırında tek 'Hazırla'
+        setup[0].click()
         self.assertEqual(store.games[0]["ad"], "Bulunan")
         game = store.games[0]
         self.assertEqual(page.editing, game["id"])
@@ -2542,7 +3147,7 @@ class TestUserInterface(unittest.TestCase):
         self.wait_for(lambda: page.autostart is not None)
         labels = lambda p: " ".join(lbl.text() for lbl in p.findChildren(type(p.header.itemAt(0).widget()))  # noqa: E731
                                     if hasattr(lbl, "text"))
-        self.assertNotIn("smileyw", labels(page))  # bilgi bölümü Ekstra ayarlar'dan kaldırıldı
+        self.assertNotIn("smileyw", labels(page))  # bilgi bölümü Ayarlar'dan kaldırıldı
         self.window.navigate("bilgi")
         about = self.window.pages["bilgi"]
         text = labels(about)
@@ -2624,6 +3229,212 @@ class TestUserInterface(unittest.TestCase):
         self.assertTrue(other.load_cache())
         self.assertEqual(set(other.states), set(self.window.c.states))
         self.assertFalse(other.fresh)  # önbellekteki durumlarla değişiklik yapılamaz
+
+    def test_cache_garbage_does_not_crash(self):
+        """Denetim B B3: içeriği null / [] / bozuk JSON olan önbellek açılışı çökertmez, yok sayılır."""
+        self.window = self.make_window()
+        from app.ui.controller import Controller
+        other = Controller("onizleme", engine=self.window.c.engine, cache_file=self.window.c.cache_file)
+        for text in ("null", "[]", "[1]", "\"x\"", "{bozuk"):
+            other.cache_file.write_text(text, encoding="utf-8")
+            self.assertFalse(other.load_cache(), text)
+
+    # ------------------------------------------------------------------ oyun sırasında seçenekleri (Hazırla / Geri al)
+    def _prep_setup(self):
+        """İki oyun, sahte süreç işlemleri ve sahte algılayıcı (gerçek süreç listesine bakılmaz)."""
+        from app.games import discovery, runtime
+
+        class FakeOps:
+            def __init__(self):
+                self.prio = {}
+
+            def list_processes(self):
+                return []
+
+            def get_priority(self, pid):
+                return 0x20
+
+            def set_priority(self, pid, value):
+                self.prio[pid] = value
+
+        class FakeDetector:
+            made = []
+
+            def __init__(self, games, ops=None, on_event=None, interval=2.0):
+                self.on_event, self.started, self.stopped = on_event, False, False
+                FakeDetector.made.append(self)
+
+            def start(self):
+                self.started = True
+
+            def stop(self):
+                self.stopped = True
+
+        saved = (self.app_module.ProcessOps, self.app_module.GameDetector, discovery.steam_downloading)
+        self.app_module.ProcessOps, self.app_module.GameDetector = FakeOps, FakeDetector
+        discovery.steam_downloading = lambda *a, **k: False
+
+        def restore():
+            self.app_module.ProcessOps, self.app_module.GameDetector, discovery.steam_downloading = saved
+        self.addCleanup(restore)
+        self.window = self.make_window()
+        store = self.window.game_store
+        for game in list(store.games):
+            store.remove(game["id"])
+        self.game_a = store.add("Oyun A", r"C:\A", "Elle", r"C:\A\a.exe")
+        self.game_b = store.add("Oyun B", r"C:\B", "Elle", r"C:\B\b.exe")
+        FakeDetector.made.clear()
+        return FakeDetector, runtime
+
+    def _open_game(self, game):
+        self.window.navigate("oyunlar")
+        page = self.window._page("oyunlar")
+        page.found, page.editing, page.opened, page.draft = [], game["id"], True, None
+        page.data_reloaded()
+        from PySide6.QtCore import QEvent
+        QApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)  # önceki kurulumun düğmeleri silinsin
+        self.qt.processEvents()
+        return page
+
+    def _switches(self, page):
+        from app.ui import widgets as w
+        return {s.accessibleName(): s for s in page.findChildren(w.ToggleSwitch) if s.accessibleName()}
+
+    def _prepare_button(self, page):
+        return next((b for b in page.findChildren(QPushButton) if b.text() == t("ui.hazirla.dugme")), None)
+
+    def test_game_page_options_off_by_default_saved_per_game(self):
+        self._prep_setup()
+        page = self._open_game(self.game_a)
+        switches = self._switches(page)
+        name = t("ui.hazirla.ad.hazirla_rahatsiz_etme")
+        self.assertEqual(set(switches), {t(f"ui.hazirla.ad.{k}") for k in profiles.RUNTIME_KEYS})  # düz anahtar, oyunda 6 seçenek
+        self.assertFalse(any(s.isChecked() for s in switches.values()))
+        self.assertFalse(self._prepare_button(page).isVisibleTo(page))  # hiçbir seçenek açık değil: Hazırla yok
+        switches[name].setChecked(True)
+        self.qt.processEvents()
+        self.assertTrue(self._prepare_button(page).isVisibleTo(page))
+        self.assertTrue(self.window.game_store.get(self.game_a["id"])["profil"]["hazirla_rahatsiz_etme"])
+        self.assertFalse(self.window.game_store.get(self.game_b["id"])["profil"]["hazirla_rahatsiz_etme"])
+        self.assertEqual(self.sys.read_reg("HKCU", "Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings",
+                                           "NOC_GLOBAL_SETTING_TOASTS_ENABLED"), None)  # seçmek sisteme hiçbir şey yazmaz
+        page_b = self._open_game(self.game_b)
+        self.assertFalse(any(s.isChecked() for s in self._switches(page_b).values()))
+
+    def test_anti_cheat_game_hides_process_and_service_options(self):
+        self._prep_setup()
+        self.game_b["anti_cheat"] = ["EasyAntiCheat"]
+        page = self._open_game(self.game_b)
+        names = set(self._switches(page))
+        self.assertEqual(names, {t(f"ui.hazirla.ad.{k}") for k in ("hazirla_rahatsiz_etme", "hazirla_steam_uyari", "hazirla_guc_plani")})
+        self.assertTrue(any(lab.text() == t("ui.hazirla.anticheat") for lab in page.findChildren(QLabel)))
+
+    def test_prepare_applies_through_engine_and_game_exit_reverts(self):
+        detector, runtime = self._prep_setup()
+        profile = self.window.game_store.get(self.game_a["id"])["profil"]
+        profile["hazirla_rahatsiz_etme"], profile["hazirla_guc_plani"] = True, True
+        before = self.sys.state_copy()
+        launched = []
+        self.assertIsNone(self.window.prep_detector)  # hazırlanmadan hiçbir izleme yok
+        self.window.prepare_game(self.game_a, launch=lambda: launched.append(1))
+        self.wait_idle()
+        self.assertEqual(launched, [1])
+        self.assertEqual(self.sys.active_scheme, runtime.HIGH_PERFORMANCE_PLAN,
+                         (self.window.status.text(), self.messages[-3:], self.window.busy, self.window._blocked()))
+        self.assertEqual(self.sys.read_reg("HKCU", runtime.DND_KEY, runtime.DND_VALUE)[0], 0)
+        self.assertTrue(self.window.c.engine.store.has("oyunsirasi-guc"))  # Değişiklikler'de görünür
+        self.assertTrue(self.window.game_session.active)
+        self.assertEqual(len(detector.made), 1)
+        self.assertTrue(detector.made[0].started)
+        page = self._open_game(self.game_a)  # alt sayfada "Geri al" var, "Hazırla" yok
+        self.assertIsNone(self._prepare_button(page))
+        self.assertTrue(any(b.text() == t("ui.hazirla.geri_al") for b in page.findChildren(QPushButton)))
+        detector.made[0].on_event("basladi", self.game_a)  # oyun açıldı
+        self.wait_idle()
+        self.window._prep_timeout()
+        self.assertIsNotNone(self.window.game_session)  # oyun açıkken süre dolması geri almaz
+        detector.made[0].on_event("bitti", self.game_a)  # oyun kapandı
+        deadline = time.time() + 5
+        while self.window.game_session is not None and time.time() < deadline:
+            self.qt.processEvents()
+            time.sleep(0.01)
+        self.wait_idle()
+        self.assertIsNone(self.window.game_session)
+        self.assertEqual(self.sys.state_copy(), before)
+        self.assertTrue(detector.made[0].stopped)
+        self.assertEqual(self.window.c.engine.store.ids_newest_first(), [])
+
+    def test_startup_recovery_does_not_revert_session_prepared_after_launch(self):
+        detector, runtime = self._prep_setup()
+        self.window.game_store.get(self.game_a["id"])["profil"]["hazirla_guc_plani"] = True
+        self.window.prepare_game(self.game_a)
+        self.wait_idle()
+        self.window._start_games()  # 500 ms'lik başlangıç taraması tam şimdi çalışsın (zamana bağlı değil)
+        self.wait_idle()
+        self.assertTrue(self.window.game_session.active)
+        self.assertEqual(self.sys.active_scheme, runtime.HIGH_PERFORMANCE_PLAN)
+        self.window.unprepare_game()
+        self.wait_idle()
+
+    def test_undo_button_and_never_started_timeout_revert(self):
+        detector, runtime = self._prep_setup()
+        self.window.game_store.get(self.game_a["id"])["profil"]["hazirla_guc_plani"] = True
+        before = self.sys.state_copy()
+        for how in ("geri_al", "zaman_asimi"):
+            self.window.prepare_game(self.game_a)
+            self.wait_idle()
+            self.assertEqual(self.sys.active_scheme, runtime.HIGH_PERFORMANCE_PLAN)
+            if how == "geri_al":
+                self.window.unprepare_game()
+            else:
+                self.window._prep_timeout()  # oyun hiç açılmadı
+            self.wait_idle()
+            self.assertIsNone(self.window.game_session)
+            self.assertEqual(self.sys.state_copy(), before)
+
+    def test_close_while_busy_leaves_session_to_recover(self):
+        """Denetim A O1: işlem sürerken 'yine de kapat' denirse aynı oturum ikinci kez (arayüz iş parçacığında) geri
+        alınmaz; günlük kalır, sonraki açılışta recover yapar."""
+        from PySide6.QtGui import QCloseEvent
+        self._prep_setup()
+        self.window.game_store.get(self.game_a["id"])["profil"]["hazirla_guc_plani"] = True
+        self.window.prepare_game(self.game_a)
+        self.wait_idle()
+        session, stopped = self.window.game_session, []
+        session.stop = lambda: stopped.append(1)
+        self.window.busy = True
+        self.window.closeEvent(QCloseEvent())
+        self.window.busy = False
+        self.assertEqual(stopped, [])
+        self.assertTrue(session.journal_path.exists())
+        type(session).stop(session)  # temizlik: sonraki testlere günlük kalmasın
+
+    def test_prepare_with_nothing_selected_just_launches(self):
+        self._prep_setup()
+        launched = []
+        self.window.prepare_game(self.game_a, launch=lambda: launched.append(1))
+        self.assertEqual(launched, [1])
+        self.assertIsNone(self.window.game_session)
+        self.assertEqual(self.sys.calls, [x for x in self.sys.calls if x not in ("set_active_scheme", "set_service")])
+
+    def test_cover_is_decoded_only_when_first_shown_and_index_is_cached(self):
+        """Oyunlar sayfası kapak sayısıyla yavaşlamasın: resim kart ilk çizilirken çözülür (ekrana gelmeyenler hiç), gömülü
+        kapak dizini dosya değişmedikçe bir kez ayrıştırılır."""
+        from app.games import discovery
+        from app.ui.page_games import Cover
+        calls = []
+        original = Cover.__dict__["_load"]
+        Cover._load = classmethod(lambda cls, path: calls.append(path))
+        try:
+            cover = Cover({"ad": "Oyun"}, "kapak.jpg")
+            self.assertEqual(calls, [])          # kurulurken çözülmez
+            self.assertIsNone(cover.pixmap)      # ilk erişimde (çizimde) çözülür
+            cover.pixmap
+            self.assertEqual(calls, ["kapak.jpg"])  # bir kez
+        finally:
+            Cover._load = original
+        path = Path(discovery.paths.data_dir()) / "oyun_kapaklari.json"
+        self.assertIs(discovery._cover_entries(path), discovery._cover_entries(path))
 
 
 if __name__ == "__main__":

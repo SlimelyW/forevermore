@@ -55,9 +55,9 @@ def main():
         from app.core import uninstall  # noqa: WPS433
         from app.engine.backup import BackupStore  # noqa: WPS433
         from app.engine.engine import Engine  # noqa: WPS433
-        if admin.is_admin():
-            _protect_backups(_log)
-        engine = Engine(store=BackupStore(readonly=not admin.is_admin()))
+        # Taşınamadıysa yedekler kullanıcının yazabildiği klasörde: normal açılıştaki gibi yazma yok (Denetim A O3)
+        moved = admin.is_admin() and _protect_backups(_log)
+        engine = Engine(store=BackupStore(readonly=not moved), is_admin=lambda: moved)
         engine.accept_without_restore_point()  # yalnızca geri alma yapılır; geri alma nokta gerektirmez
         report = uninstall.cleanup(engine, revert_changes=args.tumunu_geri_al)
         return 0 if not report["geri_alinamayan"] else 2
@@ -118,6 +118,14 @@ def self_check():
     check("seçili dil", lambda: i18n.current())
     check("başlangıç onayı metinleri", lambda: ", ".join(
         f"{item['kod']}: {len(consent.text(item['kod']))} karakter" for item in i18n.available()))
+    def covers_check():
+        listed = json.loads((paths.data_dir() / "oyun_kapaklari.json").read_text(encoding="utf-8"))["kapaklar"]
+        missing = [e["dosya"] for e in listed if not (paths.data_dir() / "oyun_kapaklari" / e["dosya"]).is_file()]
+        if missing:
+            raise FileNotFoundError("eksik kapak: " + ", ".join(missing))
+        return f"{len(listed)} gömülü kapak"
+
+    check("oyun kapakları", covers_check)
     check("bilinen süreçler", lambda: (paths.data_dir() / "bilinen_surecler.json").stat().st_size and "var")
 
     def qt_check():

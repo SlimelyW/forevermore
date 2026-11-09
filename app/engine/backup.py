@@ -117,13 +117,15 @@ class BackupStore:
         self._save()
         return raw
 
-    def _save(self):
-        if self.readonly:
-            return
-        key = self._key(create=True)
-        # anahtar yoksa imzasız (eski biçim) yazılır; sonraki açılışta eski sürüm gibi ele alınır
-        document = {"surum": 2, "veri": self._data, "hmac": self._mac(key, self._data)} if key else self._data
-        paths.atomic_write(self.path, json.dumps(document, ensure_ascii=False, indent=2))
+    def _save(self, data=None):
+        """data diske yazıldıktan SONRA bellekteki kayıt olur: yazılamazsa bellek de değişmez (Denetim A B2)."""
+        data = self._data if data is None else data
+        if not self.readonly:
+            key = self._key(create=True)
+            # anahtar yoksa imzasız (eski biçim) yazılır; sonraki açılışta eski sürüm gibi ele alınır
+            document = {"surum": 2, "veri": data, "hmac": self._mac(key, data)} if key else data
+            paths.atomic_write(self.path, json.dumps(document, ensure_ascii=False, indent=2))
+        self._data = data
 
     def recover(self):
         """Kullanıcı onayıyla imzası doğrulanamayan yedekleri yükler ve yeniden imzalar. Güvenlik: geri alma her
@@ -154,12 +156,11 @@ class BackupStore:
         with self._lock:
             if tweak_id in self._data:
                 return False
-            self._data[tweak_id] = {
+            self._save({**self._data, tweak_id: {
                 "ad": name,
                 "zaman": datetime.datetime.now().isoformat(timespec="seconds"),
                 "adimlar": entries,
-            }
-            self._save()
+            }})
             _log.info("Yedek alındı: %s (%d adım)", tweak_id, len(entries))
             return True
 
@@ -167,32 +168,36 @@ class BackupStore:
         """Kayda hangi katalog sürümüyle uygulandığını yazar. entries: yedekte henüz olmayan yeni adımlar
         ({"adim","anlik"}); eklenir ki geri alma onları da kapsasın. Kayıt yoksa bir şey yapmaz."""
         with self._lock:
-            entry = self._data.get(tweak_id)
-            if entry is None:
+            if tweak_id not in self._data:
                 return
+            entry = dict(self._data[tweak_id])  # kopya: diske yazılamazsa bellekteki kayıt değişmesin
             have = [e["adim"] for e in entry["adimlar"] if "adim" in e]
             new = [e for e in entries if e["adim"] not in have]
             if new:
                 meta = [e for e in entry["adimlar"] if "meta" in e]
                 entry["adimlar"] = [e for e in entry["adimlar"] if "meta" not in e] + new + meta
             entry["rev"] = rev
-            self._save()
+            self._save({**self._data, tweak_id: entry})
 
     def remove(self, tweak_id):
         with self._lock:
-            if self._data.pop(tweak_id, None) is not None:
-                self._save()
+            if tweak_id in self._data:
+                self._save({k: v for k, v in self._data.items() if k != tweak_id})
 
     def ids_newest_first(self):
-        return sorted(self._data, key=lambda k: self._data[k]["zaman"], reverse=True)
+        with self._lock:  # işçi iş parçacığı aynı anda kayıt ekleyebilir (Denetim A O5)
+            return sorted(self._data, key=lambda k: self._data[k]["zaman"], reverse=True)
 
     def history(self, action, tweak_id, success, detail=""):
         record = {"zaman": datetime.datetime.now().isoformat(timespec="seconds"),
                   "islem": action, "id": tweak_id, "basarili": success, "ayrinti": detail}
         if self.readonly:
             return
-        with self._lock, open(self.history_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        try:  # geçmiş yalnızca bilgi: yazılamaması işlemi başarısız göstermesin (Denetim A B3)
+            with self._lock, open(self.history_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        except OSError as exc:
+            _log.warning("İşlem geçmişi yazılamadı: %s", exc)
 
     def read_history(self, action=None, limit=20):
         """İşlem geçmişinden en yeni kayıtlar (ör. geri alınamaz eylemler için action="eylem")."""

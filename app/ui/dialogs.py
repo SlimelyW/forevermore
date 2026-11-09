@@ -101,7 +101,7 @@ def _sources(lay, tweak):
         link = QLabel(f'<a href="{url}">{url}</a>')
         link.setWordWrap(True)
         # Bağlantı yalnızca kullanıcı tıklarsa tarayıcıda açılır.
-        link.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
+        link.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)  # fare + klavye (Tab, Enter)
         link.linkActivated.connect(os.startfile)
         card.lay.addWidget(link)
     lay.addWidget(card)

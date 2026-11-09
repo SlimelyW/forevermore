@@ -47,35 +47,6 @@
       "yonetici": "Yönetici yetkisi gerekir mi.",
       "yeniden_baslatma": "yok | uygulamayı yeniden başlat | oturumu kapat/aç | yeniden başlatma | servis yeniden başlatma",
       "kaynaklar": "Linkler."
-    },
-    "istatistik": {
-      "toplam_ayar": 148,
-      "kategoriye_gore": {
-        "Display": 9,
-        "System": 17,
-        "Performans": 11,
-        "Ekran Kartı": 19,
-        "İşlemci": 10,
-        "Güç": 8,
-        "İnternet/Ağ": 9,
-        "Mouse ve Klavye": 10,
-        "Ses": 9,
-        "Görsel/QoL": 10,
-        "Placebo": 35
-      },
-      "gerceklik_durumuna_gore": {
-        "gerçek": 54,
-        "tartışmalı": 12,
-        "durumsal": 14,
-        "kısmen gerçek": 28,
-        "placebo": 29,
-        "zararlı": 11
-      },
-      "riske_gore": {
-        "güvenli": 106,
-        "dikkatli": 31,
-        "riskli": 11
-      }
     }
   },
   "kategoriler": [
@@ -128,6 +99,16 @@
       "id": "QOL",
       "ad": "Görsel/QoL",
       "aciklama": "Performanstan çok kullanım konforu sağlayan ayarlar."
+    },
+    {
+      "id": "EXP",
+      "ad": "Gezgin ve Başlat",
+      "aciklama": "Dosya Gezgini ve Başlat menüsünün kullanım rahatlığı ayarları."
+    },
+    {
+      "id": "SND",
+      "ad": "Ses ve bildirim",
+      "aciklama": "Ses efektleri, ses düzeyi ve bildirim konforu ayarları."
     },
     {
       "id": "PLC",
@@ -682,7 +663,7 @@
     },
     {
       "id": "DISP-006",
-      "kategori": "Display",
+      "kategori": "Görsel/QoL",
       "ad": "Auto HDR ve HDR",
       "tip": "ayarlar_ui",
       "okuma": "Ayarlar > Sistem > Ekran > HDR (HDR kullan / Auto HDR). Kayıt: HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences içindeki 'AutoHDREnable=' alanı.",
@@ -1280,7 +1261,7 @@
     },
     {
       "id": "SYS-011",
-      "kategori": "System",
+      "kategori": "Görsel/QoL",
       "ad": "Widget'lar, Copilot ve Recall (Windows 11)",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Name AllowNewsAndInterests -ErrorAction SilentlyContinue; Get-WindowsOptionalFeature -Online -FeatureName Recall",
@@ -1746,6 +1727,87 @@
       "kaynaklar": [
         "https://github.com/ChrisTitusTech/winutil/blob/main/config/tweaks.json"
       ]
+    },
+    {
+      "kategori": "System",
+      "tip": "bios",
+      "yonetici": false,
+      "yeniden_baslatma": "yeniden başlatma",
+      "kaynaklar": [],
+      "windows": "Windows 10, Windows 11",
+      "id": "SYS-022",
+      "ad": "XMP/EXPO profilini açma (BIOS)",
+      "donanim": {
+        "form": "masaüstü",
+        "gpu": "hepsi",
+        "cpu": "Intel / AMD"
+      },
+      "okuma": "PowerShell: Get-CimInstance Win32_PhysicalMemory | Select-Object Speed, ConfiguredClockSpeed. Speed modülün tanıtılan hızıdır, ConfiguredClockSpeed şu an çalıştığı hız.",
+      "uygulama": "BIOS'ta bellek/OC bölümünde XMP (Intel) veya EXPO/DOCP (AMD) profilini seçin; kaydedip çıkın.",
+      "geri_alma": "BIOS'ta XMP/EXPO'yu Disabled/Auto yapın.",
+      "varsayilan": "Çoğu anakartta kapalı (RAM taban hızında çalışır).",
+      "ne_ise_yarar": "RAM'in kutusunda yazan hızda çalışmasını sağlar. Kapalıyken modül çoğu zaman çok daha yavaş bir taban hızında çalışır.",
+      "artilar": [
+        "RAM tanıtılan hızında çalışır",
+        "Bellek hızına duyarlı oyunlarda ve dahili grafikte fark edilebilir"
+      ],
+      "eksiler": [
+        "Bazı anakart/işlemci/RAM birleşimlerinde kararsızlık (mavi ekran, açılmama) görülebilir",
+        "Profil, işlemcinin bellek denetleyicisini normal sınırının üstünde zorlayabilir"
+      ],
+      "dokunmamali": [
+        "Kararlılık sorunu yaşayan veya garantisini önemseyen kullanıcılar (önce BIOS'u güncelleyin)"
+      ],
+      "performans_etkisi": {
+        "seviye": "durumsal",
+        "gerekce": "Kazanç oyuna ve işlemciye göre değişir; bu proje için ölçüm yapılmadı."
+      },
+      "risk": "dikkatli",
+      "gerceklik": {
+        "durum": "durumsal",
+        "aciklama": "Forum ve video düzeyinde sık önerilir; fark oyuna ve işlemciye bağlıdır, bu proje için ölçülmedi.",
+        "celiski": null
+      }
+    },
+    {
+      "kategori": "System",
+      "tip": "bios",
+      "yonetici": false,
+      "yeniden_baslatma": "yeniden başlatma",
+      "kaynaklar": [],
+      "windows": "Windows 10, Windows 11",
+      "id": "SYS-023",
+      "ad": "Secure Boot'u kapatmama (anti-cheat için)",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "okuma": "msinfo32 > Sistem Özeti > 'Güvenli Önyükleme Durumu' (Açık/Kapalı). PowerShell: Confirm-SecureBootUEFI (yönetici).",
+      "uygulama": "Kapalıysa ve bir oyun istiyorsa: BIOS > Boot/Security > Secure Boot: Enabled (gerekirse önce CSM'yi kapatın).",
+      "geri_alma": "BIOS'ta Secure Boot'u Disabled yapın.",
+      "varsayilan": "Modern bilgisayarlarda genellikle açık.",
+      "ne_ise_yarar": "Secure Boot açıkken yalnızca imzalı önyükleme yazılımı çalışır. Valorant (Vanguard) ve Fortnite gibi bazı anti-cheat'ler açık olmasını isteyebilir.",
+      "artilar": [
+        "Anti-cheat'li oyunlar 'Secure Boot gerekli' hatası vermez",
+        "Önyükleme zincirini kurcalamaya karşı koruma"
+      ],
+      "eksiler": [
+        "İmzasız sürücü veya ikinci bir işletim sistemi kullananlar için kısıtlayıcı olabilir"
+      ],
+      "dokunmamali": [
+        "Anti-cheat'li (Valorant, Fortnite gibi) oyun oynayanlar: kapatmayın"
+      ],
+      "performans_etkisi": {
+        "seviye": "belirsiz",
+        "gerekce": "Secure Boot'u kapatmanın oyun performansına bir kazancı ölçülmedi; bazı oyunlarda ise oynamayı engelleyebilir."
+      },
+      "risk": "güvenli",
+      "gerceklik": {
+        "durum": "durumsal",
+        "aciklama": "Hangi oyunun Secure Boot istediği oyuna ve sürüme göre değişir; oyunun kendi destek sayfasından doğrulayın. Bu proje için ölçülmedi.",
+        "celiski": null
+      }
     },
     {
       "id": "PERF-001",
@@ -4703,7 +4765,7 @@
     },
     {
       "id": "AUD-001",
-      "kategori": "Ses",
+      "kategori": "Ses ve bildirim",
       "ad": "Ses geliştirmelerini (Audio Enhancements / sistem efektleri) kapatma",
       "tip": "registry",
       "okuma": "Arayüz: Ayarlar > Sistem > Ses > <cihaz> > Ses geliştirmeleri. Uç nokta GUID'leri: Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render'. Değer: Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render\\{endpoint-guid}\\FxProperties' -Name '{1da5d803-d492-4edd-8c23-e0c0ffee7f0e},5' -ErrorAction SilentlyContinue  (1 = kapalı). API: IPropertyStore::GetValue(PKEY_AudioEndpoint_Disable_SysFx).",
@@ -4835,7 +4897,7 @@
     },
     {
       "id": "AUD-004",
-      "kategori": "Ses",
+      "kategori": "Ses ve bildirim",
       "ad": "İletişim etkinliği: 'Hiçbir şey yapma' (ses kısma/ducking kapatma)",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Multimedia\\Audio' -Name UserDuckingPreference -ErrorAction SilentlyContinue  (0=sustur, 1=%80 azalt, 2=%50 azalt, 3=hiçbir şey yapma)",
@@ -4958,7 +5020,7 @@
     },
     {
       "id": "AUD-007",
-      "kategori": "Ses",
+      "kategori": "Ses ve bildirim",
       "ad": "Ses yüksekliği eşitleme (Loudness Equalization)",
       "tip": "ayarlar_ui",
       "okuma": "mmsys.cpl > cihaz > Özellikler > Geliştirmeler > Ses Yüksekliği Eşitleme (sürücü destekliyorsa).",
@@ -5039,7 +5101,7 @@
     },
     {
       "id": "AUD-009",
-      "kategori": "Ses",
+      "kategori": "Ses ve bildirim",
       "ad": "Bluetooth kulaklıkta Eller Serbest (HFP) profilini kapatma",
       "tip": "ayarlar_ui",
       "okuma": "Denetim Masası > Aygıtlar ve Yazıcılar > kulaklık > Özellikler > Hizmetler; mmsys.cpl'de iki ayrı uç nokta görünür ('Stereo' ve 'Hands-Free').",
@@ -5078,7 +5140,7 @@
     },
     {
       "id": "QOL-001",
-      "kategori": "Görsel/QoL",
+      "kategori": "Gezgin ve Başlat",
       "ad": "Dosya uzantılarını göster",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name HideFileExt",
@@ -5117,7 +5179,7 @@
     },
     {
       "id": "QOL-002",
-      "kategori": "Görsel/QoL",
+      "kategori": "Gezgin ve Başlat",
       "ad": "Klasik sağ tık menüsü (Windows 11)",
       "tip": "registry",
       "okuma": "Test-Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32'",
@@ -5156,7 +5218,7 @@
     },
     {
       "id": "QOL-003",
-      "kategori": "Görsel/QoL",
+      "kategori": "Gezgin ve Başlat",
       "ad": "Başlat aramasında web/Bing sonuçlarını kapatma",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name DisableSearchBoxSuggestions -ErrorAction SilentlyContinue",
@@ -5275,7 +5337,7 @@
     },
     {
       "id": "QOL-006",
-      "kategori": "Görsel/QoL",
+      "kategori": "Ses ve bildirim",
       "ad": "Oyun sırasında bildirimleri susturma (Rahatsız Etmeyin)",
       "tip": "ayarlar_ui",
       "okuma": "Ayarlar > Sistem > Bildirimler > Rahatsız etmeyin / Otomatik olarak aç > 'Oyun oynarken'.",
@@ -5314,7 +5376,7 @@
     },
     {
       "id": "QOL-007",
-      "kategori": "Görsel/QoL",
+      "kategori": "Gezgin ve Başlat",
       "ad": "Görev çubuğunda 'Görevi sonlandır'",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings' -Name TaskbarEndTask -ErrorAction SilentlyContinue",
@@ -5353,7 +5415,7 @@
     },
     {
       "id": "QOL-008",
-      "kategori": "Görsel/QoL",
+      "kategori": "Gezgin ve Başlat",
       "ad": "Başlat/kilit ekranı önerileri ve ipuçlarını kapatma",
       "tip": "registry",
       "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' | Select-Object SystemPaneSuggestionsEnabled, SoftLandingEnabled, SubscribedContent-338388Enabled, SubscribedContent-338389Enabled",
@@ -5472,6 +5534,243 @@
       "yeniden_baslatma": "yok",
       "kaynaklar": [
         "https://support.microsoft.com/en-us/windows/set-your-display-for-night-time-in-windows-18fe903a-e0a1-8326-4c68-fd23d7aaf136"
+      ]
+    },
+    {
+      "id": "QOL-011",
+      "kategori": "Görsel/QoL",
+      "ad": "Koyu mod (uygulamalar ve Windows)",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme, SystemUsesLightTheme",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 0; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 0",
+      "geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 1; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 1",
+      "varsayilan": "1 (açık mod).",
+      "ne_ise_yarar": "Ayarlar, Gezgin gibi uygulamaları, görev çubuğunu ve Başlat menüsünü koyu renge çevirir.",
+      "artilar": [
+        "Karanlık odada gözü daha az yorar",
+        "Ayarlar > Kişiselleştirme > Renkler'deki 'Koyu' seçimiyle aynıdır"
+      ],
+      "eksiler": [
+        "Bazı eski programlar koyu temayı tanımaz ve açık kalır"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Ayarlar > Kişiselleştirme > Renkler > Modunuzu seçin ile aynı iki değer; hemen etkili olur.",
+        "celiski": null
+      },
+      "windows": "Windows 10 1903+, Windows 11",
+      "yeniden_baslatma": "yok",
+      "kaynaklar": [
+        "https://winaero.com/enable-the-dark-theme-for-settings-and-modern-apps-in-windows-10/",
+        "https://winaero.com/how-to-enable-dark-mode-in-windows-11/"
+      ]
+    },
+    {
+      "id": "QOL-012",
+      "kategori": "Gezgin ve Başlat",
+      "ad": "Gizli dosya ve klasörleri göster",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 1",
+      "geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 2",
+      "varsayilan": "2 (gizli dosyalar görünmez).",
+      "ne_ise_yarar": "Gizli işaretli dosya ve klasörleri Gezgin'de soluk simgeyle gösterir. Korunan sistem dosyaları gizli kalır.",
+      "artilar": [
+        "Gizli klasörlere (ör. AppData) ulaşmak kolaylaşır"
+      ],
+      "eksiler": [
+        "Gizli dosyalar yanlışlıkla silinebilir; Windows bunları bilerek gizler"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Klasör Seçenekleri > Görünüm > 'Gizli dosya, klasör ve sürücüleri göster' ile aynı değer (1 göster, 2 gösterme).",
+        "celiski": null
+      },
+      "windows": "Windows 10, Windows 11",
+      "yeniden_baslatma": "yok (Gezgin'i yenile)",
+      "kaynaklar": [
+        "https://winaero.com/how-to-change-file-explorer-options-in-the-registry/"
+      ]
+    },
+    {
+      "id": "QOL-013",
+      "kategori": "Görsel/QoL",
+      "ad": "Görev çubuğu simgelerini sola yasla (Windows 11)",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 0",
+      "geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 1",
+      "varsayilan": "1 (ortada).",
+      "ne_ise_yarar": "Windows 11'de görev çubuğu simgelerini ve Başlat düğmesini Windows 10'daki gibi sola alır.",
+      "artilar": [
+        "Başlat düğmesi hep aynı yerde durur; açılan pencerelerle kaymaz"
+      ],
+      "eksiler": [
+        "Alışkın olmayan kullanıcılar için ilk günler garip gelebilir"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Ayarlar > Kişiselleştirme > Görev çubuğu > Görev çubuğu hizalaması ile aynı değer (0 sol, 1 orta).",
+        "celiski": null
+      },
+      "windows": "Windows 11",
+      "yeniden_baslatma": "yok (Gezgin'i yenile)",
+      "kaynaklar": [
+        "https://winaero.com/how-to-disable-centered-taskbar-in-windows-11/"
+      ]
+    },
+    {
+      "id": "QOL-014",
+      "kategori": "Gezgin ve Başlat",
+      "ad": "Gezgin'i 'Bu bilgisayar'da aç",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo -Value 1",
+      "geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo",
+      "varsayilan": "Değer yok (Windows kendi varsayılanını kullanır; sürüme göre Giriş ya da Hızlı erişim).",
+      "ne_ise_yarar": "Dosya Gezgini açılışta sürücülerinizi gösteren 'Bu bilgisayar' sayfasında açılır.",
+      "artilar": [
+        "Sürücülere tek tıkla ulaşılır"
+      ],
+      "eksiler": [
+        "Hızlı erişim / Giriş listesini ilk anda görmezsiniz"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Gezgin Seçenekleri > 'Dosya Gezgini'ni şunun için aç' ile aynı değer (1 = Bu bilgisayar). Kapatınca değer silinir ve Windows varsayılanına döner.",
+        "celiski": null
+      },
+      "windows": "Windows 10, Windows 11",
+      "yeniden_baslatma": "yok",
+      "kaynaklar": [
+        "https://winaero.com/windows-11-open-file-explorer-to-this-pc-or-downloads/"
+      ]
+    },
+    {
+      "id": "QOL-015",
+      "kategori": "Görsel/QoL",
+      "ad": "Pencereyi sallayarak diğerlerini küçültmeyi kapat",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 1",
+      "geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 0",
+      "varsayilan": "Windows 10'da sallama açık (0 ya da değer yok). Windows 11'in yeni sürümlerinde kapalı gelebilir; değer yokken varsayılan doğrulanmadı.",
+      "ne_ise_yarar": "Bir pencerenin başlık çubuğunu sallayınca öteki pencerelerin kendiliğinden küçülmesini engeller.",
+      "artilar": [
+        "Pencere taşırken yanlışlıkla tüm masaüstünün küçülmesi biter"
+      ],
+      "eksiler": [
+        "Sallama hareketini seviyorsanız bu özellik kapanır"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Windows 11'deki Ayarlar > Çoklu görev > 'Başlık çubuğu pencere sallama' ile aynı değer; Windows 10'da Aero Shake'i kapatır.",
+        "celiski": null
+      },
+      "windows": "Windows 10, Windows 11",
+      "yeniden_baslatma": "yok",
+      "kaynaklar": [
+        "https://winaero.com/enable-or-disable-aero-shake-in-windows-10-with-these-methods/"
+      ]
+    },
+    {
+      "id": "QOL-016",
+      "kategori": "Gezgin ve Başlat",
+      "ad": "Gezgin'de öğeleri onay kutularıyla seç",
+      "tip": "registry",
+      "okuma": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect",
+      "uygulama": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 1",
+      "geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 0",
+      "varsayilan": "0 (onay kutusu yok).",
+      "ne_ise_yarar": "Dosya Gezgini'nde her dosyanın yanına bir onay kutusu koyar; Ctrl'ye basmadan birden çok dosya seçebilirsiniz.",
+      "artilar": [
+        "Dokunmatik ekranda ve fareyle çoklu seçim kolaylaşır"
+      ],
+      "eksiler": [
+        "Liste biraz daha kalabalık görünür"
+      ],
+      "dokunmamali": [],
+      "risk": "güvenli",
+      "donanim": {
+        "form": "hepsi",
+        "gpu": "hepsi",
+        "cpu": "hepsi"
+      },
+      "yonetici": false,
+      "performans_etkisi": {
+        "seviye": "yok",
+        "gerekce": "Görünüm ayarı; oyun performansına etkisi yok."
+      },
+      "gerceklik": {
+        "durum": "gerçek",
+        "aciklama": "Kanıt düzeyi: ikincil kaynak (Winaero); Microsoft bu kayıt defteri değerini belgelemiyor. Klasör Seçenekleri > Görünüm > 'Öğeleri seçmek için onay kutularını kullan' ile aynı değer.",
+        "celiski": null
+      },
+      "windows": "Windows 10, Windows 11",
+      "yeniden_baslatma": "yok (Gezgin'i yenile)",
+      "kaynaklar": [
+        "https://winaero.com/how-to-enable-checkboxes-in-file-explorer-in-windows-11/",
+        "https://winaero.com/how-to-change-file-explorer-options-in-the-registry/"
       ]
     },
     {

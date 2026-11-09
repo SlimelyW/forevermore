@@ -46,7 +46,6 @@ IDS = {
 }
 NVAPI_OK = 0
 NVAPI_SETTING_NOT_FOUND = -160
-NVAPI_INVALID_USER_PRIVILEGE = -137
 NVDRS_DWORD_TYPE = 0
 LOCATION_CURRENT_PROFILE = 0
 
@@ -138,20 +137,6 @@ def available():
     except (OSError, NvapiError) as exc:
         _log.info("NVAPI kullanılamıyor: %s", exc)
         return False
-
-
-def get_setting(setting_id):
-    """{'deger': int veya None (sürücü varsayılanı), 'ozel': profil bu ayarı özelleştirmiş mi}."""
-    with _Session() as s:
-        setting = NvdrsSetting()
-        setting.version = SETTING_VERSION
-        status = s.f["DRS_GetSetting"](s.session, s.profile, setting_id, ctypes.byref(setting))
-        if status == NVAPI_SETTING_NOT_FOUND:
-            return {"deger": None, "ozel": False}
-        if status != NVAPI_OK:
-            raise NvapiError("DRS_GetSetting", status)
-        custom = setting.settingLocation == LOCATION_CURRENT_PROFILE and not setting.isCurrentPredefined
-        return {"deger": int(setting.current.u32), "ozel": bool(custom)}
 
 
 def get_settings(setting_ids):

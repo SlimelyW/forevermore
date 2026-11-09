@@ -37,7 +37,7 @@ Uygulamanın dili kodu değiştirmeden eklenir. Bir dil, üç dosyadan oluşur:
 ## 2. Onay metni: `lang/baslangic_onayi.<kod>.txt`
 
 `baslangic_onayi.en.txt` dosyasını kopyalayıp çevir. Son paragraftaki "asıl metin Türkçedir" notu
-kalmalıdır. **Hukuki not:** Asıl (geçerli) metin Türkçedir; her çeviri satıştan önce bir avukata
+kalmalıdır. **Hukuki not:** Asıl (geçerli) metin Türkçedir; her çeviri yayından önce bir avukata
 kontrol ettirilmelidir.
 
 ## 3. Ayar metinleri (isteğe bağlı): `data/ceviriler/<kod>.json`
@@ -79,7 +79,7 @@ py -3.12 -m app --kontrol
 ```
 
 Test, her dil dosyasının Türkçeyle aynı anahtarlara, aynı sıraya ve aynı yer tutuculara sahip
-olduğunu ve onay metninin bulunduğunu denetler. Sonra uygulamayı aç, Ekstra ayarlar > Dil'den yeni
+olduğunu ve onay metninin bulunduğunu denetler. Sonra uygulamayı aç, Ayarlar > Dil'den yeni
 dili seç ve tüm sayfaları gez: kesilen veya taşan metinleri not et.
 
 ## Notlar

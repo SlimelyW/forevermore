@@ -325,6 +325,8 @@
     "SYS-019": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SYSTEM\\CurrentControlSet\\Control\\CrashControl", "ad": "DisplayParameters", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}, {"tur": "registry", "kok": "HKLM", "yol": "SYSTEM\\CurrentControlSet\\Control\\CrashControl", "ad": "DisableEmoticon", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}]}, "notlar": ["Yalnızca mavi ekranda görünür; bu uygulamada mavi ekran oluşturularak denenmedi."]},
     "SYS-020": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "ad": "PublishUserActivities", "veri_turu": "REG_DWORD", "acik": 0, "kapali": null, "yoksa": null}, {"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "ad": "UploadUserActivities", "veri_turu": "REG_DWORD", "acik": 0, "kapali": null, "yoksa": null}]}, "notlar": ["Bu bir sistem ilkesidir; Zaman çizelgesinde cihazlar arası etkinlik devamı çalışmaz. Pano geçmişi etkilenmez."]},
     "SYS-021": {"islem": {"kontrol": "switch", "adimlar": [{"tur": "registry", "kok": "HKLM", "yol": "SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata", "ad": "PreventDeviceMetadataFromNetwork", "veri_turu": "REG_DWORD", "acik": 1, "kapali": null, "yoksa": null}]}, "notlar": ["Bu bir sistem ilkesidir; aygıt simgeleri ve bazı aygıt yazılımları internetten otomatik gelmez."]},
+    "SYS-022": {"sinif": "REHBER", "sinif_nedeni": "BIOS ayarıdır; Windows içinden yapılamaz.", "rehber": {"adimlar": ["Bilgisayarı yeniden başlatıp BIOS'a girin (açılışta genelde Del veya F2).", "Bellek/OC bölümünde XMP (Intel) veya EXPO/DOCP (AMD) profilini seçin.", "Kaydedip çıkın (F10). Açılmazsa BIOS'u sıfırlayın; kararsızlıkta profili kapatın."]}, "elle_nedeni": "bios"},
+    "SYS-023": {"sinif": "REHBER", "sinif_nedeni": "BIOS ayarıdır; Windows içinden yapılamaz.", "rehber": {"adimlar": ["Önce msinfo32 > 'Güvenli Önyükleme Durumu' satırına bakın.", "Valorant veya Fortnite gibi bir oyun istiyorsa ve Kapalıysa BIOS'ta Secure Boot'u açın (Boot/Security bölümü).", "Performans için kapatmanız gerekmez; anti-cheat'li oyun oynuyorsanız açık bırakın."]}, "elle_nedeni": "bios"},
     "SYS-017": {"sinif": "REHBER", "sinif_nedeni": "Kullanıcı isteğiyle; iki aşamalı uyarıyla Defender kartından yapılır, Kurcalama korumasını kullanıcı kendisi kapatır.", "rehber": {"ac": {"tur": "uri", "hedef": "windowsdefender://threatsettings"}}, "liste_yoneticisi": "defender"},
     "SYS-015": {
       "islem": {
@@ -1542,6 +1544,59 @@
     "AUD-006": {"sinif": "REHBER", "sinif_nedeni": "Hangi ses cihazının 'kullanılmayan' olduğuna yalnızca kullanıcı karar verebilir (ör. monitör hoparlörü bazıları için gerekli). Yanlış cihazı kapatmak sesi tamamen kesebilir. v2'de cihaz listesinden seçmeli yapılabilir.", "uyumluluk": {"gpu": null}, "rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}, "liste_yoneticisi": "ses_aygit"},
     "AUD-007": {"rehber": {"ac": {"tur": "denetim_masasi", "hedef": "mmsys.cpl"}}, "elle_nedeni": "surucu"},
     "AUD-009": {"rehber": {"ac": {"tur": "denetim_masasi", "hedef": "printers", "dogrulanmadi": true}}, "liste_yoneticisi": "ses_hfp"},
+    "QOL-011": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "ad": "AppsUseLightTheme", "veri_turu": "REG_DWORD", "acik": 0, "kapali": 1, "yoksa": 1},
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "ad": "SystemUsesLightTheme", "veri_turu": "REG_DWORD", "acik": 0, "kapali": 1, "yoksa": 1}
+        ]
+      }
+    },
+    "QOL-012": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ad": "Hidden", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 2, "yoksa": 2}
+        ],
+        "sonrasinda": ["gezgin_yeniden_baslat_oner"]
+      }
+    },
+    "QOL-013": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ad": "TaskbarAl", "veri_turu": "REG_DWORD", "acik": 0, "kapali": 1, "yoksa": 1}
+        ],
+        "sonrasinda": ["gezgin_yeniden_baslat_oner"]
+      }
+    },
+    "QOL-014": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ad": "LaunchTo", "veri_turu": "REG_DWORD", "acik": 1, "kapali": null, "yoksa": null}
+        ]
+      }
+    },
+    "QOL-015": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ad": "DisallowShaking", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}
+        ]
+      },
+      "notlar": ["Windows 11'de değer yokken sallamanın açık mı kapalı mı sayıldığı doğrulanmadı; anahtarı açıp kapatınca değer açıkça yazılır."]
+    },
+    "QOL-016": {
+      "islem": {
+        "kontrol": "switch",
+        "adimlar": [
+          {"tur": "registry", "kok": "HKCU", "yol": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ad": "AutoCheckSelect", "veri_turu": "REG_DWORD", "acik": 1, "kapali": 0, "yoksa": 0}
+        ],
+        "sonrasinda": ["gezgin_yeniden_baslat_oner"]
+      }
+    },
     "QOL-001": {
       "islem": {
         "kontrol": "switch",

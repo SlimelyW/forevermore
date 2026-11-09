@@ -53,6 +53,8 @@
   "AUD-009": "Bluetooth kulaklıkta mikrofon (Eller Serbest) modunu kapatma",
   "SYS-008": "Hızlı Başlatma",
   "SYS-019": "Mavi ekranda ayrıntı gösterme",
-  "SYS-007": "Arka planda çalışan Store uygulamaları"
+  "SYS-007": "Arka planda çalışan Store uygulamaları",
+  "SYS-022": "RAM'i tanıtılan hızında çalıştırma (XMP/EXPO)",
+  "SYS-023": "Secure Boot'u açık bırakma (anti-cheat)"
  }
 }

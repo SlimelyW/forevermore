@@ -6,7 +6,7 @@
 #   bu lisansın koşullarını karşılamanın en açık yoludur. Ayrıca daha hızlı açılır ve
 #   antivirüslerde daha az yanlış alarm verir.
 # PCOPT_ONEFILE=1 ise TEK DOSYA -> dist\Forevermore.exe (yalnızca kişisel deneme için;
-#   satışta kullanma, bkz. THIRD-PARTY-NOTICES.txt)
+#   dağıtımda kullanma, bkz. THIRD-PARTY-NOTICES.txt)
 
 import os
 

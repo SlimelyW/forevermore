@@ -8,21 +8,19 @@ alınabilir yapar. **Ücretsiz ve açık kaynaktır (MIT); Pro, hesap, reklam ve
 separates placebo from real tweaks, and backs up each change so it can be undone with one click. Free and open source
 (MIT); no accounts, no telemetry. See the [English section](#english) below.*
 
-<!-- Ekran görüntüsü: docs/img/ozet.png dosyasını ekleyip aşağıdaki satırı açın.
-![Forevermore özet ekranı](docs/img/ozet.png)
--->
-> **Ekran görüntüsü buraya gelecek.**
+
 
 ## Ne yapar
 
 - **Tarama ve PC Detayları:** donanımı, sürücüleri, güç planını, ekranı, fare/klavyeyi ve Windows durumunu okur (salt okunur).
-- **~150 ayar, her birinde kanıt etiketi:** gerçek, kısmen, duruma bağlı, tartışmalı, placebo ya da zararlı; kaynak ve
+- **162 ayar, her birinde kanıt etiketi:** gerçek, kısmen, duruma bağlı, tartışmalı, placebo ya da zararlı; kaynak ve
   ölçüm notlarıyla. Riskli ayarlar iki ayrı uyarıyla sorulur.
 - **Her değişiklik geri alınabilir:** değişiklikten önce yedek ve (gerekirse) sistem geri yükleme noktası; Değişiklikler
   sayfasından tek tıkla geri alma.
 - **Ekran kartı ayarları:** NVIDIA (NVAPI) ve AMD (ADLX) sürücü ayarları, ölçekleme, G-SYNC / FreeSync.
-- **Oyunlar:** oyun başına işlemci önceliği ve çekirdek seçimi, oyun açılınca otomatik uygulama, kapanınca geri alma;
-  oyun içi ayar rehberleri. Anti-cheat süreçlerine dokunulmaz.
+- **Oyunlar:** oyun başına işlem önceliği ve isteğe bağlı "Oyun sırasında" seçenekleri (varsayılan kapalı). Seçenekler
+  yalnızca Hazırla / Oyunu başlat'a basınca uygulanır, oyun kapanınca ya da Geri al ile geri alınır; oyun kendiliğinden ayar
+  uygulamaz. Anti-cheat'li oyunlarda süreç ayarı yoktur. Oyun içi ayar rehberleri.
 - **Hazır profiller, tek tuş Boost, uygulama kaldırıcı, ekran yerleşimi, Önce / Sonra ölçümü** (PresentMon ile FPS ve kare süresi).
 - Türkçe ve İngilizce arayüz.
 
@@ -44,7 +42,7 @@ Forevermore **kayıt defterini, servisleri, önyükleme ayarlarını ve sürüc�
 
 1. [Releases](https://github.com/SlimelyW/forevermore/releases/latest) sayfasından `Forevermore.zip` dosyasını indirin.
 2. Bir klasöre açın (klasörü olduğu gibi tutun; `_internal` programın parçasıdır) ve **Forevermore.exe**'yi çalıştırın.
-3. Kaldırmak için önce uygulamada Ekstra ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
+3. Kaldırmak için önce uygulamada Ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
 
 **İndirdiğin dosyayı doğrula (iki adım):**
 1. PowerShell'de zip'in olduğu klasörde şunu yaz: `Get-FileHash .\Forevermore.zip -Algorithm SHA256`
@@ -86,7 +84,7 @@ olur ve resmî güncelleme kanalıyla karışmaz.
 
 Klasör yapısı: `app/core` (ayarlar, yollar, dil), `app/engine` (motor, yedek, işleyiciler, katalog), `app/scan`
 (salt okunur tarama), `app/ui` (Qt arayüzü), `app/games`, `app/measure`; `data/` (ayar kataloğu), `lang/` (çeviriler),
-`tests/`, `tools/`, `site/` (tanıtım sitesi), `docs/`.
+`tests/`, `tools/`, `docs/`.
 
 ## Gizlilik
 
@@ -105,7 +103,9 @@ sorulur, "evet" derseniz günde en çok bir kez çalışır (yalnızca GitHub, v
 
 ## Lisans
 
-[MIT](LICENSE) © 2026 Kubilay Paşa. Üçüncü taraf bileşenler kendi lisanslarına tabidir.
+[MIT](LICENSE) © 2026 Kubilay Paşa. Üçüncü taraf bileşenler kendi lisanslarına tabidir. `data/oyun_kapaklari/` altındaki 15 oyun
+kapağı ilgili yayıncılara aittir (MIT kapsamında değildir); yayıncı isterse kaldırılır (`tools/kapak_kaldir.py`, bkz.
+[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)).
 
 ---
 
@@ -131,4 +131,4 @@ reduce security or need a restart and say so before you confirm. The software is
 - **Build a package:** `derle.bat` (PyInstaller; unsigned unless you hold the maintainer's update-signing key).
 - **Contribute / report a vulnerability:** [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md).
 - **Support (optional):** [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore).
-- **License:** [MIT](LICENSE); third-party components in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
+- **License:** [MIT](LICENSE); third-party components in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt). The 15 game cover images in `data/oyun_kapaklari/` belong to their publishers (not covered by the MIT license) and are removed on request (`tools/kapak_kaldir.py`).

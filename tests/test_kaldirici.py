@@ -153,6 +153,14 @@ class TestLeftovers(unittest.TestCase):
         self.assertEqual(u.find_leftovers(program(ad="Microsoft", konum=""), self.env, self.reg), [])
         self.assertEqual(u.find_leftovers(program(ad="Ab"), self.env, self.reg), [])      # çok kısa
 
+    def test_install_location_above_roots_or_generic_is_ignored(self):
+        """Denetim A O2: InstallLocation = kullanıcı profili (köklerin atası) ya da 'Common Files' önerilmez."""
+        (self.root / "PF" / "Common Files").mkdir()
+        for location in (str(self.root), str(self.root / "PF" / "Common Files")):
+            with self.subTest(location=location):
+                found = u.find_leftovers(program(ad="Zeta Zeta", konum=location), self.env, self.reg)
+                self.assertEqual(found, [])
+
     def test_install_location_that_is_a_root_is_ignored(self):
         found = u.find_leftovers(program(ad="Zeta Zeta", konum=self.env["ProgramFiles"]), self.env, self.reg)
         self.assertEqual(found, [])
@@ -201,6 +209,23 @@ class TestRemoveAndRestore(unittest.TestCase):
         self.assertEqual(back["geri_yuklenen"], 0)
         self.assertEqual(len(back["basarisiz"]), 1)
         self.assertEqual(len(u.list_sessions(self.base)), 1)                  # yedek korunur
+
+    def test_partial_cross_drive_move_is_listed_for_restore(self):
+        """Denetim A B5: kopyalandı, kaynak silinirken kilitli dosya: kopya manifestte 'kismen' olarak görünmeli."""
+        import shutil
+
+        def half_move(src, dst):
+            shutil.copytree(src, dst)
+            raise OSError("kilitli dosya")
+        with mock.patch.object(u.shutil, "move", side_effect=half_move):
+            result = u.remove_leftovers("Foo Tool", [{"tur": "klasor", "yol": str(self.folder)}], self.base, FakeOps(),
+                                        self.now)
+        self.assertEqual(result["kaldirilan"], 0)
+        self.assertEqual(len(result["basarisiz"]), 1)
+        self.assertIsNotNone(result["oturum"])
+        manifest = json.loads((self.base / result["oturum"] / "manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["ogeler"], [{"tur": "klasor", "yol": str(self.folder), "yedek": "k1", "kismen": True}])
+        self.assertEqual(len(u.list_sessions(self.base)), 1)
 
     def test_delete_session_rejects_paths(self):
         with self.assertRaises(ValueError):

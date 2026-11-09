@@ -8,7 +8,7 @@ Uzun işler arka plan havuzunda (serial=False) çalışır: Değişiklikler sır
 import threading
 
 from PySide6.QtGui import QFontDatabase
-from PySide6.QtWidgets import QCheckBox, QLabel, QPlainTextEdit, QProgressBar, QVBoxLayout
+from PySide6.QtWidgets import QCheckBox, QLabel, QPlainTextEdit, QProgressBar
 
 from app.core.i18n import t
 from app.engine import bakim

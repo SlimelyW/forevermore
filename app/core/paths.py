@@ -162,6 +162,12 @@ def game_settings_dir():
     return _protected("oyun_ayarlari")
 
 
+def update_dir(elevated):
+    """Güncelleme hazırlık klasörü. Yöneticiyken korumalı klasör (yalnızca Yöneticiler/SYSTEM yazar): doğrulanan paket ve
+    değişim betiği yönetici olarak taşınana dek yönetici olmayan bir program onları değiştiremesin (Denetim A S2)."""
+    return _protected("guncelleme") if elevated else _sub("guncelleme")
+
+
 def _tree_sizes(root):
     return {path.relative_to(root): path.stat().st_size for path in root.rglob("*") if path.is_file()}
 

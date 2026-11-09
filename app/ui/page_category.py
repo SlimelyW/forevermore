@@ -32,17 +32,12 @@ def tweak_icon(tweak, size=36):
 
 
 def title_block(tweak):
-    """Başlık + tek satırlık özet (ne işe yarar); ayrıntı (i) balonunda. Özet uzunsa kısaltılır, satırı büyütmez."""
+    """Başlık + tek satırlık özet (ne işe yarar); teknik ad ve ayrıntı (i) penceresinde. Özet uzunsa kısaltılır, satırı büyütmez."""
     box = QWidget()
     lay = QVBoxLayout(box)
     lay.setContentsMargins(0, 0, 0, 0)
     lay.setSpacing(2)
     lay.addWidget(_name_label(tweak))
-    if tweak.get("sade_ad"):
-        technical = QLabel(tweak["ad"])
-        technical.setObjectName("Summary")
-        technical.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-        lay.addWidget(technical)
     summary = QLabel(w.summary_text(tweak.get("ne_ise_yarar"), limit=90))
     summary.setObjectName("Summary")
     summary.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)  # dar pencerede kırpılır
@@ -56,31 +51,37 @@ def card_header(app, tweak, *extra):
                   w.info_button(lambda: dialogs.InfoDialog(app, tweak).exec()), spacing=12)
 
 
-class TweakRow(w.Card):
-    """Switch satırı: ad, etiketler, not, (i), aç/kapa ve "eski haline getir"."""
+GRID = (320, 3)   # en az sütun genişliği, en çok sütun: geniş pencerede 3, orta 2, dar 1
+GAP = 12
 
-    def __init__(self, app, tweak, show_reality=False):
-        super().__init__(layout="h", spacing=12, hover=True)
+
+class TweakRow(w.Card):
+    """Ayar kartı (ızgarada): üstte simge, ad, (i), eski haline getir ve anahtar (laptopta Prizde/Pilde);
+    altında en çok 2 satır açıklama; en altta rozetler ("Riskli", "Önerilen"...)."""
+
+    def __init__(self, app, tweak, show_reality=False, recommended=False):
+        super().__init__(layout="v", margins=(14, 12, 10, 10), spacing=4, hover=True)
+        self.setProperty("tile", True)
         self.app, self.c, self.tweak = app, app.c, tweak
         self.show_reality = show_reality
-        self.lay.addWidget(tweak_icon(tweak), 0, Qt.AlignmentFlag.AlignTop)
-        text = QVBoxLayout()
-        text.setSpacing(4)
-        text.addWidget(title_block(tweak))
-        self.meta = w.hbox(spacing=6)
-        text.addWidget(self.meta)
-        self.lay.addLayout(text, 1)
+        self.recommended = recommended
         self.revert_button = w.icon_button(theme.ICONS["undo"], t("ui.eski_haline"), self._revert)
         self.revert_button.setVisible(False)
-        self.lay.addWidget(self.revert_button)
-        self.lay.addWidget(w.info_button(self._info))
-        self.state_label = w.label("", muted=True, wrap=False)
-        self.lay.addWidget(self.state_label)
         self.switch = w.ToggleSwitch()
         self.switch.clicked.connect(self._on_switch)
         self.switch_box = w.hbox(spacing=12)
         self.switch_box.layout().addWidget(self.switch)
-        self.lay.addWidget(self.switch_box)
+        top = w.hbox(tweak_icon(tweak), (w.ClampLabel(dialogs.display_name(tweak), 2, "CardTitle", center=True), 1),
+                     self.revert_button, w.info_button(self._info), self.switch_box, spacing=10)
+        top.setMinimumHeight(50)  # laptopta Prizde/Pilde başlıklı iki anahtar da sığar: kartlar eşit boyda
+        self.lay.addWidget(top)
+        self.lay.addWidget(w.ClampLabel(w.summary_text(tweak.get("ne_ise_yarar"), limit=220), 2, "Summary"))
+        self.meta = w.hbox(spacing=6)
+        self.meta.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)  # rozetler kartı genişletmez
+        self.state_label = w.label("", muted=True, wrap=False)
+        bottom = w.hbox((self.meta, 1), self.state_label, spacing=8)
+        bottom.setMinimumHeight(24)
+        self.lay.addWidget(bottom)
         self.dc = None       # laptopta "Pilde" kopyası
         self.dc_switch = None
         self.dc_busy = False
@@ -101,7 +102,7 @@ class TweakRow(w.Card):
             box = QWidget()
             box_lay = QVBoxLayout(box)
             box_lay.setContentsMargins(0, 0, 0, 0)
-            box_lay.setSpacing(2)
+            box_lay.setSpacing(-6)  # anahtarın boş üst payı başlığın altına girer: kart yüksekliği artmaz
             box_lay.addWidget(w.label(caption, muted=True, size=11, wrap=False))
             box_lay.addWidget(switch)
             box.setFixedHeight(box.sizeHint().height())
@@ -125,10 +126,12 @@ class TweakRow(w.Card):
     def refresh(self):
         w.clear_layout(self.meta.layout())
         meta = self.meta.layout()
-        if self.tweak["performans_etkisi"]["seviye"] in LOUD_IMPACT:  # öteki seviyeler yalnızca (i) balonunda
-            meta.addWidget(w.impact_badge(self.tweak["performans_etkisi"]["seviye"]))
+        state = self.c.states.get(self.tweak["id"])
+        status = state.status if state else "bilinmiyor"
         if self.tweak["risk"] != "güvenli":
             meta.addWidget(w.risk_badge(self.tweak["risk"]))
+        if self.recommended and status != "acik":  # açılınca etiket söner; "Önerilenleri aç" ile aynı küme
+            meta.addWidget(w.badge(t("ui.onerilen_etiket"), "iyi"))
         if self.show_reality and self.tweak["gerceklik"]["durum"] != "gerçek":
             meta.addWidget(w.reality_badge(self.tweak["gerceklik"]["durum"]))
         changed = self.c.engine.store.has(self.tweak["id"])
@@ -139,12 +142,12 @@ class TweakRow(w.Card):
             if self.c.can_modify and not self.busy:
                 meta.addWidget(w.button(t("ui.yeniden_uygula"), self._reapply))
         avail = self.c.availability.get(self.tweak["id"])
-        for key, params in (avail.warnings if avail else []):
-            meta.addWidget(w.colored(t(key, **params), "uyari", wrap=False))
+        if avail and avail.warnings:  # uyarı metni dar kartı taşırmasın: rozet + tam metin ipucunda ve onayda
+            warning = w.badge(t("ui.dikkat"), "uyari")
+            warning.setToolTip("\n".join(t(key, **params) for key, params in avail.warnings))
+            meta.addWidget(warning)
         meta.addStretch(1)
 
-        state = self.c.states.get(self.tweak["id"])
-        status = state.status if state else "bilinmiyor"
         fresh = self.c.is_fresh(self.tweak["id"])
         off_only = self.tweak["islem"].get("yalnizca_kapat")
         self.switch.setChecked(self.pending if self.busy and self.pending is not None else status == "acik")
@@ -534,7 +537,7 @@ class TimerResolutionCard(w.Card):
         self.refresh()
 
 
-def make_row(app, tweak, show_reality=False, detected=False):
+def make_row(app, tweak, show_reality=False, detected=False, recommended=False):
     if tweak.get("liste_yoneticisi"):
         return managers_ui.make_manager(app, tweak)
     if tweak["id"] == "DISP-001" and tweak["sinif"] == "SWITCH":
@@ -542,10 +545,52 @@ def make_row(app, tweak, show_reality=False, detected=False):
     if tweak["sinif"] == "SWITCH":
         control = tweak["islem"]["kontrol"]
         cls = {"switch": TweakRow, "secim": SelectionRow, "eylem": ActionRow}[control]
+        if cls is TweakRow:
+            return cls(app, tweak, show_reality=show_reality, recommended=recommended)
         return cls(app, tweak, show_reality=show_reality)
     if tweak["sinif"] == "REHBER":
         return GuideCard(app, tweak)
     return InfoCard(app, tweak, detected=detected, show_reality=show_reality)
+
+
+def style_wide(row):
+    """Izgaraya sığmayan kart (kaydırıcı, açılır kutu, düğmeler, uzun metin): tam genişlikte, ızgara kartlarıyla aynı
+    düz yüzey ve ince çerçeve."""
+    if isinstance(row, w.Card):
+        row.setProperty("tile", True)
+        row.lay.setContentsMargins(16, 12, 16, 12)
+    return row
+
+
+def card_stack(app, entries, rows, detected=(), show_reality=False, recommended=frozenset()):
+    """Ayarları sırasıyla dizer: arka arkaya gelen anahtar kartları 3/2/1 sütunlu ızgarada, öteki kartlar tam genişlikte.
+    entries: ayar sözlüğü ya da hazır widget. rows: ayar kimliği -> kart (vurgulama ve güncelleme için)."""
+    box = QWidget()
+    lay = QVBoxLayout(box)
+    lay.setContentsMargins(0, 0, 0, 0)
+    lay.setSpacing(GAP)
+    tiles = []
+
+    def flush():
+        if tiles:
+            lay.addWidget(w.flow(*tiles, spacing=GAP, grid=GRID))
+            tiles.clear()
+
+    for entry in entries:
+        if isinstance(entry, QWidget):
+            flush()
+            lay.addWidget(style_wide(entry))
+            continue
+        row = make_row(app, entry, show_reality=show_reality, detected=entry["id"] in detected,
+                       recommended=entry["id"] in recommended)
+        rows.setdefault(entry["id"], row)
+        if isinstance(row, TweakRow):
+            tiles.append(row)
+        else:
+            flush()
+            lay.addWidget(style_wide(row))
+    flush()
+    return box
 
 
 class ManualPage(w.Page):
@@ -572,10 +617,7 @@ class ManualPage(w.Page):
         for reason, items in self.c.manual_items().items():
             self.body.addWidget(w.section_title(t(f"ui.elle.neden.{reason}")))
             self.body.addWidget(w.label(t(f"ui.elle.neden_aciklama.{reason}"), muted=True, size=12))
-            for tweak in items:
-                row = make_row(self.app, tweak, detected=tweak["id"] in detected)
-                self.body.addWidget(row)
-                self.rows[tweak["id"]] = row
+            self.body.addWidget(card_stack(self.app, items, self.rows, detected))
 
 
 class CategoryPage(w.Page):
@@ -583,12 +625,17 @@ class CategoryPage(w.Page):
         super().__init__(app)
         self.category = category
         self.rows = {}
+        self.hidden_cards = {}  # bu bilgisayara uymayan ayarların soluk kartları (gizli liste açıkken)
         self.show_hidden = False
 
     def on_show(self, highlight=None):
         self.ensure_built()
-        if highlight and highlight in self.rows:
-            row = self.rows[highlight]
+        avail = self.c.availability.get(highlight)
+        if highlight and highlight not in self.rows and avail and not avail.visible and not self.show_hidden:
+            self.show_hidden = True  # bu bilgisayara uymayan ayar aramada çıktı: gizli liste açılır
+            self.data_reloaded()
+        row = self.rows.get(highlight) or self.hidden_cards.get(highlight)
+        if highlight and row is not None:
             self.scroll.ensureWidgetVisible(row)
             row.set_highlight(True)
             QTimer.singleShot(1800, lambda: row.set_highlight(False))
@@ -602,11 +649,13 @@ class CategoryPage(w.Page):
         if not total:
             return
         self.status_big = w.label("", bold=True, size=20, wrap=False)
-        self.status_bar = QProgressBar()
-        self.status_bar.setObjectName("Thin")
-        self.status_bar.setTextVisible(False)
+        theme.tabular(self.status_big)  # ayar açılıp kapanırken "3 / 7" yana kaymasın
         self.header.addWidget(w.hbox(self.status_big, w.label(t("ui.kategori.acik"), muted=True, wrap=False), None, spacing=8))
-        self.header.addWidget(self.status_bar)
+        if total >= 4:  # "0 / 2" için çubuk gürültü: çok az ayarda yalnızca sayı kalır
+            self.status_bar = QProgressBar()
+            self.status_bar.setObjectName("Thin")
+            self.status_bar.setTextVisible(False)
+            self.header.addWidget(self.status_bar)
         self._status_refresh()
 
     def _status_refresh(self):
@@ -614,8 +663,9 @@ class CategoryPage(w.Page):
             return
         on, total = self.c.category_counts(self.category["ad"])
         self.status_big.setText(f"{on} / {total}")
-        self.status_bar.setRange(0, max(total, 1))
-        self.status_bar.setValue(on)
+        if self.status_bar is not None:
+            self.status_bar.setRange(0, max(total, 1))
+            self.status_bar.setValue(on)
 
     def tweak_updated(self, tweak_id):
         self._status_refresh()
@@ -627,13 +677,14 @@ class CategoryPage(w.Page):
 
     def build(self):
         super().build()
-        self.rows = {}
+        self.rows, self.hidden_cards = {}, {}
         cid = self.category["id"]
         self.header.addWidget(w.title(t(f"kategori.{cid}")))
-        self.header.addWidget(w.label(self.category.get("aciklama", ""), muted=True))
+        self.header.addWidget(w.label(t(f"ui.kategori_alt.{cid}"), muted=True))
         self._status_line(cid)
-        picks = [self.c.by_id[p["id"]] for p in self.c.recommendations(99)
-                 if self.c.by_id[p["id"]].get("kategori_id") == cid]
+        recs = self.c.recommendations(99)
+        recommended = {p["id"] for p in recs}
+        picks = [self.c.by_id[p["id"]] for p in recs if self.c.by_id[p["id"]].get("kategori_id") == cid]
         if picks:  # tek tıkla: önizleme açılır, onaydan sonra uygulanır
             self.header.addWidget(w.hbox(w.button(t("ui.toplu.kategori", n=len(picks)),
                                                   lambda _=False, p=picks: self.app.apply_recommended(p), primary=True),
@@ -656,10 +707,8 @@ class CategoryPage(w.Page):
                         self.body.addWidget(w.label(heading, bold=True))
                     if note:
                         self.body.addWidget(w.label(note, muted=True, size=12))
-                    rows = w.RowList()
-                    for tweak in tweaks:
-                        self.rows[tweak["id"]] = rows.add(make_row(self.app, tweak, detected=tweak["id"] in detected))
-                    self.body.addWidget(rows)
+                    self.body.addWidget(card_stack(self.app, tweaks, self.rows, detected, recommended=recommended))
+                    self.body.addSpacing(12)  # gruplar çerçeveyle değil boşlukla ayrılır
         self._hidden_section(groups["gizli"])
         self.load_nvidia()
         self.load_amd()
@@ -728,6 +777,7 @@ class CategoryPage(w.Page):
             key, params = self.c.availability[tweak["id"]].reasons[0]
             card.lay.addWidget(w.label(t(key, **params), muted=True))
             self.body.addWidget(card)
+            self.hidden_cards[tweak["id"]] = card
 
     # ------------------------------------------------------------------ özel bölümler
     def _gpu_mode_section(self):
@@ -885,34 +935,26 @@ class CategoryPage(w.Page):
         self.body.addWidget(w.section_title(t("ui.bolum.uygulanmis_placebo")))
         if applied:
             self.body.addWidget(w.label(t("ui.uygulanmis_placebo_aciklama"), muted=True))
-            for tweak in applied:
-                row = make_row(self.app, tweak, show_reality=True, detected=tweak["id"] in detected)
-                self.body.addWidget(row)
-                self.rows.setdefault(tweak["id"], row)
+            self.body.addWidget(card_stack(self.app, applied, self.rows, detected, show_reality=True))
         else:
             self.body.addWidget(w.label(t("ui.uygulanmis_placebo_yok"), muted=True))
         self.body.addWidget(w.section_title(t("ui.bolum.placebo")))
-        for tweak in self.c.tweaks:
-            if tweak["kategori"] == "Placebo" and tweak["id"] not in self._applied_ids:
-                avail = self.c.availability.get(tweak["id"])
-                if avail is not None and not avail.visible:
-                    continue
-                row = make_row(self.app, tweak, show_reality=True, detected=tweak["id"] in detected)
-                self.body.addWidget(row)
-                self.rows[tweak["id"]] = row
+        shown = [tweak for tweak in self.c.tweaks
+                 if tweak["kategori"] == "Placebo" and tweak["id"] not in self._applied_ids
+                 and not ((avail := self.c.availability.get(tweak["id"])) is not None and not avail.visible)]
+        self.body.addWidget(card_stack(self.app, shown, self.rows, detected, show_reality=True))
         others = menu.get("diger_kategorilerde_placebo_veya_zararli", [])
         if others:
             self.body.addWidget(w.section_title(t("ui.bolum.diger_placebo")))
             self.body.addWidget(w.label(t("ui.diger_placebo_aciklama"), muted=True))
+            entries = []
             for item in others:
                 tweak = self.c.by_id.get(item["id"])
                 avail = self.c.availability.get(item["id"])
                 if item["id"] in self._applied_ids or (avail is not None and not avail.visible):
                     continue
                 if tweak is not None and tweak["sinif"] == "SWITCH":  # burada da açılıp kapatılır
-                    row = make_row(self.app, tweak, show_reality=True, detected=item["id"] in detected)
-                    self.body.addWidget(row)
-                    self.rows.setdefault(item["id"], row)
+                    entries.append(tweak)
                     continue
                 card = w.Card()
                 name = QLabel(f"{item['ad']} ({item['id']})")
@@ -923,6 +965,7 @@ class CategoryPage(w.Page):
                     parts.append(w.button(t("ui.ayara_git"), lambda _=False, tid=item["id"]: self.app.go_to_tweak(tid)))
                 card.lay.addWidget(w.hbox(*parts))
                 card.lay.addWidget(w.label(item.get("neden", "")))
-                self.body.addWidget(card)
+                entries.append(card)
+            self.body.addWidget(card_stack(self.app, entries, self.rows, detected, show_reality=True))
         self._placebo_services()
         self.load_nvidia()

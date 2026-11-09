@@ -10,7 +10,7 @@ Bluetooth cihazının kullanıcının verdiği adı "_yerel" alanında tutulur v
 dışa aktarılan rapora girmez.
 """
 
-from app.core import powershell, registry
+from app.core import registry
 from app.core.i18n import t
 from app.scan.input_devices import input_devices
 

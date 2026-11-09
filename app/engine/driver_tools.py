@@ -9,8 +9,6 @@ Güvenli Mod: `bcdedit /set {current} safeboot minimal` (motorun "bcdedit" yerle
 """
 
 import ctypes
-import os
-from pathlib import Path
 
 from app.core import integrity, paths, powershell
 

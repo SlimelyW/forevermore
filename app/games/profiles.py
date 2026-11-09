@@ -2,11 +2,13 @@
 
 Yerel dosya: %LOCALAPPDATA%\\Forevermore\\oyunlar.json (hiçbir yere gönderilmez).
 
-Ayarlar yalnızca KALICI olanlardır (uygulama kapalıyken de geçerli; "Kaydet" / "Önerilen ayarları uygula" ile motordan
-yazılır, Değişiklikler'den geri alınır): öncelik (IFEO PerfOptions), GPU tercihi (DirectX UserGpuPreferences),
-tam ekran optimizasyonları (AppCompatFlags\\Layers). Oyun açılınca uygulanıp kapanınca geri alınan "oyun sırasında"
-ayarları (çekirdek seçimi, güç kısması, servisler, bildirimler, oyun içi Boost…) oyun izleyiciyle birlikte 7 Kasım
-2026'da KALDIRILDI; eski oyunlar.json'daki bu alanlar okunur ama yok sayılır.
+Ayarlar iki türdür:
+- KALICI (uygulama kapalıyken de geçerli; "Kaydet" / "Önerilen ayarları uygula" ile motordan yazılır, Değişiklikler'den
+  geri alınır): öncelik (IFEO PerfOptions), GPU tercihi (DirectX UserGpuPreferences), tam ekran optimizasyonları.
+- OYUN SIRASINDA (RUNTIME_KEYS; yalnızca kullanıcı "Hazırla" / "Oyunu başlat"a basınca uygulanır, oyun kapanınca ya da
+  "Geri al" ile geri alınır; arka planda izleyici YOK). Oyun izleyici 7 Kasım 2026'da kaldırılmıştı; bu seçenekler
+  düğmeye bağlı olarak geri geldi (runtime.GameSession). Çekirdek seçimi, güç kısması muafiyeti, standby temizliği ve
+  oyun içi Boost GERİ GELMEDİ (docs/KARAR_GUNLUGU.md).
 """
 
 import copy
@@ -26,7 +28,18 @@ DEFAULT_PROFILE = {
     "oncelik": "Normal",            # Normal / AboveNormal / High (Realtime YOK)
     "gpu_tercihi": "varsayilan",    # varsayilan / guc_tasarrufu / yuksek_performans
     "fso_kapali": False,
+    # oyun sırasında (hepsi varsayılan KAPALI; bkz. RUNTIME_KEYS)
+    "hazirla_rahatsiz_etme": False,         # Windows Rahatsız etme açılır
+    "hazirla_steam_uyari": False,    # Steam indirmesi sürüyorsa uyar (Steam'e dokunulmaz)
+    "hazirla_guc_plani": False,     # Yüksek performans güç planı
+    "hazirla_servisler": False,      # SysMain, DiagTrack, MapsBroker, WerSvc (anti-cheat'li oyunda gizli)
+    "hazirla_search": False,          # (anti-cheat'li oyunda gizli)
+    "hazirla_steam_oncelik": False,  # steamwebhelper önceliği düşer (anti-cheat'li oyunda gizli)
 }
+RUNTIME_KEYS = ("hazirla_rahatsiz_etme", "hazirla_steam_uyari", "hazirla_guc_plani", "hazirla_servisler", "hazirla_search",
+                "hazirla_steam_oncelik")
+# Oyun sürecine, oyunun hizmetlerine ya da başka süreçlere dokunmayanlar: anti-cheat'li oyunda da açılabilir.
+RUNTIME_ANTI_CHEAT_OK = ("hazirla_rahatsiz_etme", "hazirla_steam_uyari", "hazirla_guc_plani")
 PERSISTENT_DEFAULTS = {"oncelik": "Normal", "gpu_tercihi": "varsayilan", "fso_kapali": False}
 
 # Anti-cheat ve başlatıcı süreçleri: oyun olarak eklenemez, hiçbir ayar uygulanmaz.
@@ -52,17 +65,18 @@ ANTI_CHEAT_MARKERS = (
     ("XIGNCODE3", ("xigncode",)),
     ("EA Javelin", ("eaanticheat",)),
     ("Nexon BlackCipher", ("blackcipher",)),  # The First Descendant: canlı FPS açıkken oyunu kapattı (docs/CANLI_FPS_COKME.md)
+    ("Anti-cheat", ("anticheat",)),  # genel iz (THE FINALS/ARC Raiders: AntiCheatInstaller.exe); adı bilinen varsa o yazılır
 )
-ANTI_CHEAT_VERSION = 2  # işaret listesi değişince artar: eski kayıtlar bir kez yeniden taranır
+ANTI_CHEAT_VERSION = 3  # işaret listesi değişince artar: eski kayıtlar bir kez yeniden taranır
 
 
 def detect_anti_cheat(game, max_depth=4):
     """Oyunda bulunan anti-cheat adları (salt okunur, klasörün ilk dört seviyesine bakılır).
     Gömülü veya sunucu tarafı korumalar (ör. VAC) klasörde görünmez; bulunamaması "yok" demek değildir."""
     found = set()
-    if game.get("kaynak") == "Riot":
-        found.add("Riot Vanguard")
     folder = game.get("klasor") or ""
+    if game.get("kaynak") == "Riot" or r"\riot games" + "\\" in folder.lower().replace("/", "\\") + "\\":
+        found.add("Riot Vanguard")
     base = folder.rstrip("\\/").count(os.sep)
     try:
         for root, dirs, files in os.walk(folder):
@@ -75,7 +89,20 @@ def detect_anti_cheat(game, max_depth=4):
                         found.add(label)
     except OSError:
         pass
+    if len(found) > 1:
+        found.discard("Anti-cheat")  # adı bilinen koruma varsa genel etiket gereksiz
     return sorted(found)
+
+
+def runtime_options(game):
+    """Bu oyunda GÖRÜNEN oyun-sırası seçenekleri. Anti-cheat'li oyunda yalnızca oyun sürecine dokunmayanlar
+    (Rahatsız etme, Steam indirme uyarısı, güç planı); servis durdurma ve süreç önceliği gizli."""
+    return RUNTIME_ANTI_CHEAT_OK if game.get("anti_cheat") else RUNTIME_KEYS
+
+
+def runtime_selected(game):
+    """Kullanıcının bu oyunda açtığı VE bu oyunda izin verilen seçenekler (uygulama katmanı ayrıca süzer)."""
+    return [k for k in runtime_options(game) if (game.get("profil") or {}).get(k)]
 
 
 def is_protected(exe):
@@ -112,7 +139,7 @@ class GameStore:
         games = json.loads(path.read_text(encoding="utf-8")).get("oyunlar", [])
         if not isinstance(games, list):
             raise ValueError("oyunlar listesi yok")
-        return games
+        return [g for g in games if isinstance(g, dict) and isinstance(g.get("id"), str) and isinstance(g.get("ad"), str)]
 
     def load(self):
         """Bozuk dosya sessizce boş liste sayılmaz (eskiden ilk kayıtta profiller kayboluyordu): bir önceki sağlam
@@ -182,6 +209,13 @@ class GameStore:
         self.get(game_id)["profil"] = dict(DEFAULT_PROFILE, **profile)
         self.save()
 
+    def set_runtime(self, game_id, key, value):
+        """Tek bir oyun-sırası anahtarını saklar (sisteme hiçbir şey yazılmaz)."""
+        if key not in RUNTIME_KEYS:
+            raise ValueError(key)
+        self.get(game_id)["profil"][key] = bool(value)
+        self.save()
+
     def ensure_anti_cheat(self):
         """Eski kayıtlarda (veya işaret listesi değişince) anti-cheat bilgisini bir kez hesaplar. Yalnızca EKLER: klasör o an
         erişilemezse (sürücü takılı değil) daha önce bulunan koruma silinmez."""
@@ -197,6 +231,7 @@ class GameStore:
     def remove(self, game_id):
         self.games = [g for g in self.games if g["id"] != game_id]
         self.save()
+        discovery.remove_user_cover(game_id)  # kullanıcının seçtiği resim de gider
 
 
 # ---------------------------------------------------------------------------

@@ -18,7 +18,7 @@ RESTART_TEXT = {"yok": "—", "uygulama": "oyunu/uygulamayı yeniden aç", "otur
                 "bilgisayar": "yeniden başlat", "gezgin": "Gezgin'i yeniden başlat",
                 "ses_servisi": "ses birkaç sn kesilir", "durumsal": "gerekebilir"}
 
-HEADER = """# Test kontrol listesi (sürüm 2.2.0 — Revizyon 2 ve 3 dahil)
+HEADER = """# Test kontrol listesi (sürüm 2.4.1 — Revizyon 2 ve 3 dahil)
 
 > **Önemli:** Bu projedeki kod, ayar DEĞİŞTİREN hiçbir işlemde gerçek Windows üzerinde
 > çalıştırılmadı. Aşağıdaki testleri **önce sanal makinede**, sonra kendi bilgisayarında
@@ -50,7 +50,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 ## 1. Açılış ve yönetici izni
 
 - ☐ `dist\\Forevermore.zip` dosyasını temiz sanal makineye kopyala, aç, içindeki `Forevermore.exe`'ye çift tıkla. İmzasız olduğu için SmartScreen uyarısı
-  çıkması **normal**: "Ek bilgi" > "Yine de çalıştır". (Satış öncesi çözümü: `SATIS_NOTLARI.md`.)
+  çıkması **normal**: "Ek bilgi" > "Yine de çalıştır". 
 - ☐ UAC penceresinde **Evet** → uygulama açılır, üstte uyarı şeridi yoktur.
 - ☐ Kapat, tekrar aç, UAC'de **Hayır** → uygulama **salt okunur** açılır. Üstte turuncu şerit
   görünür, switch'ler gridir, tarama ve rehberler çalışır.
@@ -160,7 +160,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 - ☐ **DNS (PLC-014):** Mevcut DNS'in listedekilerden biri değilse (ör. kendi DNSCrypt/özel DNS'iniz)
   açılır listede "Özel (mevcut değer)" görünüyor ve **Uygula'ya basmadıkça hiçbir şey değişmiyor**.
   Cloudflare seç → uygula → `ipconfig /all`'da görünüyor → "Eski haline getir" → eski DNS geri geliyor.
-- ☐ **Ekstra ayarlar > Ekstra ayar bilgileri:** Kapalıyken (i) penceresinde yalnızca ne yapar,
+- ☐ **Ayarlar > Ekstra ayar bilgileri:** Kapalıyken (i) penceresinde yalnızca ne yapar,
   artılar/eksiler, kimler dokunmamalı ve tahmini etki var. Açınca Windows sürümü, gerçeklik
   durumu ve kaynaklar da görünüyor. Uygulamayı kapat-aç → seçim hatırlanıyor.
 - ☐ **Yasaklı beş ayar** (Defender kapatma, Windows Update kalıcı kapatma, sayfa dosyası kapatma,
@@ -248,7 +248,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 - ☐ **Standby temizliği (durumsal):** Açıkken oyunu aç → RAMMap'te Standby küçüldü. Önce/sonra ölçümüyle
   gerçekten fark var mı bak.
 
-## 5g. Ekstra ayarlar (Revizyon Faz 6)
+## 5g. Ayarlar (Revizyon Faz 6)
 
 - ☐ **Tepsi:** "Kapatınca tepside çalışmaya devam et"i aç → pencereyi kapat → saatin yanında simge var,
   uygulama çalışıyor → simgeye tıkla → pencere geri geliyor → sağ tık > Çıkış → uygulama tamamen kapanıyor.
@@ -283,7 +283,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 - ☐ **Anti-cheat uyarısı:** Oyunlar'da Valorant/LoL "Anti-cheat: Riot Vanguard", Rainbow Six "BattlEye,
   EasyAntiCheat", PUBG/Destiny 2 "BattlEye" rozeti gösteriyor; oyunun ayarlarını açınca üstte uyarı var.
   CS2 gibi koruması klasörde görünmeyen oyunlarda "anti-cheat izi bulunamadı" notu çıkıyor.
-- ☐ **Kaldırmaya hazırla:** Birkaç ayar uygula + "Windows'la başlat"ı aç → Ekstra ayarlar > Kaldırmaya
+- ☐ **Kaldırmaya hazırla:** Birkaç ayar uygula + "Windows'la başlat"ı aç → Ayarlar > Kaldırmaya
   hazırla → "tüm değişiklikleri geri al" işaretli → Temizle → Görev Zamanlayıcı'da görev yok,
   Değişiklikler boş, uygulama kapandı.
 - ☐ **Veri silme:** Değişiklik varken "verileri sil" kutusu pasif; geri al işaretlenince aktif → işaretle →
@@ -293,11 +293,11 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 ## 5j. Yeni ad ve çok dil (Revizyon 2 Faz 1)
 
 - ☐ **Yeni ad:** `derle.bat` → `dist\\Forevermore\\Forevermore.exe` oluştu; pencere başlığı, kenar menü,
-  tepsi simgesi ipucu ve Görev Yöneticisi'nde "Forevermore" yazıyor. Dosya özelliklerinde sürüm 2.2.0.
+  tepsi simgesi ipucu ve Görev Yöneticisi'nde "Forevermore" yazıyor. Dosya özelliklerinde sürüm 2.4.1.
 - ☐ **Veri taşıma:** Eski sürümü kullandıysan `%LOCALAPPDATA%\\Forevermore` ilk açılışta oluştu ve içinde
   `eski_klasorden_tasindi.txt` var; `%LOCALAPPDATA%\\PCOptimizer` silinmedi. Değişiklikler sayfasında eski
   sürümde yaptığın değişiklikler görünüyor ve "Eski haline getir" çalışıyor.
-- ☐ **Eski görev:** Eski sürümde "Windows'la başlat" açıktıysa, Ekstra ayarlar'da anahtar açık görünüyor.
+- ☐ **Eski görev:** Eski sürümde "Windows'la başlat" açıktıysa, Ayarlar'da anahtar açık görünüyor.
   Kapat → Görev Zamanlayıcı'da ne "PC Optimizer - oturum acilisi" ne "Forevermore - oturum acilisi" kaldı.
   Aç → yalnızca "Forevermore - oturum acilisi" var.
 - ☐ **İlk açılış dil seçimi:** `%LOCALAPPDATA%\\Forevermore\\uygulama_ayarlari.json` dosyasındaki `"dil"`
@@ -305,13 +305,13 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
   Windows dilin Türkçe ise Türkçe, değilse English önceden seçili.
 - ☐ **Onay metni dili:** English seçince onay ekranı İngilizce ve sonunda "Turkish text prevails" notu var.
   Dil değiştirince onay bir kez daha soruluyor (beklenen davranış: metin değişti).
-- ☐ **Ayarlardan dil değiştirme:** Ekstra ayarlar > Dil → Türkçe/English seç → "Şimdi yeniden aç" →
+- ☐ **Ayarlardan dil değiştirme:** Ayarlar > Dil → Türkçe/English seç → "Şimdi yeniden aç" →
   uygulama UAC sormadan yeniden açıldı, yeni dilde. "Sonra" dersen bir sonraki açılışta geçerli.
 - ☐ **İngilizce arayüz:** Tüm menüleri English'te gez. Arayüz metinleri, ayar adları, (i) penceresindeki
   açıklamalar, artı/eksiler, rehber adımları, kategori açıklamaları ve Placebo menüsü İngilizce (Faz 1b).
   Türkçe kalmış bir metin, kesilen veya taşan metin görürsen ekran görüntüsüyle bildir.
 - ☐ **İngilizce çeviri kalitesi:** Çevirileri geliştirici yaptı; anlamı bozulmuş veya garip cümle görürsen
-  not al (satıştan önce ana dili İngilizce bir uzman kontrol etmeli).
+  not al (yayından önce ana dili İngilizce bir uzman kontrol etmeli).
 - ☐ **Dil değişince ayar durumları:** English'te bir ayarı aç, Türkçeye geç → Değişiklikler sayfasında aynı
   ayar görünüyor ve "Eski haline getir" çalışıyor (dil yalnızca metni değiştirir, kayıtları değil).
 - ☐ **Sayı ve tarih biçimi:** Türkçede `4,2 GHz`, `%12`, tarih `23.10.2026 14:05`; English'te `4.2 GHz`,
@@ -358,9 +358,9 @@ dilini değiştirip oturumu kapat-aç yeterli):
 - ☐ **Taşınan ayarlar:** Sistem menüsünde "Başlangıç uygulamalarını azaltma", Performans/İşlemci/Görsel
   menülerinde oyun başına yapılan ayarlar (öncelik, GPU seçimi, çekirdek atama, bildirim) artık YOK ve
   "taşındı" yazan kart da yok. Bunlar Başlangıç ve servisler / Oyunlar menülerinde.
-- ☐ **Bilgi menüsü:** Kenar menüde Ekstra ayarlar'ın altında "Bilgi". En üstte büyük "Kubilay Paşa", altında
+- ☐ **Bilgi menüsü:** Kenar menüde Ayarlar'ın altında "Bilgi". En üstte büyük "Kubilay Paşa", altında
   Kopyala düğmesi; sürüm, gizlilik notu, üçüncü taraf lisansları. Bağış bölümü yok.
-  Ekstra ayarlar'da artık bilgi bölümü yok.
+  Ayarlar'da artık bilgi bölümü yok.
 - ☐ **Bilgi dosyası:** `data\\hakkinda.json` içinde `satirlar` listesine yeni bir satır ekle (ör.
   `{"etiket": "Not", "deger": "..."}`) → uygulamayı yeniden aç → Bilgi sayfasında görünüyor.
 - ☐ **Rapor:** Kaydedilen raporda her ekran kartının altında "Windows rolü: Yüksek performans / Güç
@@ -499,7 +499,7 @@ dilini değiştirip oturumu kapat-aç yeterli):
 - ☐ **Paket:** `derle.bat` → sonunda "Bitti", dosya boyutu ve SHA256 yazıyor; arada kırmızı hata yok.
 - ☐ **Açılış:** dist\\Forevermore.zip'i başka bir klasöre aç → Forevermore.exe → yönetici izni sorulur;
   "Hayır" → salt okunur modda açılıyor. "Evet" → normal mod; Sistem menüsünde UAC ve Defender kartları var.
-- ☐ **Lisans:** zip içinde THIRD-PARTY-NOTICES.txt ve PresentMon var; Bilgi menüsünde sürüm 2.2.0.
+- ☐ **Lisans:** zip içinde THIRD-PARTY-NOTICES.txt ve PresentMon var; Bilgi menüsünde sürüm 2.4.1.
 
 ## 5s. Özet kutuları, Bilgi ve logo
 

@@ -20,8 +20,12 @@ yazı tipleri (SIL OFL 1.1). Hiçbiri MIT ile çelişmez:
 - PyInstaller: GPLv2+ "bootloader exception" ile paketlenen programın lisansını kısıtlamaz; derleme aracıdır.
 - Yazı tipleri yalnızca web sitesindedir; OFL, yazı tiplerinin yazılımla birlikte dağıtılmasına izin verir
   (lisans metinleri site/fonts/ altındadır).
-Depoda telifli oyun kapağı, mağaza görseli ya da marka logosu yoktur; site bunları ziyaretçinin tarayıcısı üzerinden
-yayıncının sunucusundan çalışma anında alır.
+Oyun kapakları: data/oyun_kapaklari/ altında 15 oyun kapağı (300x450 JPG, ≈ 0,9 MB) uygulamayla birlikte gelir. Bunlar
+yayıncılara aittir (Steam'in herkese açık resim sunucusundan, library_600x900.jpg; oyun eşleşmesi
+data/oyun_kapaklari.json'da, kaynak adresleri docs/KAPAK_KAYNAKLARI.md'de). Uygulama bunları internetten indirmez.
+Yayıncı isterse ilgili kapak kaldırılır: python tools/kapak_kaldir.py <dosya.jpg> (ya da --hepsi). Başka mağaza görseli
+ya da marka logosu depoda yoktur; web sitesi oyun görsellerini ziyaretçinin tarayıcısı üzerinden yayıncının
+sunucusundan çalışma anında alır.
 
 1) Python 3.12 - Python Software Foundation License (PSF-2.0, MIT ile uyumlu)
    https://docs.python.org/3/license.html

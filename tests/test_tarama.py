@@ -12,7 +12,7 @@ import unittest
 from pathlib import Path
 
 from app.scan import findings
-from app.scan.hardware import analyze_ram
+from app.scan.hardware import analyze_ram, hiz_belirgin_dusuk
 from app.scan.peripherals import parse_wave_format
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -142,6 +142,9 @@ class TestRam(unittest.TestCase):
 
     def test_single_module_single_channel(self):
         self.assertEqual(analyze_ram([self.module()])["kanal"], "tek")
+        soldered = self.module()
+        soldered["SMBIOSMemoryType"] = 29  # LPDDR5 lehimli: tek satır = tek kanal DEMEK DEĞİL (Denetim B O5)
+        self.assertEqual(analyze_ram([soldered])["kanal"], "bilinmiyor")
 
     def test_dual_channel_from_labels(self):
         r = analyze_ram([self.module(BankLabel="P0 CHANNEL A"), self.module(BankLabel="P0 CHANNEL B")])
@@ -151,6 +154,13 @@ class TestRam(unittest.TestCase):
         r = analyze_ram([self.module(), self.module(DeviceLocator="DIMM_B1")])
         self.assertEqual(r["xmp_expo"], "kapali_olabilir")
         self.assertTrue(r["modul_hizinin_altinda"])
+
+    def test_hiz_belirgin_dusuk(self):
+        self.assertTrue(hiz_belirgin_dusuk(2133, 3600))     # düşük
+        self.assertFalse(hiz_belirgin_dusuk(3600, 3600))    # eşit
+        self.assertFalse(hiz_belirgin_dusuk(3300, 3600))    # %10'dan az düşük
+        self.assertFalse(hiz_belirgin_dusuk(None, 3600))    # veri yok
+        self.assertFalse(hiz_belirgin_dusuk(2133, 0))
 
     def test_laptop_memory_no_xmp_claim(self):
         r = analyze_ram([self.module(FormFactor=12, SMBIOSMemoryType=34, Speed=5600, ConfiguredClockSpeed=5600)])

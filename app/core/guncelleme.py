@@ -24,7 +24,7 @@ import zipfile
 from pathlib import Path
 
 from app import __version__
-from app.core import integrity, log, paths, powershell
+from app.core import admin, integrity, log, paths, powershell
 
 _log = log.get("guncelleme")
 
@@ -42,7 +42,7 @@ CREATE_NO_WINDOW = 0x08000000
 NEW_PROCESS_GROUP = 0x00000200
 
 # Sabit betik: yollar argüman olarak gelir. Eski klasör ".eski" adıyla yedeklenir; hata olursa geri konur.
-SWAP_SCRIPT = r"""param([int]$ProcId, [string]$Install, [string]$Staging, [string]$Exe)
+SWAP_SCRIPT = r"""param([int]$ProcId, [string]$Install, [string]$Staging, [string]$Exe, [string]$Log = '')
 $ErrorActionPreference = 'Stop'
 try { Wait-Process -Id $ProcId -Timeout 60 -ErrorAction SilentlyContinue } catch {}
 $old = $Install + '.eski'
@@ -57,6 +57,8 @@ try {
     if (Test-Path -LiteralPath $tools) { Copy-Item -LiteralPath $tools -Destination (Join-Path $Install 'tools') -Recurse }
     $done = $true
 } catch {
+    # Sessiz geri dönüş olmasın: uygulama açılışta bir kez durum satırında söyler (onceki_degisim_hatasi)
+    if ($Log) { try { ((Get-Date -Format s) + ' ' + $_) | Out-File -LiteralPath $Log -Encoding utf8 } catch {} }
     if (Test-Path -LiteralPath $old) {
         if (Test-Path -LiteralPath $Install) { Remove-Item -LiteralPath $Install -Recurse -Force -ErrorAction SilentlyContinue }
         Rename-Item -LiteralPath $old -NewName (Split-Path $Install -Leaf)
@@ -184,12 +186,30 @@ def hazirla(zip_path, staging, public_hex=None, current=__version__):
         raise
 
 
-def degisim_komutu(folder, pid, install_dir, script_path):
+def degisim_komutu(folder, pid, install_dir, script_path, log_path):
     """Betiği çalıştıracak komut satırı (liste; kabuk yok). Yollar ayrı argümanlardır."""
     # RemoteSigned yeter: betiği uygulama yerelde yazar (internetten gelmiş işareti yok). Pencereyi CREATE_NO_WINDOW gizler.
     return ["powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "RemoteSigned",
             "-File", str(script_path), "-ProcId", str(pid), "-Install", str(install_dir), "-Staging", str(folder),
-            "-Exe", "Forevermore.exe"]
+            "-Exe", "Forevermore.exe", "-Log", str(log_path)]
+
+
+def hata_dosyasi():
+    """Değişim betiğinin hata kaydı. Güncelleme klasöründe: yöneticiyken korumalı (yönetici betik kullanıcının yazabildiği
+    yere yazmasın; bağlantı hilesiyle başka dosyanın üzerine yazdırılamasın). Denetim A S3."""
+    return paths.update_dir(admin.is_admin()) / "degisim_hatasi.txt"
+
+
+def onceki_degisim_hatasi():
+    """Son değişim başarısız olup eski sürüme dönüldüyse True; kayıt silinir (açılışta bir kez gösterilir)."""
+    path = hata_dosyasi()
+    try:
+        detail = path.read_text(encoding="utf-8-sig", errors="replace")
+        path.unlink()
+    except OSError:
+        return False
+    _log.warning("Güncelleme değişimi başarısız, eski sürüme dönüldü: %s", detail.strip()[:2000])
+    return True
 
 
 def degisimi_baslat(folder):
@@ -201,13 +221,14 @@ def degisimi_baslat(folder):
     install = Path(paths.app_dir())
     script = Path(folder).parent / "degistir.ps1"
     script.write_text(SWAP_SCRIPT, encoding="utf-8-sig")  # PowerShell 5.1 Türkçe yolları doğru okusun
-    subprocess.Popen(degisim_komutu(folder, os.getpid(), install, script), close_fds=True, env=powershell.clean_env(),
+    subprocess.Popen(degisim_komutu(folder, os.getpid(), install, script, hata_dosyasi()), close_fds=True,
+                     env=powershell.clean_env(),
                      creationflags=CREATE_NO_WINDOW | NEW_PROCESS_GROUP)  # noqa: S603 - sabit betik, argümanlı
     _log.info("Güncelleme değişimi başlatıldı: %s", folder)
 
 
 def staging_dir():
-    return paths.user_data_dir() / "guncelleme" / "yeni"
+    return paths.update_dir(admin.is_admin()) / "yeni"
 
 
 def indir_ve_hazirla(info, get=http_get):

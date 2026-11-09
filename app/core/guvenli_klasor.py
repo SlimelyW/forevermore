@@ -16,6 +16,8 @@ import subprocess
 from ctypes import wintypes
 from pathlib import Path
 
+from app.core import powershell
+
 TRUSTED_OWNERS = {"S-1-5-18", "S-1-5-32-544"}   # SYSTEM, Administrators
 READ_EXECUTE = "0x1200a9"
 CREATE_NO_WINDOW = 0x08000000
@@ -158,7 +160,8 @@ def ensure(path, descriptor_text):
 def reset_acl(path):
     """Taşınan ağacı bulunduğu yerin izinlerine döndürür (aynı sürücüde izinler taşınanla birlikte gelir).
     /L: bağlantının hedefine dokunmaz. False: en az bir öğe sıfırlanamadı."""
-    exe = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "icacls.exe"
+    # SYSTEM32 API'den gelir; ortam değişkeni (SystemRoot) kullanıcı tarafından HKCU'dan ezilebilir
+    exe = Path(powershell.SYSTEM32) / "icacls.exe"
     try:
         done = subprocess.run([str(exe), str(path), "/reset", "/T", "/C", "/L", "/Q"], capture_output=True,
                               creationflags=CREATE_NO_WINDOW, timeout=600)

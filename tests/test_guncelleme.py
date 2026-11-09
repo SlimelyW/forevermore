@@ -128,8 +128,10 @@ class TestHazirla(unittest.TestCase):
 
 class TestDegisim(unittest.TestCase):
     def test_paths_are_arguments_not_script_text(self):
-        cmd = guncelleme.degisim_komutu(r"C:\a b\yeni'; calc; '", 42, r"C:\Programlar\Forevermore", r"C:\t\degistir.ps1")
+        cmd = guncelleme.degisim_komutu(r"C:\a b\yeni'; calc; '", 42, r"C:\Programlar\Forevermore", r"C:\t\degistir.ps1",
+                                        r"C:\t\hata.txt")
         self.assertEqual(cmd[cmd.index("-File") + 1], r"C:\t\degistir.ps1")
+        self.assertEqual(cmd[cmd.index("-Log") + 1], r"C:\t\hata.txt")
         self.assertIn(r"C:\a b\yeni'; calc; '", cmd)  # ayrı bir argüman olarak
         self.assertNotIn("-Command", cmd)
         self.assertNotIn("calc", guncelleme.SWAP_SCRIPT)
@@ -152,6 +154,22 @@ class TestDegisim(unittest.TestCase):
             guncelleme.degisimi_baslat(Path("x"))
         self.assertEqual(ctx.exception.kod, "kaynak")
 
+    def test_staging_is_protected_when_elevated(self):
+        """Denetim A S2: doğrulanan paket ve betik, yönetici taşıyana kadar kullanıcının yazabildiği yerde durmamalı.
+        Korumalı klasör hazır değilse (taşıma bitmedi) ya da yönetici değilse eski yer (%LOCALAPPDATA%)."""
+        from app.core import paths
+        with tempfile.TemporaryDirectory() as tmp:
+            secure, user = Path(tmp) / "secure", Path(tmp) / "user"
+            secure.mkdir()
+            with mock.patch.object(paths, "protected_path", return_value=secure), \
+                    mock.patch.object(paths, "user_data_dir", return_value=user):
+                for admin, marked, expected in ((True, True, secure), (False, True, user), (True, False, user)):
+                    with self.subTest(admin=admin, marked=marked):
+                        mark = secure / paths.PROTECTED_MARK
+                        mark.write_text("x") if marked else mark.unlink(missing_ok=True)
+                        with mock.patch.object(guncelleme.admin, "is_admin", return_value=admin):
+                            self.assertEqual(guncelleme.staging_dir(), expected / "guncelleme" / "yeni")
+
 
 class TestSwapScriptReal(unittest.TestCase):
     """Betiği gerçekten (geçici klasörlerde) çalıştırır: değişim, kullanıcı klasörü ve geri alma."""
@@ -160,7 +178,7 @@ class TestSwapScriptReal(unittest.TestCase):
         import subprocess
         script = base / "degistir.ps1"
         script.write_text(guncelleme.SWAP_SCRIPT, encoding="utf-8-sig")
-        cmd = guncelleme.degisim_komutu(staging, 999999, base / "Forevermore", script)
+        cmd = guncelleme.degisim_komutu(staging, 999999, base / "Forevermore", script, base / "hata.txt")
         cmd[cmd.index("Forevermore.exe")] = "calistir.cmd"  # gerçek .exe yerine işaret dosyası yazan betik
         subprocess.run(cmd, timeout=90, check=False, creationflags=guncelleme.CREATE_NO_WINDOW)
 
@@ -182,6 +200,7 @@ class TestSwapScriptReal(unittest.TestCase):
             self.assertEqual((base / "Forevermore" / "surum.txt").read_text(encoding="utf-8"), "yeni_paket")
             self.assertEqual((base / "Forevermore" / "tools" / "ddu.txt").read_text(encoding="utf-8"), "kullanici")
             self.assertFalse((base / "Forevermore.eski").exists())
+            self.assertFalse((base / "hata.txt").exists())
 
     def test_failed_move_rolls_back(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -190,6 +209,25 @@ class TestSwapScriptReal(unittest.TestCase):
             self.run_swap(base, base / "yok_boyle_bir_klasor")  # Move-Item hata verir
             self.assertEqual((base / "Forevermore" / "surum.txt").read_text(encoding="utf-8"), "Forevermore")
             self.assertFalse((base / "Forevermore.eski").exists())
+            self.assertTrue((base / "hata.txt").read_text(encoding="utf-8-sig").strip())  # Denetim A S3: sessiz değil
+
+    def test_previous_failure_is_reported_once(self):
+        """Denetim A S3: açılışta bir kez True (kayıt silinir), sonra False."""
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "hata.txt"
+            log.write_text("Rename-Item: erişim engellendi", encoding="utf-8-sig")
+            with mock.patch.object(guncelleme, "hata_dosyasi", return_value=log):
+                self.assertTrue(guncelleme.onceki_degisim_hatasi())
+                self.assertFalse(log.exists())
+                self.assertFalse(guncelleme.onceki_degisim_hatasi())
+
+    def test_error_log_lives_in_update_folder(self):
+        """Yönetici betik kullanıcının yazabildiği yere yazmasın: kayıt güncelleme klasöründe (S2 ile aynı yer)."""
+        from app.core import paths
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(paths, "update_dir", return_value=Path(tmp)) as update_dir:
+            self.assertEqual(guncelleme.hata_dosyasi().parent, Path(tmp))
+        update_dir.assert_called_once()
 
 
 class TestDenetimVakti(unittest.TestCase):

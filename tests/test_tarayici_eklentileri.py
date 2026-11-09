@@ -65,6 +65,13 @@ class TestManageLaunch(unittest.TestCase):
         self.assertEqual(browser_ext.manage_launch("Edge", "Default", self.ID),
                          ("msedge.exe", f'--profile-directory="Default" edge://extensions/?id={self.ID}'))
 
+    def test_launch_never_carries_a_web_address(self):
+        """Düğme internete/mağazaya çıkmaz: yalnızca tarayıcının yerel (chrome:// edge:// about:) sayfaları."""
+        for browser, profile, ext_id in (("Chrome", "Default", self.ID), ("Edge", "Profile 1", self.ID), ("Firefox", "x", "u@x")):
+            program, arguments = browser_ext.manage_launch(browser, profile, ext_id)
+            self.assertNotIn("http", arguments.lower())
+            self.assertRegex(arguments, r"(chrome://|edge://|about:)")
+
     def test_firefox_opens_general_addons_page(self):
         self.assertEqual(browser_ext.manage_launch("Firefox", "default-release", "u@x"), ("firefox.exe", "about:addons"))
 

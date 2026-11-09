@@ -159,7 +159,15 @@
   "SYS-018": "a4699966d1a9",
   "SYS-019": "cf59ffbd22bc",
   "SYS-020": "6091e161fe08",
-  "SYS-021": "a1079f1e8457"
+  "SYS-021": "a1079f1e8457",
+  "SYS-022": "191b1272b38c",
+  "SYS-023": "6ccc346826e7",
+  "QOL-011": "e096fc0bface",
+  "QOL-012": "161023df134f",
+  "QOL-013": "3bb0c52622c2",
+  "QOL-014": "bdb0ff0376bc",
+  "QOL-015": "a904074fbf7c",
+  "QOL-016": "5c06c103435a"
  },
  "genel": {
   "meta.anti_cheat_uyarisi": "In competitive games, anti-cheat systems (Vanguard, EAC, BattlEye, FACEIT, VAC) may block, or treat as grounds for a ban, tools that disable driver signature enforcement, inject into a game's DLLs or modify the game process.",
@@ -173,7 +181,6 @@
   "kategoriler.7.aciklama": "Polling rate, pointer acceleration, raw input, keyboard repeat settings.",
   "kategoriler.8.aciklama": "Audio enhancements, sample rate/bit depth, ducking, DPC latency.",
   "kategoriler.9.aciklama": "Settings that add comfort more than performance.",
-  "kategoriler.10.aciklama": "Common 'tweaks' found online that do nothing, have no measurable effect, or are harmful.",
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.0.ad": "Windows Search indexing (WSearch)",
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.0.neden": "Placebo for game FPS; noticeable only during the first indexing period and on very weak HDD systems.",
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.1.ad": "Telemetry: Connected User Experiences and Telemetry (DiagTrack)",
@@ -185,7 +192,10 @@
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.4.ad": "Touch Keyboard and Handwriting Panel Service (TabletInputService)",
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.4.neden": "Common in old 'disable services' lists; no measurable benefit.",
   "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.5.ad": "Receive Side Scaling (RSS) and offload settings",
-  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.5.neden": "The claim that disabling offload/RSS 'lowers ping' has no evidence; Microsoft recommends the defaults."
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.5.neden": "The claim that disabling offload/RSS 'lowers ping' has no evidence; Microsoft recommends the defaults.",
+  "kategoriler.10.aciklama": "File Explorer and Start menu comfort settings.",
+  "kategoriler.11.aciklama": "Sound effects, volume and notification comfort settings.",
+  "kategoriler.12.aciklama": "Common 'tweaks' found online that do nothing, have no measurable effect, or are harmful."
  },
  "ayarlar": {
   "DISP-001": {
@@ -2959,6 +2969,124 @@
    "rehber.kontrol": "Settings > System > Display > Night light. NVIDIA Control Panel > Adjust desktop color settings > Digital vibrance. AMD: Adrenalin > Display > Custom Color > Saturation.",
    "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11"
   },
+  "QOL-011": {
+   "ad": "Dark mode (apps and Windows)",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same two values as Settings > Personalization > Colors > Choose your mode; takes effect immediately.",
+   "ne_ise_yarar": "Turns Settings, File Explorer and similar apps, the taskbar and the Start menu dark.",
+   "artilar": [
+    "Easier on the eyes in a dark room",
+    "Same as choosing 'Dark' in Settings > Personalization > Colors"
+   ],
+   "eksiler": [
+    "Some older programs ignore the dark theme and stay light"
+   ],
+   "varsayilan": "1 (light mode).",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1903+, Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 0; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 0"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme, SystemUsesLightTheme",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 1; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 1"
+  },
+  "QOL-012": {
+   "ad": "Show hidden files and folders",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same value as Folder Options > View > 'Show hidden files, folders, and drives' (1 show, 2 don't show).",
+   "ne_ise_yarar": "Shows files and folders marked hidden in File Explorer with a faded icon. Protected system files stay hidden.",
+   "artilar": [
+    "Hidden folders (for example AppData) become easy to reach"
+   ],
+   "eksiler": [
+    "Hidden files can be deleted by mistake; Windows hides them on purpose"
+   ],
+   "varsayilan": "2 (hidden files are not shown).",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 2"
+  },
+  "QOL-013": {
+   "ad": "Align taskbar icons to the left (Windows 11)",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same value as Settings > Personalization > Taskbar > Taskbar alignment (0 left, 1 center).",
+   "ne_ise_yarar": "Moves the taskbar icons and the Start button to the left, like Windows 10.",
+   "artilar": [
+    "The Start button always stays in the same place and does not shift as windows open"
+   ],
+   "eksiler": [
+    "Can feel odd for the first few days if you are used to the centered layout"
+   ],
+   "varsayilan": "1 (centered).",
+   "uyumluluk.kaynak_metin.windows": "Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 0"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 1"
+  },
+  "QOL-014": {
+   "ad": "Open File Explorer to 'This PC'",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same value as File Explorer Options > 'Open File Explorer to' (1 = This PC). Turning it off deletes the value and Windows returns to its default.",
+   "ne_ise_yarar": "File Explorer opens on the 'This PC' page that lists your drives.",
+   "artilar": [
+    "Your drives are one click away"
+   ],
+   "eksiler": [
+    "You do not see Quick access / Home first"
+   ],
+   "varsayilan": "No value (Windows uses its own default: Home or Quick access, depending on the version).",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo"
+  },
+  "QOL-015": {
+   "ad": "Turn off shaking a window to minimize others",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same value as Windows 11 Settings > Multitasking > 'Title bar window shake'; on Windows 10 it turns off Aero Shake.",
+   "ne_ise_yarar": "Stops the other windows from minimizing when you shake a window by its title bar.",
+   "artilar": [
+    "No more accidental minimizing of the whole desktop while moving a window"
+   ],
+   "eksiler": [
+    "If you like the shake gesture, you lose it"
+   ],
+   "notlar": [
+    "On Windows 11 it is not verified whether a missing value counts as shake on or off; turning the switch on or off writes the value explicitly."
+   ],
+   "varsayilan": "On Windows 10 shake is on. Newer Windows 11 builds may ship with it off; the default when the value is missing is not verified.",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 0"
+  },
+  "QOL-016": {
+   "ad": "Select items in Explorer with check boxes",
+   "performans_etkisi.gerekce": "A display setting; no effect on game performance.",
+   "gerceklik.aciklama": "Evidence level: secondary source (Winaero); Microsoft does not document this registry value. Same value as Folder Options > View > 'Use check boxes to select items'.",
+   "ne_ise_yarar": "Puts a check box next to each file in File Explorer so you can select several files without holding Ctrl.",
+   "artilar": [
+    "Multi-select is easier with a mouse and on touch screens"
+   ],
+   "eksiler": [
+    "The list looks a little busier"
+   ],
+   "varsayilan": "0 (no check boxes).",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 0"
+  },
   "PLC-001": {
    "ad": "RAM cleaners / 'RAM freeing' apps",
    "ne_ise_yarar": "Forcibly empties processes' working sets and the standby list to make the 'free RAM' number bigger.",
@@ -4010,6 +4138,59 @@
    ],
    "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Name PreventDeviceMetadataFromNetwork -ErrorAction SilentlyContinue",
    "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Name PreventDeviceMetadataFromNetwork"
+  },
+  "SYS-022": {
+   "ad": "Turn on the XMP/EXPO profile (BIOS)",
+   "ne_ise_yarar": "Makes the RAM run at the speed printed on its box. With it off, the module often runs at a much slower base speed.",
+   "artilar": [
+    "RAM runs at its advertised speed",
+    "Noticeable in memory-sensitive games and on integrated graphics"
+   ],
+   "eksiler": [
+    "Some motherboard/CPU/RAM combinations become unstable (blue screens, no boot)",
+    "The profile can push the CPU's memory controller beyond its normal limit"
+   ],
+   "dokunmamali": [
+    "Users with stability problems or who care about warranty (update the BIOS first)"
+   ],
+   "varsayilan": "Off on most motherboards (RAM runs at its base speed).",
+   "gerceklik.aciklama": "Often recommended in forums and videos; the gain depends on the game and CPU and was not measured for this project.",
+   "performans_etkisi.gerekce": "The gain varies with the game and CPU; not measured for this project.",
+   "rehber.adimlar": [
+    "Restart the computer and enter the BIOS (usually Del or F2 at startup).",
+    "In the memory/OC section, choose the XMP (Intel) or EXPO/DOCP (AMD) profile.",
+    "Save and exit (F10). If it will not boot, reset the BIOS; if it is unstable, turn the profile off."
+   ],
+   "rehber.geri_alma": "Set XMP/EXPO to Disabled/Auto in the BIOS.",
+   "rehber.kontrol": "PowerShell: Get-CimInstance Win32_PhysicalMemory | Select-Object Speed, ConfiguredClockSpeed. Speed is the module's advertised speed, ConfiguredClockSpeed is the speed it runs at now.",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Running RAM at its advertised speed (XMP/EXPO)"
+  },
+  "SYS-023": {
+   "ad": "Do not turn off Secure Boot (for anti-cheat)",
+   "ne_ise_yarar": "With Secure Boot on, only signed boot software runs. Some anti-cheats, such as Valorant (Vanguard) and Fortnite, may require it to be on.",
+   "artilar": [
+    "Anti-cheat games do not show a 'Secure Boot required' error",
+    "Protection against tampering with the boot chain"
+   ],
+   "eksiler": [
+    "Can be restrictive for unsigned drivers or a second operating system"
+   ],
+   "dokunmamali": [
+    "People who play anti-cheat games (such as Valorant, Fortnite): do not turn it off"
+   ],
+   "varsayilan": "Usually on in modern computers.",
+   "gerceklik.aciklama": "Which game asks for Secure Boot depends on the game and version; confirm on the game's own support page. Not measured for this project.",
+   "performans_etkisi.gerekce": "No performance gain from turning Secure Boot off was measured; in some games it can block play.",
+   "rehber.adimlar": [
+    "First check msinfo32 > the 'Secure Boot State' line.",
+    "If a game such as Valorant or Fortnite asks for it and it is Off, turn Secure Boot on in the BIOS (Boot/Security section).",
+    "You do not need to turn it off for performance; if you play anti-cheat games, leave it on."
+   ],
+   "rehber.geri_alma": "Set Secure Boot to Disabled in the BIOS.",
+   "rehber.kontrol": "msinfo32 > System Summary > 'Secure Boot State' (On/Off). PowerShell: Confirm-SecureBootUEFI (administrator).",
+   "uyumluluk.kaynak_metin.windows": "Windows 10, Windows 11",
+   "sade_ad": "Leaving Secure Boot on (anti-cheat)"
   }
  }
 }

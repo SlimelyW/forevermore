@@ -2,6 +2,44 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.4.1 (10 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.4.1 (etiket v2.4.1).** SHA-256 (Forevermore.zip): `CBF6F0E7AEA125907C464DF693F0ADFB80CF68DEB974BA70E5AA51F7A066253A`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (rapor, dosya VirusTotal'a yüklenince açılır)
+
+> **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
+> SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
+
+### Yeni neler var
+**Bunların hepsi yeni; her Windows sürümünde, her bilgisayarda ve her oyunda denenmedi.** Sorun görürsen GitHub Konular'dan bildir. Yeni arayüz ve yeni ayarlar gerçek bir Windows'ta uçtan uca elle denenmedi; ayarlar sahte sistemle ve testlerle sınandı.
+- Yeni arayüz: alt-orta menü çubuğu, Özet'te canlı kartlar ve halkalar, kategori sayfalarında ayar kartı ızgarası, oyun kapak ızgarası, gruplu menü, daha okunaklı yazı tonları.
+- Özelleştirmeler artık dolu: Görsel/QoL, Gezgin ve Başlat, Ses ve bildirim olmak üzere üç kategori; 6 yeni ayar (koyu mod, gizli dosyalar, görev çubuğu sola, Gezgin "Bu bilgisayar"da açılsın, pencere sallama, onay kutuları). Bunların kanıt düzeyi "ikincil kaynak"tır; ayarın (i) penceresinde yazıyor. Toplam 162 ayar.
+- Oyun sırasında seçenekleri geri geldi (oyun izleyicisi olmadan): "Hazırla" ya da "Oyunu başlat" ile uygulanır, oyun kapanınca ya da "Geri al" ile geri alınır.
+- Gömülü oyun kapakları: 15 Steam kapağı uygulamayla gelir; kendi görselini seçersen o önceliklidir.
+- Hata düzeltmeleri: iki iç denetimde (A ve B) 16 + 16 düzeltme. Örnekler: önceki değer okunamazsa yazılmaz; bozuk ayar/önbellek dosyası uygulamayı çökertmez; yedek deposu önce diske yazar; Ölçüm, hile korumalı oyunda başlamaz; Ctrl+K klavyeyle gezilir; güncelleme hazırlığı yöneticiyken korumalı klasörde yapılır.
+- Site ve belgeler üçüncü bir denetimle (C) düzeltildi; gizlilik sayfası, kapak telif notu ve ayar sayıları güncel.
+
+## English
+
+**Version: 2.4.1 (tag v2.4.1).** SHA-256 (Forevermore.zip): `CBF6F0E7AEA125907C464DF693F0ADFB80CF68DEB974BA70E5AA51F7A066253A`
+Signature fingerprint: `5FE5-D786-0B89-A56E`
+VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (the report opens once the file has been uploaded to VirusTotal)
+
+> **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
+> Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
+
+### What's new
+**All of this is new and has not been tried on every Windows version, every PC or every game.** Please report problems on GitHub Issues. The new interface and the new settings have not been tried end to end on a real Windows machine; the settings were checked with a simulated system and automated tests.
+- New interface: bottom-center menu bar, live cards and rings on Overview, a card grid for settings on category pages, a game cover grid, a grouped menu, more readable text tones.
+- Customizations are now filled in: three categories (Visual/QoL, Explorer and Start, Sound and notifications) and 6 new settings (dark mode, hidden files, taskbar to the left, Explorer opens "This PC", window shake, selection checkboxes). Their evidence level is "secondary source"; the (i) window says so. 162 settings in total.
+- "During the game" options are back (without a game watcher): applied with "Prepare" or "Launch game", reverted when the game closes or with "Undo".
+- Embedded game covers: 15 Steam covers ship with the app; a picture you choose yourself takes priority.
+- Bug fixes: 16 + 16 fixes from two internal audits (A and B). Examples: nothing is written when the previous value cannot be read; a corrupt settings or cache file no longer crashes the app; the backup store writes to disk first; Measure does not start in an anti-cheat game; Ctrl+K works with the keyboard; update preparation runs in the protected folder when elevated.
+- A third audit (C) fixed the site and docs: privacy page, cover copyright note and setting counts are up to date.
+
 # 2.4.0 (8 Kasım 2026)
 
 ## Türkçe

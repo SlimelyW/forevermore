@@ -1,10 +1,10 @@
 # Dönüşüm raporu
 
-Üretim: `tools/convert_tweaks.py` — 2026-11-08. Bu dosya her çalıştırmada yeniden yazılır.
+Üretim: `tools/convert_tweaks.py` — 2026-11-10. Bu dosya her çalıştırmada yeniden yazılır.
 
 ## 1. Özet
 
-Toplam 154 ayar: **SWITCH 87**, **REHBER 57**, **BİLGİ 10**.
+Toplam 162 ayar: **SWITCH 93**, **REHBER 59**, **BİLGİ 10**.
 SWITCH'lerin 21 tanesi 'dikkatli' (açarken tek onay): DISP-005, SYS-001, SYS-005, SYS-015, PERF-004, PERF-007, PERF-009, GPU-016, CPU-001, CPU-009, NET-003, PLC-003, PLC-004, PLC-005, PLC-006, PLC-007, PLC-015, PLC-016, PLC-017, PLC-025, PLC-030.
 Riskli switch (2, açarken ve kapatırken iki aşamalı onay): PERF-003, CPU-004.
 Placebo/zararlı switch (31): SYS-003, SYS-004, SYS-005, SYS-010, SYS-015, NET-009, PLC-003, PLC-004, PLC-005, PLC-006, PLC-007, PLC-009, PLC-010, PLC-011, PLC-012, PLC-013, PLC-014, PLC-015, PLC-016, PLC-017, PLC-019, PLC-023, PLC-025, PLC-027, PLC-029, PLC-030, PLC-031, PLC-032, PLC-033, PLC-034, PLC-035.
@@ -12,16 +12,18 @@ Yasaklı (hiçbir zaman switch olmaz): PLC-008, PLC-018, PLC-020, PLC-021, PLC-0
 
 | Kategori | SWITCH | REHBER | BİLGİ |
 |---|---|---|---|
-| Display | 5 | 4 | 0 |
-| System | 15 | 6 | 0 |
+| Display | 5 | 3 | 0 |
+| System | 14 | 8 | 0 |
 | Performans | 8 | 3 | 0 |
 | Ekran Kartı | 2 | 20 | 0 |
 | İşlemci | 5 | 5 | 0 |
 | Güç | 6 | 2 | 0 |
 | İnternet/Ağ | 7 | 2 | 0 |
 | Mouse ve Klavye | 4 | 5 | 1 |
-| Ses | 2 | 7 | 0 |
-| Görsel/QoL | 8 | 2 | 0 |
+| Ses | 0 | 5 | 0 |
+| Görsel/QoL | 7 | 2 | 0 |
+| Gezgin ve Başlat | 8 | 0 | 0 |
+| Ses ve bildirim | 2 | 3 | 0 |
 | Placebo | 25 | 1 | 9 |
 
 ## 2. Doğrulama hataları
@@ -41,6 +43,8 @@ Otomatik türde (registry/powercfg/servis/komut) olup switch yapılMAyanlar ve s
 | SYS-013 | Defender dışlamaları ve Dev Drive (Defender'ı kapatmak yerine) | komut | dikkatli | REHBER | Dışlanacak oyun klasörünü kullanıcının seçmesi gerekir ('D:\Oyunlar' yalnızca örnek). Yanlış klasör dışlamak güvenlik açığı yaratır. v2'de klasör seçiciyle switch yapılabilir. |
 | SYS-016 | Kullanıcı Hesabı Denetimi (UAC) seviyesi | registry | dikkatli | REHBER | Dört seviyeli seçim; Sistem menüsündeki UAC kartıyla yapılır. |
 | SYS-017 | Windows Defender gerçek zamanlı korumasını kapatma | komut | riskli | REHBER | Kullanıcı isteğiyle; iki aşamalı uyarıyla Defender kartından yapılır, Kurcalama korumasını kullanıcı kendisi kapatır. |
+| SYS-022 | XMP/EXPO profilini açma (BIOS) | bios | dikkatli | REHBER | BIOS ayarıdır; Windows içinden yapılamaz. |
+| SYS-023 | Secure Boot'u kapatmama (anti-cheat için) | bios | güvenli | REHBER | BIOS ayarıdır; Windows içinden yapılamaz. |
 | PERF-002 | Game DVR / arka plan kaydını kapatma (Game Bar'ı silmeden) | registry | güvenli | SWITCH | Veritabanındaki isteğe bağlı sistem çapı ilke (HKLM AllowGameDVR=0) switch'e dahil edilmedi; yalnızca kullanıcı ayarları değiştirilir. AppCaptureEnabled değeri hiç yazılmamışsa açık kabul edildi. |
 | PERF-004 | Sanal Makine Platformu (VMP) / Hyper-V'yi kapatma | komut | dikkatli | SWITCH | Windows Home sürümünde Microsoft-Hyper-V-All yoktur; motor yalnızca sistemde bulunan özellikleri işlemelidir. Bellek Bütünlüğü (HVCI) açıksa hipervizör yine çalışır, kazanç daha da azalır. |
 | PERF-006 | Uygulama başına GPU seçimi (hibrit grafikli laptoplar) | registry | güvenli | REHBER | Oyun başına yapılır: Oyunlar menüsüne taşındı. |
@@ -82,7 +86,7 @@ Otomatik türde (registry/powercfg/servis/komut) olup switch yapılMAyanlar ve s
 
 ## 4. Elle tanım ↔ metinden otomatik çıkarım karşılaştırması
 
-Eşleşen: 36, farklı: 1, metinde komut yok: 87.
+Eşleşen: 43, farklı: 1, metinde komut yok: 87.
 
 | ID | Adım | Durum | Ayrıntı |
 |---|---|---|---|
@@ -238,6 +242,7 @@ Yok (yorumlanamayanların hepsi islemler.json'da elle tanımlandı).
 | Windows 10, Windows 11 (sürücü desteğine bağlı) | 10, 11 | — |
 | Windows 10 (Odak Yardımı), Windows 11 | 10, 11 | — |
 | Windows 11 23H2+ | 11 | W11≥22631 |
+| Windows 10 1903+, Windows 11 | 10, 11 | W10≥18362 |
 
 ## 9. Doğrulanmamış 'Ayarı aç' bağlantıları (test listesinde denenecek)
 

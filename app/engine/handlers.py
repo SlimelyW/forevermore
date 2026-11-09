@@ -541,8 +541,7 @@ def _builtin_set(sys, step, value, snap):
     elif action == "guc_modu":
         sys.set_power_overlay(params["kaynak"], value)
     elif action == "defender_gercek_zamanli":
-        sys.set_defender_realtime(bool(value))
-        status = sys.get_defender_status() or {}
+        status = sys.set_defender_realtime(bool(value)) or {}
         if status.get("gercek_zamanli") is None or bool(status["gercek_zamanli"]) != bool(value):
             raise UserFacingError("hata.defender_kurcalama")
     elif action == "baslangic_onayi":
@@ -580,6 +579,7 @@ def _builtin_set(sys, step, value, snap):
 
 
 def _builtin_apply(sys, step, which, snap):
+    _require_previous(step, snap)
     if step["eylem"] == "nihai_performans_plani":
         if which == "acik":
             copies = sys.list_ultimate_schemes()
@@ -588,6 +588,17 @@ def _builtin_apply(sys, step, which, snap):
             sys.set_active_scheme(step["kapali"])
         return
     _builtin_set(sys, step, step[which], snap)
+
+
+# Bu eylemlerin _builtin_restore'da kendi dalı var; geri kalanı anlık görüntüdeki "deger"e döner.
+_OWN_RESTORE = {"windows_ozelligi", "wlan_otomatik_yapilandirma", "pnp_cihaz", "nihai_performans_plani", "bcdedit",
+                "dns", "ekran_yenileme", "baslangic_onayi", "nvidia_drs", "ses_bicimi"}
+
+
+def _require_previous(step, snap):
+    """Önceki değer okunamadıysa (None) yazma: geri alma neye döneceğini bilemez (Denetim A B1)."""
+    if step["eylem"] not in _OWN_RESTORE and snap is not None and snap.get("deger", 0) is None:
+        raise UserFacingError("hata.deger_yok")
 
 
 def _builtin_restore(sys, step, snap):
@@ -620,7 +631,8 @@ def _builtin_restore(sys, step, snap):
         sys.set_nvidia_setting(int(step["parametreler"]["ayar"], 16), snap["deger"] if snap["ozel"] else None)
     elif action == "ses_bicimi":
         sys.set_audio_format(step["parametreler"]["cihaz"], raw_hex=snap["ham"])
-    elif snap["deger"] is not None:
+    else:
+        _require_previous(step, snap)  # eski yedekte None: sessizce "geri alındı" denmesin, yedek kalsın
         _builtin_set(sys, step, snap["deger"], snap)
 
 
@@ -655,11 +667,14 @@ def restore(sys, step, snap):
 def write_value(sys, step, value, snap=None):
     """Adıma doğrudan değer yazar: seçim alanları ve yöneticiler (başlangıç, servis, aygıt)."""
     if step["tur"] == "yerlesik":
+        _require_previous(step, snap)
         _builtin_set(sys, step, value, snap)
     elif step["tur"] == "servis":
         sys.set_service(step["ad"], value["baslangic"], value.get("calisiyor"))
     elif step["tur"] == "registry_anahtar":  # value: "acik" (oluştur) / "kapali" (sil)
         _key_apply(sys, step, value, snap)
+    elif step["tur"] == "guc_plani":  # value: güç planı kimliği (geri alma anlıktaki planı yazar)
+        sys.set_active_scheme(value)
     else:
         _reg_write_value(sys, step, value)
 

@@ -1,4 +1,4 @@
-"""Ana pencere: kenar menü, sayfalar, uyarı şeritleri ve durum satırı.
+"""Ana pencere: alt-orta menü çubuğu, sayfalar, uyarı şeritleri ve durum satırı.
 
 Hız düzeni:
 - Pencere, önceki oturumun önbelleğiyle HEMEN açılır.
@@ -17,12 +17,13 @@ Ayar değiştirme akışı:
 import datetime
 import os
 import sys
+import time
 from ctypes import wintypes
 
-from PySide6.QtCore import QEvent, QProcess, QRectF, Qt, QTimer
+from PySide6.QtCore import QEvent, QPoint, QProcess, QRectF, Qt, QTimer
 from PySide6.QtGui import QAction, QColor, QFont, QGuiApplication, QIcon, QKeySequence, QPainter, QPen, QPixmap, QShortcut
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QFrame, QHBoxLayout, QLabel, QLineEdit,
-                               QListWidget, QMainWindow, QMenu, QPlainTextEdit, QPushButton, QScrollArea, QStackedWidget,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+                               QListWidget, QMainWindow, QMenu, QPlainTextEdit, QPushButton, QStackedWidget,
                                QSystemTrayIcon, QVBoxLayout, QWidget)
 
 from app.core import admin, consent, guncelleme, i18n, log, paths, settings, tek_ornek
@@ -35,11 +36,13 @@ from app.ui.controller import MODE_NORMAL, MODE_PREVIEW, OWN_PAGE, Controller, i
 from app.ui.live_monitor import LiveMonitor
 from app.ui.page_boost import BoostPage
 from app.ui.page_kaldirici import UninstallerPage
+from app.ui.page_rehber import GuidePage
 from app.ui.page_temizlik import CleanerPage
 from app.ui.page_category import CategoryPage, ManualPage
 from app.ui.page_other import ChangesPage, ProfilesPage, ReportPage
 from app.ui.page_details import PcDetailsPage
 from app.ui.page_settings import AboutPage, SettingsPage, about_data, donate_url_ok
+from app.games import profiles
 from app.games.profiles import GameStore
 from app.games.runtime import GameDetector, GameSession, ProcessOps
 from app.measure import live_fps
@@ -56,10 +59,13 @@ _log = log.get("ui")
 
 
 class NavItem(motion.HoverFade, QFrame):
+    """Menü öğesi. Düz kip: ızgara paneli düğmesi (simge + ad yatay). `bar=True`: alt çubuk düğmesi (simge üstte, kısa ad
+    altta, seçilince alt çizgi); `chevron=True` panel açan düğmeye yukarı ok ekler."""
+
     hover = True
     hover_radius = 8
 
-    def __init__(self, key, glyph, text, on_click, on_hover=None):
+    def __init__(self, key, glyph, text, on_click, on_hover=None, bar=False, chevron=False):
         super().__init__()
         self._on_hover = on_hover
         self.setObjectName("NavItem")
@@ -67,25 +73,59 @@ class NavItem(motion.HoverFade, QFrame):
         self.setFocusPolicy(Qt.FocusPolicy.TabFocus)  # klavyeyle gezilir; Enter/Boşluk açar
         self.setAccessibleName(text)
         self.key = key
+        self.is_bar = bar
         self._on_click = on_click
-        lay = QHBoxLayout(self)
-        lay.setContentsMargins(0, 8, 10, 8)
-        lay.setSpacing(10)
         marker = QFrame()
         marker.setObjectName("NavMarker")
-        marker.setFixedSize(3, 18)
-        lay.addWidget(marker)
         icon = QLabel(glyph)
-        icon.setFont(theme.icon_font(16))
-        icon.setFixedWidth(20)
+        icon.setFont(theme.icon_font(18 if bar else 16))
         icon.setStyleSheet(f"color: {theme.category_color(key)}; background: transparent;")  # kategori rengi
-        lay.addWidget(icon)
-        lay.addWidget(QLabel(text), 1)
         self.count = QLabel("")
         self.count.setObjectName("NavCount")
         self.count.setVisible(False)
         theme.tabular(self.count)
-        lay.addWidget(self.count)
+        if bar:
+            self.setToolTip(text)
+            self.setMinimumWidth(76)
+            lay = QVBoxLayout(self)
+            lay.setContentsMargins(6, 6, 6, 5)
+            lay.setSpacing(2)
+            top = QHBoxLayout()
+            top.setSpacing(3)
+            top.addStretch(1)
+            top.addWidget(icon)
+            if chevron:
+                arrow = QLabel("")  # yukarı ok (Segoe simgeleri): panel yukarı açılır
+                arrow.setObjectName("NavChev")
+                arrow.setFont(theme.icon_font(9))
+                top.addWidget(arrow)
+            top.addWidget(self.count)
+            top.addStretch(1)
+            lay.addLayout(top)
+            self.text = QLabel(text)
+            self.text.setObjectName("NavText")
+            self.text.setFont(theme.ui_font(11))
+            self.text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            lay.addWidget(self.text)
+            marker.setFixedSize(18, 3)
+            lay.addWidget(marker, 0, Qt.AlignmentFlag.AlignHCenter)
+        else:
+            lay = QHBoxLayout(self)
+            lay.setContentsMargins(0, 8, 10, 8)
+            lay.setSpacing(10)
+            marker.setFixedSize(3, 18)
+            lay.addWidget(marker)
+            icon.setFixedWidth(20)
+            lay.addWidget(icon)
+            self.text = QLabel(text)
+            lay.addWidget(self.text, 1)
+            lay.addWidget(self.count)
+
+    def set_compact(self, on):
+        """Dar pencerede çubuk düğmeleri adsız kalır (ad araç ipucunda ve erişilebilir adda durur)."""
+        if self.is_bar:
+            self.text.setVisible(not on)
+            self.setMinimumWidth(44 if on else 76)
 
     def set_selected(self, on):
         if bool(self.property("selected")) == on:  # değişmeyen öğe yeniden boyanmaz (24 menü öğesi × stil = ~19 ms)
@@ -95,12 +135,8 @@ class NavItem(motion.HoverFade, QFrame):
         for child in self.findChildren(QFrame):
             w.repolish(child)
 
-    def set_count(self, on, total):
-        self.count.setVisible(total > 0)
-        self.count.setText(f"{on} / {total}")
-
     def set_tag(self, text):
-        """Sayı yerine kısa etiket (ör. "PRO"); boş metin gizler."""
+        """Menü öğesinin yanında kısa etiket; boş metin gizler."""
         self.count.setVisible(bool(text))
         self.count.setText(text)
 
@@ -151,6 +187,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, controller):
         super().__init__()
+        self._boot_time = time.time()  # _start_games yalnızca bundan önce kalan oyun günlüğünü geri alır
         self.c = controller
         suffix = "" if controller.mode == MODE_NORMAL else f" — {t('ui.mod.' + controller.mode)}"
         self.setWindowTitle(t("uygulama.ad") + suffix)
@@ -170,6 +207,14 @@ class MainWindow(QMainWindow):
         self.live_fps_game = None
         self.vram_reader = None        # ekran kartı belleği okuyucusu: yalnızca canlı FPS sürerken ve "vram_uyari" açıkken
         self.last_sessions = {}        # oyun kimliği -> son oyun oturumunun özeti (yalnızca bellekte)
+        self.game_session = None       # "Hazırla"yla uygulanmış oyun-sırası seçenekleri (runtime.GameSession); yoksa None
+        self.prepared_game = None      # hazırlanan oyun
+        self.prep_detector = None      # yalnızca hazırlıkken: oyun kapanınca geri almak için (hiçbir ayar uygulamaz)
+        self.prep_started = False      # hazırlanan oyun açıldı mı
+        self.prep_timer = QTimer(self)  # oyun hiç açılmazsa kendiliğinden geri al
+        self.prep_timer.setSingleShot(True)
+        self.prep_timer.timeout.connect(self._prep_timeout)
+        self.steam_note = False        # son hazırlıkta Steam indirmesi sürüyordu
         self.tray = None
         self.quitting = False
         self.skip_save = False  # "Kaldırmaya hazırla" verileri sildiyse hiçbir şey yazılmaz
@@ -183,22 +228,32 @@ class MainWindow(QMainWindow):
         root.setObjectName("Root")
         self.setCentralWidget(root)
         self.toast = w.Toast(self)
-        outer = QHBoxLayout(root)
+        outer = QVBoxLayout(root)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.setSpacing(0)
-        outer.addWidget(self._build_sidebar())
-        right = QVBoxLayout()
-        right.setContentsMargins(18, 12, 12, 4)
-        right.setSpacing(6)
+        self._panel_open = None
+        pages = self._build_nav(root)
+        outer.addWidget(self._build_top_strip(root, pages))
+        content = QVBoxLayout()
+        content.setContentsMargins(18, 12, 18, 4)
+        content.setSpacing(6)
         self.banner_area = QVBoxLayout()
         self.banner_area.setSpacing(6)
-        right.addLayout(self.banner_area)
+        content.addLayout(self.banner_area)
         self.stack = QStackedWidget()
-        right.addWidget(self.stack, 1)
+        content.addWidget(self.stack, 1)
         self.status = QLabel("")
         self.status.setObjectName("StatusBar")
-        right.addWidget(self.status)
-        outer.addLayout(right, 1)
+        content.addWidget(self.status)
+        outer.addLayout(content, 1)
+        outer.addWidget(self.strip_holder)  # kategori şeridi: çubuğun hemen üstü, yalnızca grup sayfasında görünür
+        bar_row = QHBoxLayout()  # yüzen çubuk: ortada, kenarlardan ve alttan boşluklu
+        bar_row.setContentsMargins(16, 4, 16, 12)
+        bar_row.addStretch(1)
+        bar_row.addWidget(self.nav_bar)
+        bar_row.addStretch(1)
+        outer.addLayout(bar_row)
+        self._chain_tab_order()
 
         self._counts_timer = QTimer(self)
         self._counts_timer.setSingleShot(True)
@@ -222,83 +277,234 @@ class MainWindow(QMainWindow):
         self.update_tray()
 
     # ------------------------------------------------------------------ düzen
-    def _build_sidebar(self):
-        bar = QFrame()
-        bar.setObjectName("Sidebar")
-        bar.setMinimumWidth(252)  # uzun çeviriler için genişleyebilir; 16 px kaydırma çubuğu payı
-        bar.setMaximumWidth(320)
-        # Kısa pencerede / "Daha fazla" açıkken menü sıkışmasın: içerik kaydırılabilir.
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.Shape.NoFrame)
-        scroll.viewport().setAutoFillBackground(False)  # yoksa menü zemini açık gri boyanır
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        holder = QVBoxLayout(bar)
-        holder.setContentsMargins(0, 0, 0, 0)
-        holder.addWidget(scroll)
-        inner = QWidget()
-        scroll.setWidget(inner)
-        inner.setAutoFillBackground(False)  # setWidget açar; menü zemini #Sidebar'dan gelmeli
-        lay = QVBoxLayout(inner)
-        lay.setContentsMargins(10, 18, 10, 10)
-        lay.setSpacing(2)
-        name = QLabel(t("uygulama.ad"))
-        name.setObjectName("Brand")
-        mark = w.logo(40) or w.IconTile("F", theme.palette()["accent"], 38, letter=True)
-        brand = w.hbox(mark, name, None, spacing=10)
-        brand.layout().setContentsMargins(4, 0, 0, 0)
-        lay.addWidget(brand)
-        lay.addSpacing(18)
-        self.nav = {}
-        rare = {"PLC", "baslangic", "elle"}  # "Daha fazla" altında katlanır
-        entries = [t("ui.menu.grup.basla"), ("ozet", t("ui.menu.ozet")), ("pc_detay", t("ui.menu.pc_detay")),
-                   ("profiller", t("ui.menu.profiller")), ("oyunlar", t("ui.menu.oyunlar")), ("boost", t("ui.menu.boost")),
-                   ("kaldirici", t("ui.menu.kaldirici")), ("temizlik", t("ui.menu.temizlik")),
-                   t("ui.menu.grup.ayarlar")]
-        for c in self.c.categories:
-            entries.append((c["id"], t(f"kategori.{c['id']}")))
-            if c["id"] == "SYS":  # başlangıç ve servis yöneticisi Sistem'in hemen altında
-                entries.append(("baslangic", t("ui.menu.baslangic")))
-        entries.append(("elle", t("ui.menu.elle")))
-        entries += [t("ui.menu.grup.takip"), ("degisiklikler", t("ui.menu.degisiklikler")),
-                    ("rapor", t("ui.menu.rapor")), ("olcum", t("ui.menu.olcum")),
-                    t("ui.menu.grup.uygulama"), ("ayarlar", t("ui.menu.ayarlar")),
-                    ("bilgi", t("ui.menu.bilgi"))]
-        self.nav_rare = []
-        for entry in entries:
-            if isinstance(entry, str):
-                head = QLabel(entry.upper())
-                head.setObjectName("NavGroup")
-                lay.addSpacing(10)
-                lay.addWidget(head)
+    # Çubuktaki sayfalar; "Araçlar" yukarı açılan panel (araç sayfaları); "Optimizasyonlar" ve "Özelleştirmeler" kategori ŞERİDİ
+    # (çubuğun hemen üstünde, yalnızca o gruptaki bir sayfa açıkken); "Ayarlar" (uygulamanın kendi ayarları) çubukta ayrı
+    # sayfa. Sayfa kimlikleri değişmedi (kategori kimlikleri, "ayarlar", "bilgi" aynı).
+    NAV_BAR = ("profiller", "ozet", "oyunlar", "boost", "temizlik")
+    NAV_TOOLS = ("pc_detay", "kaldirici", "olcum", "degisiklikler", "rapor", "baslangic", "elle", "rehber", "bilgi")
+    CUSTOM_CATEGORIES = ("QOL", "EXP", "SND")  # görünüm/rahatlık; öteki tüm kategoriler "optimizasyonlar" (Placebo dahil: Kubilay kararı)
+    STRIP_GROUPS = ("optimizasyonlar", "ozellestirmeler")
+    COMPACT_BELOW = 840  # bu genişlikten dar pencerede çubuk/şerit düğmeleri adsız (ad kırpılmasın; en küçük pencere 900)
+
+    def _build_nav(self, root):
+        """Alt-orta menü çubuğu, kategori şeridi ve Araçlar paneli. Döndürür: arama için (kimlik, ad) listesi."""
+        self.nav = {}        # sayfa kimliği -> düğme (çubukta, şeritte ya da panelde); seçili sayfa buradan boyanır
+        self.nav_groups = {}  # "optimizasyonlar" / "ozellestirmeler" / "araclar" -> çubuktaki grup düğmesi
+        self.nav_panels = {}  # yalnızca "araclar" yukarı açılan panel
+        self._category_ids = {c["id"] for c in self.c.categories}
+        self.strip_keys = {
+            "optimizasyonlar": [c["id"] for c in self.c.categories if c["id"] not in self.CUSTOM_CATEGORIES],
+            "ozellestirmeler": [k for k in self.CUSTOM_CATEGORIES if k in self._category_ids]}
+        self._group_last = {}  # şerit grubu -> en son açılan kategori (grup düğmesi oraya döner)
+        pages = []
+
+        def item(key, **kwargs):
+            text = t(f"kategori.{key}") if key in self._category_ids else t(f"ui.menu.{key}")
+            self.nav[key] = NavItem(key, theme.ICONS.get(key, ""), text, self.navigate, self._hover_nav, **kwargs)
+            pages.append((key, text))
+            return self.nav[key]
+
+        self.nav_bar = QFrame()
+        self.nav_bar.setObjectName("NavBar")
+        row = QHBoxLayout(self.nav_bar)
+        row.setContentsMargins(6, 4, 6, 4)
+        row.setSpacing(2)
+        for key in self.NAV_BAR:
+            bar_item = item(key, bar=True)
+            bar_item.text.setText(t(f"ui.menu.{key}").split(" (")[0])  # "Boost (bellek)" çubukta "Boost"
+            row.addWidget(bar_item)
+        for key in self.NAV_TOOLS:
+            item(key)
+        self.strip_holder = QWidget()  # ortalı şerit; gizliyken yer kaplamaz
+        holder = QHBoxLayout(self.strip_holder)
+        holder.setContentsMargins(16, 4, 16, 0)
+        holder.addStretch(1)
+        self.nav_strips = {}  # grup -> o grubun şeridi (çubuğun hemen üstündeki ikinci şerit: aynı görsel dil, simge + ad)
+        for group in self.STRIP_GROUPS:  # grup başına ayrı çerçeve: grup değişince yalnızca çerçeve gösterilir/gizlenir (hızlı)
+            strip = QFrame()
+            strip.setObjectName("NavStrip")
+            strip_row = QHBoxLayout(strip)
+            strip_row.setContentsMargins(6, 4, 6, 4)
+            strip_row.setSpacing(2)
+            for key in self.strip_keys[group]:
+                strip_row.addWidget(item(key, bar=True))
+            strip.setVisible(False)
+            holder.addWidget(strip)
+            self.nav_strips[group] = strip
+        holder.addStretch(1)
+        self.strip_holder.setVisible(False)
+        for group in (*self.STRIP_GROUPS, "araclar"):
+            is_strip = group in self.STRIP_GROUPS
+            if is_strip and not self.strip_keys[group]:
                 continue
-            key, text = entry
-            item = NavItem(key, theme.ICONS.get(key, ""), text, self.navigate, self._hover_nav)
-            if key in rare:
-                self.nav_rare.append(item)
-                item.setVisible(False)
-            lay.addWidget(item)
-            self.nav[key] = item
-            if key == "elle":
-                self.nav_more = QLabel(t("ui.menu.daha_fazla"))
-                self.nav_more.setObjectName("NavMore")
-                self.nav_more.setCursor(Qt.CursorShape.PointingHandCursor)
-                self.nav_more.mousePressEvent = lambda _e: self._show_rare(not self.nav_rare[0].isVisible())
-                lay.addWidget(self.nav_more)
-        pages = [e for e in entries if not isinstance(e, str)]
-        self.search_box = SearchBox(self.c.tweaks, pages, self.go_to_tweak, self.navigate)
-        lay.insertWidget(2, self.search_box)  # logo ile "Başla" arasında; marka satırından boşlukla ayrı
-        lay.insertSpacing(3, 8)
-        QShortcut(QKeySequence("Ctrl+K"), self, self.search_box.focus)
+            glyph = theme.ICONS[group] if is_strip else ""
+            head = NavItem(group, glyph, t(f"ui.menu.grup.{group}"), self._open_group if is_strip else self._toggle_panel,
+                           bar=True, chevron=not is_strip)
+            self.nav_groups[group] = head
+            row.addWidget(head)
+            if is_strip:
+                continue
+            panel = QFrame(root)
+            panel.setObjectName("NavPanel")
+            panel.setVisible(False)  # çubuğun üstünde yüzer; yerleşime girmez (konum _place_panel'de)
+            lay = QVBoxLayout(panel)
+            lay.setContentsMargins(12, 10, 12, 12)
+            lay.setSpacing(8)
+            title = QLabel(t(f"ui.menu.grup.{group}").upper())
+            title.setObjectName("NavGroup")
+            lay.addWidget(title)
+            panel.grid = QGridLayout()
+            panel.grid.setSpacing(4)
+            lay.addLayout(panel.grid)
+            panel.keys, panel.cols = self.NAV_TOOLS, 0
+            self.nav_panels[group] = panel
+        settings_item = item("ayarlar", bar=True)  # uygulamanın kendi ayarları: panelde değil, çubukta
+        row.addWidget(settings_item)
+        return pages
+
+    def _chain_tab_order(self):
+        """Tab: çubuk soldan sağa; her şerit grubunun düğmesinden hemen sonra o grubun şerit düğmeleri (gizliler atlanır).
+        Pencereye yerleştikten SONRA çağrılır (setTabOrder aynı pencerede olmayan parçalara işlemez)."""
+        order = [self.nav[k] for k in self.NAV_BAR]
+        for group in self.STRIP_GROUPS:
+            if group in self.nav_groups:
+                order += [self.nav_groups[group], *(self.nav[k] for k in self.strip_keys[group])]
+        order += [self.nav_groups["araclar"], self.nav["ayarlar"]]
+        for before, after in zip(order, order[1:]):
+            QWidget.setTabOrder(before, after)
+
+    def _open_group(self, group):
+        """Şerit grubunun düğmesi: gruptaki en son (yoksa ilk) kategoriye gider; zaten grubun içindeyse hiçbir şey yapmaz."""
+        self._close_panel(refocus=False)  # açık Araçlar paneli grup düğmesine basınca da kapansın
+        keys = self.strip_keys[group]
+        if self._group_of(self.current) != group and keys:
+            self.navigate(self._group_last.get(group) if self._group_last.get(group) in keys else keys[0])
+
+    def _build_top_strip(self, root, pages):
+        """Üst şerit: logo + ad, arama (Ctrl+K), bağış bağlantısı. Eski kenar çubuğundaki öğelerin yeni yeri."""
+        strip = QFrame()
+        strip.setObjectName("TopStrip")
+        lay = QHBoxLayout(strip)
+        lay.setContentsMargins(16, 8, 16, 8)
+        lay.setSpacing(12)
+        mark = w.logo(30) or w.IconTile("F", theme.palette()["accent"], 30, letter=True)
+        self.brand_name = QLabel(t("uygulama.ad"))
+        self.brand_name.setObjectName("Brand")
+        lay.addWidget(mark)
+        lay.addWidget(self.brand_name)
         lay.addStretch(1)
+        self.search_box = SearchBox(self.c.tweaks, pages, self.go_to_tweak, self.navigate, overlay=root)
+        self.search_box.setFixedWidth(300)
+        lay.addWidget(self.search_box)
+        QShortcut(QKeySequence("Ctrl+K"), self, self.search_box.focus)
         url = about_data()["bagis_url"]
-        if donate_url_ok(url):  # kaydırma alanının dışında: menü uzasa da hep görünür; sessiz, açılır pencere yok
-            donate = QPushButton(t("ui.menu.bagis"))
-            donate.setObjectName("DonateBtn")
-            donate.setCursor(Qt.CursorShape.PointingHandCursor)
-            donate.clicked.connect(lambda _=False: os.startfile(url))  # noqa: S606
-            holder.addWidget(donate)
-        return bar
+        self.donate_btn = None
+        if donate_url_ok(url):  # sessiz bağlantı, açılır pencere yok
+            self.donate_btn = QPushButton(t("ui.menu.bagis"))
+            self.donate_btn.setObjectName("DonateBtn")
+            self.donate_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.donate_btn.clicked.connect(lambda _=False: os.startfile(url))  # noqa: S606
+            lay.addWidget(self.donate_btn)
+        self.top_strip = strip
+        return strip
+
+    # ------------------------------------------------------------------ yukarı açılan paneller
+    def _fill_panel(self, panel, cols):
+        while panel.grid.count():
+            panel.grid.takeAt(0)
+        for index, key in enumerate(panel.keys):
+            panel.grid.addWidget(self.nav[key], index // cols, index % cols)
+        for column in range(3):
+            panel.grid.setColumnStretch(column, 1 if column < cols else 0)
+        panel.cols = cols
+
+    def _toggle_panel(self, group):
+        if self._panel_open == group:
+            self._close_panel()
+        else:
+            self._open_panel(group)
+
+    def _open_panel(self, group):
+        self._close_panel(refocus=False)
+        head = self.nav_groups[group]
+        by_key = head.hasFocus()  # klavyeyle açıldıysa odak panele geçer (fareyle açılınca halka çıkmaz)
+        self._panel_open = group
+        panel = self.nav_panels[group]
+        self._place_panel()
+        motion.expand(panel, True)
+        panel.raise_()
+        self._mark_groups()
+        if by_key:
+            self.nav[panel.keys[0]].setFocus()
+
+    def _close_panel(self, refocus=True):
+        group, self._panel_open = self._panel_open, None
+        if group is None:
+            return False
+        panel = self.nav_panels[group]
+        focus = QApplication.focusWidget()
+        had_focus = focus is not None and panel.isAncestorOf(focus)
+        panel.setVisible(False)
+        self._mark_groups()
+        if refocus and had_focus:
+            self.nav_groups[group].setFocus()
+        return True
+
+    def _place_panel(self):
+        group = self._panel_open
+        if group is None:
+            return
+        panel, root = self.nav_panels[group], self.centralWidget()
+        avail = root.width() - 24
+        cols = 3 if avail >= 640 else 2 if avail >= 420 else 1
+        if cols != panel.cols:
+            self._fill_panel(panel, cols)
+        panel.layout().activate()
+        hint = panel.sizeHint()
+        width = min(avail, hint.width())
+        head = self.nav_groups[group]
+        centre = head.mapTo(root, head.rect().center()).x()
+        x = max(12, min(centre - width // 2, root.width() - width - 12))
+        y = self.nav_bar.mapTo(root, QPoint(0, 0)).y() - hint.height() - 8
+        panel.setGeometry(x, max(4, y), width, hint.height())
+
+    def _group_of(self, key):
+        for group, keys in self.strip_keys.items():
+            if key in keys:
+                return group
+        return "araclar" if key in self.NAV_TOOLS else None
+
+    def _mark_groups(self):
+        current = self._group_of(self.current)
+        for group, head in self.nav_groups.items():
+            head.set_selected(group == self._panel_open or group == current)
+        self._show_strip(current)
+
+    def _show_strip(self, group):
+        """Kategori şeridi yalnızca şerit grubundaki bir sayfa açıkken görünür ve yalnızca o grubun düğmelerini taşır."""
+        keys = self.strip_keys.get(group, ())
+        if keys:
+            self._group_last[group] = self.current
+        for name, strip in self.nav_strips.items():
+            strip.setVisible(name == group and bool(keys))
+        self.strip_holder.setVisible(bool(keys))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if getattr(self, "nav_bar", None) is not None:
+            self._apply_width(self.width())
+
+    def _apply_width(self, width):
+        """Dar pencerede (< COMPACT_BELOW) çubuk düğmeleri adsız, üst şeritte yalnızca logo + arama kalır (bağış bağlantısı
+        Bilgi sayfasında da var)."""
+        compact = width < self.COMPACT_BELOW
+        for item in (*self.nav.values(), *self.nav_groups.values()):
+            item.set_compact(compact)
+        self.brand_name.setVisible(not compact)
+        if self.donate_btn is not None:
+            self.donate_btn.setVisible(not compact)
+        self.search_box.setFixedWidth(180 if compact else 300)
+        self._place_panel()
 
     def _page(self, key):
         if key not in self.pages:
@@ -316,6 +522,8 @@ class MainWindow(QMainWindow):
                 page = AboutPage(self)
             elif key == "elle":
                 page = ManualPage(self)
+            elif key == "rehber":
+                page = GuidePage(self)
             elif key == "pc_detay":
                 page = PcDetailsPage(self)
             elif key == "baslangic":
@@ -336,11 +544,6 @@ class MainWindow(QMainWindow):
             self.stack.addWidget(page)
         return self.pages[key]
 
-    def _show_rare(self, on):
-        for item in self.nav_rare:
-            item.setVisible(on)
-        self.nav_more.setText(t("ui.menu.daha_az" if on else "ui.menu.daha_fazla"))
-
     HISTORY_MAX = 30
     _TEXT_INPUTS = (QLineEdit, QPlainTextEdit, QAbstractSpinBox, QComboBox, QListWidget)
 
@@ -354,20 +557,36 @@ class MainWindow(QMainWindow):
         return False
 
     def _escape(self):
-        """Esc: metin/seçim kutusunda yalnızca odağı bırakır (arama kutusu önce temizlenir); aksi halde önceki ekran."""
+        """Esc: önce açık panel; sayfanın kendi 'bir adım geri'si (Oyunlar alt sayfası); metin/seçim kutusunda yalnızca odağı
+        bırakır (arama kutusu önce temizlenir); aksi halde önceki ekran."""
+        if self._close_panel():
+            return
         focus = QApplication.focusWidget()
-        if isinstance(focus, self._TEXT_INPUTS):
+        page = self.pages.get(self.current)
+        in_page = bool(focus and page and page.isAncestorOf(focus))
+        if isinstance(focus, self._TEXT_INPUTS) and not in_page:  # arama kutusu gibi sayfa dışı giriş: yalnızca odağı bırakır
             if focus is self.search_box.edit:
                 self.search_box.edit.clear()
             focus.clearFocus()
+        elif self._page_escape():
+            return
+        elif isinstance(focus, self._TEXT_INPUTS):
+            focus.clearFocus()
         else:
             self.go_back()
+
+    def _page_escape(self):
+        """Sayfanın kendi 'bir adım geri'si varsa (ör. Oyunlar'da oyunun alt sayfası → liste) Esc önce onu kullanır."""
+        handler = getattr(self.pages.get(self.current), "handle_escape", None)
+        return bool(handler and handler())
 
     def mousePressEvent(self, event):
         """Fare "geri" tuşu (işlenmeyen tıklama pencereye kadar çıkar): önceki ekran."""
         if event.button() == Qt.MouseButton.BackButton and self.go_back():
             event.accept()
             return
+        if self._panel_open and not self.nav_bar.rect().contains(self.nav_bar.mapFrom(self, event.position().toPoint())):
+            self._close_panel(refocus=False)  # çubuğa tıklama kendi düğmesince işlenir (yoksa kapanıp yeniden açılırdı)
         super().mousePressEvent(event)
 
     def navigate(self, key, highlight=None, _back=False):
@@ -375,14 +594,14 @@ class MainWindow(QMainWindow):
             if not self._history or self._history[-1] != self.current:
                 self._history.append(self.current)
                 del self._history[:-self.HISTORY_MAX]
-        if self.nav.get(key) in self.nav_rare:
-            self._show_rare(True)
+        self._close_panel(refocus=False)
         for name, item in self.nav.items():
             item.set_selected(name == key)
         page = self._page(key)
         self.stack.setCurrentWidget(page)
         motion.fade_in(page)
         self.current = key
+        self._mark_groups()
         page.on_show(highlight)
 
     def go_to_tweak(self, tweak_id):
@@ -421,8 +640,13 @@ class MainWindow(QMainWindow):
     def _auto_update_check(self):
         """Kullanıcı ilk soruda/Ayarlar'da evet dediyse günde en çok bir kez yeni sürüm var mı diye bakar; sessiz: yalnızca
         durum çubuğuna tek satır yazar, hata sessiz geçilir."""
+        if self.c.mode == MODE_PREVIEW:
+            return
+        if guncelleme.onceki_degisim_hatasi():  # son kurulum eski sürüme döndü: bir kez söylenir (Denetim A S3)
+            self.set_status(t("ui.guncelleme.hata.degisim"), "sorun")
+            return
         now = datetime.datetime.now(datetime.timezone.utc)
-        if self.c.mode == MODE_PREVIEW or not guncelleme.denetim_vakti(
+        if not guncelleme.denetim_vakti(
                 settings.get("guncelleme_denetle"), settings.get("guncelleme_son_deneme"), now):
             return
         settings.set("guncelleme_son_deneme", now.isoformat())
@@ -498,6 +722,10 @@ class MainWindow(QMainWindow):
             item = self.nav.get(category["id"])
             if item and category["id"] != "PLC":
                 item.set_tag(str(waiting[category["id"]]) if waiting.get(category["id"]) else "")
+        for group, head in self.nav_groups.items():  # çubukta, şerit kapalıyken grubun toplamı
+            if group in self.strip_keys:
+                total = sum(n for cid, n in waiting.items() if cid != "PLC" and cid in self.strip_keys[group])
+                head.set_tag(str(total) if total else "")
 
     def _tweak_updated(self, tweak_id):
         for page in self.pages.values():
@@ -566,13 +794,130 @@ class MainWindow(QMainWindow):
         system = self.c.engine.system
 
         def recover():
-            return GameSession(system, ProcessOps()).recover()
+            return GameSession(system, ProcessOps(), engine=self.c.engine).recover(before=self._boot_time)
 
         def done(recovered):
             if recovered:
                 self.set_status(t("ui.oyun_oturumu_geri_alindi"), "bilgi")
             self.update_game_detector()
         self.worker.run(recover, done, lambda _e: self.update_game_detector(), serial=False)
+
+    PREP_WAIT_MS = 10 * 60 * 1000  # oyun bu sürede açılmazsa hazırlık geri alınır
+
+    def prepare_game(self, game, launch=None, done=lambda: None):
+        """"Hazırla" / "Oyunu başlat": oyunun AÇIK ve izin verilen oyun-sırası seçeneklerini uygular (motor: yedek, Değişiklikler,
+        geri alma). Oyun kapanınca ya da "Geri al"la geri alınır; yalnızca bu düğmeyle başlar. launch: hazırlıktan sonra çağrılır."""
+        if self.busy or self._blocked():
+            done()
+            return
+        if not profiles.runtime_selected(game):
+            if launch:
+                launch()
+            done()
+            return
+        if self.game_session is not None and self.prepared_game["id"] == game["id"]:  # zaten hazır
+            if launch:
+                launch()
+            done()
+            return
+        if self.game_session is not None:  # başka bir oyunun hazırlığı sürüyor: önce geri al
+            self.unprepare_game(lambda: self.prepare_game(game, launch, done), done)
+            return
+        engine = self.c.engine
+        session = GameSession(engine.system, ProcessOps(), engine=engine)
+        self.busy = True  # geri yükleme noktası hazırlanırken de ikinci tıklama başka bir işe girmesin
+
+        def cancel():
+            self.busy = False
+            done()
+
+        def proceed():
+            def finished(results):
+                self.busy = False
+                self._prepared(session, game, results)
+                if launch:
+                    launch()
+                done()
+
+            def failed(_exc):
+                self.busy = False
+                dialogs.show_message(self, t("ui.hata_baslik"), t("hata.beklenmeyen"), "sorun")
+                done()
+            self.worker.run(lambda: session.start(game), finished, failed)
+        self.ensure_prepared(proceed, cancel)
+
+    def _prepared(self, session, game, results):
+        """Hazırlık bitti: tek satır özet; geri alınacak bir şey varsa oyun kapanana kadar tek kısa bakış başlar."""
+        names = {k: t(f"ui.hazirla.ad.{k}") for k, _ok, _d in results}
+        applied = [names[k] for k, ok, detail in results if ok and detail not in ("zaten", "indiriyor")]
+        skipped = [names[k] for k, ok, _d in results if not ok]
+        self.steam_note = any(k == "hazirla_steam_uyari" and detail == "indiriyor" for k, _ok, detail in results)
+        parts = []
+        if applied:
+            parts.append(t("ui.hazirla.uygulandi", liste=", ".join(applied)))
+        elif not skipped:
+            parts.append(t("ui.hazirla.hicbiri"))
+        if skipped:
+            parts.append(t("ui.hazirla.atlandi", liste=", ".join(skipped)))
+        if self.steam_note:
+            parts.append(t("ui.hazirla.steam_indiriyor"))
+        self.game_session = session if session.active else None
+        if self.game_session is not None:
+            parts.append(t("ui.hazirla.geri_alinir"))
+            self.prepared_game, self.prep_started = game, False
+            self.prep_detector = GameDetector(lambda: [game], on_event=lambda kind, g: self.worker.call_soon(self._prepared_event, kind))
+            self.prep_detector.start()
+            self.prep_timer.start(self.PREP_WAIT_MS)
+        self.set_status(" ".join(parts), "sorun" if skipped else "iyi")
+        if self.current == "degisiklikler":
+            self.pages[self.current].data_reloaded()
+        self._reload_games_page()
+
+    def _prepared_event(self, kind):
+        if kind == "basladi":
+            self.prep_started = True
+            self.prep_timer.stop()
+        elif self.game_session is not None:
+            self.unprepare_game()
+
+    def _prep_timeout(self):
+        if self.game_session is not None and not self.prep_started:
+            self.unprepare_game()
+
+    def unprepare_game(self, then=None, cancel=lambda: None):
+        """"Geri al" / oyun kapandı / süre doldu: hazırlıkta uygulananların hepsi geri alınır (motor). then: başarılıysa."""
+        session = self.game_session
+        if session is None:
+            if then:
+                then()
+            return
+        self.prep_timer.stop()
+        if self.prep_detector is not None:
+            self.prep_detector.stop()
+            self.prep_detector = None
+        self.busy = True
+
+        def finished(_result):
+            self.busy = False
+            ok = not session.journal_path.exists()
+            if ok:
+                self.game_session, self.prepared_game, self.steam_note = None, None, False
+                self.set_status(t("ui.hazirla.geri_alindi_durum"), "iyi")
+            else:
+                self.set_status(t("ui.hazirla.geri_alinamadi"), "sorun")
+            if self.current == "degisiklikler":
+                self.pages[self.current].data_reloaded()
+            self._reload_games_page()
+            if ok and then:
+                then()
+            elif not ok:
+                cancel()
+
+        def failed(_exc):
+            self.busy = False
+            self.set_status(t("ui.hazirla.geri_alinamadi"), "sorun")
+            cancel()
+        self.worker.run(session.stop, finished, failed)
 
     def update_game_detector(self):
         """Canlı FPS veya oyun oturumu kaydı açıksa ve exe'si bilinen oyun varsa "oyun açık mı" algılayıcısını çalıştırır,
@@ -957,7 +1302,8 @@ class MainWindow(QMainWindow):
         if level == 2:
             tweak = self.c.by_id.get(tweak_id) or self.c.by_id.get(engine.stored_related(tweak_id) or "")
             ok = (self._confirm(tweak, False, level) if tweak else
-                  dialogs.ask_yes_no(self, t("ui.risk2_baslik"), t("ui.risk2_metin")))
+                  dialogs.ask_yes_no(self, t("ui.risk2_baslik"), t("ui.risk2_geri_metin",
+                                                                   ad=(engine.store.get(tweak_id) or {}).get("ad", tweak_id))))
             if not ok:
                 done()
                 return
@@ -1184,6 +1530,12 @@ class MainWindow(QMainWindow):
             self.recorder.stop()
         if self.game_detector is not None:
             self.game_detector.stop()
+        if self.prep_detector is not None:
+            self.prep_detector.stop()
+        # Çıkarken hazırlıkta uygulananlar geri alınır. İşlem sürüyorsa (işçi aynı oturumu geri alıyor olabilir)
+        # atlanır: günlük kalır, sonraki açılışta recover yapar (Denetim A O1).
+        if self.game_session is not None and not self.busy:
+            self.game_session.stop()
         if not self.skip_save:
             self.c.save_cache()
         self.worker.shutdown()

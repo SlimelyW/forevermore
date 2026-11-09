@@ -388,6 +388,13 @@ _CHANNEL_RE = re.compile(r"channel\s*([A-H])\b", re.IGNORECASE)
 _DIMM_RE = re.compile(r"DIMM[_\s-]?([A-H])\d", re.IGNORECASE)
 
 
+def hiz_belirgin_dusuk(calisan, modul, oran=0.10):
+    """Çalışan hız, modülün tanıtılan hızından %oran'dan fazla düşükse True; veri yoksa/geçersizse False."""
+    if not calisan or not modul or calisan <= 0 or modul <= 0:
+        return False
+    return calisan < modul * (1 - oran)
+
+
 def analyze_ram(modules):
     if not modules:
         return {"moduller": [], "kanal": "bilinmiyor"}
@@ -408,7 +415,9 @@ def analyze_ram(modules):
             "parca_no": (m.get("PartNumber") or "").strip(),
             "yuva": (m.get("DeviceLocator") or "").strip(),
         })
-    if len(parsed) == 1:
+    if len(parsed) == 1 and parsed[0]["tur"].startswith("LP"):
+        channel = "bilinmiyor"  # lehimli LPDDR: tek satır tek kanal demek değil
+    elif len(parsed) == 1:
         channel = "tek"
     elif len(channels) >= 2:
         channel = "cift_veya_fazla"
@@ -429,7 +438,7 @@ def analyze_ram(modules):
             xmp = "acik_olabilir"
     elif first["form"] == "SODIMM" or first["tur"].startswith("LP"):
         xmp = "laptop_uygulanmaz"
-    below_rated = any(m["modul_hizi"] and m["calisan_hiz"] and m["calisan_hiz"] < m["modul_hizi"] for m in parsed)
+    below_rated = any(hiz_belirgin_dusuk(m["calisan_hiz"], m["modul_hizi"]) for m in parsed)
     return {
         "moduller": parsed,
         "toplam_gb": sum(m["kapasite_gb"] for m in parsed),

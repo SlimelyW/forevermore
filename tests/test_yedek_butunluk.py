@@ -115,6 +115,54 @@ class CrashRecoveryTest(unittest.TestCase):
         self.assertFalse(store.has("KOTU"))
 
 
+class DiskWriteFailureTest(unittest.TestCase):
+    """Denetim A B2: diske yazılamazsa bellekteki kayıt da değişmemeli (bellek = disk)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.store = BackupStore(Path(self.tmp.name))
+        self.store.save_first("A", "Ayar A", ENTRY)  # anahtar ve dosya oluştu
+
+    def failing_disk(self):
+        from unittest import mock
+        from app.engine import backup
+        return mock.patch.object(backup.paths, "atomic_write", side_effect=PermissionError("Erişim engellendi"))
+
+    def test_save_first_failure_leaves_no_ghost_record(self):
+        with self.failing_disk(), self.assertRaises(PermissionError):
+            self.store.save_first("B", "Ayar B", ENTRY)
+        self.assertFalse(self.store.has("B"))
+
+    def test_remove_failure_keeps_record_in_memory(self):
+        with self.failing_disk(), self.assertRaises(PermissionError):
+            self.store.remove("A")
+        self.assertTrue(self.store.has("A"))
+        self.assertTrue(BackupStore(Path(self.tmp.name)).has("A"))
+
+    def test_stamp_rev_failure_does_not_change_memory(self):
+        with self.failing_disk(), self.assertRaises(PermissionError):
+            self.store.stamp_rev("A", 7)
+        self.assertNotIn("rev", self.store.get("A"))
+
+
+class ListingLockTest(unittest.TestCase):
+    def test_ids_newest_first_waits_for_writer(self):
+        """Denetim A O5: liste, işçi iş parçacığı yazarken gezilmemeli (dictionary changed size during iteration)."""
+        import threading
+        with tempfile.TemporaryDirectory() as tmp:
+            store = BackupStore(Path(tmp))
+            store.save_first("A", "Ayar A", ENTRY)
+            out = []
+            with store._lock:  # bir yazıcı kilidi tutuyor
+                reader = threading.Thread(target=lambda: out.append(store.ids_newest_first()))
+                reader.start()
+                reader.join(0.2)
+                self.assertTrue(reader.is_alive())
+            reader.join(5)
+            self.assertEqual(out, [["A"]])
+
+
 class RevertValidationTest(EngineTestBase):
     def test_revert_skips_a_stored_registry_step_with_a_bad_root(self):
         step = {"tur": "registry", "kok": "HKEY_USERS", "yol": r"Software\Test", "ad": "Deger",

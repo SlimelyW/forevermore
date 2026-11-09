@@ -437,6 +437,71 @@ class TestStepTypes(EngineTestBase):
         self.assertIsNone(self.sys.read_reg("HKCU", r"Control Panel\Keyboard", "KeyboardSpeed"))
 
 
+class TestUnreadablePreviousValue(EngineTestBase):
+    """Denetim A B1: önceki değer okunamazsa (None) yazılmaz; eski yedekte None varsa geri alma "başarılı" demez."""
+    STEP = {"tur": "yerlesik", "eylem": "cihaz_guc", "parametreler": {"ornek": "USB1"}, "acik": False, "kapali": True}
+
+    def setUp(self):
+        super().setUp()
+        self.sys.get_device_power = lambda instance: None  # ör. aygıt eşlenemedi, okuma boş döndü
+
+    def test_switch_refuses_to_write(self):
+        result = self.engine.set_enabled(make_tweak([dict(self.STEP)]), True)
+        self.assertEqual(result.key, "hata.deger_yok")
+        self.assertNotIn("USB1", self.sys.device_power)
+        self.assertFalse(self.engine.store.has("TEST-001"))
+
+    def test_custom_refuses_to_write(self):
+        result = self.engine.apply_custom("GUC-1", "Güç", [dict(self.STEP)], [False])
+        self.assertEqual(result.key, "hata.deger_yok")
+        self.assertNotIn("USB1", self.sys.device_power)
+        self.assertFalse(self.engine.store.has("GUC-1"))
+
+    def test_revert_of_old_backup_with_none_keeps_backup(self):
+        self.sys.device_power["USB1"] = False  # eski sürüm None ile yedekleyip yazmıştı
+        self.engine.store.save_first("GUC-1", "Güç", [{"adim": dict(self.STEP), "anlik": {"deger": None}}])
+        result = self.engine.revert("GUC-1")
+        self.assertFalse(result.ok)
+        self.assertEqual(result.key, "hata.geri_alma_kismen")
+        self.assertTrue(self.engine.store.has("GUC-1"))
+
+
+class TestAfterWriteFailures(EngineTestBase):
+    """Denetim A B3: yazma bitti; doğrulama okuması ya da işlem geçmişi hata verirse sonuç yine 'uygulandı'."""
+
+    def test_verify_read_failure_is_a_warning(self):
+        tweak = make_tweak([reg_step()])
+        real, calls = self.sys.read_reg, []
+
+        def read_reg(*args):
+            calls.append(args)
+            if len(calls) > 1:  # ilk okuma anlık görüntü, sonraki doğrulama
+                raise PermissionError("zaman aşımı")
+            return real(*args)
+        self.sys.read_reg = read_reg
+        result = self.engine.set_enabled(tweak, True)
+        self.assertTrue(result.ok, result)
+        self.assertIn(("uyari.dogrulanamadi", {}), result.warnings)
+
+    def test_history_write_failure_is_not_an_error(self):
+        self.engine.store.history_path = Path(self.tmp.name)  # klasör: açılamaz
+        self.assertTrue(self.engine.set_enabled(make_tweak([reg_step()]), True).ok)
+        self.assertTrue(self.engine.revert("TEST-001").ok)
+
+
+class TestWindowsServiceCheck(unittest.TestCase):
+    def test_systemroot_env_is_not_trusted(self):
+        """Denetim A S1 (managers.py): ezilmiş SystemRoot, yabancı servisi "Windows servisi" yapmamalı."""
+        import os
+        from unittest import mock
+        from app.core import powershell
+        from app.engine import managers
+        windows = os.path.dirname(powershell.SYSTEM32)
+        with mock.patch.dict(os.environ, {"SystemRoot": r"C:\Users\x\kotu"}):
+            self.assertFalse(managers._is_windows_service(r"C:\Users\x\kotu\svc.exe"))
+            self.assertTrue(managers._is_windows_service(os.path.join(windows, "svc.exe")))
+
+
 class TestRealCatalogRoundTrip(EngineTestBase):
     """Veritabanındaki HER switch: aç → eski haline getir → sistem birebir aynı."""
 

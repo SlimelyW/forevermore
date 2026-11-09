@@ -5,14 +5,13 @@ TÜRKÇE
 ------
 Forevermore, oyuncular için bir Windows ayar uygulamasıdır. Bilgisayarınızı tarar, işe yarayan
 ayarları açıklamalarıyla gösterir, placebo ve zararlı ayarları ayırır; her değişikliği yedekleyip tek
-tıkla geri alınabilir yapar. Telemetri yoktur; internete yalnızca sizin Ayarlar'dan açtığınız güncelleme
-denetiminde bağlanır. Ücretsizdir ve tüm ayarlar herkese açıktır.
+tıkla geri alınabilir yapar. Telemetri yoktur; internete yalnızca güncelleme denetiminde bağlanır; bu bir kez sorulur, "evet" derseniz çalışır (Ayarlar'dan değişir). Ücretsizdir ve tüm ayarlar herkese açıktır.
 
 Çalıştırma: Bu klasördeki Forevermore.exe'yi açın. Ayar değiştirebilmek için yönetici izni ister; "Hayır"
 derseniz yalnızca tarama ve rehberlerin çalıştığı salt okunur modda açılır. Klasörü olduğu gibi tutun
 (_internal klasörü programın parçasıdır).
 
-Kaldırma: Önce uygulamada Ekstra ayarlar > "Kaldırmaya hazırla" ile yapılan değişiklikleri geri alın,
+Kaldırma: Önce uygulamada Ayarlar > "Kaldırmaya hazırla" ile yapılan değişiklikleri geri alın,
 sonra bu klasörü silin.
 
 Lisans: LICENSE (MIT; ücretsiz ve açık kaynak, garanti yok). Üçüncü taraf bileşenler: THIRD-PARTY-NOTICES.txt.
@@ -22,13 +21,13 @@ ENGLISH
 -------
 Forevermore is a Windows settings app for gamers. It scans your PC, shows the settings that work
 with explanations, separates placebo and harmful settings, and backs up every change so it can be undone
-with one click. No telemetry; it connects to the internet only for the update check you turn on in Settings.
+with one click. No telemetry; it connects to the internet only for the update check, which asks you once and runs only if you say yes (changeable in Settings).
 It is free and every setting is available to everyone.
 
 Run Forevermore.exe in this folder. It asks for administrator rights to change settings; if you say "No"
 it opens read-only (scan and guides only). Keep the folder as it is (_internal is part of the program).
 
-Uninstall: first undo the changes with Extra settings > "Prepare for uninstall", then delete this folder.
+Uninstall: first undo the changes with Settings > "Prepare for uninstall", then delete this folder.
 
 License: LICENSE (MIT; free and open source, no warranty). Third-party components: THIRD-PARTY-NOTICES.txt.
 Source: https://github.com/SlimelyW/forevermore  Feedback: GitHub Issues
