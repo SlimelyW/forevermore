@@ -8,7 +8,7 @@ GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapı
 
 **Sürüm: 2.4.1 (etiket v2.4.1).** SHA-256 (Forevermore.zip): `CBF6F0E7AEA125907C464DF693F0ADFB80CF68DEB974BA70E5AA51F7A066253A`
 İmza parmak izi: `5FE5-D786-0B89-A56E`
-VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (rapor, dosya VirusTotal'a yüklenince açılır)
+VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (0/65 motor işaretledi, 11 Kasım 2026; zamanla değişebilir)
 
 > **Uygulama henüz kod imzalı değil.** Windows Defender veya SmartScreen uyarı verebilir. Zip'i açıp `Forevermore.exe`'yi çalıştır.
 > SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır.
@@ -26,7 +26,7 @@ VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb
 
 **Version: 2.4.1 (tag v2.4.1).** SHA-256 (Forevermore.zip): `CBF6F0E7AEA125907C464DF693F0ADFB80CF68DEB974BA70E5AA51F7A066253A`
 Signature fingerprint: `5FE5-D786-0B89-A56E`
-VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (the report opens once the file has been uploaded to VirusTotal)
+VirusTotal: https://www.virustotal.com/gui/file/cbf6f0e7aea125907c464df693f0adfb80cf68deb974ba70e5aa51f7a066253a (0/65 engines flagged it, November 11, 2026; it can change over time)
 
 > **The app is not code-signed yet.** Windows Defender or SmartScreen may warn. Unzip and run `Forevermore.exe`.
 > Compare the SHA-256 with `Get-FileHash Forevermore.zip -Algorithm SHA256`.
