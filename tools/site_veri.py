@@ -3,7 +3,7 @@
     py -3.12 tools\\site_veri.py
 
 - site/veri.js: tahmin oyunu, örnek tarama, geri alma, ayar künyesi, oyun listesi ve Steam appid'leri (TR + EN).
-- site/index.html, site/en.html: <!--n:ad-->...<!--/n--> sayaçları ve <!--v:yol-->...<!--/v--> metinleri (ör. olcum.aciklama) yeniden yazılır.
+- site/tr.html, site/index.html: <!--n:ad-->...<!--/n--> sayaçları ve <!--v:yol-->...<!--/v--> metinleri (ör. olcum.aciklama) yeniden yazılır.
 Kaynaklar: data/tweaks_app.json, data/ceviriler/en.json, lang/tr.json, lang/en.json. Metinleri elle değiştirmeyin.
 """
 
@@ -127,7 +127,7 @@ def main():
     (SITE / "veri.js").write_text(
         "/* tools/site_veri.py üretir; elle değiştirmeyin. */\nwindow.FM_VERI = "
         + json.dumps(data, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
-    for code, page in (("tr", "index.html"), ("en", "en.html")):
+    for code, page in (("tr", "tr.html"), ("en", "index.html")):
         if (SITE / page).exists():
             patch(SITE / page, data[code])
     print("site/veri.js yazıldı;", data["tr"]["n"])

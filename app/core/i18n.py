@@ -113,9 +113,8 @@ def windows_language():
 
 
 def suggest():
-    """İlk açılışta önerilen dil: Windows'un dili mevcutsa o, değilse İngilizce."""
-    code = windows_language()
-    return code if code in {item["kod"] for item in available()} else FALLBACK
+    """İlk açılışta önerilen dil: her zaman İngilizce (sahip kararı, 25 Kasım 2026); diğer diller seçicide."""
+    return FALLBACK
 
 
 # ---------------------------------------------------------------- metin

@@ -61,9 +61,9 @@ class TestLanguageCore(unittest.TestCase):
         self.assertEqual(i18n.value_label("deger.gerceklik", "kısmen gerçek"), "real in some cases")
         self.assertEqual(i18n.value_label("deger.etki", "bilinmeyen"), "bilinmeyen")
 
-    def test_suggestion_uses_windows_language_only_if_available(self):
+    def test_suggestion_is_always_english(self):
         with mock.patch.object(i18n, "windows_language", return_value="tr"):
-            self.assertEqual(i18n.suggest(), "tr")
+            self.assertEqual(i18n.suggest(), "en")
         with mock.patch.object(i18n, "windows_language", return_value="ja"):
             self.assertEqual(i18n.suggest(), "en")
         with mock.patch.object(i18n, "windows_language", return_value=None):

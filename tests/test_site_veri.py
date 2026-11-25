@@ -43,7 +43,7 @@ class TestSiteVeri(unittest.TestCase):
                          "site/veri.js eski: py -3.12 tools\\site_veri.py çalıştır")
 
     def test_sayfa_sayaclari_guncel(self):
-        for kod, sayfa in (("tr", "index.html"), ("en", "en.html")):
+        for kod, sayfa in (("tr", "tr.html"), ("en", "index.html")):
             with self.subTest(sayfa=sayfa), tempfile.TemporaryDirectory() as tmp:
                 kopya = Path(tmp) / sayfa
                 shutil.copyfile(SITE / sayfa, kopya)
@@ -60,7 +60,7 @@ class TestSiteVeri(unittest.TestCase):
 class TestSiteYayinDosyalari(unittest.TestCase):
     """Cloudflare Pages dosyaları ve sayfa donanımı (C11/C12/C20/C21)."""
 
-    PAGES = ("index.html", "en.html", "gizlilik.html", "erisilebilirlik.html", "kosullar.html")
+    PAGES = ("index.html", "tr.html", "gizlilik.html", "erisilebilirlik.html", "kosullar.html")
 
     def test_csp_inline_betik_karmalari(self):
         headers = _text(SITE / "_headers")

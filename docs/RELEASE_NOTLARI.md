@@ -2,6 +2,36 @@
 
 GitHub'daki release açıklamasına sürümün iki bloğunu (TR, sonra EN) yapıştırın. SHA-256 değeri `site/ayarlar.js` ile aynı olmalı.
 
+# 2.5.1 (25 Kasım 2026)
+
+## Türkçe
+
+**Sürüm: 2.5.1 (etiket v2.5.1).** SHA-256 (Forevermore.zip): `C75C70EC4584338A3547CD75C200AACB2DF2E45D815B46C4D92D62FA493B6B4E`
+İmza parmak izi: `5FE5-D786-0B89-A56E`
+
+> **Uygulama henüz kod imzalı değil.** Windows SmartScreen veya Defender uyarı verebilir; yeni ve imzasız bir program için beklenen durumdur.
+> Zip'i açıp `Forevermore.exe`'yi çalıştır. SHA-256 değerini `Get-FileHash Forevermore.zip -Algorithm SHA256` ile karşılaştır. Antivirüsü kapatma.
+
+### Yeni neler var
+- İspanyolca, Almanca, Rusça ve Basit Çince eklendi (otomatik çeviri, anadil kontrolü yok). Varsayılan dil İngilizce; Ayarlar'dan değiştirilir.
+- Gömülü oyun kapakları kaldırıldı (yayıncı telifi).
+- Yayın öncesi denetim düzeltmeleri: oyun normal kullanıcı yetkisiyle açılır, "Önce" ölçümü "Oyundayım, başla"ya basınca başlar, güncelleme 2.5.x'i reddetmez.
+- **Çoğu gerçek Windows'ta uçtan uca denenmedi.** Sorunları GitHub Konular'dan bildir.
+
+## English
+
+**Version 2.5.1 (tag v2.5.1).** SHA-256 (Forevermore.zip): `C75C70EC4584338A3547CD75C200AACB2DF2E45D815B46C4D92D62FA493B6B4E`
+Update-signature fingerprint: `5FE5-D786-0B89-A56E`
+
+> **The app is not code-signed yet.** Windows SmartScreen or Defender may show a warning; this is expected for a new, unsigned program.
+> Extract the zip and run `Forevermore.exe`. Compare the hash with `Get-FileHash Forevermore.zip -Algorithm SHA256`. Do not turn your antivirus off.
+
+### What's new
+- Adds Spanish, German, Russian and Simplified Chinese (machine translations, not reviewed by native speakers). English is the default; pick another language in Settings.
+- Removes the bundled game cover images (publisher copyright).
+- Fixes from the pre-release audit: games start with normal user rights, the Before measurement starts only when you press "I'm in the game", the update check no longer rejects 2.5.x.
+- **Most of this has not been tested end to end on real Windows machines.** Please report problems in GitHub Issues.
+
 # 2.4.1 (10 Kasım 2026)
 
 ## Türkçe

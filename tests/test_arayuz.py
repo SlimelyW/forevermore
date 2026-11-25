@@ -1701,7 +1701,7 @@ class TestUserInterface(unittest.TestCase):
         page = self._settings_page()
         page._select_tab("sistem")
         dialog = ps.ReleaseNotesDialog(self.window)
-        self.assertIn("2.3.2", dialog.viewer.toPlainText())
+        self.assertIn("2.5.1", dialog.viewer.toPlainText())
         dialog.deleteLater()
 
     def test_card_shows_recommended_label_only_for_recommended_and_no_impact_badge(self):

@@ -1,0 +1,4349 @@
+{
+ "_aciklama": [
+  "Ayar metinlerinin 'zh' çeviri katmanı. Asıl metin Türkçedir (data/tweaks_app.json).",
+  "OTOMATİK ÇEVİRİ: yapay zekâ tarafından İngilizce katmandan çevrildi; ana dili o dil olan biri kontrol etmedi, hatalar olabilir.",
+  "_kaynak_ozeti: tools/ceviri_ozeti.py --yenile ile yazılır.",
+  "Biçim ve çevrilebilen alanlar: docs/DIL_EKLEME.md, app/engine/catalog.py (TRANSLATABLE)."
+ ],
+ "_kaynak_ozeti": {
+  "DISP-001": "16b13057eb10",
+  "DISP-002": "416c7fb5aa85",
+  "DISP-003": "84482a893bfb",
+  "DISP-004": "58379688ac25",
+  "DISP-005": "143790527125",
+  "DISP-006": "1bc8b832406e",
+  "DISP-007": "ebf26bd080ac",
+  "DISP-008": "a4f934aac992",
+  "DISP-009": "2801fb42c45e",
+  "SYS-001": "ceae756d558a",
+  "SYS-002": "c2af45483e50",
+  "SYS-003": "d14e590dd3bc",
+  "SYS-004": "f984bff0ecbb",
+  "SYS-005": "246fdc25ae32",
+  "SYS-006": "a851a0fda53f",
+  "SYS-007": "8a2235adedcd",
+  "SYS-008": "d1310fb1d70a",
+  "SYS-009": "f08489a49f41",
+  "SYS-010": "9f77551cd0e0",
+  "SYS-011": "5226661758b4",
+  "SYS-012": "b2357a4b98ea",
+  "SYS-013": "3a531cc1f761",
+  "SYS-014": "210edaf4cb6b",
+  "SYS-015": "bb91379097ec",
+  "SYS-016": "0522acaae445",
+  "SYS-017": "b9f2995feaaf",
+  "SYS-018": "a4699966d1a9",
+  "SYS-019": "cf59ffbd22bc",
+  "SYS-020": "6091e161fe08",
+  "SYS-021": "a1079f1e8457",
+  "SYS-022": "191b1272b38c",
+  "SYS-023": "6ccc346826e7",
+  "PERF-001": "d8c90d2e5dab",
+  "PERF-002": "248e161a89b9",
+  "PERF-003": "02e960343a96",
+  "PERF-004": "a2b218a848b2",
+  "PERF-005": "5bed86d1c605",
+  "PERF-006": "f1900d8ba019",
+  "PERF-007": "b546d242c111",
+  "PERF-008": "455cf49bbc10",
+  "PERF-009": "279d86c89830",
+  "PERF-010": "e6ef822232de",
+  "PERF-011": "ff68eae07686",
+  "GPU-001": "27ba595a22f1",
+  "GPU-002": "bbfa61c2ec03",
+  "GPU-003": "af4969885389",
+  "GPU-004": "89236896261e",
+  "GPU-005": "2cb3243abe31",
+  "GPU-006": "a18902a450b0",
+  "GPU-007": "d87fc9e084b8",
+  "GPU-008": "001895f3b98e",
+  "GPU-009": "db2f1fa325c7",
+  "GPU-010": "0b8cc3810d2c",
+  "GPU-011": "46b0f2a5857b",
+  "GPU-012": "075af0229966",
+  "GPU-013": "0f9296756b6b",
+  "GPU-014": "3a37a0e2c75d",
+  "GPU-015": "563990404a42",
+  "GPU-016": "130cfc8ba11a",
+  "GPU-017": "fdc9132b6a6f",
+  "GPU-018": "8f26dffe2a72",
+  "GPU-019": "2dcbea58afa1",
+  "GPU-020": "889ba83ce8ae",
+  "GPU-021": "8eb4971b709c",
+  "GPU-022": "5c0f89900f82",
+  "CPU-001": "34c3d2b1f58b",
+  "CPU-002": "bbbe78a81cd5",
+  "CPU-003": "d34808cc8bac",
+  "CPU-004": "560f8a744620",
+  "CPU-005": "d25870bcfaab",
+  "CPU-006": "b3355532b5fa",
+  "CPU-007": "d57aeafcab35",
+  "CPU-008": "9e4a9a8d4a05",
+  "CPU-009": "1555cc2505a3",
+  "CPU-010": "8e0d4db12666",
+  "PWR-001": "d09be063dad2",
+  "PWR-002": "6a07cd28f704",
+  "PWR-003": "4fcd4f70f695",
+  "PWR-004": "c03a71eac6e8",
+  "PWR-005": "10b3f65b52f3",
+  "PWR-006": "6c07cc126ca5",
+  "PWR-007": "7c01284b3830",
+  "PWR-008": "e32c12611e62",
+  "NET-001": "24e9f163bae3",
+  "NET-002": "cd36c86b9c93",
+  "NET-003": "85750ec192be",
+  "NET-004": "cdae6d00ea02",
+  "NET-005": "5326d7145cf4",
+  "NET-006": "d0bf48ac0586",
+  "NET-007": "c68fa24cf020",
+  "NET-008": "6e3169248076",
+  "NET-009": "fb13a52cfbf0",
+  "INP-001": "33c7b57916e8",
+  "INP-002": "84b4d1ae9a45",
+  "INP-003": "c2830642f140",
+  "INP-004": "e8d9a66d7f92",
+  "INP-005": "f19bd73846c3",
+  "INP-006": "2c49c4b73f5a",
+  "INP-007": "632025c7f73b",
+  "INP-008": "6585dbc9f803",
+  "INP-009": "25604a42490a",
+  "INP-010": "21da4ba20818",
+  "AUD-001": "e6b219468d80",
+  "AUD-002": "57a085f3602b",
+  "AUD-003": "64c62c18aeb5",
+  "AUD-004": "2111b90aa05b",
+  "AUD-005": "18a2faba7f98",
+  "AUD-006": "3d75c45f33bf",
+  "AUD-007": "c2e344f18081",
+  "AUD-008": "1a956afaf71f",
+  "AUD-009": "798c56f24017",
+  "QOL-001": "dbe42adbb8d4",
+  "QOL-002": "36d8600bc010",
+  "QOL-003": "10fb72a8d452",
+  "QOL-004": "721c1cfe7169",
+  "QOL-005": "d29178c737d2",
+  "QOL-006": "19cff754eb5d",
+  "QOL-007": "0562ecd26d40",
+  "QOL-008": "85cd86f8f55d",
+  "QOL-009": "3d793b242900",
+  "QOL-010": "37840e4260af",
+  "QOL-011": "e096fc0bface",
+  "QOL-012": "161023df134f",
+  "QOL-013": "3bb0c52622c2",
+  "QOL-014": "bdb0ff0376bc",
+  "QOL-015": "a904074fbf7c",
+  "QOL-016": "5c06c103435a",
+  "PLC-001": "f05869e072f4",
+  "PLC-002": "1bf1b6c0ac90",
+  "PLC-003": "76d19db9aafe",
+  "PLC-004": "cdf22e37ec61",
+  "PLC-005": "1f910ccf265c",
+  "PLC-006": "d92062e4b083",
+  "PLC-007": "1be1a65fc4a2",
+  "PLC-008": "5edcd28c35e4",
+  "PLC-009": "6c3543c6268c",
+  "PLC-010": "d0ed051861ab",
+  "PLC-011": "af2cd208ee8b",
+  "PLC-012": "345e1270bebc",
+  "PLC-013": "398c4a8ec64e",
+  "PLC-014": "da04788ef337",
+  "PLC-015": "268d6b0981ee",
+  "PLC-016": "51c219f8fbff",
+  "PLC-017": "e16f1246c4d4",
+  "PLC-018": "91714a0397c4",
+  "PLC-019": "3dfead198ba9",
+  "PLC-020": "efe370232d77",
+  "PLC-021": "11f94c76a6e6",
+  "PLC-022": "86a00e08c372",
+  "PLC-023": "7bdb4e906a6e",
+  "PLC-024": "b44d64ca598c",
+  "PLC-025": "ee3510c13c75",
+  "PLC-026": "a5c7cbf8dfd1",
+  "PLC-027": "20e06c4311a8",
+  "PLC-028": "8d0dc11cd267",
+  "PLC-029": "9fe25d87fd8e",
+  "PLC-030": "0c2fbb97e9dc",
+  "PLC-031": "65ce4a7c1f44",
+  "PLC-032": "890b88e5faa4",
+  "PLC-033": "8a7d7b604f28",
+  "PLC-034": "5caf49c1f3f6",
+  "PLC-035": "bfcbbdaffc49",
+  "QOL-017": "0084520e845a",
+  "SYS-024": "d3be20c793c6",
+  "NET-010": "e5a639aa288c",
+  "SYS-025": "0b7ed721e680",
+  "SYS-026": "5b5acdda9ee3"
+ },
+ "genel": {
+  "meta.anti_cheat_uyarisi": "在竞技类游戏中，反作弊系统（Vanguard、EAC、BattlEye、FACEIT、VAC）可能会阻止那些禁用驱动程序签名强制、注入游戏 DLL 或修改游戏进程的工具，或将其视为封号的依据。",
+  "kategoriler.0.aciklama": "刷新率、VRR、全屏/窗口化呈现模型、MPO、HDR。",
+  "kategoriler.1.aciklama": "Windows 服务、启动项、后台组件。",
+  "kategoriler.2.aciklama": "游戏模式、Game DVR、基于虚拟化的安全性、优先级和内存管理。",
+  "kategoriler.3.aciklama": "HAGS、NVIDIA 控制面板、AMD Adrenalin、ReBAR、驱动程序。",
+  "kategoriler.4.aciklama": "核心休眠、加速、混合/X3D 调度、安全缓解措施、计时器。",
+  "kategoriler.5.aciklama": "电源计划、电源模式、USB/PCIe 电源管理、笔记本专用设置。",
+  "kategoriler.6.aciklama": "有线/无线、网卡高级设置、缓冲膨胀、传递优化。",
+  "kategoriler.7.aciklama": "轮询率、指针加速、原始输入、键盘重复设置。",
+  "kategoriler.8.aciklama": "音频增强、采样率/位深、闪避、DPC 延迟。",
+  "kategoriler.9.aciklama": "更多是增加舒适度而非性能的设置。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.0.ad": "Windows 搜索索引（WSearch）",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.0.neden": "对游戏 FPS 是安慰剂；只在首次建立索引期间和非常弱的 HDD 系统上才会察觉到。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.1.ad": "遥测：已连接的用户体验和遥测（DiagTrack）",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.1.neden": "对隐私是真实的，对 FPS 是安慰剂。“关闭遥测，FPS 就会上升”的说法没有证据。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.2.ad": "Xbox 服务（XblAuthManager、XblGameSave、XboxNetApiSvc、XboxGipSvc）",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.2.neden": "常见于精简优化清单；没有性能收益，反而会丢失功能。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.3.ad": "Windows 错误报告（WerSvc）",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.3.neden": "常见于性能清单，但该服务在空闲时并不运行。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.4.ad": "触摸键盘和手写面板服务（TabletInputService）",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.4.neden": "常见于旧的“禁用服务”清单；没有可测量的收益。",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.5.ad": "接收端缩放（RSS）和卸载设置",
+  "placebo_menusu.diger_kategorilerde_placebo_veya_zararli.5.neden": "“禁用卸载/RSS 能降低 ping”的说法没有证据；Microsoft 建议保持默认值。",
+  "kategoriler.10.aciklama": "文件资源管理器和开始菜单的便利设置。",
+  "kategoriler.11.aciklama": "音效、音量和通知方面的便利设置。",
+  "kategoriler.12.aciklama": "网上常见的“调优”，它们要么什么都不做，要么没有可测量的效果，要么有害。"
+ },
+ "ayarlar": {
+  "DISP-001": {
+   "ad": "将显示器刷新率设为支持的最高值",
+   "ne_ise_yarar": "买了 144 Hz 显示器却用 60 Hz，是最常见的错误。此设置决定屏幕每秒刷新多少次。",
+   "artilar": [
+    "画面更流畅，显示延迟更低",
+    "没有硬件成本"
+   ],
+   "eksiler": [
+    "在笔记本电脑上，高刷新率会略微多耗一点电",
+    "如果线缆/接口不对，可能不会出现高刷新率选项"
+   ],
+   "dokunmamali": [
+    "那些用 CRU 强制设置显示器不支持的自定义（超频）刷新率的用户应当小心"
+   ],
+   "notlar": [
+    "每台显示器都会设置为其在当前分辨率下支持的最高刷新率；分辨率不会改变。",
+    "关闭它只会撤销应用所做的更改（恢复为之前的 Hz 值）。"
+   ],
+   "varsayilan": "Windows 通常会根据 EDID 选择首选模式；有时那是 60 Hz。",
+   "gerceklik.aciklama": "刷新率直接决定显示延迟和动态清晰度。",
+   "performans_etkisi.gerekce": "它不会改变 FPS，但会改变感知到的流畅度和显示延迟；对于卡在 60 Hz 的高刷新率显示器，差异非常明显。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 显示 > 高级显示 > 选择刷新率：选最高值（例如 144/165/240 Hz）。",
+    "请确认显示器 OSD 和线缆（DisplayPort 或足够新的 HDMI 版本）支持该刷新率。"
+   ],
+   "rehber.geri_alma": "在同一菜单中选择之前的值。",
+   "rehber.kontrol": "Get-CimInstance Win32_VideoController | Select-Object Name, CurrentRefreshRate  （注意：有多台显示器时只返回一个值；要获得准确信息，请查看 设置 > 系统 > 显示 > 高级显示）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "DISP-002": {
+   "ad": "可变刷新率（VRR）/ G-SYNC / FreeSync",
+   "ne_ise_yarar": "让显示器的刷新与 GPU 输出的帧率保持一致。画面流畅、无撕裂，也没有垂直同步造成的卡顿。Windows 中的 VRR 开关还能让不原生支持 VRR 的 DX11 游戏也用上它。",
+   "artilar": [
+    "帧率波动时更流畅",
+    "画面无撕裂，延迟比垂直同步低得多"
+   ],
+   "eksiler": [
+    "在某些面板上，低 FPS 时会闪烁",
+    "如果 FPS 超过刷新率，就会脱离 VRR 范围；需要使用限帧器（见 GPU-NV-05）"
+   ],
+   "dokunmamali": [
+    "开启 VRR 后会看到闪烁的 OLED/VA 面板用户，可以在有问题的游戏中关闭它"
+   ],
+   "notlar": [
+    "此开关只会打开 Windows 的 VRR 开关。要使用 G-SYNC/FreeSync，还必须在显示器自己的菜单和显卡驱动程序中同时开启。"
+   ],
+   "varsayilan": "取决于驱动程序和显示器；在许多系统上，Windows 的 VRR 开关是关闭的。",
+   "gerceklik.aciklama": "依据 Blur Busters 的测量：G-SYNC + 限制 FPS 能在比垂直同步更低的延迟下输出无撕裂的画面；但 VRR 在竞技游戏中对延迟的影响，尚未有对照测量证明。如果撕裂或卡顿让你困扰，就开启；如果你想要最低延迟，请在自己的游戏中开关各试一次。",
+   "performans_etkisi.gerekce": "影响流畅度和撕裂；不会提高 FPS。它对延迟的影响因来源而异；没有对照测量。",
+   "rehber.adimlar": [
+    "先在显示器 OSD 中开启 Adaptive-Sync/FreeSync，然后在 GPU 驱动程序中启用它。",
+    "Windows 11：设置 > 系统 > 显示 > 图形 > 更改默认图形设置 > 可变刷新率：开（会在 DirectXUserGlobalSettings 值中加入“VRROptimizeEnable=1;”）。"
+   ],
+   "rehber.geri_alma": "在相同的位置关闭它。对于注册表，请从 DirectXUserGlobalSettings 值中移除“VRROptimizeEnable=1;”。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences' -Name DirectXUserGlobalSettings -ErrorAction SilentlyContinue  （在该值中查找“VRROptimizeEnable=1;”）。G-SYNC：NVIDIA 控制面板 > 设置 G-SYNC。FreeSync：AMD Adrenalin > 显示 > AMD FreeSync。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1903+（Windows VRR 开关）、Windows 11",
+   "gerceklik.celiski": "Blur Busters 认为 G-SYNC + 限制 FPS 相比垂直同步属于低延迟；在缺乏对照测量的竞技类 FPS 游戏（CS2、Valorant）中，一些玩家会保持 VRR 关闭。一次 CS2 测量（开启 Reflex）显示：G-SYNC + 垂直同步关闭时为 5.44 ms，开启时为 7.88 ms；变量没有分离，而且只是一套配置。",
+   "sade_ad": "可变刷新率（G-SYNC / FreeSync）"
+  },
+  "DISP-003": {
+   "ad": "窗口化游戏优化（Windows 11）",
+   "ne_ise_yarar": "把使用旧的“blt”呈现模型的 DirectX 10/11 窗口化/无边框游戏升级到“flip”模型。这样窗口模式下的延迟会接近全屏，并且 Auto HDR/VRR 也能生效。",
+   "artilar": [
+    "无边框窗口模式下延迟更低",
+    "保留 Alt+Tab 的便利"
+   ],
+   "eksiler": [
+    "据报告，在少数游戏中会出现画面故障或覆盖层不兼容；可以针对单个游戏关闭"
+   ],
+   "dokunmamali": [
+    "开启后会黑屏/崩溃的特定游戏（对该游戏关闭即可）"
+   ],
+   "varsayilan": "取决于版本；据报告，在某些 24H2 系统上默认是开启的。",
+   "gerceklik.aciklama": "机制明确的更改，依据 Microsoft 的 DXGI flip 模型文档。",
+   "performans_etkisi.gerekce": "对延迟和画面呈现的一致性影响大于对 FPS 的影响；仅适用于 DX10/11 窗口化游戏。DX12/Vulkan 本来就使用 flip 模型。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 显示 > 图形 > 更改默认图形设置 > 窗口化游戏优化：开。",
+    "针对单个游戏：图形 > 应用 > 选项。"
+   ],
+   "rehber.geri_alma": "把同一个开关关闭，或从该值中移除“SwapEffectUpgradeEnable=1;”。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences' -Name DirectXUserGlobalSettings -ErrorAction SilentlyContinue  （在该值中查找“SwapEffectUpgradeEnable=1;”）",
+   "uyumluluk.kaynak_metin.windows": "Windows 11 22H2+"
+  },
+  "DISP-004": {
+   "ad": "禁用全屏优化（FSO）",
+   "ne_ise_yarar": "从 Windows 10 开始，请求“独占全屏”的游戏实际上运行在经过优化的无边框窗口（FSO）中。此设置会强制游戏进入真正的独占全屏。",
+   "artilar": [
+    "据报告，在一些较老的 DX9/DX11 游戏中延迟/卡顿更少",
+    "可以修复在 FSO 下表现异常的游戏"
+   ],
+   "eksiler": [
+    "Alt+Tab 会变慢",
+    "在某些游戏中，覆盖层和 Game Bar 无法工作",
+    "对 DX12/Vulkan 游戏没有效果"
+   ],
+   "dokunmamali": [
+    "对运行正常的游戏，全局（系统范围）应用它是不必要的"
+   ],
+   "notlar": [
+    "会为所有游戏关闭全屏优化。针对单个游戏的设置将加入“游戏”菜单。",
+    "效果取决于游戏；有些游戏没有差异。游戏重启后生效。"
+   ],
+   "varsayilan": "FSO 开启。",
+   "gerceklik.aciklama": "机制是真实的；收益取决于游戏和驱动程序。常见的“在每个游戏里都关掉它”的建议并未得到证明。",
+   "gerceklik.celiski": "Microsoft（DirectX 博客）称 FSO 在性能和延迟上等同于独占全屏；在 r/GlobalOffensive 等社区中，一些用户报告关闭后手感更好，但对照测量很少。",
+   "performans_etkisi.gerekce": "Microsoft 表示 FSO 提供与独占全屏相同的延迟；社区测量因游戏而异，结果相互矛盾。",
+   "rehber.adimlar": [
+    "针对单个游戏（推荐）：游戏 exe > 属性 > 兼容性 > “禁用全屏优化”。",
+    "通过命令：Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers' -Name '<C:\\path\\game.exe>' -Value '~ DISABLEDXMAXIMIZEDWINDOWEDMODE'。",
+    "全局（不推荐）：在 GameConfigStore 下，GameDVR_FSEBehaviorMode=2，GameDVR_HonorUserFSEBehaviorMode=1。"
+   ],
+   "rehber.geri_alma": "取消勾选兼容性复选框，或运行 Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers' -Name '<C:\\path\\game.exe>'。对于全局值，设置 GameDVR_FSEBehaviorMode=0 和 GameDVR_HonorUserFSEBehaviorMode=0。",
+   "rehber.kontrol": "针对单个游戏：Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'  （exe 路径上的“DISABLEDXMAXIMIZEDWINDOWEDMODE”标志）。全局：Get-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' | Select-Object GameDVR_FSEBehaviorMode, GameDVR_HonorUserFSEBehaviorMode",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+、Windows 11",
+   "sade_ad": "关闭全屏优化"
+  },
+  "DISP-005": {
+   "ad": "禁用多平面叠加（MPO）",
+   "ne_ise_yarar": "MPO 通过把部分屏幕图层交给 GPU 的硬件平面来加速桌面合成。在某些驱动程序/显示器组合上，它会导致闪烁、黑屏、浏览器卡死，以及多显示器下的卡顿。此设置会关闭 MPO。",
+   "artilar": [
+    "可以修复多显示器下的闪烁/卡顿/黑屏问题"
+   ],
+   "eksiler": [
+    "在窗口化/无边框游戏中，延迟和功耗可能略有上升",
+    "在没有问题的系统上没有收益"
+   ],
+   "dokunmamali": [
+    "没有闪烁或卡死问题的所有人",
+    "笔记本电脑用户（MPO 在视频播放时可以省电）"
+   ],
+   "notlar": [
+    "只有在出现问题时才开启，例如第二块屏幕上的闪烁、黑屏闪动或卡顿。"
+   ],
+   "varsayilan": "没有值（MPO 已启用）。",
+   "gerceklik.aciklama": "这是针对某一类特定错误的官方变通办法，而不是通用的性能设置。在 Windows 11 24H2 上，仅此一项注册表键可能没有效果。",
+   "gerceklik.celiski": "有报告称此键在 Windows 11 24H2 中不再起作用（TechPowerUp、SteamDB 的 MPO 提示），也有报告称它仍然有效（Microsoft Q&A、Guru3D）。还有报告称，较新的 AMD 驱动程序会让 MPO 重新出现。",
+   "performans_etkisi.gerekce": "修复受影响系统上的稳定性问题；对未受影响的系统没有效果或略有负面影响。",
+   "rehber.adimlar": [
+    "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode -PropertyType DWord -Value 5 -Force  （NVIDIA 的 mpo_disable.reg 文件写入的是相同的值）"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\Dwm' -Name OverlayTestMode -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11（在 24H2 上的有效性存在争议）",
+   "sade_ad": "关闭显示图层合并（MPO）"
+  },
+  "DISP-006": {
+   "ad": "Auto HDR 和 HDR",
+   "ne_ise_yarar": "Auto HDR 会把用 SDR 制作的 DX11/DX12 游戏人为地扩展为 HDR。",
+   "artilar": [
+    "在合适的 HDR 面板上画面更鲜艳"
+   ],
+   "eksiler": [
+    "会带来少量 GPU 开销",
+    "在较弱的 HDR 面板（HDR400）上颜色发灰或不正确",
+    "在某些游戏中，截图/录制的颜色会出错"
+   ],
+   "dokunmamali": [
+    "显示器不具备真正 HDR 支持，或亮度较低的用户"
+   ],
+   "varsayilan": "关闭。",
+   "gerceklik.aciklama": "这是视觉功能，不是性能提升。",
+   "performans_etkisi.gerekce": "Microsoft 表示 Auto HDR 的 GPU 开销很小；它主要是画质设置。",
+   "rehber.adimlar": [
+    "在 HDR 显示器上：设置 > 系统 > 显示 > HDR > 使用 HDR：开；Auto HDR：开/关。",
+    "使用 Windows HDR 校准应用进行校准。"
+   ],
+   "rehber.geri_alma": "在同一菜单中关闭它。",
+   "rehber.kontrol": "设置 > 系统 > 显示 > HDR（使用 HDR / Auto HDR）。注册表：HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences 中的“AutoHDREnable=”字段。",
+   "uyumluluk.kaynak_metin.windows": "Windows 11（Auto HDR）；HDR 在 Windows 10 中也有"
+  },
+  "DISP-007": {
+   "ad": "动态刷新率（DRR）– 笔记本电脑",
+   "ne_ise_yarar": "Windows 在桌面上降到 60 Hz，在滚动和手写等场景下再升到高刷新率。可以省电。",
+   "artilar": [
+    "固定的高刷新率：流畅度始终一致"
+   ],
+   "eksiler": [
+    "固定的高刷新率更耗电"
+   ],
+   "dokunmamali": [
+    "把续航放在第一位的用户"
+   ],
+   "varsayilan": "在支持的笔记本上可能是“动态”。",
+   "gerceklik.aciklama": "在续航和流畅度之间的取舍。",
+   "performans_etkisi.gerekce": "游戏通常会触发高刷新率；差异主要体现在桌面的流畅度上。",
+   "rehber.adimlar": [
+    "玩游戏时选择固定的最高刷新率；想省电则选择“动态”。"
+   ],
+   "rehber.geri_alma": "在同一菜单中改回“动态”。",
+   "rehber.kontrol": "设置 > 系统 > 显示 > 高级显示 > 刷新率列表中是否选中了“动态（… Hz）”？",
+   "uyumluluk.kaynak_metin.windows": "Windows 11"
+  },
+  "DISP-008": {
+   "ad": "缩放模式：GPU 缩放或显示器缩放",
+   "ne_ise_yarar": "决定非原生分辨率的画面由显卡放大，还是由显示器放大。",
+   "artilar": [
+    "对使用拉伸分辨率的玩家，结果更一致"
+   ],
+   "eksiler": [
+    "某些显示器的缩放器会导致画面模糊"
+   ],
+   "dokunmamali": [
+    "只用原生分辨率玩游戏的玩家（没有影响）"
+   ],
+   "varsayilan": "通常为“显示器”。",
+   "gerceklik.aciklama": "这是画质/兼容性设置；“GPU 缩放会增加延迟”的说法没有一致的证据。",
+   "gerceklik.celiski": "一些论坛用户声称 GPU 缩放会增加一帧延迟；没有找到支持这一点的可重复测量。",
+   "performans_etkisi.gerekce": "效果取决于显示器自己的缩放器；没有关于 GPU 缩放延迟差异的实测通用数据。",
+   "rehber.adimlar": [
+    "如果你用原生分辨率玩，就无关紧要。",
+    "对于低分辨率/拉伸（例如 CS2 4:3），请在你想用的设备上选择缩放；“全屏”模式会得到拉伸的画面。"
+   ],
+   "rehber.geri_alma": "改回之前的选项。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 调整桌面大小和位置 > 执行缩放的设备：GPU/显示器。AMD：Adrenalin > 显示 > GPU 缩放。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "画面缩放：显卡或显示器"
+  },
+  "DISP-009": {
+   "ad": "刷新率不同的多显示器，以及第二块屏幕上的视频",
+   "ne_ise_yarar": "在旧版 Windows 10 中，桌面合成会锁定到刷新率最低的显示器并造成卡顿。较新的版本已基本修复，但在某些系统上，在第二块屏幕上播放视频仍可能造成游戏内卡顿。",
+   "artilar": [
+    "帧时间更一致"
+   ],
+   "eksiler": [
+    "放弃多任务处理的便利"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的用户"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "社区里有很多相关报告；Microsoft 在后来的 Windows 10 版本中改进了对混合刷新率的支持。",
+   "gerceklik.celiski": "一些用户报告问题已完全修复；另一些人说仍然存在，尤其是在 G-SYNC + 窗口化游戏 + 第二块屏幕播放视频的情况下。",
+   "performans_etkisi.gerekce": "问题取决于驱动程序/系统的组合；在某些系统上卡顿明显，在另一些系统上完全没有影响。",
+   "rehber.adimlar": [
+    "玩游戏时，不要在第二块屏幕上显示持续运动的内容（视频、带动画的 Discord/浏览器）；必要时，测试开启/关闭浏览器中的硬件加速。"
+   ],
+   "rehber.geri_alma": "回到你之前的习惯。",
+   "rehber.kontrol": "设置 > 系统 > 显示 > 每台显示器的高级显示 > 刷新率。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-001": {
+   "ad": "禁用打印后台处理程序服务",
+   "ne_ise_yarar": "负责把打印任务排队的服务。如果你没有打印机，把它关掉可以缩小攻击面（例如 PrintNightmare 之类的漏洞）。",
+   "artilar": [
+    "安全：针对打印服务漏洞的攻击面更小",
+    "节省的内存非常少"
+   ],
+   "eksiler": [
+    "无法向任何打印机、“Microsoft Print to PDF”或 PDF/XPS 打印机打印",
+    "当无法获取打印机列表时，某些程序会报错或无法打开"
+   ],
+   "dokunmamali": [
+    "使用打印机的用户",
+    "从 AutoCAD/Revit/SolidWorks 等 CAD 程序输出 PDF 图纸的人（绘图输出使用打印系统）",
+    "在 Office 中使用“打印为 PDF”的人",
+    "传真/扫描打印一体机（MFP）用户",
+    "企业/域内的计算机"
+   ],
+   "varsayilan": "自动，正在运行。",
+   "gerceklik.aciklama": "对安全有真实收益；对性能是安慰剂。",
+   "performans_etkisi.gerekce": "空闲时几乎不占用 CPU；没有观察到对 FPS 的影响。",
+   "rehber.adimlar": [
+    "Stop-Service -Name Spooler -Force; Set-Service -Name Spooler -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service -Name Spooler -StartupType Automatic; Start-Service -Name Spooler",
+   "rehber.kontrol": "Get-Service -Name Spooler | Select-Object Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-002": {
+   "ad": "SysMain（前身为 Superfetch）",
+   "ne_ise_yarar": "把常用的应用预先加载到空闲内存中，让它们打开得更快。",
+   "artilar": [
+    "在配备 HDD 和 4 GB 内存的非常弱的系统上，它可以减轻开机后磁盘占用 100% 的情况"
+   ],
+   "eksiler": [
+    "在配备 SSD 和 8 GB 以上内存的系统上，应用打开得更慢",
+    "空闲内存会保持“未使用”状态；这并不等于性能"
+   ],
+   "dokunmamali": [
+    "大多数使用 SSD 且内存充足的用户"
+   ],
+   "varsayilan": "自动，正在运行。",
+   "gerceklik.aciklama": "在 r/lowendgaming 上经常被推荐；除了 HDD + 内存很少的情况外，没有证明有收益。",
+   "gerceklik.celiski": "低配玩家社区说它能解决“磁盘 100%”问题；另一些人指出，在 SSD 上这种缓存是有用的。",
+   "performans_etkisi.gerekce": "可以减轻较弱的 HDD 系统上的后台磁盘负载；对现代系统没有效果或有负面影响。独立测量有限。",
+   "rehber.adimlar": [
+    "Stop-Service -Name SysMain -Force; Set-Service -Name SysMain -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service -Name SysMain -StartupType Automatic; Start-Service -Name SysMain",
+   "rehber.kontrol": "Get-Service -Name SysMain | Select-Object Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-003": {
+   "ad": "Windows 搜索索引（WSearch）",
+   "ne_ise_yarar": "为文件和电子邮件内容建立索引，以便快速搜索。",
+   "artilar": [
+    "消除全新安装后首次建立索引时的磁盘/CPU 负载"
+   ],
+   "eksiler": [
+    "开始菜单和资源管理器的搜索会变得非常慢",
+    "Outlook 中的搜索会失效或变慢"
+   ],
+   "dokunmamali": [
+    "Outlook 用户",
+    "使用文件搜索的 Office 用户"
+   ],
+   "notlar": [
+    "开始菜单和文件资源管理器中的搜索会变慢；Outlook 等程序中的搜索也会受影响。"
+   ],
+   "varsayilan": "自动（延迟启动），正在运行。",
+   "gerceklik.aciklama": "对游戏 FPS 是安慰剂；只在首次建立索引期间和非常弱的 HDD 系统上才会察觉到。",
+   "performans_etkisi.gerekce": "索引完成后，空闲时占用的资源非常少；而且在有用户活动（例如玩游戏）时，Windows 本来就会放慢索引速度。",
+   "rehber.adimlar": [
+    "推荐：设置 > 隐私和安全性 > 搜索 Windows > 减少已建立索引的位置，或排除游戏文件夹。",
+    "完全关闭：Stop-Service WSearch -Force; Set-Service WSearch -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service WSearch -StartupType Automatic; Start-Service WSearch",
+   "rehber.kontrol": "Get-Service -Name WSearch | Select-Object Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-004": {
+   "ad": "遥测：已连接的用户体验和遥测（DiagTrack）",
+   "ne_ise_yarar": "向 Microsoft 发送诊断/使用数据。",
+   "artilar": [
+    "隐私",
+    "后台网络/CPU 活动略少"
+   ],
+   "eksiler": [
+    "Windows 预览体验计划需要可选的诊断数据",
+    "某些兼容性/故障排除功能会受限"
+   ],
+   "dokunmamali": [
+    "Windows 预览体验成员",
+    "受管理的企业设备"
+   ],
+   "varsayilan": "自动，正在运行；诊断级别为“必需”或“可选”。",
+   "gerceklik.aciklama": "对隐私是真实的，对 FPS 是安慰剂。“关闭遥测，FPS 就会上升”的说法没有证据。",
+   "performans_etkisi.gerekce": "没有证据表明对 FPS 有可测量的影响；真正的好处是隐私。",
+   "rehber.adimlar": [
+    "设置 > 隐私和安全性 > 诊断和反馈 > 关闭可选的诊断数据。",
+    "另外：Set-Service DiagTrack -StartupType Disabled; Stop-Service DiagTrack -Force"
+   ],
+   "rehber.geri_alma": "Set-Service DiagTrack -StartupType Automatic; Start-Service DiagTrack",
+   "rehber.kontrol": "Get-Service -Name DiagTrack | Select-Object Status, StartType; Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Name AllowTelemetry -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11（AllowTelemetry=0 仅在企业版/教育版上才完全有效）"
+  },
+  "SYS-005": {
+   "ad": "Xbox 服务（XblAuthManager、XblGameSave、XboxNetApiSvc、XboxGipSvc）",
+   "ne_ise_yarar": "管理 Xbox 登录、云存档、Xbox 网络和 Xbox 配件（XboxGipSvc）。",
+   "artilar": [
+    "这些服务本来就是手动启动，所以关闭它们没有实际好处"
+   ],
+   "eksiler": [
+    "Game Pass/Microsoft Store 游戏、云存档以及 Xbox 手柄/配件管理会失效",
+    "Xbox Game Bar/多人联机（Teredo）出现问题"
+   ],
+   "dokunmamali": [
+    "玩 Game Pass 或 Microsoft Store 游戏的人",
+    "Xbox 手柄/耳机用户",
+    "AMD Ryzen X3D 双 CCD 处理器用户（需要 Game Bar 的游戏检测，见 CPU-005）"
+   ],
+   "notlar": [
+    "Xbox 应用、Game Pass 游戏、云存档和 Xbox 手柄（XboxGipSvc）可能无法再工作。"
+   ],
+   "varsayilan": "手动（触发启动）。",
+   "gerceklik.aciklama": "常见于精简优化清单；没有性能收益，反而会丢失功能。",
+   "performans_etkisi.gerekce": "手动启动的服务只要不被使用就不会运行。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "如有需要：Set-Service -Name <service> -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service -Name <service> -StartupType Manual",
+   "rehber.kontrol": "Get-Service -Name XblAuthManager, XblGameSave, XboxNetApiSvc, XboxGipSvc | Select-Object Name, Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-006": {
+   "ad": "减少启动应用",
+   "ne_ise_yarar": "限制随 Windows 自动启动的程序（Discord、Steam、Spotify、OneDrive、厂商工具）。",
+   "artilar": [
+    "启动更快",
+    "更多的空闲内存，后台 CPU 占用更少",
+    "覆盖层/原始输入的监听器更少（见 INP-011）"
+   ],
+   "eksiler": [
+    "某些工具（RGB、鼠标宏、音频软件、VPN）必须手动启动"
+   ],
+   "dokunmamali": [
+    "在关闭音频驱动程序面板、触摸板、安全软件和硬件工具之前，请先确认它们的作用"
+   ],
+   "varsayilan": "取决于已安装的软件。",
+   "gerceklik.aciklama": "在后台运行的程序会消耗真实的资源；这是最一致的建议之一。",
+   "performans_etkisi.gerekce": "在 8 GB 或更少内存的系统上，对游戏期间的可用内存和后台负载影响明显；在性能强的系统上影响较小。",
+   "rehber.adimlar": [
+    "任务管理器 > 启动应用 > 禁用不必要的项。",
+    "或者 设置 > 应用 > 启动。"
+   ],
+   "rehber.geri_alma": "在同一位置启用它们。",
+   "rehber.kontrol": "Get-CimInstance Win32_StartupCommand | Select-Object Name, Command, Location; 任务管理器 > 启动应用（“启动影响”列）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-007": {
+   "ad": "后台应用（Store/UWP 应用）",
+   "ne_ise_yarar": "阻止 Microsoft Store 应用在后台运行。不影响传统的桌面程序（Discord、Steam）。",
+   "artilar": [
+    "部分 Store 应用的后台活动会停止"
+   ],
+   "eksiler": [
+    "Store 应用（邮件、日历、WhatsApp、手机连接）不再有通知",
+    "全局策略会隐藏针对单个应用的设置"
+   ],
+   "dokunmamali": [
+    "期望收到 Store 应用通知的人（WhatsApp、手机连接）"
+   ],
+   "notlar": [
+    "这是一项系统策略：Store 应用（例如手机连接、邮件）可能不再在后台接收通知。"
+   ],
+   "varsayilan": "电源优化（由 Windows 决定）。",
+   "gerceklik.aciklama": "机制是真实的，但对玩家的作用有限；大部分后台负载来自桌面程序。",
+   "performans_etkisi.gerekce": "Windows 本来就会限制已挂起的 Store 应用；对传统桌面程序没有影响。",
+   "rehber.adimlar": [
+    "针对单个应用（Windows 11）：设置 > 应用 > 已安装的应用 > 应用 > 高级选项 > 后台应用权限：从不。",
+    "全局策略：New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Force; New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground -PropertyType DWord -Value 2 -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy' -Name LetAppsRunInBackground -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "在后台运行的 Store 应用"
+  },
+  "SYS-008": {
+   "ad": "快速启动（Hiberboot）",
+   "ne_ise_yarar": "关机时把内核会话写入磁盘，以加快下次启动。关闭后，“关机”就变成真正的冷关机。",
+   "artilar": [
+    "针对驱动程序/硬件问题的干净启动",
+    "解决双系统时 NTFS 分区一直处于锁定状态的问题",
+    "更新的应用更稳定"
+   ],
+   "eksiler": [
+    "启动会多花几秒钟（在 HDD 上更久）"
+   ],
+   "dokunmamali": [
+    "使用较慢 HDD、且在意启动时间的用户"
+   ],
+   "varsayilan": "1（开启），前提是已启用休眠。",
+   "gerceklik.aciklama": "对稳定性/兼容性是真实的；对 FPS 没有影响。",
+   "performans_etkisi.gerekce": "不影响游戏性能；它关系到的是启动时间和稳定性。",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled -Value 0"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled -Value 1",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "快速启动"
+  },
+  "SYS-009": {
+   "ad": "关闭休眠（hiberfil.sys）",
+   "ne_ise_yarar": "删除 hiberfil.sys 文件（占用的磁盘空间相当于你内存容量的很大一部分）。同时也会关闭快速启动。",
+   "artilar": [
+    "在小容量 SSD 上可以释放数 GB 的磁盘空间"
+   ],
+   "eksiler": [
+    "无法使用休眠和快速启动",
+    "笔记本电池电量降到临界值时，会话可能丢失"
+   ],
+   "dokunmamali": [
+    "会用到休眠的笔记本电脑用户"
+   ],
+   "notlar": [
+    "关闭休眠后，快速启动也会被自动禁用。"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "对磁盘空间是真实的，对性能是安慰剂。它对游戏性能的影响没有文档记载；hiberfil.sys 文件占用的磁盘空间相当于内存的某个百分比。",
+   "performans_etkisi.gerekce": "只会释放磁盘空间。",
+   "rehber.adimlar": [
+    "powercfg /hibernate off"
+   ],
+   "rehber.geri_alma": "powercfg /hibernate on",
+   "rehber.kontrol": "powercfg /a  （休眠是否可用）；Test-Path C:\\hiberfil.sys",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-010": {
+   "ad": "Windows 错误报告（WerSvc）",
+   "ne_ise_yarar": "收集并发送崩溃应用的错误报告。",
+   "artilar": [
+    "崩溃后生成报告所需的时间更短"
+   ],
+   "eksiler": [
+    "崩溃转储和故障排除信息会丢失；开发者收不到报告"
+   ],
+   "dokunmamali": [
+    "正在排查崩溃问题的用户"
+   ],
+   "varsayilan": "手动。",
+   "gerceklik.aciklama": "常见于性能清单，但该服务在空闲时并不运行。",
+   "performans_etkisi.gerekce": "手动启动；只在发生崩溃时才运行。",
+   "rehber.adimlar": [
+    "Set-Service -Name WerSvc -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service -Name WerSvc -StartupType Manual",
+   "rehber.kontrol": "Get-Service -Name WerSvc | Select-Object Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-011": {
+   "ad": "小组件、Copilot 和 Recall（Windows 11）",
+   "ne_ise_yarar": "关闭新闻/天气面板（基于 WebView2）、AI 助手，以及基于屏幕快照的“Recall”功能。",
+   "artilar": [
+    "释放小组件的 WebView2 进程所占用的内存",
+    "隐私（Recall）"
+   ],
+   "eksiler": [
+    "无法使用相关功能"
+   ],
+   "dokunmamali": [
+    "经常使用这些功能的人"
+   ],
+   "notlar": [
+    "此开关只会关闭小组件。Copilot 可以在 设置 > 应用 中卸载，或从任务栏隐藏。Recall（仅限 Copilot+ PC）作为 Windows 功能单独关闭。"
+   ],
+   "varsayilan": "小组件已启用；Recall 在 Copilot+ PC 上是可选的（默认关闭，需经用户同意才会开启）。",
+   "gerceklik.aciklama": "对内存和隐私是真实的；对 FPS 的影响很小。",
+   "performans_etkisi.gerekce": "小组件进程可能占用几百 MB 内存；在 8 GB 内存的系统上能察觉到，但没有证明对 FPS 有直接影响。",
+   "rehber.adimlar": [
+    "小组件：New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Force; New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Name AllowNewsAndInterests -PropertyType DWord -Value 0 -Force。",
+    "Recall（仅限 Copilot+ PC）：Disable-WindowsOptionalFeature -Online -FeatureName Recall。",
+    "Copilot：在 设置 > 应用 中卸载，或从任务栏隐藏。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Name AllowNewsAndInterests; Enable-WindowsOptionalFeature -Online -FeatureName Recall",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Name AllowNewsAndInterests -ErrorAction SilentlyContinue; Get-WindowsOptionalFeature -Online -FeatureName Recall",
+   "uyumluluk.kaynak_metin.windows": "Windows 11（Recall 仅在 24H2+ 的 Copilot+ PC 上）"
+  },
+  "SYS-012": {
+   "ad": "玩游戏时暂停 OneDrive 同步",
+   "ne_ise_yarar": "大文件同步会在你玩游戏时占用磁盘和上传带宽。",
+   "artilar": [
+    "玩游戏时网络和磁盘活动更少"
+   ],
+   "eksiler": [
+    "备份会被推迟；未同步的文件有风险"
+   ],
+   "dokunmamali": [
+    "把 OneDrive 当作备份使用的人（请暂停，而不要永久关闭）"
+   ],
+   "varsayilan": "登录时启动，并持续同步。",
+   "gerceklik.aciklama": "没有内容在同步时，没有效果。",
+   "performans_etkisi.gerekce": "只有在同步进行时才有影响（尤其是在上传速度较低的连接上会让 ping 变高）。",
+   "rehber.adimlar": [
+    "OneDrive 图标 > 设置 > 暂停同步（2/8/24 小时），或把它从启动项中移除。",
+    "把“文档/桌面”文件夹从已知文件夹移动中移除是另外一个步骤。"
+   ],
+   "rehber.geri_alma": "恢复同步；把它重新加入启动项。",
+   "rehber.kontrol": "任务栏上的 OneDrive 图标 > 状态；Get-Process OneDrive -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-013": {
+   "ad": "Defender 排除项和 Dev Drive（而不是关闭 Defender）",
+   "ne_ise_yarar": "让特定文件夹免于实时扫描；减少游戏更新、着色器缓存写入和编译期间的磁盘/CPU 负载。",
+   "artilar": [
+    "大型游戏的更新/安装可能更快",
+    "由于 Defender 保持开启，安全性得以保留"
+   ],
+   "eksiler": [
+    "进入被排除文件夹的恶意软件不会被扫描"
+   ],
+   "dokunmamali": [
+    "安装盗版游戏或来自不可信来源游戏的人",
+    "想要排除整个 C:\\ 或用户文件夹的人（绝不要这样做）"
+   ],
+   "varsayilan": "没有排除项。",
+   "gerceklik.aciklama": "Microsoft 通过 Dev Drive 和性能模式正式支持这种做法。",
+   "performans_etkisi.gerekce": "对游戏内 FPS 的影响通常很小；在加载时间和大量文件操作中差异更明显。具体数值取决于游戏。",
+   "rehber.adimlar": [
+    "Add-MpPreference -ExclusionPath 'D:\\Games'  （仅用于从你信任的来源安装的游戏文件夹）。",
+    "面向开发者：设置 > 系统 > 存储 > 高级存储设置 > 磁盘和卷 > 创建 Dev Drive。"
+   ],
+   "rehber.geri_alma": "Remove-MpPreference -ExclusionPath 'D:\\Games'",
+   "rehber.kontrol": "Get-MpPreference | Select-Object ExclusionPath, ExclusionProcess",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11（Dev Drive：Windows 11 23H2+）"
+  },
+  "SYS-014": {
+   "ad": "Windows 更新的活动时间和暂停（而不是关闭它）",
+   "ne_ise_yarar": "防止更新在你玩游戏时自动下载/安装并自动重启。",
+   "artilar": [
+    "玩游戏时不会出现意外重启或后台下载",
+    "不放弃安全更新"
+   ],
+   "eksiler": [
+    "暂停结束后，积压的更新会一起下载"
+   ],
+   "varsayilan": "活动时间自动设置。",
+   "gerceklik.aciklama": "完全关闭 Windows 更新的安全替代方案（见 PLC-024）。",
+   "performans_etkisi.gerekce": "只有在更新的下载/安装与游戏撞在一起时才有影响。",
+   "rehber.adimlar": [
+    "设置 > Windows 更新 > 高级选项 > 活动时间：你玩游戏的时段。",
+    "在比赛期间等情况下，使用“暂停更新”（1-5 周）。"
+   ],
+   "rehber.geri_alma": "把活动时间设为自动；恢复更新。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings' -ErrorAction SilentlyContinue | Select-Object ActiveHoursStart, ActiveHoursEnd",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-015": {
+   "ad": "触摸键盘和手写面板服务（TabletInputService）",
+   "ne_ise_yarar": "触摸键盘、表情面板（Win+.）、手写以及部分 IME（输入法）功能。",
+   "artilar": [
+    "没有明显的好处"
+   ],
+   "eksiler": [
+    "表情面板、触摸键盘以及某些应用中的文本输入可能失效",
+    "东亚语言输入法可能无法工作"
+   ],
+   "dokunmamali": [
+    "触摸屏笔记本电脑/平板用户",
+    "使用表情面板或输入法（IME）的人"
+   ],
+   "notlar": [
+    "触摸键盘、手写，以及在某些语言中表情/输入法面板，可能会停止工作。"
+   ],
+   "varsayilan": "手动（触发启动）。",
+   "gerceklik.aciklama": "常见于旧的“禁用服务”清单；没有可测量的收益。",
+   "performans_etkisi.gerekce": "由触发条件启动；空闲时没有负载。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "如有需要：Set-Service -Name TabletInputService -StartupType Disabled"
+   ],
+   "rehber.geri_alma": "Set-Service -Name TabletInputService -StartupType Manual",
+   "rehber.kontrol": "Get-Service -Name TabletInputService -ErrorAction SilentlyContinue | Select-Object Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PERF-001": {
+   "ad": "游戏模式",
+   "ne_ise_yarar": "检测到游戏时，阻止 Windows 更新安装驱动程序/弹出重启通知，并尝试给游戏分配资源优先级。",
+   "artilar": [
+    "后台更新与游戏之间的冲突更少",
+    "是 AMD X3D 双 CCD 处理器上游戏检测链路的一部分"
+   ],
+   "eksiler": [
+    "在早期的 Windows 10 版本（2017-2020）中，有些游戏出现过卡顿的报告；在当前版本中并不常见"
+   ],
+   "dokunmamali": [
+    "除非你已通过测量确认游戏模式在某个特定游戏中造成了问题，否则请保持开启"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "机制是真实的；效果很小，并取决于具体情况。",
+   "gerceklik.celiski": "有很多论坛/Reddit 帖子建议在旧版 Windows 10 上把它关掉；在当前的 Windows 11 上，大多数独立测试显示结果为中性或略有正面。",
+   "performans_etkisi.gerekce": "在性能强的系统上，差异通常在测量误差范围内；在有后台负载的较弱系统上可能更明显。",
+   "rehber.adimlar": [
+    "设置 > 游戏 > 游戏模式：开。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\GameBar' -Name AutoGameModeEnabled -Value 1 -Type DWord"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\GameBar' -Name AutoGameModeEnabled -Value 0 -Type DWord",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\GameBar' -Name AutoGameModeEnabled -ErrorAction SilentlyContinue  （如果没有该值，默认为开启）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1703+、Windows 11"
+  },
+  "PERF-002": {
+   "ad": "关闭 Game DVR / 后台录制（不移除 Game Bar）",
+   "ne_ise_yarar": "持续录制最近 30 秒/分钟的后台录制会占用 GPU 编码器和磁盘。此设置会关闭录制；Game Bar 应用仍然保留。",
+   "artilar": [
+    "如果后台录制是开启的：编码和磁盘写入的负载会消失"
+   ],
+   "eksiler": [
+    "用 Win+Alt+G 的“录制刚才发生的事”将无法使用",
+    "使用系统策略（AllowGameDVR=0）时，Game Bar 的某些功能会被禁用"
+   ],
+   "dokunmamali": [
+    "用 Game Bar 录制片段的人",
+    "Ryzen 7950X3D/7900X3D/9950X3D/9900X3D 用户绝不能移除 Game Bar（游戏检测）；他们只能关闭录制"
+   ],
+   "varsayilan": "后台录制关闭；捕获功能开启。",
+   "gerceklik.aciklama": "持续录制会消耗真实的资源。但如果录制本来就已关闭，只更改 GameDVR 注册表值不会带来额外好处。",
+   "performans_etkisi.gerekce": "如果后台录制是开启的，影响为低到中等（编码器和磁盘负载）；如果本来就是关闭的，则没有影响。",
+   "rehber.adimlar": [
+    "设置 > 游戏 > 捕获 >“录制刚才发生的事”（后台录制）：关。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' -Name GameDVR_Enabled -Value 0 -Type DWord; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR' -Name AppCaptureEnabled -Value 0 -Type DWord。",
+    "系统范围策略（可选）：HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR AllowGameDVR=0"
+   ],
+   "rehber.geri_alma": "GameDVR_Enabled=1 和 AppCaptureEnabled=1；删除策略值：Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR' -Name AllowGameDVR",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\System\\GameConfigStore' -Name GameDVR_Enabled; Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR' -Name AppCaptureEnabled -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭后台游戏录制"
+  },
+  "PERF-003": {
+   "ad": "内存完整性（HVCI）/ 内核隔离",
+   "ne_ise_yarar": "让加载到内核中的驱动程序在受虚拟机监控程序保护的环境中接受验证；使内核级攻击更难得手。虚拟化层会带来少量性能开销。",
+   "artilar": [
+    "在某些游戏中 FPS 会提升，尤其是在较旧的处理器上（不支持 MBEC）",
+    "Microsoft 自己也把“为玩游戏而临时关闭”作为一种选择"
+   ],
+   "eksiler": [
+    "对内核级恶意软件和存在漏洞的驱动程序的防护变弱",
+    "某些企业/反作弊策略会检查安全功能"
+   ],
+   "dokunmamali": [
+    "工作/企业计算机",
+    "保存敏感数据、安装盗版软件或安全意识较低的用户",
+    "没有 ESU 的 Windows 10 系统（它们本来也已不再获得安全更新）"
+   ],
+   "notlar": [
+    "计算机重启后生效。如果有组织策略或 UEFI 锁定，Windows 可能会把此设置重新开启。"
+   ],
+   "varsayilan": "大多数全新安装 Windows 11 的新系统上为开启。",
+   "gerceklik.aciklama": "Microsoft 的官方文档承认，在某些场景下 HVCI 和 VMP 可能降低游戏性能。",
+   "gerceklik.celiski": "各个测试中影响的大小差别很大；在新 CPU 上差异更小。",
+   "performans_etkisi.gerekce": "Tom's Hardware 的一项测试报告称，在某些游戏中最多损失约 10%；在其他测试中，差异只有几 FPS，或在测量误差之内。影响取决于游戏、CPU 世代（是否支持 MBEC/GMET）和驱动程序。",
+   "rehber.adimlar": [
+    "Windows 安全中心 > 设备安全性 > 内核隔离 > 内存完整性：关。",
+    "命令：Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity' -Name Enabled -Value 0"
+   ],
+   "rehber.geri_alma": "在同一菜单中改为开，或设为 Enabled=1，然后重启。",
+   "rehber.kontrol": "Get-CimInstance -Namespace root\\Microsoft\\Windows\\DeviceGuard -ClassName Win32_DeviceGuard | Select-Object VirtualizationBasedSecurityStatus, SecurityServicesRunning  （SecurityServicesRunning 中的 2 = HVCI 正在运行）。注册表：HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity Enabled",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "内核隔离（内存完整性）"
+  },
+  "PERF-004": {
+   "ad": "关闭虚拟机平台（VMP）/ Hyper-V",
+   "ne_ise_yarar": "移除需要虚拟机监控程序的虚拟化组件。",
+   "artilar": [
+    "移除虚拟机监控程序层后，在某些游戏中会有少量提升（前提是 HVCI 已关闭）"
+   ],
+   "eksiler": [
+    "WSL2、Docker Desktop、Hyper-V 虚拟机、Windows 沙盒以及某些安卓模拟器将无法工作"
+   ],
+   "dokunmamali": [
+    "使用 WSL2/Docker 的开发者",
+    "基于 Hyper-V 的模拟器/虚拟机的用户"
+   ],
+   "notlar": [
+    "WSL2、Docker、安卓子系统和虚拟机程序都需要这些功能。",
+    "内存完整性（HVCI）和某些游戏保护系统可能需要虚拟机监控程序。",
+    "读取和更改状态可能需要几秒到几分钟。",
+    "会更改一项引导设置（bcdedit）。如果你使用 BitLocker，更改后可能会要求输入恢复密钥；请确认你有密钥（尚不确定，待测试）。"
+   ],
+   "varsayilan": "取决于系统；如果安装了 WSL2/Docker，则为开启。",
+   "gerceklik.aciklama": "Microsoft 的游戏性能文档中提到过；其单独的影响尚未被完全区分开。测量（2021 年）主要针对 VBS/HVCI；没有单独测量虚拟机平台。关闭它会使 WSL2 等虚拟化功能停止工作。",
+   "performans_etkisi.gerekce": "Microsoft 表示可能有影响；独立测量大多是与 HVCI 一起进行的，所以 VMP 单独的影响并不确定。",
+   "rehber.adimlar": [
+    "Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart; Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart"
+   ],
+   "rehber.geri_alma": "Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform; Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All",
+   "rehber.kontrol": "Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Hyper-V-All | Select-Object FeatureName, State; bcdedit /enum '{current}' | Select-String hypervisorlaunchtype",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭虚拟化功能（Hyper-V）"
+  },
+  "PERF-005": {
+   "ad": "视觉效果：“调整为最佳性能”",
+   "ne_ise_yarar": "关闭窗口动画、阴影和透明等桌面效果。",
+   "artilar": [
+    "在旧系统或核显非常弱的系统上，桌面感觉更流畅"
+   ],
+   "eksiler": [
+    "字体可能看起来有问题（如果关闭了字体平滑）",
+    "文件夹缩略图会消失"
+   ],
+   "dokunmamali": [
+    "配备现代 GPU 的系统（没有明显差别）"
+   ],
+   "notlar": [
+    "关闭的效果与“最佳性能”相同；屏幕字体平滑和缩略图保持开启。",
+    "任务栏动画可能需要重启资源管理器才能生效。"
+   ],
+   "varsayilan": "0（由 Windows 选择）。",
+   "gerceklik.aciklama": "对感知到的桌面速度是真实的，对游戏 FPS 是安慰剂。",
+   "performans_etkisi.gerekce": "桌面合成由 GPU 完成；对全屏游戏没有影响。好处是在非常低端的硬件上，桌面响应更灵敏。",
+   "rehber.adimlar": [
+    "SystemPropertiesPerformance.exe >“调整为最佳性能”（建议重新勾选屏幕字体平滑和缩略图）。"
+   ],
+   "rehber.geri_alma": "在同一窗口中选择“让 Windows 选择计算机的最佳设置”。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects' -Name VisualFXSetting -ErrorAction SilentlyContinue  （0=由 Windows 选择，1=最佳外观，2=最佳性能，3=自定义）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PERF-006": {
+   "ad": "按应用选择 GPU（混合显卡的笔记本电脑）",
+   "ne_ise_yarar": "确保游戏在独立显卡上运行，而不是在集成显卡（iGPU）上。",
+   "artilar": [
+    "如果游戏之前不小心在 iGPU 上运行，FPS 提升会非常大"
+   ],
+   "eksiler": [
+    "给浏览器等程序选择高性能会让电池很快耗尽"
+   ],
+   "dokunmamali": [
+    "只有一块 GPU 的台式机系统（没有效果）"
+   ],
+   "varsayilan": "由 Windows/驱动程序决定（GpuPreference=0）。",
+   "gerceklik.aciklama": "在 Optimus/混合显卡系统上，这是有文档记载的机制。在带有 MUX 开关的笔记本电脑上，“仅独显”模式会带来额外的延迟/FPS 提升。",
+   "performans_etkisi.gerekce": "对于在错误的 GPU 上运行的游戏，差异可能达到数倍；如果本来就在正确的 GPU 上运行，则没有影响。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 显示 > 图形 > 应用 > 选项 > 高性能。",
+    "命令：New-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences' -Name '<C:\\path\\game.exe>' -Value 'GpuPreference=2;' -PropertyType String -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences' -Name '<C:\\path\\game.exe>'",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences'  （每个 exe 对应“GpuPreference=0/1/2;”）。在任务管理器 > 详细信息 >“GPU 引擎”列中查看游戏在哪块 GPU 上运行。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+、Windows 11"
+  },
+  "PERF-007": {
+   "ad": "关闭内存压缩",
+   "ne_ise_yarar": "Windows 不把很少使用的页面写入磁盘，而是在内存中压缩它们。关闭后，压缩所花的 CPU 时间会消失，但在内存紧张时磁盘分页会更多。",
+   "artilar": [
+    "在 32 GB 以上、从不会遇到内存压力的系统上，压缩带来的 CPU 开销会消失"
+   ],
+   "eksiler": [
+    "在 8-16 GB 内存的系统上：页面文件使用更多、卡顿更多、加载时间更长"
+   ],
+   "dokunmamali": [
+    "16 GB 或更少内存的系统",
+    "页面文件放在 HDD 上的人"
+   ],
+   "notlar": [
+    "如果你的内存少于 16 GB，关闭它可能会增加卡顿。"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "机制是真实的，但效果是正面还是负面，取决于内存容量。",
+   "gerceklik.celiski": "一些优化指南建议关闭；Microsoft 说它设计这项功能就是为了性能。",
+   "performans_etkisi.gerekce": "没有一致的独立测量；预计在内存少时是负面的，在内存多时没有影响。",
+   "rehber.adimlar": [
+    "Disable-MMAgent -MemoryCompression"
+   ],
+   "rehber.geri_alma": "Enable-MMAgent -MemoryCompression",
+   "rehber.kontrol": "Get-MMAgent | Select-Object MemoryCompression, PageCombining",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PERF-008": {
+   "ad": "关闭电源节流（EcoQoS）",
+   "ne_ise_yarar": "Windows 会把后台进程推到高能效核心/较低频率（EcoQoS）。关闭后，后台进程也会全速运行。",
+   "artilar": [
+    "OBS/直播/编译等后台工作不会被节流"
+   ],
+   "eksiler": [
+    "在笔记本电脑上，续航和温度会变差",
+    "对游戏本身没有直接好处，因为前台游戏本来就不会被节流"
+   ],
+   "dokunmamali": [
+    "使用电池的笔记本电脑用户"
+   ],
+   "varsayilan": "没有值（电源节流已启用）。",
+   "gerceklik.aciklama": "机制是真实的，但“能提高 FPS”的说法找错了对象。",
+   "performans_etkisi.gerekce": "只对后台工作负载有意义；预计对前台游戏没有影响。处于焦点的游戏本来就获得高 QoS。",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Force; New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff -PropertyType DWord -Value 1 -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling' -Name PowerThrottlingOff -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1709+、Windows 11",
+   "sade_ad": "关闭省电节流"
+  },
+  "PERF-009": {
+   "ad": "Win32PrioritySeparation（前台时间片优先级）",
+   "ne_ise_yarar": "一个 6 位的值；决定时间片是短还是长、是固定还是可变，以及前台窗口获得多大的提升。0x26 = 短、可变、前台提升 3:1。",
+   "artilar": [
+    "理论上，前台应用能获得更多 CPU 时间"
+   ],
+   "eksiler": [
+    "错误的值可能让后台的音频/直播进程“饿死”",
+    "在现代多核系统上，其效果很难测量"
+   ],
+   "dokunmamali": [
+    "主播/录制者（后台进程很重要）"
+   ],
+   "varsayilan": "2（0x2）。“系统属性 > 性能 > 高级 > 程序”中的选项就对应此值。",
+   "gerceklik.aciklama": "这是真实的调度器设置，但在多核 CPU 上，大多数游戏线程本来就能找到核心，所以预计影响很小。",
+   "gerceklik.celiski": "YouTube/Discord 上的优化合集推荐的“最佳”值各不相同，例如 0x26、0x28、0x2A；这种不一致说明缺乏确凿的证据。",
+   "performans_etkisi.gerekce": "机制有文档记载；没有找到独立测量表明它在游戏中带来可重复的 FPS/延迟收益。",
+   "rehber.adimlar": [
+    "推荐：保持默认值。",
+    "若想试验（社区数值）：Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation -Value 0x26"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation -Value 2",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name Win32PrioritySeparation",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "分给前台程序的时间份额"
+  },
+  "PERF-010": {
+   "ad": "游戏进程的永久“高”CPU 优先级（IFEO PerfOptions）",
+   "ne_ise_yarar": "每次游戏启动时自动设置进程优先级。",
+   "artilar": [
+    "在后台运行重负载工作（编译、直播编码）时，保证游戏的优先级"
+   ],
+   "eksiler": [
+    "后台的音频/Discord/直播软件可能被“饿死”",
+    "某些反作弊系统会自己设置游戏的优先级，或不喜欢 IFEO 的更改"
+   ],
+   "dokunmamali": [
+    "使用 OBS 直播的人",
+    "反作弊锁定进程优先级的游戏"
+   ],
+   "varsayilan": "正常。",
+   "gerceklik.aciklama": "机制是真实的且有文档记载（IFEO）；只有在 CPU 不够用时才会显现收益。",
+   "performans_etkisi.gerekce": "如果 CPU 有空闲核心，则没有影响；在 CPU 满载时才有意义。",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -Force; New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -Name CpuPriorityClass -PropertyType DWord -Value 3 -Force  （1=空闲，2=正常，3=高，5=低于正常，6=高于正常）"
+   ],
+   "rehber.geri_alma": "Remove-Item -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -Recurse",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\<game.exe>\\PerfOptions' -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "为游戏永久设置高 CPU 优先级"
+  },
+  "PERF-011": {
+   "ad": "关闭游戏内覆盖层（Discord、Steam、NVIDIA、Xbox、RGB 软件）",
+   "ne_ise_yarar": "覆盖层会挂钩游戏的画面呈现链路。多个覆盖层可能造成卡顿、崩溃和反作弊问题。",
+   "artilar": [
+    "帧时间更一致",
+    "兼容性问题更少"
+   ],
+   "eksiler": [
+    "游戏内聊天/FPS 计数器/好友通知会丢失"
+   ],
+   "dokunmamali": [
+    "经常使用某个覆盖层的人（只保留一个开启）"
+   ],
+   "varsayilan": "大多数是开启的。",
+   "gerceklik.aciklama": "与覆盖层相关的卡顿和崩溃，是社区和游戏支持页面上常见的故障排除步骤。",
+   "performans_etkisi.gerekce": "单个覆盖层的开销通常很小；多个覆盖层，或有 bug 的版本，可能造成卡顿。",
+   "rehber.adimlar": [
+    "关闭你不使用的覆盖层；测试使用硬件加速的后台应用（Discord、浏览器）的影响。"
+   ],
+   "rehber.geri_alma": "在相同的设置中重新开启。",
+   "rehber.kontrol": "每个应用自己的设置：Discord > 设置 > 游戏覆盖；Steam > 设置 > 游戏中；NVIDIA 应用 > 设置 > 游戏内覆盖层。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭游戏内覆盖层"
+  },
+  "GPU-001": {
+   "ad": "硬件加速 GPU 计划（HAGS）",
+   "ne_ise_yarar": "把 GPU 工作队列的调度，从 CPU 上的 Windows 内核转移到 GPU 自己的调度器。",
+   "artilar": [
+    "NVIDIA DLSS 帧生成所必需",
+    "在某些受 CPU 限制的场景中，延迟/卡顿略有改善"
+   ],
+   "eksiler": [
+    "在某些游戏、VR 和捕获软件中有卡顿的报告（取决于驱动程序版本）"
+   ],
+   "dokunmamali": [
+    "使用 DLSS 帧生成或类似帧生成的人不应关闭它"
+   ],
+   "varsayilan": "在 Windows 11 且驱动程序支持的情况下，大多为开启。",
+   "gerceklik.aciklama": "这是一项架构上的更改；对 FPS 的影响通常很小，但帧生成等功能依赖于它。HwSchMode 注册表值（2 开，1 关）没有写在 Microsoft 的文档里；该文章只介绍了“设置”中的开关，并说大多数用户不会察觉到这一更改。",
+   "gerceklik.celiski": "一些社区指南建议关闭它（为了减少卡顿），另一些建议开启（为了降低延迟）；两者都基于特定游戏的观察。",
+   "performans_etkisi.gerekce": "Microsoft 表示用户可能看不到明显差异；独立测试得出的是小幅正面/负面结果，取决于游戏和驱动程序。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 显示 > 图形 > 更改默认图形设置 > 硬件加速 GPU 计划。",
+    "命令：Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name HwSchMode -Value 2 -Type DWord"
+   ],
+   "rehber.geri_alma": "把 HwSchMode 改回之前的值（1）并重启。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name HwSchMode -ErrorAction SilentlyContinue  （2 = 开，1 = 关）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+、Windows 11",
+   "sade_ad": "让显卡自己调度自己的工作（HAGS）"
+  },
+  "GPU-002": {
+   "ad": "低延迟模式",
+   "ne_ise_yarar": "缩短 CPU 在 GPU 之前准备好的帧队列。开 = 最多 1 个预渲染帧；Ultra = 恰好在 GPU 需要时才发送帧。",
+   "artilar": [
+    "在受 GPU 限制的情况下，输入延迟明显更低"
+   ],
+   "eksiler": [
+    "在受 CPU 限制的情况下没有好处；有时平均 FPS 会略有下降，或卡顿增加",
+    "对 DX12 和 Vulkan 游戏没有效果（由游戏自己管理队列）"
+   ],
+   "dokunmamali": [
+    "在使用 Reflex 的游戏中不必费心"
+   ],
+   "notlar": [
+    "NVIDIA 控制面板中的“Ultra”值不在公开的 NVAPI 里；这里可以选择关/开。",
+    "如果游戏支持 NVIDIA Reflex，请在游戏中开启 Reflex；此时此设置没有效果。"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "NVIDIA 的延迟指南和独立测量都显示，在受 GPU 限制的场景中延迟更低。",
+   "performans_etkisi.gerekce": "影响延迟，而不是 FPS。对受 GPU 限制的 DX9/DX11 游戏有意义；其他情况下影响很小或没有。",
+   "rehber.adimlar": [
+    "如果游戏支持 NVIDIA Reflex：请在游戏中开启 Reflex；此时此设置没有效果。",
+    "如果不支持，且 GPU 占用在 95% 以上：选“开”或 Ultra。"
+   ],
+   "rehber.geri_alma": "改回“关”（默认）。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 全局/程序设置 > 低延迟模式。（以编程方式读取：NVIDIA Profile Inspector 或 NVAPI DRS。）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "关（由应用程序决定）",
+   "nvidia.secenekler.1.etiket": "开（最多 1 帧）"
+  },
+  "GPU-003": {
+   "ad": "电源管理模式：首选最高性能",
+   "ne_ise_yarar": "防止 GPU 在低负载时降低时钟频率。",
+   "artilar": [
+    "在 GPU 占用率较低的电竞游戏中，由时钟波动引起的帧时间尖峰可能会减少"
+   ],
+   "eksiler": [
+    "如果全局应用，即使在桌面上功耗和发热也很高",
+    "笔记本电脑上的电池和风扇噪音"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户（在全局设置中）",
+    "对用电量/发热敏感的人"
+   ],
+   "notlar": [
+    "在全局设置中，“最高性能”意味着即使空闲时也保持高频率和高功耗；针对单个游戏的设置将加入“游戏”菜单。"
+   ],
+   "varsayilan": "正常。",
+   "gerceklik.aciklama": "它的效果仅限于低 GPU 负载的场景。在一次独立对比中，FPS 变化很小且不一致，而空闲功耗明显上升；作者建议，如果达到目标频率没有问题，就保持默认值。（之前那句“它也出现在 NVIDIA 的延迟指南中”已被删除，因为在该指南里无法核实。）",
+   "performans_etkisi.gerekce": "在 GPU 高负载下，GPU 本来就以最高频率运行；差异体现在低负载游戏的帧时间一致性上。",
+   "rehber.adimlar": [
+    "在“程序设置”选项卡中，只对游戏选择“首选最高性能”。",
+    "不建议全局应用。"
+   ],
+   "rehber.geri_alma": "正常（默认）。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 电源管理模式。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "最佳功率（默认）",
+   "nvidia.secenekler.1.etiket": "自适应",
+   "nvidia.secenekler.2.etiket": "首选最高性能",
+   "profil_notu": "在一次独立对比中，帧率变化很小且不一致，而空闲功耗明显上升。即使在台式机上，它也要付出发热和功耗的代价；在笔记本上则会影响续航和风扇噪音。它作为一个可选的单独设置留在这里。"
+  },
+  "GPU-004": {
+   "ad": "纹理过滤 – 质量：高性能",
+   "ne_ise_yarar": "通过在纹理过滤中做一些画质上的取舍，节省显存带宽。",
+   "artilar": [
+    "在非常弱/老旧的 GPU 上，FPS 有少量提升"
+   ],
+   "eksiler": [
+    "地面和远处表面出现闪烁和模糊"
+   ],
+   "dokunmamali": [
+    "现代 GPU（差异在测量误差之内，而画面会变差）"
+   ],
+   "varsayilan": "质量。",
+   "gerceklik.aciklama": "这是真实的画质/性能取舍，但收益非常小。",
+   "performans_etkisi.gerekce": "在现代 GPU 上，纹理过滤的开销非常小。",
+   "rehber.adimlar": [
+    "选择“高性能”（各向异性采样优化和三线性优化也会随之开启）。"
+   ],
+   "rehber.geri_alma": "质量（默认）。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 纹理过滤 - 质量。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "高质量",
+   "nvidia.secenekler.1.etiket": "质量（默认）",
+   "nvidia.secenekler.2.etiket": "性能",
+   "nvidia.secenekler.3.etiket": "高性能",
+   "profil_notu": "收益非常小，却要牺牲画质（远处表面出现闪烁和模糊）。配置文件中只包含不会降低画质的设置。"
+  },
+  "GPU-005": {
+   "ad": "着色器缓存大小",
+   "ne_ise_yarar": "把已编译的着色器存放在磁盘上，这样重新打开游戏时就不必再次编译相同的着色器。",
+   "artilar": [
+    "对于玩很多大型游戏的人，因缓存溢出造成的编译卡顿更少"
+   ],
+   "eksiler": [
+    "占用更多磁盘空间"
+   ],
+   "dokunmamali": [
+    "磁盘空间非常有限的人"
+   ],
+   "notlar": [
+    "只提供“驱动程序默认值”和“无限制”：NVIDIA 的文档没有说明其他大小的单位。"
+   ],
+   "varsayilan": "驱动程序默认值（大小有限）。",
+   "gerceklik.aciklama": "机制是真实的；只有当默认缓存被填满时，收益才会显现。",
+   "performans_etkisi.gerekce": "不会改变平均 FPS；在缓存溢出的系统上可以改善卡顿（1% 低位）。",
+   "rehber.adimlar": [
+    "如果磁盘空间足够：10 GB、100 GB 或无限制。"
+   ],
+   "rehber.geri_alma": "驱动程序默认值。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 着色器缓存大小。缓存位置：%LOCALAPPDATA%\\NVIDIA\\DXCache 和 GLCache。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "驱动程序默认值",
+   "nvidia.secenekler.1.etiket": "无限制",
+   "profil_notu": "它不会提高平均 FPS；只能在默认缓存被填满后减少卡顿（1% 低位），并且要占用磁盘空间。如有需要，你可以自行加大。"
+  },
+  "GPU-006": {
+   "ad": "G-SYNC + 垂直同步（驱动程序中）+ FPS 上限的组合",
+   "ne_ise_yarar": "保证帧率保持在 G-SYNC 范围内；画面无撕裂，也没有垂直同步带来的延迟。驱动程序垂直同步与 G-SYNC 一起使用时，只在帧时间波动期间防止撕裂。",
+   "artilar": [
+    "无撕裂画面下的最低延迟（Blur Busters 的测量）"
+   ],
+   "eksiler": [
+    "FPS 无法超过刷新率（竞技玩家可能接受撕裂，更喜欢不限制 FPS）"
+   ],
+   "dokunmamali": [
+    "没有 G-SYNC/VRR 显示器的人（需要另一种策略）"
+   ],
+   "notlar": [
+    "这里只选择驱动程序的垂直同步。请在 NVIDIA 控制面板中开启 G-SYNC，并通过“最大帧速率”设置 FPS 上限。"
+   ],
+   "varsayilan": "垂直同步：使用 3D 应用程序设置；FPS 上限：关。",
+   "gerceklik.aciklama": "在 Blur Busters 的 G-SYNC 101 系列中用高速摄像机测量。",
+   "gerceklik.celiski": "一些竞技玩家认为，不限制 FPS + 关闭垂直同步的延迟更低；当 FPS 远高于刷新率时确实如此，代价是撕裂。",
+   "performans_etkisi.gerekce": "会限制 FPS，但能改善延迟和帧的一致性；与传统垂直同步相比，延迟差异很大。",
+   "rehber.adimlar": [
+    "G-SYNC：开。",
+    "NVCP 垂直同步：开。",
+    "游戏内垂直同步：关。",
+    "FPS 上限：比刷新率低几 FPS（例如 144 Hz 对应约 138-141）— 最好使用游戏内限帧器或 Reflex（垂直同步开启时，Reflex 会自动设置上限）。"
+   ],
+   "rehber.geri_alma": "把这些设置恢复到之前的状态。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 设置 G-SYNC；管理 3D 设置 > 垂直同步和最大帧速率。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "使用应用程序设置（默认）",
+   "nvidia.secenekler.1.etiket": "开",
+   "nvidia.secenekler.2.etiket": "关",
+   "sade_ad": "G-SYNC、垂直同步和 FPS 上限一起使用"
+  },
+  "GPU-007": {
+   "ad": "最大帧速率（驱动程序 FPS 限制器）",
+   "ne_ise_yarar": "把 FPS 限制在一个固定值。帧时间更一致，可以通过避免 GPU 占用达到 100% 来降低延迟，并降低发热和功耗。",
+   "artilar": [
+    "帧时间更一致",
+    "保持在 VRR 范围内",
+    "笔记本电脑上发热/风扇噪音更少"
+   ],
+   "eksiler": [
+    "延迟通常比游戏内限帧器略高"
+   ],
+   "notlar": [
+    "使用 G-SYNC 时，推荐值比显示器刷新率低 3（例如 144 Hz 对应 141）。"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "在受 GPU 限制时，限制 FPS 会清空渲染队列，从而降低延迟（NVIDIA 和 Blur Busters）。",
+   "performans_etkisi.gerekce": "会降低 FPS，但可以改善一致性和延迟；效果取决于所选的值。",
+   "rehber.adimlar": [
+    "优先顺序：游戏内限帧器 / Reflex > 驱动程序限帧器 > RTSS。",
+    "在驱动程序中：开 > 数值。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 最大帧速率。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "关（默认）",
+   "nvidia.secenekler.1.etiket": "60 FPS",
+   "nvidia.secenekler.2.etiket": "117 FPS",
+   "nvidia.secenekler.3.etiket": "141 FPS",
+   "nvidia.secenekler.4.etiket": "162 FPS",
+   "nvidia.secenekler.5.etiket": "237 FPS",
+   "sade_ad": "在驱动程序中设置 FPS 上限"
+  },
+  "GPU-008": {
+   "ad": "线程优化",
+   "ne_ise_yarar": "让驱动程序在多核 CPU 上把它的工作负载拆分到不同的线程。",
+   "artilar": [
+    "在一些较老的、受 CPU 限制的游戏中 FPS 会提升"
+   ],
+   "eksiler": [
+    "在某些游戏中出现卡顿或掉帧"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的人"
+   ],
+   "varsayilan": "自动。",
+   "gerceklik.aciklama": "驱动程序默认值本来就会根据游戏配置文件来决定。",
+   "gerceklik.celiski": "对于“开”和“关”，社区指南给出的建议正好相反。",
+   "performans_etkisi.gerekce": "因游戏而异，可能是正面也可能是负面；没有通用规则。",
+   "rehber.adimlar": [
+    "保持默认值（自动）；只有当某个特定游戏（通常是旧的 OpenGL/DX9）出现问题时，才针对该程序试试开/关。"
+   ],
+   "rehber.geri_alma": "自动。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 线程优化。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "自动（默认）",
+   "nvidia.secenekler.1.etiket": "开",
+   "nvidia.secenekler.2.etiket": "关",
+   "profil_notu": "没有证据表明它有助于性能。驱动程序默认值（自动）本来就会按游戏配置文件来决定，而它可能会损害某些游戏。"
+  },
+  "GPU-009": {
+   "ad": "首选刷新率：最高可用",
+   "ne_ise_yarar": "防止在独占全屏中更改分辨率的老游戏掉到 60 Hz。",
+   "artilar": [
+    "保证老游戏中使用高刷新率"
+   ],
+   "eksiler": [
+    "在锁定特定刷新率的游戏中偶尔会有问题"
+   ],
+   "varsayilan": "由应用程序控制。",
+   "gerceklik.aciklama": "有文档记载的驱动程序设置。",
+   "performans_etkisi.gerekce": "只对会掉到 60 Hz 的老游戏/独占全屏游戏有效；在这种情况下差异很大。",
+   "rehber.adimlar": [
+    "选择“最高可用”。"
+   ],
+   "rehber.geri_alma": "由应用程序控制。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 首选刷新率（在 G-SYNC 显示器上显示）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "由应用程序控制（默认）",
+   "nvidia.secenekler.1.etiket": "最高可用"
+  },
+  "GPU-010": {
+   "ad": "NVIDIA Reflex（游戏内）– 开 + Boost",
+   "ne_ise_yarar": "在游戏引擎和驱动程序之间动态同步渲染队列；是低延迟模式的高级、游戏内版本。Boost 在受 CPU 限制的情况下让 GPU 时钟保持在高位。",
+   "artilar": [
+    "在支持的游戏中，是最有效的降延迟方法"
+   ],
+   "eksiler": [
+    "Boost 会增加功耗",
+    "在某些游戏中 FPS 可能略有下降"
+   ],
+   "varsayilan": "取决于游戏。",
+   "gerceklik.aciklama": "NVIDIA 和独立（LDAT）测量都证实延迟更低。",
+   "performans_etkisi.gerekce": "在受 GPU 限制的场景中明显降低系统延迟；不会提高 FPS。",
+   "rehber.adimlar": [
+    "开；如果没有受 GPU 限制且不在意功耗，则选“开 + Boost”。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "游戏内画面设置 > NVIDIA Reflex 低延迟。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "NVIDIA Reflex（低延迟）"
+  },
+  "GPU-011": {
+   "ad": "即时重放和 RTX 视频超分辨率",
+   "ne_ise_yarar": "即时重放使用 NVENC 持续编码并写入磁盘。RTX VSR 使用 GPU 的 Tensor 核心对浏览器视频进行放大。",
+   "artilar": [
+    "后台编码和视频放大的负载会消失"
+   ],
+   "eksiler": [
+    "会失去片段录制/视频画质功能"
+   ],
+   "dokunmamali": [
+    "经常录制片段的人"
+   ],
+   "varsayilan": "即时重放关闭；安装后 RTX VSR 关闭（由用户自己开启）。",
+   "gerceklik.aciklama": "移除了后台工作负载；效果很小。",
+   "performans_etkisi.gerekce": "NVENC 是独立的硬件单元；开销很低，但不为零。RTX VSR 在高画质级别下会明显占用 GPU 性能。",
+   "rehber.adimlar": [
+    "如果你不使用，请关闭即时重放。",
+    "如果你在玩游戏时在第二块屏幕上看视频，请关闭 RTX 视频超分辨率/HDR，或降低其画质级别。"
+   ],
+   "rehber.geri_alma": "在相同的位置重新开启。",
+   "rehber.kontrol": "NVIDIA 应用 > 录制 > 即时重放；NVIDIA 控制面板 > 视频 > 调整视频图像设置 > RTX 视频增强。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "GPU-012": {
+   "ad": "DLDSR / DSR 和图像缩放（NIS）",
+   "ne_ise_yarar": "DLDSR 以更高的分辨率渲染，再缩小到屏幕分辨率（画质上升，FPS 下降）。NIS 从较低分辨率放大（FPS 上升，画质下降）。",
+   "artilar": [
+    "DLDSR：更清晰，边缘闪烁更少",
+    "NIS：在没有 DLSS/FSR 的游戏中提升 FPS"
+   ],
+   "eksiler": [
+    "DLDSR：FPS 明显下降",
+    "NIS：模糊/过度锐化"
+   ],
+   "dokunmamali": [
+    "在有 DLSS/FSR 的游戏中，请使用游戏自己的放大器，而不是 NIS"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "在受 GPU 限制的游戏中，渲染分辨率是影响 FPS 的最大因素。",
+   "performans_etkisi.gerekce": "会改变渲染分辨率，因此对 FPS 的影响直接而明显（方向取决于选择）。",
+   "rehber.adimlar": [
+    "为了画质（如果有富余的 GPU 性能）：DLDSR 1.78x/2.25x。",
+    "为了性能：如果游戏没有 DLSS/FSR，使用 NIS，或使用更低的分辨率 + 锐化。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > DSR - 倍数；图像缩放。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "从更高分辨率缩小（DLDSR）"
+  },
+  "GPU-013": {
+   "ad": "Radeon Anti-Lag / Anti-Lag 2",
+   "ne_ise_yarar": "通过限制 CPU 领先 GPU 的程度来降低输入延迟（对应 NVIDIA 的低延迟模式/Reflex）。",
+   "artilar": [
+    "在受 GPU 限制时延迟更低"
+   ],
+   "eksiler": [
+    "在受 CPU 限制时收益很小；偶尔会出现 FPS 下降"
+   ],
+   "dokunmamali": [
+    "2023 年短暂发布的“Anti-Lag+”因干扰游戏 DLL，导致 CS2 中出现 VAC 封号；AMD 已撤回该版本。在竞技游戏中，请避免使用会注入游戏的驱动程序端功能；请使用游戏内的 Anti-Lag 2。"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "AMD 有文档记载的降延迟技术。",
+   "gerceklik.celiski": "由于 Anti-Lag+（2023）引发 VAC 封号事件，出现了“AMD 的延迟功能会导致封号”的传言；它只适用于已被撤回的 Anti-Lag+。",
+   "performans_etkisi.gerekce": "影响延迟；在受 GPU 限制的场景中有意义。",
+   "rehber.adimlar": [
+    "驱动程序中的 Anti-Lag：开（在受 GPU 限制的游戏中）。",
+    "如果游戏支持 Anti-Lag 2，请在游戏中开启。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "AMD Software: Adrenalin > 游戏 > 图形 > Radeon Anti-Lag。Anti-Lag 2：游戏内设置。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "这是驱动程序的全局 Anti-Lag。如果游戏支持 Anti-Lag 2，请在游戏中开启它。"
+   ]
+  },
+  "GPU-014": {
+   "ad": "Radeon Chill",
+   "ne_ise_yarar": "在没有鼠标/键盘动作时降低 FPS，有动作时再提高。如果把最小值=最大值固定下来，它就变成一个简单的 FPS 限制器。",
+   "artilar": [
+    "在笔记本电脑和安静的系统上，功耗、发热和风扇噪音更少"
+   ],
+   "eksiler": [
+    "动作开始时 FPS 回升，可能会让人感觉到延迟/卡顿"
+   ],
+   "dokunmamali": [
+    "竞技类 FPS 玩家（在动态模式下）"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "为省电而设计；它不是性能功能。",
+   "performans_etkisi.gerekce": "这是一项有意降低 FPS 的省电功能。",
+   "rehber.adimlar": [
+    "为了省电/降温：开，并设置最小/最大 FPS。",
+    "在竞技游戏中：关。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "AMD Software: Adrenalin > 游戏 > 图形 > Radeon Chill。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "这里只能开启或关闭；最小/最大 FPS 值需要在 AMD Software 中设置。"
+   ]
+  },
+  "GPU-015": {
+   "ad": "Radeon Boost、Enhanced Sync 和 AFMF（驱动程序帧生成）",
+   "ne_ise_yarar": "用画质或延迟来换取更高 FPS 或更流畅表现的功能。",
+   "artilar": [
+    "Boost：移动时 FPS 更高",
+    "AFMF：在低 FPS 时，感知到的流畅度更好"
+   ],
+   "eksiler": [
+    "Boost：移动时画面模糊",
+    "Enhanced Sync：在某些系统上有卡顿的报告",
+    "AFMF：输入延迟增加，真实 FPS 并不增加"
+   ],
+   "dokunmamali": [
+    "竞技玩家不应使用 AFMF"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "这些功能是真实的，但属于取舍，而不是“免费的 FPS”。",
+   "performans_etkisi.gerekce": "可以提高显示的 FPS，但要付出延迟/画质的代价。",
+   "rehber.adimlar": [
+    "Boost：在快速移动时动态降低分辨率（在支持的游戏中）。",
+    "Enhanced Sync：减少 FreeSync 范围之外的撕裂。",
+    "AFMF：驱动程序级别的帧生成。",
+    "请针对每个游戏分别测试。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "AMD Software: Adrenalin > 游戏 > 图形。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "AFMF（驱动程序帧生成）和针对单个游戏的设置需要在 AMD Software 中设置。"
+   ],
+   "sade_ad": "AMD 帧生成和 Boost"
+  },
+  "GPU-016": {
+   "ad": "禁用 ULPS（超低功耗状态）",
+   "ne_ise_yarar": "防止空闲的（通常是第二块）GPU 进入深度睡眠状态。",
+   "artilar": [
+    "修复旧 CrossFire 系统以及某些超频工具下的稳定性/唤醒问题"
+   ],
+   "eksiler": [
+    "空闲功耗更高",
+    "在现代单 GPU 系统上没有好处",
+    "驱动程序更新可能会重置该值"
+   ],
+   "dokunmamali": [
+    "单 GPU 系统",
+    "笔记本电脑"
+   ],
+   "varsayilan": "1（开启）。",
+   "gerceklik.aciklama": "对旧的多 GPU 问题是真实的修复；作为通用性能设置则是安慰剂。",
+   "performans_etkisi.gerekce": "对单 GPU 的游戏性能没有影响；它是为多 GPU/超频稳定性准备的。",
+   "rehber.adimlar": [
+    "在 AMD GPU 的子键中（例如 0000）：Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}\\<0000>' -Name EnableUlps -Value 0"
+   ],
+   "rehber.geri_alma": "把 EnableUlps 设为 1。",
+   "rehber.kontrol": "Get-ChildItem 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}' -ErrorAction SilentlyContinue | ForEach-Object { Get-ItemProperty $_.PSPath -Name EnableUlps -ErrorAction SilentlyContinue } | Select-Object PSChildName, EnableUlps",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭 AMD 显卡的深度省电睡眠"
+  },
+  "GPU-017": {
+   "ad": "Resizable BAR / Smart Access Memory",
+   "ne_ise_yarar": "让 CPU 一次性访问全部 GPU 显存。",
+   "artilar": [
+    "在某些游戏中 FPS 会提升；对 Intel Arc 几乎是必需的"
+   ],
+   "eksiler": [
+    "在某些游戏中会略有下降（这就是 NVIDIA 使用按游戏白名单的原因）",
+    "关闭 CSM 会导致旧的 MBR 安装无法启动（请先运行 MBR2GPT）"
+   ],
+   "dokunmamali": [
+    "使用 MBR/传统引导的安装，在转换之前不得关闭 CSM"
+   ],
+   "varsayilan": "取决于主板；许多新主板默认是关闭的。",
+   "gerceklik.aciklama": "有 GPU 厂商的文档记载，并得到独立测试的证实。",
+   "performans_etkisi.gerekce": "因游戏而异；在 Intel Arc 上收益很高，在 NVIDIA/AMD 上则取决于游戏，从没有到中低。",
+   "rehber.adimlar": [
+    "BIOS：关闭 CSM（UEFI 引导），开启“Above 4G Decoding”，开启“Re-Size BAR Support”。",
+    "然后在驱动程序中确认它已启用。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中关闭 Re-Size BAR。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 系统信息 > Resizable BAR：是/否。AMD Adrenalin > 性能 > 硬件 > Smart Access Memory。GPU-Z 也会显示。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+、Windows 11",
+   "sade_ad": "完整访问显存（Resizable BAR）"
+  },
+  "GPU-018": {
+   "ad": "MSI（消息信号中断）模式",
+   "ne_ise_yarar": "让设备通过内存写入而不是共享的（基于线路的）线路来传递中断；减少中断共享和延迟。",
+   "artilar": [
+    "在使用共享 IRQ 的设备上，DPC/中断延迟可能会下降"
+   ],
+   "eksiler": [
+    "对不支持 MSI 的设备开启它，可能导致蓝屏/无法启动",
+    "驱动程序更新可能会重置该值"
+   ],
+   "dokunmamali": [
+    "其驱动程序已经使用 MSI 的设备（没有额外效果）",
+    "不熟悉注册表和安全模式恢复的用户"
+   ],
+   "varsayilan": "由驱动程序的 INF 文件设置；许多现代 GPU/NVMe/网卡驱动程序已经使用 MSI。",
+   "gerceklik.aciklama": "Microsoft 把 MSI 描述为有文档记载的机制；只有在以基于线路方式运行的设备上才预期有收益。在一套测试系统上，开启 MSI 并没有改变帧时间；那里的 Windows 11 驱动程序已经把 GPU、USB、NVMe 和网络设备设为 MSI/MSI-X 模式。",
+   "gerceklik.celiski": "在 Blur Busters/Guru3D 社区中，一些人报告使用“MSI Utility”后有改善，另一些人则没有看到差别。",
+   "performans_etkisi.gerekce": "对已经使用 MSI 的设备没有影响；对停留在基于线路模式的旧设备，延迟改善来自社区报告。",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\PCI\\<device-id>\\<instance>\\Device Parameters\\Interrupt Management\\MessageSignaledInterruptProperties' -Name MSISupported -Value 1 -Type DWord  （如果该键不存在，请先创建）"
+   ],
+   "rehber.geri_alma": "MSISupported=0 或删除该值；重启。如果无法启动，请在安全模式下撤销。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\PCI\\<device-id>\\<instance>\\Device Parameters\\Interrupt Management\\MessageSignaledInterruptProperties' -Name MSISupported -ErrorAction SilentlyContinue。设备管理器 > 查看 > 按连接显示资源 > 如果 IRQ 值为负数，则使用的是 MSI。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "显卡中断模式（MSI）"
+  },
+  "GPU-019": {
+   "ad": "干净安装驱动程序（DDU）和最新的驱动程序",
+   "ne_ise_yarar": "包含针对新游戏的优化和错误修复；DDU 会在更换 GPU 品牌时以及安装失败后清除残留。",
+   "artilar": [
+    "新游戏中有明显改善",
+    "修复由残留引起的崩溃/黑屏"
+   ],
+   "eksiler": [
+    "新驱动程序有时会带来回退问题"
+   ],
+   "dokunmamali": [
+    "稳定运行、没有问题的工作站（建议使用 Studio 驱动程序）"
+   ],
+   "varsayilan": "Windows 更新可能会安装通用驱动程序。",
+   "gerceklik.aciklama": "最新的驱动程序确实有收益；“每次更新都用 DDU”的习惯是不必要的。DDU 不是性能工具；它是用来清理驱动程序问题的工具。",
+   "performans_etkisi.gerekce": "驱动程序优化可以让新游戏有很大差别；对老游戏通常没有差别。DDU 本身不会提高 FPS。",
+   "rehber.adimlar": [
+    "从厂商处下载当前的驱动程序。",
+    "如果有问题，请在安全模式下用 Display Driver Uninstaller（DDU）卸载，并在断开网络的情况下安装新驱动程序。"
+   ],
+   "rehber.geri_alma": "重新安装之前的驱动程序版本。",
+   "rehber.kontrol": "Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, DriverDate",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "DDU 和 NVCleanstall 不随程序捆绑：请从它们的官方页面下载，并放入 tools 文件夹。两者都没有可靠的命令行模式，所以应用只会打开该工具；具体步骤由你在工具内完成。",
+    "并非每次更新驱动程序都需要 DDU；请在更换 GPU 品牌时或安装失败后使用。"
+   ]
+  },
+  "CPU-001": {
+   "ad": "关闭核心休眠（CPMINCORES）",
+   "ne_ise_yarar": "防止 Windows 把空闲的核心“休眠”；所有核心始终处于随时接收工作的状态。",
+   "artilar": [
+    "在一些旧游戏中以及负载突然变化时，由核心唤醒延迟引起的卡顿可能减少"
+   ],
+   "eksiler": [
+    "空闲功耗和发热更高",
+    "在 AMD Ryzen 7950X3D/7900X3D/9950X3D/9900X3D 上，把游戏送到正确的（V-Cache）CCD 的机制依赖于核心休眠；关闭它可能会降低性能"
+   ],
+   "dokunmamali": [
+    "双 CCD 的 Ryzen X3D 用户",
+    "笔记本电脑用户（电池和发热）"
+   ],
+   "varsayilan": "在“平衡”计划中是一个较低的百分比（启用休眠）；在“高性能”计划中是 100。",
+   "gerceklik.aciklama": "在 Windows 7 时代（尤其是 AMD FX/早期 Ryzen）这是个真实的问题；如今收益不确定，在 X3D 上还可能有害。预计在单 CCD 处理器上没有差别；在双 CCD 的 X3D 型号上可能造成损害。",
+   "gerceklik.celiski": "r/lowendgaming 和旧指南推荐“取消休眠”工具；AMD X3D 指南则说休眠是其工作方式的一部分。",
+   "performans_etkisi.gerekce": "使用现代 Windows 10/11 调度器的独立测试，没有显示出一致的收益；Windows 7 时代的问题已基本过去。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 100; powercfg /setactive SCHEME_CURRENT"
+   ],
+   "rehber.geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES <之前的值，在“平衡”计划中通常是 5-10>; powercfg /setactive SCHEME_CURRENT  （或：powercfg -restoredefaultschemes — 会删除所有自定义计划）",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR CPMINCORES  （如果被隐藏，请先运行：powercfg -attributes SUB_PROCESSOR CPMINCORES -ATTRIB_HIDE）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭 CPU 核心休眠"
+  },
+  "CPU-002": {
+   "ad": "处理器最小状态（PROCTHROTTLEMIN）",
+   "ne_ise_yarar": "设置处理器空闲时可以降到的最低性能状态。",
+   "artilar": [
+    "频率拉升的延迟更小"
+   ],
+   "eksiler": [
+    "空闲功耗和发热更高",
+    "在现代 CPU（Intel Speed Shift / AMD CPPC）上，频率切换本来就只需要微秒"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户"
+   ],
+   "varsayilan": "平衡：5%；高性能：100%。",
+   "gerceklik.aciklama": "在较老的 CPU（Speed Shift 之前）上更重要。该机制在 Microsoft 的服务器文档中有描述（对于极低延迟建议设为 100）；没有找到测量它对游戏延迟影响的数据。",
+   "performans_etkisi.gerekce": "使用硬件控制的 P 状态时，加速非常快；在游戏负载下，CPU 本来就处于高频。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100; powercfg /setactive SCHEME_CURRENT"
+   ],
+   "rehber.geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5; powercfg /setactive SCHEME_CURRENT  （“平衡”计划的默认值通常是 5%）",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "提高 CPU 的最低速度"
+  },
+  "CPU-003": {
+   "ad": "处理器性能提升模式（PERFBOOSTMODE）– 笔记本散热控制",
+   "ne_ise_yarar": "决定睿频/Precision Boost 的行为。0（禁用）会完全关闭睿频。",
+   "artilar": [
+    "在笔记本电脑上，限制睿频可以大幅降低温度和风扇噪音，并减少由热节流引起的 FPS 骤降"
+   ],
+   "eksiler": [
+    "睿频关闭后，在受 CPU 限制的游戏中 FPS 明显下降"
+   ],
+   "dokunmamali": [
+    "散热良好的台式机用户（不要降低该值）"
+   ],
+   "notlar": [
+    "这是一项实验性设置：笔记本很烫时开启，性能下降时关闭。"
+   ],
+   "varsayilan": "通常为 2（激进）。",
+   "gerceklik.aciklama": "有文档记载的电源设置；在笔记本社区中很常见，且效果（温度）可以测量。",
+   "performans_etkisi.gerekce": "在台式机上降低它会降低性能；在触及热上限的笔记本上，它可以改善一致性。",
+   "rehber.adimlar": [
+    "台式机：保持为 2（激进）。",
+    "在发烫的笔记本上试用：powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 4; powercfg /setactive SCHEME_CURRENT  （0=禁用，1=启用，2=激进，3=高效启用，4=高效激进）"
+   ],
+   "rehber.geri_alma": "改回之前的值（通常是 2），并运行 powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE +ATTRIB_HIDE",
+   "rehber.kontrol": "powercfg -attributes SUB_PROCESSOR PERFBOOSTMODE -ATTRIB_HIDE; powercfg /query SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "CPU 加速（睿频）模式"
+  },
+  "CPU-004": {
+   "ad": "关闭 Spectre/Meltdown 软件缓解措施",
+   "ne_ise_yarar": "关闭针对处理器侧信道漏洞的软件防护。",
+   "artilar": [
+    "在旧款 Intel CPU（大致为第 8 代之前）上，对磁盘 I/O 和系统调用密集的工作有可测量的提升"
+   ],
+   "eksiler": [
+    "使电脑暴露于通过浏览器和本地恶意代码进行的内存读取攻击之下",
+    "在新 CPU 上，缓解措施已经由硬件实现，所以收益可以忽略不计"
+   ],
+   "dokunmamali": [
+    "任何用于上网、共享或工作的计算机",
+    "新一代 CPU 的所有者（没有好处）"
+   ],
+   "notlar": [
+    "计算机重启后生效。",
+    "会降低安全性：浏览器或电脑上的恶意代码可以读取内核内存。",
+    "在 Windows 10（支持已于 2025 年 10 月 14 日结束）上，关闭它比在 Windows 11 上风险更高。",
+    "如果无法创建还原点，则不会应用。在 AMD 和新款 Intel CPU 上，收益可以忽略不计。",
+    "如果 Windows 无法启动：在安全模式下，在管理员命令提示符中运行 reg delete \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\" /v FeatureSettingsOverride /f，并对 FeatureSettingsOverrideMask 执行同样的操作，然后重启；或者在恢复环境中使用系统还原，回到此更改之前的还原点。"
+   ],
+   "varsayilan": "没有值（根据 CPU 启用缓解措施）。",
+   "gerceklik.aciklama": "效果是真实的，但安全代价很高；Microsoft 只在特定场景下才有相关文档。",
+   "performans_etkisi.gerekce": "在游戏中通常很低；在旧款 Intel CPU + 大量 I/O 时更明显。在新 CPU 上非常低。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "根据 Microsoft KB4073119：FeatureSettingsOverride=3 且 FeatureSettingsOverrideMask=3（DWORD）— 会关闭 Spectre v2 和 Meltdown 缓解措施。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name FeatureSettingsOverride, FeatureSettingsOverrideMask; 重启",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' | Select-Object FeatureSettingsOverride, FeatureSettingsOverrideMask  （可使用 Microsoft 的 SpeculationControl PowerShell 模块获取详细状态：Get-SpeculationControlSettings）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "CPU-005": {
+   "ad": "AMD Ryzen X3D（双 CCD）：Game Bar + AMD 芯片组驱动程序 + 平衡计划",
+   "ne_ise_yarar": "在 7950X3D/7900X3D/9950X3D/9900X3D 上，两个 CCD 中只有一个拥有额外缓存。当检测到游戏（通过 Game Bar）时，另一个 CCD 会被休眠，游戏运行在 V-Cache 核心上。",
+   "artilar": [
+    "游戏运行在正确的核心上：FPS 和 1% 低位有明显差别，取决于游戏"
+   ],
+   "eksiler": [
+    "未被检测到的游戏可能运行在错误的 CCD 上（请在 Game Bar 中用“记住这是一个游戏”来标记它们）"
+   ],
+   "dokunmamali": [
+    "在这些处理器上，会移除 Game Bar 的精简脚本、“卓越/高性能”计划以及关闭核心休眠的工具，都会破坏这套机制"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "AMD 和独立评测（Notebookcheck、TheFPSReview）都证实了对 Game Bar 和驱动程序的依赖。",
+   "gerceklik.celiski": "一些评测说休眠由驱动程序完成，另一些说由 Windows 电源管理完成；具体分工并不完全清楚，但大家一致认为这些组件是必需的。",
+   "performans_etkisi.gerekce": "在错误的 CCD 上调度，可能造成严重的性能损失，取决于游戏；正确的配置可以避免这一点。",
+   "rehber.adimlar": [
+    "安装最新的 AMD 芯片组驱动程序（包括 3D V-Cache 性能优化器驱动程序）。",
+    "保持 Xbox Game Bar 已安装并更新到最新。",
+    "使用“平衡”电源计划。",
+    "在 BIOS 中：CPPC 和 CPPC Preferred Cores：自动/启用。"
+   ],
+   "rehber.geri_alma": "—",
+   "rehber.kontrol": "Get-AppxPackage Microsoft.XboxGamingOverlay | Select-Object Version; Get-Service -Name amd3dvcacheSvc -ErrorAction SilentlyContinue; powercfg /getactivescheme",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "CPU-006": {
+   "ad": "Windows 11 以及 Intel 混合（P/E 核心）处理器上的 E 核处理",
+   "ne_ise_yarar": "确保在第 12 代及更新的 Intel 处理器上，游戏线程运行在性能核心上。",
+   "artilar": [
+    "在 Windows 11 + 当前游戏下，调度通常是正确的"
+   ],
+   "eksiler": [
+    "关闭 E 核会在多核工作（编译、渲染、直播）中造成严重的性能损失"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的用户"
+   ],
+   "varsayilan": "所有核心开启。",
+   "gerceklik.aciklama": "Denuvo DRM 和调度问题在 Alder Lake 发布时是真实存在的；它们已通过补丁基本修复。",
+   "gerceklik.celiski": "一些竞技玩家报告关闭 E 核后帧时间更一致；其他测试则显示没有差别。",
+   "performans_etkisi.gerekce": "调度问题出现在 Windows 10 和一些旧游戏中；在 Windows 11 上大多已解决。",
+   "rehber.adimlar": [
+    "使用 Windows 11（支持 Thread Director）。",
+    "如果某个特定的老游戏有 E 核问题：不要在 BIOS 中关闭 E 核，而是先更新游戏，然后再尝试用 Process Lasso 设置 CPU 集/亲和性。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中重新启用 E 核。",
+   "rehber.kontrol": "Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors; 任务管理器 > 性能 > CPU。",
+   "uyumluluk.kaynak_metin.windows": "推荐 Windows 11（Windows 10 没有 Thread Director）"
+  },
+  "CPU-007": {
+   "ad": "关闭 SMT / 超线程",
+   "ne_ise_yarar": "阻止每个物理核心运行两个线程。",
+   "artilar": [
+    "有报告称，在某些游戏中 1% 低位有小幅改善（8 核及以上的 CPU）"
+   ],
+   "eksiler": [
+    "在核心较少的 CPU（4-6 核）上有明显的性能损失",
+    "在多线程应用中损失很大"
+   ],
+   "dokunmamali": [
+    "4-6 核 CPU 的用户",
+    "主播/渲染者"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "在特定游戏 + 高核心数的组合中有小幅收益，在其他情况下则有损失。",
+   "gerceklik.celiski": "评测网站的关闭 SMT 测试，会因游戏不同而得出相反的结果。",
+   "performans_etkisi.gerekce": "因游戏和核心数不同，可能是正面也可能是负面；没有通用规则。",
+   "rehber.adimlar": [
+    "BIOS > CPU 设置 > SMT / 超线程：禁用。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中设为启用。",
+   "rehber.kontrol": "Get-CimInstance Win32_Processor | Select-Object NumberOfCores, NumberOfLogicalProcessors  （如果两者相等，则 SMT 已关闭）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭超线程 / SMT"
+  },
+  "CPU-008": {
+   "ad": "关闭 C 状态（BIOS）",
+   "ne_ise_yarar": "防止核心进入深度睡眠状态。",
+   "artilar": [
+    "唤醒延迟降低微秒级（在测量环境中）"
+   ],
+   "eksiler": [
+    "空闲功耗和发热明显上升",
+    "在 Ryzen 和现代 Intel 上，加速算法会从空闲核心的睡眠中获得功耗预算；单核加速可能下降"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户",
+    "Ryzen 用户（加速行为可能被破坏）"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "在痴迷于延迟的社区（Blur Busters 论坛）中很常见；其在游戏中的可测量收益存在争议。",
+   "gerceklik.celiski": "一些用户报告 DPC 延迟更低；另一些人则测得加速性能的损失。",
+   "performans_etkisi.gerekce": "没有找到独立测量表明它在游戏中有可重复的收益；在某些情况下是负面的。",
+   "rehber.adimlar": [
+    "重启计算机并进入 BIOS（通常在启动时按 Del 或 F2）。",
+    "在 CPU 电源管理部分找到“Global C-State Control”或“C-States”设置。",
+    "将其设为 Disabled，保存并退出（F10）。要撤销，请在同一位置选择“自动/启用”。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中设为自动/启用。",
+   "rehber.kontrol": "BIOS > CPU 电源管理 > C-States / Global C-state Control。在 Windows 中间接查看：powercfg /energy 报告。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭 CPU 睡眠状态（BIOS）"
+  },
+  "CPU-009": {
+   "ad": "计时器分辨率工具和 GlobalTimerResolutionRequests",
+   "ne_ise_yarar": "自 Windows 10 2004 起，timeBeginPeriod 只影响调用它的进程；在 Windows 11 上，窗口被最小化/不可见的进程所发出的请求同样无法保证。这就是“计时器分辨率”工具可能不再影响游戏的原因。社区使用这个注册表值来恢复旧的全局行为。",
+   "artilar": [
+    "在不自己设置计时器的老游戏中，基于 Sleep 的 FPS 限制器可能变得更精确"
+   ],
+   "eksiler": [
+    "全系统的中断频率很高：功耗和笔记本续航会变差",
+    "大多数现代游戏和引擎本来就会请求自己的计时器分辨率"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户",
+    "没有遇到问题的人"
+   ],
+   "varsayilan": "没有值（按进程的行为）。",
+   "gerceklik.aciklama": "Microsoft 记载了这一行为变化；该注册表值的存在是社区观察到的，没有官方的用户文档。",
+   "gerceklik.celiski": "一些“计时器分辨率”工具仍被当作“FPS 加速器”推荐，尽管它们在 Windows 10 2004+ 上已不再有全局效果。",
+   "performans_etkisi.gerekce": "有报告称对帧时间一致性有小幅影响；没有可重复的、大范围的测量。",
+   "rehber.adimlar": [
+    "通常不需要。",
+    "要在 Windows 11 上恢复旧的（全局）行为：New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel' -Name GlobalTimerResolutionRequests -PropertyType DWord -Value 1 -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel' -Name GlobalTimerResolutionRequests",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel' -Name GlobalTimerResolutionRequests -ErrorAction SilentlyContinue；当前分辨率：Sysinternals ClockRes（clockres.exe）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+（按进程）、Windows 11（GlobalTimerResolutionRequests）"
+  },
+  "CPU-010": {
+   "ad": "使用 Process Lasso 分配核心 / CPU 亲和性",
+   "ne_ise_yarar": "限制进程可以在哪些核心上运行。",
+   "artilar": [
+    "在特定情况下可以修正调度器的错误"
+   ],
+   "eksiler": [
+    "使用不当会减少游戏可用的核心数，降低性能",
+    "某些反作弊会阻止对进程的干预"
+   ],
+   "dokunmamali": [
+    "没有具体问题的人"
+   ],
+   "varsayilan": "所有核心。",
+   "gerceklik.aciklama": "这个工具是真实的；“在每个游戏里都设置亲和性”的通用建议却不是。收益因游戏和硬件而异：在一篇文章中（9950X3D、非常低的画质设置），两个游戏有改善，一个没有差别；没有通用的证据。",
+   "performans_etkisi.gerekce": "如果修复了某个问题则很高；否则没有影响或为负面。",
+   "rehber.adimlar": [
+    "仅针对特定问题（例如 X3D 上 CCD 错误、旧游戏的多核 bug）：使用 Process Lasso 设置一条永久的 CPU 集/亲和性规则。"
+   ],
+   "rehber.geri_alma": "删除该规则；选择所有核心。",
+   "rehber.kontrol": "任务管理器 > 详细信息 > 进程 > 设置相关性；Get-Process <name> | Select-Object ProcessorAffinity",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "把程序固定在特定的 CPU 核心上"
+  },
+  "PWR-001": {
+   "ad": "电源计划：高性能 / 卓越性能",
+   "ne_ise_yarar": "预置的配置，会把核心休眠、处理器最小状态以及磁盘/USB/PCIe 省电等子设置调整到偏向性能的方向。",
+   "artilar": [
+    "在某些系统上，加速响应和帧时间一致性有小幅改善"
+   ],
+   "eksiler": [
+    "空闲功耗和发热更高",
+    "笔记本电脑续航更短",
+    "一些现代笔记本（现代待机）只有“平衡”计划；会使用“电源模式”来代替更改计划"
+   ],
+   "dokunmamali": [
+    "Ryzen 7900X3D/7950X3D/9900X3D/9950X3D 用户（AMD 推荐使用“平衡”计划）",
+    "使用电池的笔记本电脑用户"
+   ],
+   "notlar": [
+    "当电源计划改变时，“处理器”和“电源”菜单中的计划设置（核心休眠、处理器最小状态等）必须在新计划中重新应用。"
+   ],
+   "varsayilan": "平衡（381b4222-f694-41f0-9685-ff5bb260df2e）。",
+   "gerceklik.aciklama": "机制是真实的，但“卓越性能”是为工作站设计的，在游戏中没有显示出与“高性能”的有意义差别。在一台电脑上用 4 个游戏做的一次测量中，只有一个游戏的 1% 低位帧率有改善；其他游戏要么没有差别，要么略有下降。",
+   "gerceklik.celiski": "优化视频把“卓越性能”说成“秘密 FPS 模式”；Microsoft 把它定义为面向工作站工作负载。",
+   "performans_etkisi.gerekce": "在现代 CPU 上，“平衡”计划同样能快速加速；在独立测试中，差异通常很小。在较旧的系统上可能更明显。",
+   "rehber.adimlar": [
+    "高性能：powercfg /setactive SCHEME_MIN。",
+    "卓越性能（如果未显示）：powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61，然后用列表中的新 GUID 运行 powercfg /setactive <GUID>"
+   ],
+   "rehber.geri_alma": "平衡：powercfg /setactive SCHEME_BALANCED",
+   "rehber.kontrol": "powercfg /getactivescheme; powercfg /list",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+（卓越性能）、Windows 11"
+  },
+  "PWR-002": {
+   "ad": "Windows 11 电源模式：最佳性能（叠加层）",
+   "ne_ise_yarar": "Windows 的电源模式层，会改变 CPU 的功耗上限和加速的激进程度，尤其是在笔记本电脑上。",
+   "artilar": [
+    "在接通电源的笔记本电脑上有明显的性能提升（取决于 OEM 的设置）"
+   ],
+   "eksiler": [
+    "发热、风扇噪音、电池消耗更快"
+   ],
+   "dokunmamali": [
+    "想使用电池并保持安静的人"
+   ],
+   "notlar": [
+    "电源模式只在“平衡”电源计划处于活动状态时生效；在“高性能/卓越性能”计划中，它本来就已是最高。",
+    "使用的是 Windows 未公开的电源模式 API（powercfg 命令在此 Windows 版本上不起作用）。"
+   ],
+   "varsayilan": "平衡（接通电源时）。",
+   "gerceklik.aciklama": "有文档记载的电源模式；是对笔记本性能最重要的 Windows 设置之一。",
+   "performans_etkisi.gerekce": "在笔记本电脑上，影响从低到高，取决于 OEM 把哪些功耗上限与此模式绑定；在台式机上通常较低。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 电源和电池 > 电源模式：最佳性能。",
+    "命令：powercfg /overlaysetactive ded574b5-45a0-4f42-8737-46345c09c238"
+   ],
+   "rehber.geri_alma": "powercfg /overlaysetactive 00000000-0000-0000-0000-000000000000",
+   "rehber.kontrol": "powercfg /getactiveoverlayscheme  （00000000-...=平衡/更佳性能，ded574b5-45a0-4f42-8737-46345c09c238=最佳性能，961cc777-2547-4f9d-8174-7d86181b8a7a=最佳能效）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1709+（滑块）、Windows 11"
+  },
+  "PWR-003": {
+   "ad": "USB 选择性暂停",
+   "ne_ise_yarar": "防止空闲的 USB 设备被置于睡眠状态。",
+   "artilar": [
+    "可以修复鼠标/键盘/音频接口/DAC 的短暂断连或首次移动延迟"
+   ],
+   "eksiler": [
+    "笔记本电脑续航更短"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的笔记本电脑用户"
+   ],
+   "varsayilan": "1（启用）。",
+   "gerceklik.aciklama": "对断连/唤醒问题是真实的修复；不是性能设置。该机制有文档记载（设备唤醒期间的延迟）；其在游戏中的效果没有被测量过。",
+   "performans_etkisi.gerekce": "不影响 FPS；修复 USB 设备断连。游戏期间正在使用的设备本来就不会进入睡眠。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0; powercfg /setactive SCHEME_CURRENT"
+   ],
+   "rehber.geri_alma": "把该值设为 1，并重新激活该计划。",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭 USB 省电"
+  },
+  "PWR-004": {
+   "ad": "PCI Express 链接状态电源管理（ASPM）",
+   "ne_ise_yarar": "控制 PCIe 链路（GPU、NVMe、网卡）在空闲时是否进入低功耗状态。",
+   "artilar": [
+    "偶尔可以修复某些 NVMe/GPU/网卡设备的唤醒延迟或不稳定问题"
+   ],
+   "eksiler": [
+    "笔记本电脑续航更短"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户（如果没有问题）"
+   ],
+   "varsayilan": "平衡：中等/最大（取决于系统）；高性能：关。",
+   "gerceklik.aciklama": "对特定系统的稳定性是真实的；对 FPS 没有影响。",
+   "performans_etkisi.gerekce": "在负载下，链路本来就处于活动状态；影响体现在从空闲切换到负载的过程中。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0; powercfg /setactive SCHEME_CURRENT  （0=关，1=中等，2=最大节能）"
+   ],
+   "rehber.geri_alma": "改回之前的值（在“平衡”中通常为 1 或 2）。",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "PCI Express 省电"
+  },
+  "PWR-005": {
+   "ad": "设备管理器：“允许计算机关闭此设备以节约电源”",
+   "ne_ise_yarar": "防止 Windows 为了省电而关闭单个设备。",
+   "artilar": [
+    "可以修复网络断连以及鼠标/键盘的唤醒问题"
+   ],
+   "eksiler": [
+    "笔记本电脑续航更短"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的笔记本电脑用户"
+   ],
+   "varsayilan": "在大多数设备上已勾选。",
+   "gerceklik.aciklama": "对特定的硬件问题是真实的。",
+   "performans_etkisi.gerekce": "如果没有断连/稳定性问题，则没有影响。",
+   "rehber.adimlar": [
+    "设备管理器 > USB 根集线器 / 网络适配器 / HID 设备 > 属性 > 电源管理 > 取消勾选该复选框。",
+    "命令（管理员）：Get-CimInstance -Namespace root\\wmi -ClassName MSPower_DeviceEnable | Where-Object InstanceName -like '*<device>*' | Set-CimInstance -Property @{Enable=$false}"
+   ],
+   "rehber.geri_alma": "重新勾选该复选框，或设为 Enable=$true。",
+   "rehber.kontrol": "Get-CimInstance -Namespace root\\wmi -ClassName MSPower_DeviceEnable | Select-Object InstanceName, Enable",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PWR-006": {
+   "ad": "笔记本电脑：OEM 性能模式、接通电源玩游戏以及 MUX 开关",
+   "ne_ise_yarar": "在笔记本电脑上，CPU/GPU 的功耗上限和风扇曲线主要由 OEM 软件和 EC 设置，而不是 Windows。",
+   "artilar": [
+    "是影响笔记本性能的最大单项杠杆之一",
+    "有 MUX 时，经由核显的复制开销和延迟会消失"
+   ],
+   "eksiler": [
+    "风扇噪音和发热较高",
+    "在独显模式下，续航会短得多"
+   ],
+   "dokunmamali": [
+    "把电池使用放在首位的用户"
+   ],
+   "varsayilan": "平衡/混合。",
+   "gerceklik.aciklama": "笔记本评测一致地测得，不同性能模式之间有很大差异。",
+   "performans_etkisi.gerekce": "功耗上限直接决定 GPU/CPU 的时钟频率；使用电池或静音模式时，游戏性能会明显下降。",
+   "rehber.adimlar": [
+    "接通电源；在 OEM 软件中选择“性能/Turbo”模式；如果有 MUX，则选择“仅独显/Ultimate”模式（需要重启）。"
+   ],
+   "rehber.geri_alma": "改回“平衡/静音”模式和“混合”（MSHybrid/Optimus）模式。",
+   "rehber.kontrol": "OEM 软件（Armoury Crate、Lenovo Vantage/Legion Space、MSI Center、Omen Gaming Hub、Alienware Command Center 等）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PWR-007": {
+   "ad": "在此时间后关闭硬盘（HDD）",
+   "ne_ise_yarar": "防止机械硬盘在空闲时停转。",
+   "artilar": [
+    "防止存放在 HDD 上的游戏因硬盘重新启转而出现几秒钟的卡顿"
+   ],
+   "eksiler": [
+    "功耗和磁盘磨损略有增加"
+   ],
+   "dokunmamali": [
+    "只使用 SSD 的人（没有影响）"
+   ],
+   "varsayilan": "接通电源时为 20 分钟。",
+   "gerceklik.aciklama": "HDD 的启转时间是物理延迟。",
+   "performans_etkisi.gerekce": "只有在硬盘处于睡眠状态时从 HDD 读取数据，才有影响。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0; powercfg /setactive SCHEME_CURRENT  （0 = 从不）"
+   ],
+   "rehber.geri_alma": "powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 1200; powercfg /setactive SCHEME_CURRENT  （20 分钟）",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_DISK DISKIDLE",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PWR-008": {
+   "ad": "系统散热策略：主动",
+   "ne_ise_yarar": "决定温度升高时，是先让风扇加速，还是先让处理器降速（在支持 ACPI 的系统上）。",
+   "artilar": [
+    "防止处于被动模式的笔记本电脑过早降频"
+   ],
+   "eksiler": [
+    "风扇噪音更大"
+   ],
+   "varsayilan": "接通电源时通常为“主动”。",
+   "gerceklik.aciklama": "在使用 ACPI 热区的系统上是真实的；对由 OEM 管理的系统没有效果。",
+   "performans_etkisi.gerekce": "在许多现代笔记本上，风扇由 EC/OEM 软件管理，此设置可能没有效果。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR SYSCOOLPOL 1; powercfg /setactive SCHEME_CURRENT  （1=主动：先让风扇加速，0=被动：先让处理器降速）"
+   ],
+   "rehber.geri_alma": "改回之前的值。",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT SUB_PROCESSOR SYSCOOLPOL",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "NET-001": {
+   "ad": "使用有线以太网（而不是 Wi-Fi）",
+   "ne_ise_yarar": "消除无线连接中由后台扫描造成的丢包、抖动（延迟波动）和 ping 尖峰。",
+   "artilar": [
+    "ping 更稳定，丢包接近于零"
+   ],
+   "eksiler": [
+    "布线可能比较困难"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "基于网络物理原理；所有来源的建议都一致。",
+   "performans_etkisi.gerekce": "无线连接是在线游戏中“卡顿”感最大的本地原因之一；效果取决于环境。",
+   "rehber.adimlar": [
+    "如有可能，请使用网线。",
+    "如果不行：使用 5/6 GHz 频段，靠近路由器，避开信道拥堵。"
+   ],
+   "rehber.geri_alma": "—",
+   "rehber.kontrol": "Get-NetAdapter | Select-Object Name, InterfaceDescription, Status, LinkSpeed; Wi-Fi 信号：netsh wlan show interfaces",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "NET-002": {
+   "ad": "Wi-Fi 适配器省电：最高性能",
+   "ne_ise_yarar": "防止无线网卡为了省电而进入睡眠。",
+   "artilar": [
+    "可以减少笔记本电脑上周期性的 ping 尖峰"
+   ],
+   "eksiler": [
+    "续航更短"
+   ],
+   "dokunmamali": [
+    "使用有线连接的人（没有影响）"
+   ],
+   "varsayilan": "接通电源时通常为“最高性能”；使用电池时为省电。",
+   "gerceklik.aciklama": "无线省电是已知的延迟来源；效果取决于网卡和驱动程序。",
+   "performans_etkisi.gerekce": "在使用电池时，或使用激进省电的驱动程序时才有影响。",
+   "rehber.adimlar": [
+    "powercfg /setacvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0; powercfg /setactive SCHEME_CURRENT  （0=最高性能，3=最大节能）。",
+    "同时还有适配器“高级”属性中的“MIMO 节能”/“漫游积极性”设置。"
+   ],
+   "rehber.geri_alma": "改回之前的值。",
+   "rehber.kontrol": "powercfg /query SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "NET-003": {
+   "ad": "停止 Wi-Fi 后台扫描（WLAN AutoConfig）",
+   "ne_ise_yarar": "即使已连接，Windows 也会定期扫描附近的网络；在许多网卡上，这种扫描期间会按固定间隔出现 ping 尖峰。",
+   "artilar": [
+    "可以消除按固定间隔重复出现的 ping 尖峰"
+   ],
+   "eksiler": [
+    "如果连接断开，不会自动重新连接；网络列表不会更新",
+    "忘记重新开启，下次启动时会看起来像是连接问题"
+   ],
+   "dokunmamali": [
+    "经常连接/断开 Wi-Fi 或切换网络的用户（会话结束时请重新开启）"
+   ],
+   "varsayilan": "启用。",
+   "gerceklik.aciklama": "后台扫描导致延迟尖峰是无线网卡的已知行为；间隔规律的 ping 尖峰就是这个问题的迹象。",
+   "performans_etkisi.gerekce": "在存在与扫描相关的 ping 尖峰的系统上很明显；在其他系统上没有影响。",
+   "rehber.adimlar": [
+    "在已连接的状态下，玩游戏之前：netsh wlan set autoconfig enabled=no interface=\"<Wi-Fi 接口名称>\"。",
+    "另外，如果开启了位置服务，也可能触发 Wi-Fi 扫描。"
+   ],
+   "rehber.geri_alma": "netsh wlan set autoconfig enabled=yes interface=\"<Wi-Fi 接口名称>\"",
+   "rehber.kontrol": "netsh wlan show settings  （自动配置状态）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "关闭期间，如果 Wi-Fi 连接断开，它不会自行重新连接，网络列表也不会更新。游戏结束时请把此设置关闭（更改 > 还原也会做同样的事）。"
+   ]
+  },
+  "NET-004": {
+   "ad": "缓冲膨胀：路由器上的 SQM / 智能队列（QoS）",
+   "ne_ise_yarar": "防止在家里其他人下载/上传/看视频时 ping 飙升（缓冲膨胀）。",
+   "artilar": [
+    "在共享连接上，负载下的 ping 稳定性大幅改善"
+   ],
+   "eksiler": [
+    "最大下载速度可能略有下降",
+    "在高速率下，路由器的 CPU 可能跟不上"
+   ],
+   "dokunmamali": [
+    "不支持 SQM 的运营商调制解调器（请先确认是否支持）"
+   ],
+   "varsayilan": "在大多数路由器上为关。",
+   "gerceklik.aciklama": "不是 Windows 设置；但它是少数真正能做到“网络调优”所承诺的 ping 改善的常见方法之一。",
+   "performans_etkisi.gerekce": "如果连接与其他用户共享，则影响很大；对于线路空闲的单个用户则没有影响。",
+   "rehber.adimlar": [
+    "在路由器上开启 SQM（fq_codel/cake）或“智能队列”/“自适应 QoS”，并把带宽设置得略低于实际速度。"
+   ],
+   "rehber.geri_alma": "关闭 SQM/QoS。",
+   "rehber.kontrol": "缓冲膨胀测试（例如 Waveform Bufferbloat Test）：测量负载下的延迟增加。",
+   "uyumluluk.kaynak_metin.windows": "与操作系统无关",
+   "sade_ad": "路由器上的延迟控制（缓冲膨胀）"
+  },
+  "NET-005": {
+   "ad": "关闭传递优化的点对点上传",
+   "ne_ise_yarar": "限制向其他计算机上传 Windows/Store 更新，以及后台带宽的使用。",
+   "artilar": [
+    "防止由后台上传引起的 ping 升高（尤其是在上传速度较低的线路上）"
+   ],
+   "eksiler": [
+    "同一网络上的多台电脑各自单独下载更新"
+   ],
+   "dokunmamali": [
+    "在有很多电脑的本地网络中，“仅限本地网络”选项更有效率"
+   ],
+   "notlar": [
+    "这是一项策略：开启时，“设置”中的传递优化选项会显示为灰色（无法更改）。"
+   ],
+   "varsayilan": "本地网络上的电脑（取决于版本）。",
+   "gerceklik.aciklama": "有文档记载的 Microsoft 功能；效果取决于连接容量。",
+   "performans_etkisi.gerekce": "只在更新正在传输期间才有影响。",
+   "rehber.adimlar": [
+    "设置 > Windows 更新 > 高级选项 > 传递优化 >“允许从其他电脑下载”：关（或仅限本地网络）。",
+    "策略：DODownloadMode=0（仅 HTTP）。",
+    "另外，在“高级选项”下还有上传/下载带宽限制。"
+   ],
+   "rehber.geri_alma": "开启该设置；删除策略值：Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization' -Name DODownloadMode",
+   "rehber.kontrol": "Get-DeliveryOptimizationStatus; Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization' -Name DODownloadMode -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "NET-006": {
+   "ad": "关闭 Nagle 算法（TcpAckFrequency / TCPNoDelay）",
+   "ne_ise_yarar": "TcpAckFrequency=1 会关闭延迟确认（delayed ACK）。Nagle 算法会合并小的 TCP 数据包；关闭它需要在应用端使用 TCP_NODELAY。",
+   "artilar": [
+    "在使用 TCP 且不设置 TCP_NODELAY 的老游戏中（例如一些 MMO），响应速度可能改善"
+   ],
+   "eksiler": [
+    "网络流量和 CPU 占用会略有增加",
+    "大多数现代游戏使用 UDP；对这些游戏没有效果"
+   ],
+   "dokunmamali": [
+    "玩基于 UDP 的游戏的人（没有效果）"
+   ],
+   "varsayilan": "没有值（延迟确认已启用）。",
+   "gerceklik.aciklama": "TcpAckFrequency 有 Microsoft 的文档记载。由于大多数现代竞技游戏使用 UDP，所以“它能降低 ping”的通用说法是错误的。",
+   "gerceklik.celiski": "有社区分析声称，现代 Windows 上 tcpip.sys 不会读取 TCPNoDelay 注册表值；这一点存在争议。正因如此，《魔兽世界》之类的游戏提供了自己的“为速度优化网络”选项。",
+   "performans_etkisi.gerekce": "只对不会自己关闭 Nagle 的基于 TCP 的游戏有效；对其他游戏没有影响。",
+   "rehber.adimlar": [
+    "New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force; New-ItemProperty -Path '...\\<InterfaceGuid>' -Name TCPNoDelay -PropertyType DWord -Value 1 -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' -Name TcpAckFrequency, TCPNoDelay",
+   "rehber.kontrol": "Get-NetAdapter | Select-Object Name, InterfaceGuid; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\<InterfaceGuid>' | Select-Object TcpAckFrequency, TCPNoDelay",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭网络数据包合并（Nagle）"
+  },
+  "NET-007": {
+   "ad": "网卡：中断调节",
+   "ne_ise_yarar": "关闭网卡对中断的合并，让每个数据包都单独产生一次中断。",
+   "artilar": [
+    "本地网络中的数据包处理延迟降低微秒级"
+   ],
+   "eksiler": [
+    "在大流量下，CPU 占用和中断次数会上升"
+   ],
+   "dokunmamali": [
+    "CPU 较弱、且进行高速文件传输的系统"
+   ],
+   "notlar": [
+    "应用时，网卡会断开连接几秒钟；请不要在游戏或下载期间应用。"
+   ],
+   "varsayilan": "启用。",
+   "gerceklik.aciklama": "机制是真实的（Microsoft 的网卡调优指南）；但对游戏 ping 来说实际是安慰剂。在对单块网卡的一次测量中（Intel Gigabit CT，Windows 10 1909），关闭调节时约有 265 万次中断，而自适应时约为 20 万次；“中等”设置对游戏的影响最小，并保持了较低的 DPC 延迟。",
+   "performans_etkisi.gerekce": "与网络游戏毫秒级的 ping 相比，微秒级的收益无法测量。",
+   "rehber.adimlar": [
+    "Set-NetAdapterAdvancedProperty -Name '<Ethernet>' -RegistryKeyword '*InterruptModeration' -RegistryValue 0"
+   ],
+   "rehber.geri_alma": "Set-NetAdapterAdvancedProperty -Name '<Ethernet>' -RegistryKeyword '*InterruptModeration' -RegistryValue 1  （或 Reset-NetAdapterAdvancedProperty -Name '<Ethernet>' -DisplayName '*'）",
+   "rehber.kontrol": "Get-NetAdapterAdvancedProperty -Name '<Ethernet>' | Select-Object DisplayName, DisplayValue, RegistryKeyword",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "NET-008": {
+   "ad": "关闭节能以太网（EEE / 绿色以太网）",
+   "ne_ise_yarar": "防止链路在空闲时切换到低功耗模式。",
+   "artilar": [
+    "可以修复某些交换机/路由器组合下的链路断开和唤醒延迟"
+   ],
+   "eksiler": [
+    "功耗非常轻微地增加"
+   ],
+   "notlar": [
+    "应用时，网卡会断开连接几秒钟。"
+   ],
+   "varsayilan": "通常为启用。",
+   "gerceklik.aciklama": "对兼容性问题是真实的修复；不是通用的性能提升。Intel 的文档只描述了链路速率问题；其对延迟的影响没有被测量过。",
+   "performans_etkisi.gerekce": "如果没有问题，对 ping 没有影响。",
+   "rehber.adimlar": [
+    "Set-NetAdapterAdvancedProperty -Name '<Ethernet>' -DisplayName '<Energy-Efficient Ethernet>' -DisplayValue 'Disabled'  （名称和关键字取决于厂商：Realtek、Intel 等）"
+   ],
+   "rehber.geri_alma": "把同一个属性设为“Enabled”。",
+   "rehber.kontrol": "Get-NetAdapterAdvancedProperty -Name '<Ethernet>' | Where-Object DisplayName -match 'Energy|Green|EEE'",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭以太网省电"
+  },
+  "NET-009": {
+   "ad": "接收端缩放（RSS）和卸载设置",
+   "ne_ise_yarar": "RSS 把传入的流量分散到多个核心；卸载则把部分工作从 CPU 转交给网卡。",
+   "artilar": [
+    "在大多数情况下，默认值能带来最好的结果"
+   ],
+   "eksiler": [
+    "网上常见的“关闭所有卸载”的建议会增加 CPU 负载"
+   ],
+   "dokunmamali": [
+    "没有遇到问题的人（不要更改）"
+   ],
+   "notlar": [
+    "应用时，网卡会断开连接几秒钟。"
+   ],
+   "varsayilan": "RSS 和卸载已启用。",
+   "gerceklik.aciklama": "“禁用卸载/RSS 能降低 ping”的说法没有证据；Microsoft 建议保持默认值。",
+   "performans_etkisi.gerekce": "保持默认值时；关闭它们并不会改善游戏 ping。",
+   "rehber.adimlar": [
+    "推荐：保持 RSS 启用（Enable-NetAdapterRss -Name '<Ethernet>'）。",
+    "只有在存在有文档记载的驱动程序 bug 时，才关闭 LSO/校验和卸载。"
+   ],
+   "rehber.geri_alma": "Reset-NetAdapterAdvancedProperty -Name '<Ethernet>' -DisplayName '*'",
+   "rehber.kontrol": "Get-NetAdapterRss -Name '<Ethernet>'; netsh int tcp show global; Get-NetAdapterLso -Name '<Ethernet>'",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "网卡负载分担（RSS / 卸载）"
+  },
+  "INP-001": {
+   "ad": "轮询率（报告率）– 读取和设置",
+   "ne_ise_yarar": "决定鼠标每秒向计算机发送多少次位置。125 Hz = 8 ms，1000 Hz = 1 ms，8000 Hz = 0.125 ms 的间隔。",
+   "artilar": [
+    "从 125 Hz 提高到 1000 Hz，会明显降低平均输入延迟和光标移动的不均匀性",
+    "在高刷新率显示器上光标更流畅"
+   ],
+   "eksiler": [
+    "4000-8000 Hz 会增加 CPU 负载；有报告称在某些游戏中出现卡顿/掉帧（尤其是在 Windows 10 上，以及有应用在后台监听原始输入时）",
+    "无线鼠标的续航会明显下降"
+   ],
+   "dokunmamali": [
+    "CPU 较弱的系统上不要使用 4000/8000 Hz",
+    "如果高轮询率在老游戏中造成卡顿，请改回 1000 Hz"
+   ],
+   "varsayilan": "取决于鼠标（大多数游戏鼠标为 1000 Hz，办公鼠标通常为 125 Hz）。",
+   "gerceklik.aciklama": "报告间隔是延迟的一个物理组成部分。高轮询率造成的卡顿，Microsoft 工程师也承认过，并且 Windows 11 中限制了后台监听。",
+   "gerceklik.celiski": "8000 Hz 是否带来明显好处存在争议；Blur Busters 主张它在高刷新率显示器上让光标更平滑，其他人则指出其 CPU 代价。",
+   "performans_etkisi.gerekce": "125→1000 Hz 是输入延迟上真实、可测量的改善（报告之间的间隔从 8 ms 降到 1 ms）。超过 1000 Hz 后，收益缩小，CPU 代价上升。",
+   "rehber.adimlar": [
+    "使用鼠标软件（G HUB、Synapse、GG 等）、鼠标上的组合键或板载配置文件。",
+    "推荐的起点：1000 Hz。",
+    "只有在 CPU 强劲且游戏支持时，才使用 2000-8000 Hz。"
+   ],
+   "rehber.geri_alma": "在同一软件中改回之前的值。",
+   "rehber.kontrol": "Windows 中没有可靠的直接读取方式。可选办法：（1）用 USBView / USB Device Tree Viewer 查看端点的 bInterval 值（只能得到上限）；（2）用 Raw Input WM_INPUT 时间戳测量（持续移动鼠标时）；（3）在 Chromium 浏览器中使用基于“pointerrawupdate”的测试页面（粗略检查）；（4）厂商软件（设置的值）。详情：arastirma_notlari.mouse_polling_rate",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "INP-002": {
+   "ad": "关闭“提高指针精确度”（鼠标加速）",
+   "ne_ise_yarar": "关闭 Windows 的鼠标加速：光标移动的距离只取决于你移动鼠标的距离，而不取决于速度。",
+   "artilar": [
+    "肌肉记忆一致；在桌面以及不使用原始输入的游戏中，瞄准更一致"
+   ],
+   "eksiler": [
+    "用低 DPI 鼠标在大屏幕上移动，可能更累"
+   ],
+   "dokunmamali": [
+    "习惯了加速的办公/笔记本触摸板用户（触摸板有自己的设置）"
+   ],
+   "varsayilan": "开启（1、6、10）。",
+   "gerceklik.aciklama": "Microsoft 的 mouse_event 文档：当加速级别为零时，指针速度不会被放大；“提高指针精确度”复选框会把这三个值（MouseSpeed、MouseThreshold1/2）同时设为零。",
+   "performans_etkisi.gerekce": "对 FPS/延迟没有影响；影响的是输入的一致性。使用原始输入的游戏本来就会跳过此设置。",
+   "rehber.adimlar": [
+    "main.cpl > 指针选项 > 取消勾选“提高指针精确度”。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseSpeed -Value '0'; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseThreshold1 -Value '0'; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseThreshold2 -Value '0'  （通过注册表更改会在登录时生效；通过界面更改会立即生效）"
+   ],
+   "rehber.geri_alma": "勾选该复选框，或把这些值设为“1”、“6”、“10”。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' | Select-Object MouseSpeed, MouseThreshold1, MouseThreshold2  （1/6/10 = 开，0/0/0 = 关）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭鼠标加速"
+  },
+  "INP-003": {
+   "ad": "指针速度 10/20（旧界面中为 6/11）– 1:1 映射",
+   "ne_ise_yarar": "在 10（并关闭加速）时，鼠标每计数一次正好移动一个像素。更高的值会跳过像素，更低的值会丢失移动。",
+   "artilar": [
+    "在桌面以及不使用原始输入的游戏中，移动精确且无损"
+   ],
+   "eksiler": [
+    "无（可通过 DPI 来补偿）"
+   ],
+   "varsayilan": "10。",
+   "gerceklik.aciklama": "Windows 的指针倍率有文档记载；10 = 1.0 倍率。",
+   "performans_etkisi.gerekce": "这是输入精度方面的设置。",
+   "rehber.adimlar": [
+    "设置 > 蓝牙和设备 > 鼠标 > 鼠标指针速度：10。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseSensitivity -Value '10'。",
+    "通过鼠标 DPI 和游戏内灵敏度来调整手感。"
+   ],
+   "rehber.geri_alma": "改回之前的值。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name MouseSensitivity",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "islem.alanlar.0.etiket": "指针速度",
+   "sade_ad": "让鼠标速度保持 1:1"
+  },
+  "INP-004": {
+   "ad": "游戏内的原始输入（Raw Input）选项",
+   "ne_ise_yarar": "游戏直接获取鼠标数据，而不经过 Windows 的指针弹道（加速、速度倍率）。",
+   "artilar": [
+    "瞄准一致，与 Windows 的鼠标设置无关"
+   ],
+   "eksiler": [
+    "在某些非常老的游戏中，原始输入的实现可能有 bug"
+   ],
+   "varsayilan": "取决于游戏。",
+   "gerceklik.aciklama": "Raw Input API 有 Microsoft 的文档记载。",
+   "performans_etkisi.gerekce": "这是一致性方面的设置；延迟差异取决于具体实现，通常可以忽略。",
+   "rehber.adimlar": [
+    "如果游戏支持，原始输入：开。"
+   ],
+   "rehber.geri_alma": "关。",
+   "rehber.kontrol": "游戏的鼠标设置（例如“Raw Input”）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "INP-005": {
+   "ad": "MarkC Mouse Fix（曲线注册表修复）",
+   "ne_ise_yarar": "把加速曲线拉平，使其即使勾选了加速复选框，也产生 1:1 的移动。",
+   "artilar": [
+    "在强制加速的老游戏中获得 1:1 的移动"
+   ],
+   "eksiler": [
+    "在大多数现代游戏中没有必要",
+    "针对错误 DPI 缩放比例的文件会给出错误的速度"
+   ],
+   "dokunmamali": [
+    "玩使用原始输入的游戏的人",
+    "已经关闭加速的用户"
+   ],
+   "varsayilan": "Windows 默认的 SmoothMouseXCurve/YCurve 曲线。",
+   "gerceklik.aciklama": "对特定老游戏是真实的修复；对如今的大多数用户没有必要。",
+   "performans_etkisi.gerekce": "这是输入一致性方面的设置。",
+   "rehber.adimlar": [
+    "仅用于强制开启加速、且不支持原始输入的老游戏：应用与你的显示缩放比例（100/125/150%）对应的 MarkC .reg 文件。"
+   ],
+   "rehber.geri_alma": "应用 MarkC 软件包中的“Windows Default”.reg 文件。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' | Select-Object SmoothMouseXCurve, SmoothMouseYCurve",
+   "uyumluluk.kaynak_metin.windows": "Windows 7 - Windows 11"
+  },
+  "INP-006": {
+   "ad": "键盘重复延迟和重复速率",
+   "ne_ise_yarar": "决定按住一个键后多久开始重复，以及重复的速度有多快。",
+   "artilar": [
+    "编辑文本和在菜单中操作时感觉更快"
+   ],
+   "eksiler": [
+    "延迟较短时容易误输入重复字母"
+   ],
+   "varsayilan": "KeyboardDelay=1，KeyboardSpeed=31。",
+   "gerceklik.aciklama": "对桌面使用的舒适度是真实的；“它能降低游戏中的键盘延迟”的说法是错误的。这是一项使用偏好；没有证据表明它对性能有影响。",
+   "performans_etkisi.gerekce": "游戏直接读取按键的按下/松开事件；重复设置不会影响游戏内的响应。",
+   "rehber.adimlar": [
+    "control keyboard > 重复延迟：短，重复速度：快。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\Control Panel\\Keyboard' -Name KeyboardDelay -Value '0'; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Keyboard' -Name KeyboardSpeed -Value '31'"
+   ],
+   "rehber.geri_alma": "KeyboardDelay='1'，KeyboardSpeed='31'（Windows 默认值）",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Keyboard' | Select-Object KeyboardDelay, KeyboardSpeed",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "islem.alanlar.0.etiket": "重复延迟",
+   "islem.alanlar.0.secenekler.0.etiket": "短（约 250 ms）",
+   "islem.alanlar.0.secenekler.1.etiket": "约 500 ms（Windows 默认值）",
+   "islem.alanlar.0.secenekler.2.etiket": "约 750 ms",
+   "islem.alanlar.0.secenekler.3.etiket": "长（约 1 秒）",
+   "islem.alanlar.1.etiket": "重复速率"
+  },
+  "INP-007": {
+   "ad": "关闭粘滞键/筛选键/切换键的快捷方式",
+   "ne_ise_yarar": "防止在连按 5 次 Shift 或按住右 Shift 8 秒时弹出窗口，并把你从游戏中踢回桌面。",
+   "artilar": [
+    "不会再在游戏进行到一半时被踢回桌面"
+   ],
+   "eksiler": [
+    "会失去通过快捷方式使用辅助功能的方式"
+   ],
+   "dokunmamali": [
+    "使用这些辅助功能的人"
+   ],
+   "varsayilan": "快捷方式开启。",
+   "gerceklik.aciklama": "Microsoft 的 STICKYKEYS 文档：SKF_HOTKEYACTIVE = 0x4（热键激活标志）。应用只会在这三个值中更改这一位，而不会覆盖整个值。筛选键和切换键的 Microsoft 页面没有在本应用中打开并核实（第二个来源只是一个论坛）。",
+   "performans_etkisi.gerekce": "这是便利性设置。",
+   "rehber.adimlar": [
+    "设置 > 辅助功能 > 键盘 > 粘滞键/筛选键/切换键 > 关闭键盘快捷方式。",
+    "命令：StickyKeys Flags='506'，Keyboard Response Flags='122'，ToggleKeys Flags='58'"
+   ],
+   "rehber.geri_alma": "StickyKeys Flags='510'，Keyboard Response Flags='126'，ToggleKeys Flags='62'",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\StickyKeys' -Name Flags; Get-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\Keyboard Response' -Name Flags; Get-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\ToggleKeys' -Name Flags",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "INP-008": {
+   "ad": "USB 端口的选择和无线接收器的摆放",
+   "ne_ise_yarar": "共用的集线器、前面板线缆以及 USB 3.0 的 2.4 GHz 干扰，可能导致无线鼠标丢包和光标移动不稳。",
+   "artilar": [
+    "轮询更稳定，尤其是在 4000/8000 Hz 和使用无线鼠标时"
+   ],
+   "eksiler": [
+    "需要整理线缆"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "鼠标厂商（罗技、雷蛇等）建议让接收器靠近鼠标，并避开 USB 3.0 的干扰；USB 3.0 的 2.4 GHz 干扰有 Intel 的文档记载。",
+   "performans_etkisi.gerekce": "在存在干扰/共用问题的环境中很明显；在其他环境中没有影响。",
+   "rehber.adimlar": [
+    "把鼠标/接收器直接插到主板上的端口（最好是直连 CPU 的端口）；避免使用集线器、显示器的 USB 口和前面板线缆。",
+    "用延长线把无线接收器放在靠近鼠标的位置；让它远离 2.4 GHz Wi-Fi 和 USB 3.0 的干扰。"
+   ],
+   "rehber.geri_alma": "—",
+   "rehber.kontrol": "USBView / 设备管理器 > 查看 > 按连接显示设备：鼠标通过哪个控制器/集线器连接。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "INP-009": {
+   "ad": "减少在后台监听原始输入的应用（高轮询率卡顿）",
+   "ne_ise_yarar": "每一个鼠标报告都会被送给所有注册了原始输入的应用。很多后台监听者，可能在游戏清空其输入队列时延迟渲染，从而造成卡顿。在 Windows 11 Insider 25272 版本（2023）中，Microsoft 宣布了一项更改：对后台监听者的消息进行限速和合并。",
+   "artilar": [
+    "使用高轮询率鼠标时，由鼠标移动引发的 FPS 下降更少"
+   ],
+   "eksiler": [
+    "玩游戏时需要关闭某些工具软件"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "Microsoft 工程师的解释是在 Blur Busters 论坛上转述的。该更改在哪个 Windows 11 正式版中发布，本次调研无法用官方发行说明加以确认。",
+   "performans_etkisi.gerekce": "在受影响的系统上很明显（Windows 10、很多监听者、4-8 kHz 鼠标）；预计在当前的 Windows 11 版本上会有所减轻。",
+   "rehber.adimlar": [
+    "玩游戏时关闭不必要的后台应用；保持 Windows 11 更新到最新（系统会限制后台的原始输入监听者）；如果问题仍然存在，请把轮询率降到 1000 Hz。"
+   ],
+   "rehber.geri_alma": "—",
+   "rehber.kontrol": "Windows 中没有直接的命令。症状：如果在高轮询率（1000 Hz 以上）下移动鼠标时 FPS 会下降，请通过关闭后台的 RGB/宏软件、覆盖层、录屏软件和浏览器来测试。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10（问题更可能出现）、Windows 11（已改善）"
+  },
+  "INP-010": {
+   "ad": "用 hidusbf 对 USB 轮询率“超频”",
+   "ne_ise_yarar": "尝试把不提供软件轮询率设置的老鼠标从 125 Hz 提高到 500/1000 Hz。",
+   "artilar": [
+    "老款 125 Hz 鼠标的输入延迟更低（如果鼠标固件支持）"
+   ],
+   "eksiler": [
+    "测试签名模式与安全启动以及反作弊（Vanguard、FACEIT、EAC）不兼容；游戏可能无法启动",
+    "如果固件不支持，会出现重复/损坏的报告"
+   ],
+   "dokunmamali": [
+    "玩带有反作弊的竞技游戏的人",
+    "需要安全启动的系统"
+   ],
+   "varsayilan": "未安装。",
+   "bilgi.neden": "社区测量显示它在一些老鼠标上有效；但在安全和兼容性上的代价很高。",
+   "bilgi.yapilamaz_nedeni": "需要安装一个单独的、未签名的驱动程序；本应用不会安装第三方驱动程序。",
+   "gerceklik.aciklama": "社区测量显示它在一些老鼠标上有效；但在安全和兼容性上的代价很高。",
+   "performans_etkisi.gerekce": "取决于鼠标；对现代游戏鼠标没有必要。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11（由于驱动程序签名要求，实现起来很困难）",
+   "sade_ad": "提高 USB 鼠标的轮询率（hidusbf）"
+  },
+  "AUD-001": {
+   "ad": "关闭音频增强（系统音效）",
+   "ne_ise_yarar": "绕过音频驱动程序和 Windows 施加在音频信号上的效果（低音增强、虚拟环绕声、响度均衡、Nahimic/Dolby/Sonic Studio 处理）。",
+   "artilar": [
+    "修复由某些 APO 引起的爆音、延迟、崩溃和应用不兼容问题",
+    "音频按原样播放，不会被改动"
+   ],
+   "eksiler": [
+    "依赖这些效果的用户（例如响度均衡、麦克风降噪）会失去这些功能",
+    "在某些笔记本上，扬声器保护/均衡器效果也会被关闭，声音可能变弱、变得发尖"
+   ],
+   "dokunmamali": [
+    "关闭厂商的均衡器后，笔记本扬声器明显变差的用户",
+    "刻意使用响度均衡的人（见 AUD-007）"
+   ],
+   "notlar": [
+    "应用期间，音频会中断几秒钟（Windows 音频服务会被重新启动）。",
+    "可以针对每个输出设备分别开启/关闭。"
+   ],
+   "varsayilan": "取决于驱动程序；大多数设备上为开启。",
+   "gerceklik.aciklama": "对有问题的驱动程序效果是真实的修复；“它能提高 FPS”的说法没有证据。",
+   "gerceklik.celiski": "Microsoft 的文档在一个版本中把该属性类型写作 VT_UI4，在较早的版本中则是 VT_BOOL。注册表的对应关系没有官方文档（见 arastirma_notlari.ses_gelistirmeleri_ve_format）。",
+   "performans_etkisi.gerekce": "APO 的 CPU 开销通常很小；真正的好处是在有问题的 APO 下的稳定性（DPC 延迟、崩溃）。",
+   "rehber.adimlar": [
+    "推荐：Windows 11 设置 > 声音 > 设备 > 音频增强：关；Windows 10：mmsys.cpl > 设备 > 属性 > 增强 >“禁用所有增强”。",
+    "API：IMMDevice::OpenPropertyStore(STGM_READWRITE) > SetValue(PKEY_AudioEndpoint_Disable_SysFx, VT_UI4 = 1)。",
+    "注册表（可能有权限问题）：在 FxProperties 下 '{1da5d803-d492-4edd-8c23-e0c0ffee7f0e},5' = 1（DWORD），然后 Restart-Service Audiosrv -Force"
+   ],
+   "rehber.geri_alma": "在界面中开启增强，或把该值设为 0 / 删除它，然后 Restart-Service Audiosrv -Force",
+   "rehber.kontrol": "界面：设置 > 系统 > 声音 > <设备> > 音频增强。端点 GUID：Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render'。值：Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render\\{endpoint-guid}\\FxProperties' -Name '{1da5d803-d492-4edd-8c23-e0c0ffee7f0e},5' -ErrorAction SilentlyContinue  （1 = 关）。API：IPropertyStore::GetValue(PKEY_AudioEndpoint_Disable_SysFx)。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭音频特效"
+  },
+  "AUD-002": {
+   "ad": "采样率和位深（默认格式）",
+   "ne_ise_yarar": "决定 Windows 音频引擎在共享模式下混合所有声音并发送给设备时所用的格式。",
+   "artilar": [
+    "与内容匹配的采样率（48 kHz）可以避免重新采样",
+    "修复某些 USB DAC/耳机因采样率错误而产生的爆音"
+   ],
+   "eksiler": [
+    "选择 96/192 kHz 不会给游戏音频带来可听到的音质提升；在某些设备上还可能增加 CPU/DPC 负载并带来问题",
+    "在蓝牙和某些 USB 耳机上无法更改"
+   ],
+   "dokunmamali": [
+    "录音棚/DAW 用户（他们使用 ASIO/独占模式，此设置不会影响；请把它设置为工程的采样率）"
+   ],
+   "varsayilan": "取决于驱动程序（通常是 24 位 48000 Hz 或 16 位 44100/48000 Hz）。",
+   "gerceklik.aciklama": "对采样率匹配和兼容性是真实的；“更高的采样率 = 更清晰的脚步声”的说法是安慰剂。",
+   "gerceklik.celiski": "发烧友社区主张使用高采样率；由于游戏内容通常以 48 kHz 制作，没有证据显示有实际好处。",
+   "performans_etkisi.gerekce": "对游戏性能没有可测量的影响；这是音频兼容性和感知音质方面的设置。",
+   "rehber.adimlar": [
+    "推荐值：24 位，48000 Hz（大多数游戏和视频内容是 48 kHz）。",
+    "在界面中，或：svcl.exe /SetDefaultFormat \"<设备名称>\" 24 48000。",
+    "通过编程：未公开的 IPolicyConfig::SetDeviceFormat。"
+   ],
+   "rehber.geri_alma": "选择之前的格式：svcl.exe /SetDefaultFormat \"<设备名称>\" <位深> <Hz>",
+   "rehber.kontrol": "界面：mmsys.cpl > 设备 > 属性 > 高级 > 默认格式。API：IPropertyStore::GetValue(PKEY_AudioEngine_DeviceFormat) → WAVEFORMATEXTENSIBLE（nSamplesPerSec、wBitsPerSample）。注册表（原始二进制）：HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render\\{endpoint-guid}\\Properties 下的 '{f19f064d-082c-4e27-bc73-6882a1bb8e4c},0'。NirSoft：使用 svcl.exe /scomma \"\" 获取设备列表和“Default Format”列。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "AUD-003": {
+   "ad": "独占模式权限",
+   "ne_ise_yarar": "让应用独自、并以自己的格式使用音频设备（绕过 Windows 混音器）。",
+   "artilar": [
+    "关闭后，Discord + 游戏 + 音乐可以一起正常播放"
+   ],
+   "eksiler": [
+    "使用独占模式运行低延迟/比特完美的音乐/DAW 应用会失去这一能力"
+   ],
+   "dokunmamali": [
+    "追求比特完美的音乐听众，以及使用 WASAPI 独占模式的音乐人"
+   ],
+   "varsayilan": "允许。",
+   "gerceklik.aciklama": "有文档记载的 Windows 音频架构行为。",
+   "performans_etkisi.gerekce": "与游戏性能无关。",
+   "rehber.adimlar": [
+    "如果应用接管音频并使其他声音静音是个问题，请取消勾选“允许应用程序独占控制该设备”。"
+   ],
+   "rehber.geri_alma": "重新勾选该复选框。",
+   "rehber.kontrol": "mmsys.cpl > 设备 > 属性 > 高级 > 独占模式复选框。（社区报告称它们存储在注册表的 Properties 下，为 '{b3f8fa53-0004-438e-9003-51a46e139bfc},3' 和 ',4'；没有官方文档。）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "这些值在注册表中的位置没有 Microsoft 的文档（由社区报告）；尚未在这台计算机上测试过。应用期间，音频会中断几秒钟。",
+    "可以针对每个输出设备分别开启/关闭。"
+   ]
+  },
+  "AUD-004": {
+   "ad": "通信活动：“不执行任何操作”（关闭闪避）",
+   "ne_ise_yarar": "防止 Discord/Teams 之类的通信应用打开音频流时，游戏和其他声音被自动降低音量。",
+   "artilar": [
+    "语音聊天期间，游戏音频（脚步声）不会被降低"
+   ],
+   "eksiler": [
+    "通话期间，背景声音仍然很响"
+   ],
+   "varsayilan": "把其他声音的音量降低 80%。",
+   "gerceklik.aciklama": "有文档记载的 Windows 音频流衰减行为。",
+   "performans_etkisi.gerekce": "这是便利性设置。",
+   "rehber.adimlar": [
+    "mmsys.cpl > 通信选项卡 >“不执行任何操作”。",
+    "命令：New-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Multimedia\\Audio' -Name UserDuckingPreference -PropertyType DWord -Value 3 -Force"
+   ],
+   "rehber.geri_alma": "UserDuckingPreference=1，或删除该值。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Multimedia\\Audio' -Name UserDuckingPreference -ErrorAction SilentlyContinue  （0=静音，1=降低 80%，2=降低 50%，3=不执行任何操作）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭通话期间的音量闪避"
+  },
+  "AUD-005": {
+   "ad": "空间音效（Windows Sonic / 头戴式耳机的 Dolby Atmos / DTS）",
+   "ne_ise_yarar": "在立体声耳机上创建虚拟环绕声/3D 定位。",
+   "artilar": [
+    "在没有自带 3D 音频的游戏中，方位感可能会改善"
+   ],
+   "eksiler": [
+    "与游戏自己的 HRTF 一起使用：重复处理，导致方向混淆",
+    "一些玩家觉得，由于混响/染色，脚步声更难分辨"
+   ],
+   "dokunmamali": [
+    "使用游戏内 HRTF 的人（避免重复处理）"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "方位感知因人和游戏而异。Windows 文档介绍了这些选项；对延迟的影响没有文档记载，而听起来如何则因人而异。",
+   "gerceklik.celiski": "在竞技社区（r/GlobalOffensive 等）中，一些玩家认为 Dolby Atmos 是优势，另一些人则觉得游戏自己的立体声/HRTF 输出更清晰。",
+   "performans_etkisi.gerekce": "处理开销非常小；影响体现在音频的感知上。",
+   "rehber.adimlar": [
+    "如果游戏有自己的 HRTF/3D 音频（例如 CS2、Valorant、Apex），请关闭 Windows 空间音效并使用游戏内选项。",
+    "如果游戏没有，可以试试 Windows Sonic。"
+   ],
+   "rehber.geri_alma": "空间音效：关 / 之前的选项。",
+   "rehber.kontrol": "设置 > 系统 > 声音 > <设备> > 空间音效。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1703+、Windows 11"
+  },
+  "AUD-006": {
+   "ad": "禁用未使用的音频设备（NVIDIA/AMD HDMI 音频等）",
+   "ne_ise_yarar": "防止 Windows 自行把默认设备切换到显示器扬声器，并避免加载不必要的音频驱动程序。",
+   "artilar": [
+    "默认音频设备不会混乱",
+    "少加载一个驱动程序"
+   ],
+   "eksiler": [
+    "想从显示器/电视扬声器出声时，必须重新开启"
+   ],
+   "dokunmamali": [
+    "使用电视/显示器扬声器的人"
+   ],
+   "varsayilan": "全部启用。",
+   "gerceklik.aciklama": "对便利性是真实的；对性能是安慰剂。",
+   "performans_etkisi.gerekce": "这是整洁/便利性方面的设置；除非某个特定驱动程序引发 DPC 问题，否则没有性能影响。",
+   "rehber.adimlar": [
+    "mmsys.cpl > 右键单击未使用的设备 > 禁用。",
+    "或者：Disable-PnpDevice -InstanceId '<InstanceId>' -Confirm:$false。",
+    "安装 NVIDIA 驱动程序时，可以通过“自定义安装”跳过 HD Audio 组件。"
+   ],
+   "rehber.geri_alma": "Enable-PnpDevice -InstanceId '<InstanceId>' -Confirm:$false",
+   "rehber.kontrol": "Get-PnpDevice -Class AudioEndpoint, MEDIA | Select-Object Status, FriendlyName, InstanceId",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "AUD-007": {
+   "ad": "响度均衡",
+   "ne_ise_yarar": "压缩动态范围：提高轻的声音，压低响的声音。",
+   "artilar": [
+    "脚步声之类较轻的声音更容易听到"
+   ],
+   "eksiler": [
+    "爆炸声和声音的远近感会失去自然感；耳朵容易疲劳",
+    "由于此功能属于“增强”，它不能与 AUD-001 一起使用"
+   ],
+   "dokunmamali": [
+    "想要音乐/电影保持自然动态的人"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "动态范围压缩是真实存在的效果；它是否算优势，取决于偏好。",
+   "gerceklik.celiski": "与 AUD-001（关闭增强）冲突；两者不能同时应用。",
+   "performans_etkisi.gerekce": "这是一项音频处理功能。",
+   "rehber.adimlar": [
+    "可以在竞技游戏中开启，以听到较轻的声音（脚步声）。"
+   ],
+   "rehber.geri_alma": "取消勾选该复选框。",
+   "rehber.kontrol": "mmsys.cpl > 设备 > 属性 > 增强 > 响度均衡（如果驱动程序支持）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11（取决于驱动程序支持）"
+  },
+  "AUD-008": {
+   "ad": "DPC 延迟诊断（LatencyMon）– 爆音和卡顿",
+   "ne_ise_yarar": "判断音频爆音、微卡顿和鼠标掉线是否来自某个硬件驱动程序。",
+   "artilar": [
+    "基于证据的故障排除，而不是随意“调优”"
+   ],
+   "eksiler": [
+    "解读结果需要经验"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "这是一个测量工具；调优清单里承诺的“降低延迟”，正是在这里才能真正被测量出来。",
+   "performans_etkisi.gerekce": "如果找到并修复了有问题的驱动程序，卡顿会明显改善；如果没有问题，则没有影响。",
+   "rehber.adimlar": [
+    "更新/回滚相关的驱动程序（网络、音频、ACPI、GPU，以及 Nahimic 之类的音频软件）；必要时禁用未使用的设备。"
+   ],
+   "rehber.geri_alma": "把驱动程序回滚到之前的版本。",
+   "rehber.kontrol": "在游戏/音频负载下运行 LatencyMon 10 分钟以上；在“Drivers”选项卡中找出 DPC/ISR 时间最高的驱动程序。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "诊断音频爆音和卡顿（DPC）"
+  },
+  "AUD-009": {
+   "ad": "关闭蓝牙耳机的免提（HFP）配置文件",
+   "ne_ise_yarar": "防止在蓝牙耳机的麦克风被打开时，音质降到电话级别（单声道、低采样率）。",
+   "artilar": [
+    "游戏和聊天时保持立体声、高音质"
+   ],
+   "eksiler": [
+    "无法使用耳机内置的麦克风"
+   ],
+   "dokunmamali": [
+    "通过耳机麦克风说话的人"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "在传统蓝牙中，A2DP（立体声）和 HFP（麦克风）配置文件无法同时以高音质运行；在支持 LE Audio 的新设备上，这个限制较小。",
+   "performans_etkisi.gerekce": "这是音质方面的设置。",
+   "rehber.adimlar": [
+    "在“服务”选项卡中，取消勾选“免提电话”（请使用单独的 USB/有线麦克风）。"
+   ],
+   "rehber.geri_alma": "重新勾选该复选框。",
+   "rehber.kontrol": "控制面板 > 设备和打印机 > 耳机 > 属性 > 服务；mmsys.cpl 会显示两个单独的端点（“立体声”和“免提”）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭蓝牙耳机的耳机（免提）模式"
+  },
+  "QOL-001": {
+   "ad": "显示文件扩展名",
+   "ne_ise_yarar": "在文件名末尾显示 .exe、.pdf 等扩展名。",
+   "artilar": [
+    "更容易发现“发票.pdf.exe”之类的伪造文件"
+   ],
+   "eksiler": [
+    "重命名时有不小心删掉扩展名的风险"
+   ],
+   "varsayilan": "1（隐藏）。",
+   "gerceklik.aciklama": "安全性和易用性。",
+   "performans_etkisi.gerekce": "这是显示方面的设置。",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name HideFileExt -Value 0"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name HideFileExt -Value 1",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name HideFileExt",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-002": {
+   "ad": "经典右键菜单（Windows 11）",
+   "ne_ise_yarar": "右键单击时直接打开旧版的完整菜单，而无需点击“显示更多选项”。",
+   "artilar": [
+    "点击更少；可以直接使用旧的外壳扩展"
+   ],
+   "eksiler": [
+    "这是不受支持的小技巧；将来的更新可能会将其移除"
+   ],
+   "varsayilan": "新的（精简）菜单。",
+   "gerceklik.aciklama": "一种常见且有效的便利性更改；没有 Microsoft 的文档记载。",
+   "performans_etkisi.gerekce": "这是界面方面的设置。",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Force | Set-ItemProperty -Name '(default)' -Value ''; Stop-Process -Name explorer -Force"
+   ],
+   "rehber.geri_alma": "Remove-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}' -Recurse; Stop-Process -Name explorer -Force",
+   "rehber.kontrol": "Test-Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32'",
+   "uyumluluk.kaynak_metin.windows": "Windows 11"
+  },
+  "QOL-003": {
+   "ad": "关闭开始菜单搜索中的网页/Bing 结果",
+   "ne_ise_yarar": "阻止你在开始菜单中输入的内容被发送给 Bing，并关闭网页建议；本地搜索会更快、更简单。",
+   "artilar": [
+    "更快、仅限本地的结果",
+    "隐私"
+   ],
+   "eksiler": [
+    "无法在开始菜单中进行网页搜索",
+    "在某些 Windows 版本中，搜索框的建议也会消失"
+   ],
+   "varsayilan": "网页结果开启。",
+   "gerceklik.aciklama": "有文档记载的组策略。",
+   "gerceklik.celiski": "据报告，旧的“BingSearchEnabled”值在新的 Windows 版本上不起作用；应优先使用基于策略的值。",
+   "performans_etkisi.gerekce": "除了开始菜单搜索的感知速度之外，没有影响。",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Force; New-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name DisableSearchBoxSuggestions -PropertyType DWord -Value 1 -Force"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name DisableSearchBoxSuggestions",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name DisableSearchBoxSuggestions -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 2004+、Windows 11"
+  },
+  "QOL-004": {
+   "ad": "关闭透明效果",
+   "ne_ise_yarar": "关闭开始菜单、任务栏和窗口中的模糊透明（Acrylic/Mica）效果。",
+   "artilar": [
+    "在非常弱的核显上，桌面更流畅；在笔记本电脑上可极少量省电"
+   ],
+   "eksiler": [
+    "外观更扁平"
+   ],
+   "varsayilan": "1（开启）。",
+   "gerceklik.aciklama": "对低端硬件上的桌面是真实的，对游戏是安慰剂。",
+   "performans_etkisi.gerekce": "只涉及桌面合成；对全屏游戏没有影响。",
+   "rehber.adimlar": [
+    "设置 > 个性化 > 颜色 > 透明效果：关。",
+    "命令：Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name EnableTransparency -Value 0"
+   ],
+   "rehber.geri_alma": "EnableTransparency=1",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name EnableTransparency",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-005": {
+   "ad": "动画效果和菜单显示延迟（MenuShowDelay）",
+   "ne_ise_yarar": "移除窗口打开/最小化的动画，并缩短子菜单打开前的延迟。",
+   "artilar": [
+    "界面感觉“更快”"
+   ],
+   "eksiler": [
+    "对一些用户来说，没有动画的过渡显得生硬"
+   ],
+   "notlar": [
+    "此开关只会更改菜单延迟。动画效果请使用“性能”菜单中的“视觉效果”设置。"
+   ],
+   "varsayilan": "动画开启；MenuShowDelay=400（毫秒）。",
+   "gerceklik.aciklama": "对感知速度是真实的；对系统性能是安慰剂。",
+   "performans_etkisi.gerekce": "感知到的界面速度；对真实的处理速度没有影响。",
+   "rehber.adimlar": [
+    "设置 > 辅助功能 > 视觉效果 > 动画效果：关。",
+    "菜单延迟：Set-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop' -Name MenuShowDelay -Value '100'"
+   ],
+   "rehber.geri_alma": "开启动画；MenuShowDelay='400'",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop' -Name MenuShowDelay; Get-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop\\WindowMetrics' -Name MinAnimate -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-006": {
+   "ad": "玩游戏时静音通知（勿扰）",
+   "ne_ise_yarar": "防止通知弹窗在游戏期间弹出并抢走焦点。",
+   "artilar": [
+    "游戏被 Alt+Tab 切出或短暂卡顿的风险更小"
+   ],
+   "eksiler": [
+    "重要通知会被延迟"
+   ],
+   "varsayilan": "在 Windows 11 中，游戏规则通常是开启的。",
+   "gerceklik.aciklama": "便利性。",
+   "performans_etkisi.gerekce": "这是便利性设置。",
+   "rehber.adimlar": [
+    "Windows 11：开启“玩游戏时”和“以全屏模式使用应用时”的自动规则。"
+   ],
+   "rehber.geri_alma": "关闭这些规则。",
+   "rehber.kontrol": "设置 > 系统 > 通知 > 勿扰 / 自动开启勿扰 >“玩游戏时”。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10（专注助手）、Windows 11"
+  },
+  "QOL-007": {
+   "ad": "任务栏上的“结束任务”",
+   "ne_ise_yarar": "在任务栏上右键单击应用时，增加一个可直接关闭已卡死游戏的选项。",
+   "artilar": [
+    "无需打开任务管理器就能关闭卡死的游戏"
+   ],
+   "eksiler": [
+    "可能不小心关闭未保存的工作"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "Windows 11 的官方功能。",
+   "performans_etkisi.gerekce": "这是便利性设置。",
+   "rehber.adimlar": [
+    "设置 > 系统 > 开发者选项 > 结束任务：开。",
+    "命令：New-Item -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings' -Force; New-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings' -Name TaskbarEndTask -PropertyType DWord -Value 1 -Force"
+   ],
+   "rehber.geri_alma": "TaskbarEndTask=0",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings' -Name TaskbarEndTask -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 11 23H2+"
+  },
+  "QOL-008": {
+   "ad": "关闭开始菜单/锁屏的建议和提示",
+   "ne_ise_yarar": "关闭开始菜单建议、锁屏广告和“提示”通知。",
+   "artilar": [
+    "界面更干净，没有不想要的应用建议"
+   ],
+   "eksiler": [
+    "基本上没有"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "便利性；不涉及性能方面的说法。",
+   "performans_etkisi.gerekce": "这是便利性/隐私方面的设置。",
+   "rehber.adimlar": [
+    "设置 > 个性化 > 开始 >“显示提示、快捷方式、新应用等的推荐内容”：关；设置 > 系统 > 通知 >“在使用 Windows 时获取提示和建议”：关。",
+    "注册表：把上面的值设为 0。"
+   ],
+   "rehber.geri_alma": "开启相同的设置，或把这些值设为 1。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' | Select-Object SystemPaneSuggestionsEnabled, SoftLandingEnabled, SubscribedContent-338388Enabled, SubscribedContent-338389Enabled",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-009": {
+   "ad": "Edge 启动加速和后台运行",
+   "ne_ise_yarar": "防止 Edge 在登录时以及关闭后仍在后台保留进程。",
+   "artilar": [
+    "对于不使用 Edge 的人：可以释放几百 MB 内存和启动负载"
+   ],
+   "eksiler": [
+    "Edge 第一次打开会稍慢一些"
+   ],
+   "dokunmamali": [
+    "把 Edge 当作主浏览器、并希望它打开得快的人"
+   ],
+   "notlar": [
+    "由于写入的是策略，Edge 设置中可能会显示“你的浏览器由你的组织管理”。这是正常的；关闭开关后它就会消失。"
+   ],
+   "varsayilan": "开启。",
+   "gerceklik.aciklama": "有文档记载的 Edge 策略。",
+   "performans_etkisi.gerekce": "节省内存；对内存较少的系统有一点贡献。",
+   "rehber.adimlar": [
+    "edge://settings/system >“启动加速”和“关闭 Microsoft Edge 后继续运行后台扩展和应用”：关。",
+    "策略：StartupBoostEnabled=0，BackgroundModeEnabled=0（HKLM:\\SOFTWARE\\Policies\\Microsoft\\Edge）。"
+   ],
+   "rehber.geri_alma": "开启这些设置，或删除策略值。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Edge' -ErrorAction SilentlyContinue | Select-Object StartupBoostEnabled, BackgroundModeEnabled",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-010": {
+   "ad": "夜间模式和数字振动（Digital Vibrance）",
+   "ne_ise_yarar": "夜间模式减少蓝光；数字振动提高色彩饱和度。",
+   "artilar": [
+    "保护眼睛",
+    "在某些游戏中，模型会从背景中凸显出来"
+   ],
+   "eksiler": [
+    "色彩准确度会受影响（进行照片/视频编辑时请关闭）"
+   ],
+   "dokunmamali": [
+    "从事对色彩要求严格工作的人"
+   ],
+   "notlar": [
+    "夜间模式：Windows 没有用于开启/关闭它的公开 API；请通过“打开设置”在“设置”中完成。",
+    "数字振动：此设置不在 NVIDIA 的公开 NVAPI 中；对于 AMD，则需要使用 Radeon 软件。"
+   ],
+   "varsayilan": "夜间模式关；数字振动 50%。",
+   "gerceklik.aciklama": "视觉偏好；竞技方面的优势是主观的。",
+   "performans_etkisi.gerekce": "显示输出处的色彩变换；没有性能开销。",
+   "rehber.adimlar": [
+    "夜间模式：把它安排在晚上。",
+    "数字振动：在竞技游戏中（例如 CS2、Valorant），为了更容易看清敌人，倾向于 60-80%；可以针对单个游戏设置。"
+   ],
+   "rehber.geri_alma": "关闭夜间模式；数字振动 50%（NVIDIA 默认值）。",
+   "rehber.kontrol": "设置 > 系统 > 显示 > 夜间模式。NVIDIA 控制面板 > 调整桌面颜色设置 > 数字振动。AMD：Adrenalin > 显示 > 自定义颜色 > 饱和度。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "QOL-011": {
+   "ad": "深色模式（应用和 Windows）",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 设置 > 个性化 > 颜色 > 选择你的模式 中的两个值相同；立即生效。",
+   "ne_ise_yarar": "让“设置”、文件资源管理器等应用，以及任务栏和开始菜单变为深色。",
+   "artilar": [
+    "在暗室中对眼睛更友好",
+    "与在 设置 > 个性化 > 颜色 中选择“深色”相同"
+   ],
+   "eksiler": [
+    "一些较旧的程序会忽略深色主题，仍保持浅色"
+   ],
+   "varsayilan": "1（浅色模式）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1903+、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 0; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 0"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme, SystemUsesLightTheme",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -Value 1; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name SystemUsesLightTheme -Value 1"
+  },
+  "QOL-012": {
+   "ad": "显示隐藏的文件和文件夹",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 文件夹选项 > 查看 >“显示隐藏的文件、文件夹和驱动器”的值相同（1 显示，2 不显示）。",
+   "ne_ise_yarar": "在文件资源管理器中，以淡化的图标显示被标记为隐藏的文件和文件夹。受保护的系统文件仍保持隐藏。",
+   "artilar": [
+    "隐藏的文件夹（例如 AppData）变得很容易访问"
+   ],
+   "eksiler": [
+    "隐藏的文件可能被误删；Windows 是有意把它们隐藏起来的"
+   ],
+   "varsayilan": "2（不显示隐藏文件）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -Value 2"
+  },
+  "QOL-013": {
+   "ad": "任务栏图标靠左对齐（Windows 11）",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 设置 > 个性化 > 任务栏 > 任务栏对齐方式的值相同（0 靠左，1 居中）。",
+   "ne_ise_yarar": "把任务栏图标和开始按钮移到左侧，就像 Windows 10 一样。",
+   "artilar": [
+    "开始按钮始终位于同一位置，不会因为打开窗口而移动"
+   ],
+   "eksiler": [
+    "如果你习惯了居中布局，头几天可能会觉得别扭"
+   ],
+   "varsayilan": "1（居中）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 0"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -Value 1"
+  },
+  "QOL-014": {
+   "ad": "让文件资源管理器打开到“此电脑”",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 文件资源管理器选项 >“打开文件资源管理器时打开”的值相同（1 = 此电脑）。关闭它会删除该值，Windows 恢复为其默认行为。",
+   "ne_ise_yarar": "文件资源管理器打开时显示列出你各个驱动器的“此电脑”页面。",
+   "artilar": [
+    "你的驱动器近在咫尺，点一下就能到"
+   ],
+   "eksiler": [
+    "你不会先看到“快速访问”/“主页”"
+   ],
+   "varsayilan": "没有值（Windows 使用自己的默认值：主页或快速访问，取决于版本）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo"
+  },
+  "QOL-015": {
+   "ad": "关闭“晃动窗口以最小化其他窗口”",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 Windows 11 设置 > 多任务处理 >“标题栏窗口晃动”的值相同；在 Windows 10 上，它会关闭 Aero Shake。",
+   "ne_ise_yarar": "当你抓住标题栏晃动一个窗口时，不再最小化其他窗口。",
+   "artilar": [
+    "移动窗口时，不会再不小心把整个桌面都最小化"
+   ],
+   "eksiler": [
+    "如果你喜欢晃动手势，就会失去它"
+   ],
+   "notlar": [
+    "在 Windows 11 上，尚未验证该值缺失时算作晃动开启还是关闭；打开或关闭开关都会显式写入该值。"
+   ],
+   "varsayilan": "在 Windows 10 上，晃动是开启的。较新的 Windows 11 版本出厂时可能是关闭的；该值缺失时的默认行为尚未验证。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name DisallowShaking -Value 0"
+  },
+  "QOL-016": {
+   "ad": "在资源管理器中用复选框选择项目",
+   "performans_etkisi.gerekce": "这是显示方面的设置；对游戏性能没有影响。",
+   "gerceklik.aciklama": "证据等级：二手来源（Winaero）；Microsoft 没有为此注册表值提供文档。与 文件夹选项 > 查看 >“使用复选框以选择项”的值相同。",
+   "ne_ise_yarar": "在文件资源管理器中，每个文件旁边加一个复选框，这样无需按住 Ctrl 就能选择多个文件。",
+   "artilar": [
+    "用鼠标和在触摸屏上多选更容易"
+   ],
+   "eksiler": [
+    "列表看起来稍微杂乱一些"
+   ],
+   "varsayilan": "0（没有复选框）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name AutoCheckSelect -Value 0"
+  },
+  "PLC-001": {
+   "ad": "内存清理器 /“释放内存”类应用",
+   "ne_ise_yarar": "强制清空进程的工作集和待机列表，以使“可用内存”的数字变大。",
+   "artilar": [
+    "任务管理器中“可用”内存的数字变大（仅仅是表面上的）"
+   ],
+   "eksiler": [
+    "被清空的数据在再次需要时要从磁盘重新读取：造成卡顿和加载延迟",
+    "如果游戏的工作集被裁剪，缺页中断会增加"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "—",
+   "bilgi.neden": "Windows 的内存管理器本来就已优化；“清理”内存会破坏缓存。",
+   "bilgi.yapilamaz_nedeni": "它属于另一类程序；本应用不会安装或移除其他程序。",
+   "gerceklik.aciklama": "Windows 的内存管理器本来就已优化；“清理”内存会破坏缓存。",
+   "gerceklik.celiski": "在 Windows 10 1803 前后，有一个因待机列表没有被清空而引起的卡顿 bug；当时 ISLC（Intelligent Standby List Cleaner）在某些系统上确实有帮助。在当前版本中，没有关于这个问题的一致证据。",
+   "performans_etkisi.gerekce": "Windows 在需要时会立即释放缓存的内存；空闲内存就是未被利用的内存。强制清空它大多是负面的。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-002": {
+   "ad": "注册表清理器",
+   "ne_ise_yarar": "声称可以删除“无效的”注册表项。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "可能会破坏应用和 Windows 组件",
+    "Microsoft 不支持由这些工具引起的问题"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "—",
+   "bilgi.neden": "Microsoft 的官方支持政策不支持注册表清理器，并指出了它们的风险。",
+   "bilgi.yapilamaz_nedeni": "它属于另一类程序；本应用不会安装或移除其他程序。",
+   "gerceklik.aciklama": "Microsoft 的官方支持政策不支持注册表清理器，并指出了它们的风险。",
+   "performans_etkisi.gerekce": "未使用的注册表项不会对性能产生可测量的影响。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-003": {
+   "ad": "禁用 HPET / bcdedit useplatformclock",
+   "ne_ise_yarar": "试图保证 Windows 使用处理器时间戳计数器（TSC）而不是 HPET 来计时。",
+   "artilar": [
+    "如果 useplatformclock=yes 是被误设的，移除它会带来真实的改善（仅限这种情况）"
+   ],
+   "eksiler": [
+    "禁用 HPET 设备可能在某些系统上引起计时/音频问题",
+    "强制 useplatformclock=yes 会造成严重的性能损失"
+   ],
+   "dokunmamali": [
+    "所有人（默认值是正确的）"
+   ],
+   "notlar": [
+    "会禁用设备管理器中的“高精度事件计时器”（HPET）设备。"
+   ],
+   "varsayilan": "未定义 useplatformclock；在现代系统上 Windows 使用 TSC。",
+   "gerceklik.aciklama": "2016-2018 年在 YouTube 上流传开来；默认设置本来就已优化。只有在被强制设为 useplatformclock=yes 的系统上，移除它才有真实的好处。",
+   "gerceklik.celiski": "一些用户报告禁用 HPET 后感觉“更顺滑”；对照测量没有显示出一致的差异。",
+   "performans_etkisi.gerekce": "默认配置本来就使用 TSC；这一更改通常不会改变任何东西。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "常见建议：bcdedit /deletevalue useplatformclock（如果没有设置，则没有效果），或在设备管理器中禁用“高精度事件计时器”。"
+   ],
+   "rehber.geri_alma": "bcdedit /deletevalue useplatformclock；在设备管理器中重新启用该设备。",
+   "rehber.kontrol": "bcdedit /enum '{current}'  （如果没有 useplatformclock 这一行，则使用默认行为）",
+   "tespit.mesaj": "这台计算机上定义了“useplatformclock”引导设置。在大多数现代系统上，此设置会增加延迟。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "更改系统时钟（HPET）"
+  },
+  "PLC-004": {
+   "ad": "bcdedit：disabledynamictick / useplatformtick / tscsyncpolicy",
+   "ne_ise_yarar": "关闭动态时钟节拍（空闲时跳过计时器中断），并更改计时源。",
+   "artilar": [
+    "为特定的虚拟机/调试场景而设计"
+   ],
+   "eksiler": [
+    "空闲功耗更高（尤其是在笔记本电脑上）",
+    "在游戏中没有显示出一致的好处"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "notlar": [
+    "会更改一项引导设置（bcdedit）。如果你使用 BitLocker，更改后可能会要求输入恢复密钥；请确认你有密钥（尚不确定，待测试）。"
+   ],
+   "varsayilan": "未定义。",
+   "gerceklik.aciklama": "Microsoft 把这些选项记载为用于调试/测试，而不是性能设置。",
+   "gerceklik.celiski": "常见于注重延迟的 Discord/YouTube 指南；没有找到支持它的对照数据。",
+   "performans_etkisi.gerekce": "在独立测量中，没有可重复的游戏改善。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "常见建议：bcdedit /set disabledynamictick yes; bcdedit /set useplatformtick yes; bcdedit /set tscsyncpolicy enhanced"
+   ],
+   "rehber.geri_alma": "bcdedit /deletevalue disabledynamictick; bcdedit /deletevalue useplatformtick; bcdedit /deletevalue tscsyncpolicy",
+   "rehber.kontrol": "bcdedit /enum '{current}'",
+   "tespit.mesaj": "这台计算机上已应用了网上常见的某个引导（bcdedit）设置。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "更改计时器行为"
+  },
+  "PLC-005": {
+   "ad": "msconfig：“处理器数”和“最大内存”",
+   "ne_ise_yarar": "一个用于限制 Windows 所使用的核心数和内存量的调试选项。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "如果值输入错误，Windows 会使用更少的核心/更少的内存；性能下降"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "notlar": [
+    "这个有害的设置无法在应用中开启；只有当它已在你的电脑上被应用时，你才能把它关闭。",
+    "会更改一项引导设置（bcdedit）。如果你使用 BitLocker，更改后可能会要求输入恢复密钥；请确认你有密钥（尚不确定，待测试）。"
+   ],
+   "varsayilan": "未勾选（使用所有核心和内存）。",
+   "gerceklik.aciklama": "“解锁所有核心”的谣言；该设置是用来限制的。",
+   "performans_etkisi.gerekce": "Windows 默认就使用所有核心；此设置只会减少它们。",
+   "rehber.adimlar": [
+    "不要这样做。",
+    "如果这些复选框已被勾选，请取消勾选。"
+   ],
+   "rehber.geri_alma": "msconfig > 高级选项 > 取消勾选这些复选框；或 bcdedit /deletevalue numproc; bcdedit /deletevalue truncatememory",
+   "rehber.kontrol": "msconfig > 引导 > 高级选项；bcdedit /enum '{current}'（numproc、truncatememory）",
+   "tespit.mesaj": "在 msconfig 中应用了“处理器数”或“最大内存”的限制。这会阻止计算机发挥全部性能；建议将其移除。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-006": {
+   "ad": "SvcHostSplitThresholdInKB（减少 svchost 进程的数量）",
+   "ne_ise_yarar": "通过把服务分组到 svchost.exe 进程中，减少任务管理器中的进程数量。",
+   "artilar": [
+    "任务管理器中的进程更少（仅仅是表面上的）"
+   ],
+   "eksiler": [
+    "一个服务崩溃，也会拖垮同一进程中的其他服务",
+    "调试变得更困难"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "3670016（3.5 GB）。在内存大于该值的系统上，服务会运行在各自独立的 svchost 进程中。",
+   "gerceklik.aciklama": "Microsoft 出于可靠性和安全性选择了独立进程（Windows 10 1703）。",
+   "performans_etkisi.gerekce": "进程数量不是性能指标；节省的内存可以忽略不计。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "常见建议：把该值设为与内存容量（KB）相等。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control' -Name SvcHostSplitThresholdInKB -Value 3670016  （Windows 默认值，约 3.5 GB）",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control' -Name SvcHostSplitThresholdInKB",
+   "tespit.mesaj": "SvcHostSplitThresholdInKB 的值与 Windows 默认值不同（可能之前应用过某种“调优”）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1703+、Windows 11"
+  },
+  "PLC-007": {
+   "ad": "LargeSystemCache=1 和 DisablePagingExecutive=1",
+   "ne_ise_yarar": "LargeSystemCache 给文件系统缓存提供服务器式的优先级；DisablePagingExecutive 防止内核代码被写入页面文件。",
+   "artilar": [
+    "在文件服务器上的特定场景中有用（LargeSystemCache）"
+   ],
+   "eksiler": [
+    "在桌面上，LargeSystemCache 可能减少应用可用的内存；据报告会与一些旧驱动程序产生问题"
+   ],
+   "dokunmamali": [
+    "桌面/游戏系统"
+   ],
+   "varsayilan": "两者均为 0。",
+   "gerceklik.aciklama": "是 Windows XP 时代调优清单的遗留物。",
+   "performans_etkisi.gerekce": "在内存充足的系统上，内核本来就几乎不会被换页；没有证据显示它能改善游戏表现。",
+   "rehber.adimlar": [
+    "不推荐。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name LargeSystemCache -Value 0; Set-ItemProperty -Path '...\\Memory Management' -Name DisablePagingExecutive -Value 0",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' | Select-Object LargeSystemCache, DisablePagingExecutive",
+   "tespit.mesaj": "LargeSystemCache 或 DisablePagingExecutive 已被更改（可能之前应用过某种“调优”）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "Windows 内存缓存设置"
+  },
+  "PLC-008": {
+   "ad": "关闭页面文件（pagefile）",
+   "ne_ise_yarar": "抱着“我内存很大，不需要页面文件”的想法，关闭虚拟内存。",
+   "artilar": [
+    "节省几 GB 的磁盘空间"
+   ],
+   "eksiler": [
+    "提交上限被限制在内存大小：大型游戏可能因“内存不足”错误而崩溃",
+    "无法创建蓝屏转储文件",
+    "有些应用假定页面文件是存在的"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "由系统管理。",
+   "bilgi.neden": "Microsoft 说明，提交上限和转储文件都需要页面文件。",
+   "bilgi.yapilamaz_nedeni": "为了你的安全，此设置绝不会通过应用来应用。",
+   "gerceklik.aciklama": "Microsoft 说明，提交上限和转储文件都需要页面文件。",
+   "performans_etkisi.gerekce": "内存充足时，页面文件本来就用得很少；关闭它不会提高速度，还会降低稳定性。",
+   "rehber.geri_alma": "SystemPropertiesPerformance.exe > 高级 > 虚拟内存 >“自动管理所有驱动器的分页文件大小”。",
+   "rehber.kontrol": "Get-CimInstance Win32_PageFileUsage | Select-Object Name, AllocatedBaseSize, CurrentUsage; Get-CimInstance Win32_ComputerSystem | Select-Object AutomaticManagedPagefile",
+   "tespit.mesaj": "页面文件（虚拟内存）似乎已被关闭。内存耗尽时，这可能导致程序崩溃。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-009": {
+   "ad": "对 SSD 进行碎片整理 / 关闭“优化驱动器”",
+   "ne_ise_yarar": "两种相反的谣言：（1）“要定期给 SSD 做碎片整理”，（2）“这会损害 SSD，请关闭优化”。Windows 能识别 SSD，并发送 TRIM 而不是做碎片整理。",
+   "artilar": [
+    "默认行为可以保持 SSD 的性能"
+   ],
+   "eksiler": [
+    "关闭该任务也会关闭定期 TRIM；长期来看写入性能可能下降",
+    "用第三方碎片整理工具强制对 SSD 做碎片整理会造成不必要的写入"
+   ],
+   "dokunmamali": [
+    "所有人（保持默认值）"
+   ],
+   "notlar": [
+    "SSD 上每周一次的 TRIM 也会停止。"
+   ],
+   "varsayilan": "每周优化已开启；SSD 上会执行 TRIM（retrim）。",
+   "gerceklik.aciklama": "自 Windows 8 起，“优化驱动器”就能识别 SSD。在启用了卷影复制的系统上，偶尔做一次真正的碎片整理是有意为之的。",
+   "gerceklik.celiski": "一些指南建议关闭该任务；这同时也会关闭 TRIM。",
+   "performans_etkisi.gerekce": "默认设置运行正确；更改它不会有任何收益。",
+   "rehber.adimlar": [
+    "保持默认值：让定期的“优化驱动器”保持开启。"
+   ],
+   "rehber.geri_alma": "Optimize-Volume -DriveLetter C -ReTrim -Verbose（手动触发 TRIM）；重新启用该计划任务。",
+   "rehber.kontrol": "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\Defrag\\' | Select-Object TaskName, State; fsutil behavior query DisableDeleteNotify  （0 = TRIM 已开启）",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-010": {
+   "ad": "MMCSS：SystemResponsiveness=0",
+   "ne_ise_yarar": "决定向 MMCSS 注册的多媒体线程把多少 CPU 让给低优先级的工作。",
+   "artilar": [
+    "无（对游戏而言）"
+   ],
+   "eksiler": [
+    "可能影响音频/直播软件的后台任务"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "20。",
+   "gerceklik.aciklama": "“把它设为 0”的建议与官方文档相矛盾：该值会被向上取整为 10。",
+   "performans_etkisi.gerekce": "根据 Microsoft 的文档，小于 10 的值会被当作 10 处理（写入 0 与写入 10 相同）。它只影响向 MMCSS 注册的线程；大多数游戏并不使用 MMCSS。",
+   "rehber.adimlar": [
+    "不推荐（没有效果）。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness -Value 20",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name SystemResponsiveness",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "移除为后台任务预留的 CPU 份额"
+  },
+  "PLC-011": {
+   "ad": "NetworkThrottlingIndex=ffffffff",
+   "ne_ise_yarar": "在多媒体（音频/视频）播放期间，限制非多媒体网络数据包的处理速率。它是在 Windows Vista 时代加入的，用来防止音频中断。",
+   "artilar": [
+    "在同时播放音频的情况下，进行超高速（千兆以上）传输时的吞吐量"
+   ],
+   "eksiler": [
+    "基本上没有"
+   ],
+   "varsayilan": "10。",
+   "gerceklik.aciklama": "“它能降低 ping”的说法与其机制不符。",
+   "gerceklik.celiski": "几乎每个“游戏调优”合集里都有；没有对照测量显示 ping 有改善。",
+   "performans_etkisi.gerekce": "它是吞吐量的限制；不会改变通过互联网进行游戏时的 ping。",
+   "rehber.adimlar": [
+    "不推荐（对 ping 没有效果）。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex -Value 10",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name NetworkThrottlingIndex",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "移除网络流量节流"
+  },
+  "PLC-012": {
+   "ad": "MMCSS“Games”任务配置（GPU Priority=8、Priority=6、Scheduling Category=High）",
+   "ne_ise_yarar": "决定调用 AvSetMmThreadCharacteristics('Games') 的线程的 MMCSS 优先级。",
+   "artilar": [
+    "无（如果游戏不使用此任务）"
+   ],
+   "eksiler": [
+    "基本上没有"
+   ],
+   "varsayilan": "GPU Priority=8、Priority=2、Scheduling Category=Medium。",
+   "gerceklik.aciklama": "该机制有文档记载，但它的目标对象（使用 MMCSS 的游戏）几乎不存在。",
+   "performans_etkisi.gerekce": "只影响向 MMCSS“Games”任务注册自己的线程；绝大多数游戏都不会这样做。",
+   "rehber.adimlar": [
+    "不推荐（没有效果）。"
+   ],
+   "rehber.geri_alma": "默认值：GPU Priority=8、Priority=2、Scheduling Category='Medium'、SFIO Priority='Normal'",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games'",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "游戏任务优先级设置"
+  },
+  "PLC-013": {
+   "ad": "“QoS 数据包计划程序保留 20% 的带宽”（NonBestEffortLimit=0）",
+   "ne_ise_yarar": "声称 Windows“保留”了 20% 的带宽，并且可以把它释放出来。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "无（没有效果）"
+   ],
+   "varsayilan": "策略未定义。",
+   "gerceklik.aciklama": "是 Windows XP 时代遗留下来的误解。",
+   "performans_etkisi.gerekce": "自 Windows XP 时代起，Microsoft 就已说明：除非应用专门请求 QoS 优先级，否则不会保留任何带宽。",
+   "rehber.adimlar": [
+    "不推荐（没有效果）。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Psched' -Name NonBestEffortLimit -ErrorAction SilentlyContinue",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "“网络保留 20%”设置"
+  },
+  "PLC-014": {
+   "ad": "“更换 DNS 能降低 ping”",
+   "ne_ise_yarar": "DNS 只是把域名翻译成 IP 地址；连接建立之后，发往游戏服务器的数据包不会再经过 DNS。",
+   "artilar": [
+    "打开网页时的首次查询时间可能变短",
+    "绕过某些运营商 DNS 服务器的错误/封锁"
+   ],
+   "eksiler": [
+    "某些 CDN 可能会把你导向地理位置更远的服务器"
+   ],
+   "notlar": [
+    "会应用到所有已连接的网卡。",
+    "如果你使用 DNSCrypt 之类的 DNS 工具或 VPN，请不要更改它；否则你的连接可能中断。"
+   ],
+   "varsayilan": "运营商/路由器的 DNS。",
+   "gerceklik.aciklama": "这种说法与网络协议的工作方式相矛盾。",
+   "performans_etkisi.gerekce": "游戏内的延迟（ping）与 DNS 无关。",
+   "rehber.adimlar": [
+    "为了隐私/可靠性而更换 DNS 是合理的；对 ping 来说则没有必要。"
+   ],
+   "rehber.geri_alma": "Set-DnsClientServerAddress -InterfaceAlias '<Ethernet>' -ResetServerAddresses",
+   "rehber.kontrol": "Get-DnsClientServerAddress -AddressFamily IPv4",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "islem.alanlar.0.etiket": "DNS 服务器",
+   "islem.alanlar.0.secenekler.0.etiket": "自动（调制解调器 / 运营商）",
+   "islem.alanlar.0.secenekler.1.etiket": "Cloudflare（1.1.1.1）",
+   "islem.alanlar.0.secenekler.2.etiket": "Google（8.8.8.8）",
+   "islem.alanlar.0.secenekler.3.etiket": "Quad9（9.9.9.9）"
+  },
+  "PLC-015": {
+   "ad": "完全关闭 IPv6",
+   "ne_ise_yarar": "禁用 IPv6 协议。",
+   "artilar": [
+    "无（除非 IPv6 配置有问题）"
+   ],
+   "eksiler": [
+    "Microsoft 认为这是未经测试的配置；某些 Windows 组件可能会失效",
+    "Xbox 网络（Teredo）以及某些游戏中的多人游戏 NAT 穿透可能受到影响",
+    "与 IPv6 优先的运营商之间出现连接问题"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "IPv6 已启用。",
+   "gerceklik.aciklama": "Microsoft 明确建议不要禁用 IPv6。",
+   "performans_etkisi.gerekce": "IPv6 的存在不会拖慢 IPv4 连接。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "如果确实有 IPv6 问题，Microsoft 推荐的做法不是关闭 IPv6，而是优先使用 IPv4：DisabledComponents=0x20。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters' -Name DisabledComponents; Enable-NetAdapterBinding -Name '*' -ComponentID ms_tcpip6",
+   "rehber.kontrol": "Get-NetAdapterBinding -ComponentID ms_tcpip6; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters' -Name DisabledComponents -ErrorAction SilentlyContinue",
+   "tespit.mesaj": "IPv6 已通过注册表被完全关闭。Microsoft 不推荐这样做；某些 Windows 功能和游戏网络可能出现问题。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "如果你确实有 IPv6 问题，请使用“优先使用 IPv4”设置（NET-010），而不是关闭 IPv6；两者写入的是同一个注册表值，不要同时使用。"
+   ]
+  },
+  "PLC-016": {
+   "ad": "关闭 TCP 接收窗口自动调节（autotuninglevel=disabled）",
+   "ne_ise_yarar": "防止 TCP 接收窗口随连接而增长。",
+   "artilar": [
+    "极少数情况下，可以兼容有 bug 的网络设备"
+   ],
+   "eksiler": [
+    "下载速度严重下降（尤其是在高延迟/高速连接上）；Steam/游戏更新会变慢"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "normal。",
+   "gerceklik.aciklama": "Microsoft 建议使用默认的“normal”设置。",
+   "performans_etkisi.gerekce": "对游戏 ping 没有影响；对下载速度有负面影响。",
+   "rehber.adimlar": [
+    "不推荐。"
+   ],
+   "rehber.geri_alma": "netsh int tcp set global autotuninglevel=normal",
+   "rehber.kontrol": "netsh int tcp show global  （“Receive Window Auto-Tuning Level”）",
+   "tespit.mesaj": "TCP 接收窗口自动调节已被关闭。这可能严重降低下载速度。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "关闭网络接收自动调节"
+  },
+  "PLC-017": {
+   "ad": "缩小 MouseDataQueueSize / KeyboardDataQueueSize",
+   "ne_ise_yarar": "设置鼠标/键盘类驱动程序的缓冲区容量（事件数量）。有人声称“把它缩小能降低延迟”。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "值非常小时会丢失事件（跳过移动/按键），尤其是在高轮询率下"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "notlar": [
+    "这个有害的设置无法在应用中开启；只有当它已在你的电脑上被应用时，你才能把它关闭（会恢复为默认值 100）。"
+   ],
+   "varsayilan": "100。",
+   "gerceklik.aciklama": "djdallmann 的 GamingPCSetup 研究表明，这个值不会改善延迟，而且较小的值有丢失数据的风险。",
+   "gerceklik.celiski": "一些“高手调优”合集推荐 16-20 之类的值。",
+   "performans_etkisi.gerekce": "队列大小只是一个容量；事件不会等它填满才被处理，所以缩小缓冲区并不会降低延迟。",
+   "rehber.adimlar": [
+    "不推荐。"
+   ],
+   "rehber.geri_alma": "MouseDataQueueSize=100，KeyboardDataQueueSize=100（默认）",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\mouclass\\Parameters' -Name MouseDataQueueSize; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\kbdclass\\Parameters' -Name KeyboardDataQueueSize",
+   "tespit.mesaj": "鼠标/键盘的数据队列已被缩小。这可能导致快速移动时丢失输入。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-018": {
+   "ad": "以“实时”优先级运行游戏；提高 csrss/dwm 的优先级",
+   "ne_ise_yarar": "给游戏或系统进程最高的 CPU 优先级。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "实时优先级可能让输入、音频、磁盘和驱动程序线程“饿死”：鼠标卡死、音频中断、系统挂起",
+    "csrss.exe 是受保护的进程；通过 IFEO 干预可能产生不可预测的结果"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "正常。",
+   "bilgi.neden": "Microsoft 的文档说明，实时优先级可能阻塞系统线程。",
+   "bilgi.yapilamaz_nedeni": "为了你的安全，此设置绝不会通过应用来应用。",
+   "gerceklik.aciklama": "Microsoft 的文档说明，实时优先级可能阻塞系统线程。",
+   "performans_etkisi.gerekce": "没有证据显示有正面效果；产生负面效果的风险很高。关于“高”优先级，请见 PERF-010（视情况而定）。",
+   "tespit.mesaj": "已对 csrss.exe 应用了优先级更改。这可能破坏系统稳定性。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-019": {
+   "ad": "IRQ8Priority / IRQ 优先级注册表值",
+   "ne_ise_yarar": "声称它“给系统时钟/鼠标中断以优先权”。",
+   "artilar": [
+    "无"
+   ],
+   "eksiler": [
+    "无（Windows 不会读取此值）"
+   ],
+   "notlar": [
+    "由于数据库中没有可应用的值，无法通过应用开启；如果它已被应用，你可以将其关闭。"
+   ],
+   "varsayilan": "未定义。",
+   "gerceklik.aciklama": "自 20 世纪 90 年代末流传下来的谣言。",
+   "performans_etkisi.gerekce": "Windows NT 内核通过 IRQL 和 APIC 管理中断优先级；这些注册表值并不会被使用。",
+   "rehber.adimlar": [
+    "没有效果。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name IRQ8Priority, IRQ16Priority",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' | Select-Object IRQ8Priority, IRQ16Priority",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "硬件中断优先级值"
+  },
+  "PLC-020": {
+   "ad": "完全关闭 Windows Defender",
+   "ne_ise_yarar": "移除杀毒防护。",
+   "artilar": [
+    "大量文件操作（安装、编译）更快"
+   ],
+   "eksiler": [
+    "对恶意软件没有任何防护",
+    "由于有篡改防护，在现代版本上，注册表方法通常不起作用或会被还原",
+    "一些执行这种“调优”的脚本本身就含有恶意软件"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "开启，篡改防护开启。",
+   "bilgi.neden": "游戏内的收益在测量误差范围内；安全代价非常高。",
+   "bilgi.yapilamaz_nedeni": "完全关闭 Defender（服务、策略）绝不会通过应用来完成。只能通过“系统”菜单中的 Defender 卡片，在警告和确认之后关闭实时保护。",
+   "gerceklik.aciklama": "游戏内的收益在测量误差范围内；安全代价非常高。",
+   "performans_etkisi.gerekce": "游戏运行时对 FPS 的影响通常可以忽略；差异体现在大量访问文件的操作中。",
+   "tespit.mesaj": "Windows Defender 的实时保护似乎已被关闭。如果你没有使用其他杀毒软件，你的计算机就没有保护。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-021": {
+   "ad": "永久关闭 Windows 更新",
+   "ne_ise_yarar": "完全停止更新。",
+   "artilar": [
+    "不会有意外重启"
+   ],
+   "eksiler": [
+    "安全漏洞得不到修补",
+    "Microsoft Store/Game Pass、DirectX 组件和某些反作弊可能要求系统保持最新",
+    "Windows Update Medic 服务可能会还原这些更改"
+   ],
+   "dokunmamali": [
+    "所有人"
+   ],
+   "varsayilan": "手动（触发启动）。",
+   "bilgi.neden": "活动时间和暂停能在没有风险的情况下带来同样的好处。",
+   "bilgi.yapilamaz_nedeni": "为了你的安全，此设置绝不会通过应用来应用。",
+   "gerceklik.aciklama": "活动时间和暂停能在没有风险的情况下带来同样的好处。",
+   "performans_etkisi.gerekce": "没有更新时，该服务不会产生负载；影响只出现在更新期间，而且可以通过暂停来解决。",
+   "tespit.mesaj": "Windows 更新服务已被禁用。安全更新无法到达。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-022": {
+   "ad": "激进的精简脚本（移除 Store、Xbox、Edge WebView2、Game Bar）",
+   "ne_ise_yarar": "批量移除预装的应用和组件。",
+   "artilar": [
+    "预装应用更少，节省一些磁盘空间"
+   ],
+   "eksiler": [
+    "Game Pass、Xbox 应用和 Store 更新会失效",
+    "依赖 WebView2 的应用（Teams、小组件、许多启动器）会停止工作",
+    "在双 CCD 的 Ryzen X3D 上，移除 Game Bar 会破坏游戏检测",
+    "一些脚本所做的更改无法撤销"
+   ],
+   "dokunmamali": [
+    "所有人（尤其是 Game Pass 和 X3D 用户）"
+   ],
+   "varsayilan": "—",
+   "bilgi.neden": "批量移除只换来很小的收益，却有很高的损坏风险。",
+   "bilgi.yapilamaz_nedeni": "为了你的安全，此设置绝不会通过应用来应用。",
+   "gerceklik.aciklama": "批量移除只换来很小的收益，却有很高的损坏风险。",
+   "gerceklik.celiski": "一些精简项目提供撤销和选择性模式；问题出在那些一键“移除全部”的模式上。",
+   "performans_etkisi.gerekce": "被移除的大多数应用，只要不运行就不占用资源。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-023": {
+   "ad": "定期删除 Prefetch / Temp 文件夹能“提高 FPS”",
+   "ne_ise_yarar": "删除临时文件和应用启动痕迹。",
+   "artilar": [
+    "清理 Temp 可以释放磁盘空间"
+   ],
+   "eksiler": [
+    "删除 Prefetch 会让应用启动在一段时间内变慢"
+   ],
+   "notlar": [
+    "无法撤销。正在使用的文件会被跳过。如果删除了 Prefetch，程序在一段时间内首次打开会比较慢。"
+   ],
+   "varsayilan": "—",
+   "gerceklik.aciklama": "对磁盘空间有意义，对性能是安慰剂；对 Prefetch 来说则适得其反。",
+   "performans_etkisi.gerekce": "游戏 FPS 不会受到临时文件或预读文件是否存在的影响。",
+   "rehber.adimlar": [
+    "要清理 Temp，使用 设置 > 系统 > 存储 > 临时文件，或“存储感知”就足够了。",
+    "不要删除 Prefetch。"
+   ],
+   "rehber.geri_alma": "Prefetch 会自行重建（最初几次启动会比较慢）。",
+   "rehber.kontrol": "Get-ChildItem C:\\Windows\\Prefetch | Measure-Object; Get-ChildItem $env:TEMP -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "islem.eylemler.0.etiket": "清理临时文件",
+   "islem.eylemler.1.etiket": "清理 Prefetch 文件夹"
+  },
+  "PLC-024": {
+   "ad": "一键式“游戏加速器”/ FPS 加速器类应用",
+   "ne_ise_yarar": "批量应用本数据库中的一些设置（禁用服务、电源计划、注册表值、结束后台进程）。Hone.gg 之类的商业工具，以及 Nexus Mods 上的调优合集，都属于此类。",
+   "artilar": [
+    "关闭后台应用的那部分，在内存较少的系统上可以带来真实的好处",
+    "有些提供撤销功能"
+   ],
+   "eksiler": [
+    "无法区分到底是哪个设置起了作用",
+    "也可能包含安慰剂和有害的设置（即本类别）",
+    "用户评价中也有关于驱动程序、显示和启动问题的报告",
+    "一些免费的“加速器”含有广告软件"
+   ],
+   "dokunmamali": [
+    "企业计算机",
+    "你看不到其具体操作的工具"
+   ],
+   "varsayilan": "—",
+   "bilgi.neden": "它们的效果仅取决于其中所包含的真实设置；因为所有内容是一次性应用的，所以无法追溯因果关系。",
+   "bilgi.yapilamaz_nedeni": "它属于另一类程序；本应用本来就会列出、备份并撤销每一项更改。",
+   "gerceklik.aciklama": "它们的效果仅取决于其中所包含的真实设置；因为所有内容是一次性应用的，所以无法追溯因果关系。",
+   "gerceklik.celiski": "在 Trustpilot 之类的平台上，既有正面评价（FPS 提升），也有负面评价（驱动程序/显示/启动问题）。",
+   "performans_etkisi.gerekce": "没有找到独立的对照测量；厂商的说法和用户评价好坏参半。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-025": {
+   "ad": "关闭 NVIDIA 遥测/后台服务能“提高 FPS”",
+   "ne_ise_yarar": "关闭 NVIDIA 的驱动程序辅助服务和遥测。",
+   "artilar": [
+    "隐私（遥测）"
+   ],
+   "eksiler": [
+    "控制面板、覆盖层和某些驱动程序功能会停止工作"
+   ],
+   "dokunmamali": [
+    "NVIDIA 控制面板用户"
+   ],
+   "notlar": [
+    "NVIDIA 控制面板和 NVIDIA 应用的某些功能会停止工作。"
+   ],
+   "varsayilan": "自动。",
+   "gerceklik.aciklama": "出于隐私考虑可以理解，对性能则是安慰剂。使用 NVCleanstall 干脆不安装遥测组件，是更干净的做法。",
+   "performans_etkisi.gerekce": "没有证据显示空闲服务对游戏性能有可测量的影响。",
+   "rehber.adimlar": [
+    "不推荐。",
+    "如果关闭 NVDisplay.ContainerLocalSystem，NVIDIA 控制面板将无法打开。"
+   ],
+   "rehber.geri_alma": "Set-Service -Name NVDisplay.ContainerLocalSystem -StartupType Automatic; Start-Service NVDisplay.ContainerLocalSystem",
+   "rehber.kontrol": "Get-Service -Name NvContainerLocalSystem, NVDisplay.ContainerLocalSystem -ErrorAction SilentlyContinue | Select-Object Name, Status, StartType",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-026": {
+   "ad": "为 DirectX 游戏开启三重缓冲",
+   "ne_ise_yarar": "据 NVIDIA 称，此设置只影响 OpenGL 应用程序。",
+   "artilar": [
+    "在 OpenGL + 垂直同步的情况下，可以防止 FPS 减半"
+   ],
+   "eksiler": [
+    "在 OpenGL 中多一帧延迟"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "被错误地应用到 DirectX 游戏上的设置。",
+   "performans_etkisi.gerekce": "对 DirectX/Vulkan 游戏没有效果。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "notlar": [
+    "此驱动程序设置只影响 OpenGL 游戏；在 DirectX 游戏中开启它没有效果。"
+   ],
+   "nvidia.secenekler.0.etiket": "关（默认）",
+   "nvidia.secenekler.1.etiket": "开",
+   "rehber.adimlar": [
+    "没有效果（在 DX 游戏中）。"
+   ],
+   "rehber.kontrol": "NVIDIA 控制面板 > 管理 3D 设置 > 三重缓冲。",
+   "rehber.geri_alma": "关。",
+   "profil_notu": "它只对 OpenGL 游戏有意义。在 DirectX 和 Vulkan 游戏中没有效果（安慰剂），而在 OpenGL 中还可能增加一帧延迟。"
+  },
+  "PLC-027": {
+   "ad": "“卓越性能计划能让笔记本电脑的 FPS 成倍提升”",
+   "ne_ise_yarar": "在笔记本电脑上使用为台式工作站设计的计划。",
+   "artilar": [
+    "在某些系统上，响应速度有小幅改善"
+   ],
+   "eksiler": [
+    "更高的发热可能导致热节流，并抵消收益",
+    "续航明显下降",
+    "在笔记本电脑上，真正的功耗上限是由 OEM 软件/EC 设置的"
+   ],
+   "dokunmamali": [
+    "笔记本电脑用户"
+   ],
+   "notlar": [
+    "如有需要，会创建并激活一份 Windows“卓越性能”计划的副本；还原时会恢复之前的计划，并删除创建的副本。"
+   ],
+   "varsayilan": "平衡。",
+   "gerceklik.aciklama": "对笔记本电脑的夸大说法；台式机的情况请见 PWR-001。",
+   "performans_etkisi.gerekce": "它不会改变功耗上限，所以在受 GPU 限制的笔记本游戏中收益很小；如果出现热节流，还可能是负面的。",
+   "rehber.adimlar": [
+    "在笔记本电脑上，请使用 Windows 的电源模式（PWR-002）和 OEM 性能模式（PWR-006），而不是电源计划。"
+   ],
+   "rehber.geri_alma": "powercfg /setactive SCHEME_BALANCED",
+   "rehber.kontrol": "powercfg /getactivescheme",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+、Windows 11"
+  },
+  "PLC-028": {
+   "ad": "“关闭 Nagle，所有游戏的 ping 都会下降”",
+   "ne_ise_yarar": "一种以偏概全的说法：认为某个 TCP 设置能降低所有游戏的 ping。",
+   "artilar": [
+    "只对使用 TCP 且不会自己关闭 Nagle 的游戏有用"
+   ],
+   "eksiler": [
+    "大多数现代竞技游戏（CS2、Valorant、Apex、Fortnite、Overwatch、Killer Instinct 等）使用 UDP；TCP 设置不会影响它们",
+    "屏幕上显示的“ping”是由服务器距离和路由决定的"
+   ],
+   "varsayilan": "—",
+   "bilgi.neden": "把一个视情况而定的设置，说成是普遍适用的好处。",
+   "bilgi.yapilamaz_nedeni": "它与“互联网/网络”菜单中的 Nagle 设置（NET-006）相同；你可以在那里开启/关闭它。",
+   "gerceklik.aciklama": "把一个视情况而定的设置，说成是普遍适用的好处。",
+   "performans_etkisi.gerekce": "从设计上来说，对基于 UDP 的游戏没有效果。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-029": {
+   "ad": "为了“性能”而开启 ClearPageFileAtShutdown",
+   "ne_ise_yarar": "关机时用零覆盖页面文件。这是一项安全功能（防止在电脑关机期间，磁盘上旧的内存数据被读取）。",
+   "artilar": [
+    "在物理接触的场景下提供安全保障"
+   ],
+   "eksiler": [
+    "关机时间变长（页面文件很大时需要几分钟）"
+   ],
+   "notlar": [
+    "关机时间可能明显变长。"
+   ],
+   "varsayilan": "0。",
+   "gerceklik.aciklama": "把安全设置误当成了性能设置。",
+   "performans_etkisi.gerekce": "不会改变下一次会话的性能。",
+   "rehber.adimlar": [
+    "对性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name ClearPageFileAtShutdown -Value 0",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name ClearPageFileAtShutdown",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "GPU-020": {
+   "ad": "G-SYNC 范围：仅全屏 / 全屏和窗口化",
+   "ne_ise_yarar": "设置 G-SYNC（可变刷新率）在哪些窗口模式下起作用。现在很多游戏运行在无边框窗口模式下，所以除非选择“全屏和窗口化”，G-SYNC 可能不会对它们生效。",
+   "artilar": [
+    "在无边框窗口化游戏中也能获得无撕裂、低延迟的画面"
+   ],
+   "eksiler": [
+    "某些桌面程序（视频播放器、浏览器）可能出现闪烁或亮度波动"
+   ],
+   "dokunmamali": [
+    "没有 G-SYNC / G-SYNC Compatible 显示器的人（此设置没有效果）"
+   ],
+   "notlar": [
+    "G-SYNC 本身是在 NVIDIA 控制面板 > 设置 G-SYNC 中为显示器开启的；此设置只选择它在哪些窗口模式下起作用。"
+   ],
+   "varsayilan": "仅全屏。",
+   "gerceklik.aciklama": "NVIDIA 驱动程序设置头文件（NvApiDriverSettings.h：VRR_MODE）中有文档记载的设置。",
+   "performans_etkisi.gerekce": "不会改变 FPS；在 G-SYNC 显示器上，它可以避免窗口化游戏中的撕裂和垂直同步延迟。",
+   "rehber.adimlar": [
+    "为了让 G-SYNC 在无边框窗口模式下运行的游戏中生效：选择“全屏和窗口化”。"
+   ],
+   "rehber.geri_alma": "仅全屏（驱动程序默认值）。",
+   "rehber.kontrol": "NVIDIA 控制面板 > 设置 G-SYNC >“为全屏模式启用”/“为窗口和全屏模式启用”。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "关",
+   "nvidia.secenekler.1.etiket": "仅全屏（默认）",
+   "nvidia.secenekler.2.etiket": "全屏和窗口化",
+   "sade_ad": "G-SYNC 范围"
+  },
+  "PLC-030": {
+   "ad": "关闭 8.3 短文件名能“加速游戏”",
+   "ne_ise_yarar": "决定 NTFS 是否为新文件创建兼容旧 DOS 的短名称（如 PROGRA~1）。",
+   "artilar": [
+    "在文件非常多的文件夹中，创建文件可能略微加快"
+   ],
+   "eksiler": [
+    "依赖短名称的非常老的安装程序和脚本可能会失效"
+   ],
+   "varsayilan": "2（按卷决定）。",
+   "gerceklik.aciklama": "一个被当作 FPS 设置传播的文件系统设置。",
+   "performans_etkisi.gerekce": "只影响创建新文件时的名称生成；与渲染游戏画面无关。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "fsutil 8dot3name set 2",
+   "rehber.kontrol": "fsutil 8dot3name query",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-031": {
+   "ad": "关闭文件“上次访问时间”更新（NtfsDisableLastAccessUpdate）",
+   "ne_ise_yarar": "决定 NTFS 是否在每次读取文件时写入“上次访问”时间。",
+   "artilar": [
+    "在扫描大量小文件的工作中，磁盘写入略少"
+   ],
+   "eksiler": [
+    "查看上次访问时间的备份和存储工具可能会看到错误的数据"
+   ],
+   "varsayilan": "0x80000002（由 Windows 管理）。",
+   "gerceklik.aciklama": "一个 Windows 旧时代的磁盘设置，被当作游戏设置反复传播。",
+   "performans_etkisi.gerekce": "自 Windows 10 1803 起，此值已由 Windows 自行管理；游戏在加载时只读取一次文件，所以帧率不受影响。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "fsutil behavior set disablelastaccess 2",
+   "rehber.kontrol": "fsutil behavior query disablelastaccess",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-032": {
+   "ad": "用 IoPageLockLimit“加大磁盘缓存”",
+   "ne_ise_yarar": "Windows 2000 的文档将其描述为可为 I/O 操作锁定的最大内存量。",
+   "artilar": [
+    "无（对游戏而言）"
+   ],
+   "eksiler": [
+    "在注册表中留下一个没有效果的值"
+   ],
+   "varsayilan": "该值不存在。",
+   "gerceklik.aciklama": "XP 时代调优指南遗留下来的值。",
+   "performans_etkisi.gerekce": "这是 Windows XP 时代的设置；没有找到官方来源表明现代 Windows 仍会读取它，也没有测得的 FPS 影响。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name IoPageLockLimit",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name IoPageLockLimit",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-033": {
+   "ad": "把 CPU 的 L2 缓存大小写入 SecondLevelDataCache",
+   "ne_ise_yarar": "手动告诉 Windows 处理器的 L2 缓存大小。",
+   "artilar": [
+    "无（对游戏而言）"
+   ],
+   "eksiler": [
+    "几乎没有；只是留下一个没有效果的值"
+   ],
+   "varsayilan": "0（Windows 自动检测大小）。",
+   "gerceklik.aciklama": "只在非常老的处理器上才有意义的值。",
+   "performans_etkisi.gerekce": "根据 Microsoft 的文档，只有当硬件抽象层（HAL）无法检测到 L2 大小时，才会使用该值；在如今的处理器上，大小本来就能被检测到。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name SecondLevelDataCache -Value 0",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name SecondLevelDataCache",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-034": {
+   "ad": "用 MaxUserPort / TcpTimedWaitDelay“加速网络”",
+   "ne_ise_yarar": "更改出站连接可以使用多少个端口，以及已关闭的连接要等待多久。",
+   "artilar": [
+    "防止每秒打开数千个连接的服务器出现端口耗尽"
+   ],
+   "eksiler": [
+    "等待时间更短，会增加迟到的数据包混入新连接的可能性"
+   ],
+   "varsayilan": "这些值不存在（动态端口 49152–65535，TIME_WAIT 120 秒）。",
+   "gerceklik.aciklama": "把服务器的设置用到了游戏电脑上。",
+   "performans_etkisi.gerekce": "游戏只使用少数几个连接；游戏电脑上不会发生端口耗尽，所以 ping 和帧率都不会受影响。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name MaxUserPort,TcpTimedWaitDelay",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name MaxUserPort,TcpTimedWaitDelay",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "PLC-035": {
+   "ad": "用 DefaultTTL=64“降低 ping”",
+   "ne_ise_yarar": "设置发出的数据包最多可以经过多少个路由器（它的生存期）。",
+   "artilar": [
+    "无（对游戏而言）"
+   ],
+   "eksiler": [
+    "发往非常遥远的服务器的数据包可能在途中被丢弃（如果把该值设得很小）"
+   ],
+   "varsayilan": "该值不存在（Windows 使用 128）。",
+   "gerceklik.aciklama": "把数据包的生存期限制误当成了延迟设置。",
+   "performans_etkisi.gerekce": "TTL 只是数据包最多可以经过多少跳的上限；它不会改变数据包的速度或路由。",
+   "rehber.adimlar": [
+    "对游戏性能来说没有必要。"
+   ],
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -Name DefaultTTL",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "更改网络数据包的生存期（TTL）"
+  },
+  "SYS-016": {
+   "ad": "用户账户控制（UAC）级别",
+   "ne_ise_yarar": "决定当程序请求管理员权限时，Windows 是否显示确认窗口，以及是否让屏幕变暗。",
+   "artilar": [
+    "确认窗口更少（在较低级别）",
+    "始终通知：更改设置时也会询问"
+   ],
+   "eksiler": [
+    "在较低级别下，恶意程序可能在不被察觉的情况下获得管理员权限"
+   ],
+   "dokunmamali": [
+    "与他人共用电脑的人",
+    "经常下载程序的人"
+   ],
+   "varsayilan": "仅在应用尝试更改时通知（ConsentPromptBehaviorAdmin=5，PromptOnSecureDesktop=1）。",
+   "gerceklik.aciklama": "不是性能设置；而是便利性与安全性之间的取舍。",
+   "performans_etkisi.gerekce": "只改变确认窗口出现的时机；不影响游戏性能。",
+   "rehber.adimlar": [
+    "通过应用中的级别选择器，或 控制面板 > 用户账户 > 更改用户账户控制设置。"
+   ],
+   "rehber.geri_alma": "“更改”页面上的“还原”，或“默认”级别。",
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name ConsentPromptBehaviorAdmin,PromptOnSecureDesktop,EnableLUA",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "SYS-017": {
+   "ad": "关闭 Windows Defender 实时保护",
+   "ne_ise_yarar": "阻止 Defender 在文件被打开和下载时对其进行扫描。Defender 服务、病毒库更新和手动扫描保持不变。",
+   "artilar": [
+    "在安装、游戏加载和编译等大量文件操作的任务中，消除扫描带来的延迟"
+   ],
+   "eksiler": [
+    "恶意软件在被打开时不会被拦截",
+    "Windows 可能在一段时间后或重启后自行重新开启保护"
+   ],
+   "dokunmamali": [
+    "没有使用其他杀毒软件的所有人",
+    "会从互联网下载文件和模组的人"
+   ],
+   "varsayilan": "开启；篡改防护开启。",
+   "gerceklik.aciklama": "在大量文件操作中是真实的，但在游戏中大多察觉不到；安全代价很高。",
+   "performans_etkisi.gerekce": "游戏运行时，对 FPS 的影响通常在测量误差范围内；差异体现在加载和文件复制中。",
+   "rehber.adimlar": [
+    "先到 Windows 安全中心 > 病毒和威胁防护 > 管理设置 > 篡改防护：关。然后在应用中点击“关闭实时保护”。"
+   ],
+   "rehber.geri_alma": "应用中的“重新开启保护”，或 Set-MpPreference -DisableRealtimeMonitoring $false",
+   "rehber.kontrol": "Get-MpComputerStatus | Select-Object RealTimeProtectionEnabled, IsTamperProtected",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11"
+  },
+  "GPU-021": {
+   "ad": "NVIDIA 图像缩放（NIS）质量放大",
+   "ne_ise_yarar": "开启 NVIDIA 图像缩放（NIS）在驱动程序端的质量放大功能：让游戏以较低的分辨率渲染，再缩放到屏幕分辨率。当显卡是瓶颈时，这是提高 FPS 的一种方法；画面可能比原生分辨率略微柔和一些。",
+   "artilar": [
+    "当显卡是瓶颈时，可以提高帧率",
+    "在不支持 DLSS 的游戏中也能使用"
+   ],
+   "eksiler": [
+    "画质低于原生分辨率",
+    "仅靠这个驱动程序设置可能不够；还必须在 NVIDIA 应用中开启图像缩放"
+   ],
+   "dokunmamali": [
+    "在原生分辨率下帧率已经很流畅的人",
+    "已经在使用游戏自带 DLSS/FSR 放大的人（两者不会同时使用）"
+   ],
+   "notlar": [
+    "要让它在游戏中生效，还必须在 NVIDIA 应用中开启图像缩放；本应用没有测量过放大的真实效果。"
+   ],
+   "varsayilan": "关。",
+   "gerceklik.aciklama": "该设置列在 NVIDIA Profile Inspector 的设置字典中（0x10444444，“NVIDIA Image Scaling - Quality Upscaling”）；官方头文件中没有它的条目。应用验证过驱动程序接受该值；没有测量其在游戏中的效果。",
+   "performans_etkisi.gerekce": "只有当显卡是瓶颈、并选择了较低的分辨率时，FPS 才会上升；当 CPU 是瓶颈时没有效果。本应用没有测量过。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "关（默认）",
+   "nvidia.secenekler.1.etiket": "开",
+   "rehber.adimlar": [
+    "驱动程序设置：开。要让 NIS 在游戏中生效，还必须在 NVIDIA 应用中开启图像缩放。"
+   ],
+   "rehber.geri_alma": "关（驱动程序默认值）。",
+   "rehber.kontrol": "NVIDIA 应用 / 控制面板 > 图像缩放（NIS）。"
+  },
+  "GPU-022": {
+   "ad": "阻止 NVIDIA 覆盖层附加到游戏上",
+   "ne_ise_yarar": "在驱动程序层面，禁止 NVIDIA 应用的游戏内覆盖层（Alt+Z 面板、即时重放、游戏滤镜）附加到 DirectX 游戏上。对于不使用覆盖层的人，这样可以让一个后台组件远离游戏。",
+   "artilar": [
+    "不会有额外的覆盖层附加到游戏上",
+    "可能降低与覆盖层冲突的游戏出现冲突的概率，包括某些反作弊警告"
+   ],
+   "eksiler": [
+    "即时重放、游戏内面板和 NVIDIA 游戏滤镜将停止工作"
+   ],
+   "dokunmamali": [
+    "使用即时重放或 NVIDIA 游戏内面板的人"
+   ],
+   "notlar": [
+    "此设置开启期间，即时重放和 NVIDIA 游戏内面板无法工作。"
+   ],
+   "varsayilan": "允许覆盖层。",
+   "gerceklik.aciklama": "该设置列在 NVIDIA Profile Inspector 的设置字典中（0x90DE9159，“Driver - NVIDIA App Overlay Shim Prohibition”）；没有官方文档。写入需要管理员权限（没有的话，驱动程序会拒绝）；以管理员身份时，已写入、读回并还原。覆盖层是否真的被禁用，以及对 FPS 的影响，都没有测量过。",
+   "performans_etkisi.gerekce": "预计关闭覆盖层后，负载会有非常小的减少；本应用没有测量过。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "nvidia.secenekler.0.etiket": "允许覆盖层（默认）",
+   "nvidia.secenekler.1.etiket": "禁止覆盖层",
+   "rehber.adimlar": [
+    "驱动程序设置：禁止 NVIDIA 应用的覆盖层附加到 DirectX 游戏上。"
+   ],
+   "rehber.geri_alma": "关（允许覆盖层；驱动程序默认值）。",
+   "rehber.kontrol": "NVIDIA 应用 > 设置 > 游戏内覆盖层。"
+  },
+  "SYS-018": {
+   "ad": "长文件路径支持（取消 260 个字符的限制）",
+   "performans_etkisi.gerekce": "对 FPS 或速度没有影响；它只是兼容性设置。",
+   "gerceklik.aciklama": "Microsoft 有文档记载的设置（Maximum Path Length Limitation）。其效果取决于程序是否声明支持长路径。",
+   "ne_ise_yarar": "对于声明支持长路径的程序，取消 Windows 的 260 个字符的文件路径限制。避免在深层文件夹结构（软件开发、游戏模组、压缩包）中出现“路径太长”的错误。",
+   "artilar": [
+    "深层文件夹中的“路径太长”错误更少",
+    "开发者工具和某些游戏模组管理器可能需要它"
+   ],
+   "eksiler": [
+    "只有声明支持长路径（清单）的程序才能受益；较旧的程序仍可能失败"
+   ],
+   "dokunmamali": [
+    "使用短路径、从未见过此错误的人（开启它没有任何好处）"
+   ],
+   "notlar": [
+    "长路径支持只适用于声明了它的程序（清单）；该设置在重启后才完全生效。"
+   ],
+   "varsayilan": "关（0）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10（1607+）、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' -Name LongPathsEnabled -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' -Name LongPathsEnabled -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' -Name LongPathsEnabled -Type DWord -Value 0"
+  },
+  "SYS-019": {
+   "ad": "详细的蓝屏（BSOD）信息",
+   "performans_etkisi.gerekce": "只会改变崩溃界面的内容；对性能没有影响。",
+   "gerceklik.aciklama": "这种行为是真实的，但在本应用中它只依赖于单一的工具清单（CTT WinUtil）；没有经过验证的官方文档，也没有通过制造蓝屏来测试过。",
+   "ne_ise_yarar": "发生蓝屏（崩溃）时，除了错误代码，还会显示驱动程序/模块信息，并去掉哭脸图标。在故障排除时，更容易看出错误来自哪个文件。",
+   "artilar": [
+    "崩溃时可以在屏幕上看到错误的来源",
+    "为技术支持或论坛提供更多线索"
+   ],
+   "eksiler": [
+    "只有在发生蓝屏时才察觉得到；正常使用时没有影响"
+   ],
+   "dokunmamali": [
+    "从来没见过蓝屏的人（没有可见的好处）"
+   ],
+   "notlar": [
+    "只在蓝屏时可见；本应用没有通过制造蓝屏来测试过。"
+   ],
+   "varsayilan": "关（0）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 1; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters,DisableEmoticon -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisplayParameters -Type DWord -Value 0; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -Name DisableEmoticon -Type DWord -Value 0",
+   "sade_ad": "在蓝屏上显示详细信息"
+  },
+  "SYS-020": {
+   "ad": "关闭活动历史记录的发布和上传",
+   "performans_etkisi.gerekce": "预计对 FPS 没有影响；主要目的是隐私。没有测量过。",
+   "gerceklik.aciklama": "Microsoft 有文档记载的组策略设置（发布/上传用户活动）；机制是真实的，性能影响很小。",
+   "ne_ise_yarar": "阻止 Windows 把你做过的事情（打开的文档、网站）作为活动历史记录发布，并上传到你的 Microsoft 账户。不影响剪贴板历史记录。",
+   "artilar": [
+    "活动数据不会上传到你的 Microsoft 账户",
+    "少量后台活动和一个隐私隐患随之消失"
+   ],
+   "eksiler": [
+    "时间线（Win+Tab）中的跨设备活动接续将无法工作"
+   ],
+   "dokunmamali": [
+    "使用跨设备活动历史记录的人"
+   ],
+   "notlar": [
+    "这是一项系统策略；时间线中的跨设备活动接续将无法工作。剪贴板历史记录不受影响。"
+   ],
+   "varsayilan": "未定义（Windows 使用自己的设置）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Force; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name PublishUserActivities -Type DWord -Value 0; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name UploadUserActivities -Type DWord -Value 0"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name PublishUserActivities,UploadUserActivities -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name PublishUserActivities,UploadUserActivities"
+  },
+  "SYS-021": {
+   "ad": "阻止从互联网下载设备元数据",
+   "performans_etkisi.gerekce": "只会在插入设备时阻止一次后台下载；对游戏性能没有影响。",
+   "gerceklik.aciklama": "该设置是真实的 Windows 策略；但“防止额外软件被安装”的效果，在本应用中只依赖单一的工具清单（CTT WinUtil），并且没有经过测试。",
+   "ne_ise_yarar": "插入新设备（显示器、鼠标、打印机）时，阻止 Windows 从互联网下载设备图标和信息。也可能减少设备自带的额外厂商软件被自动安装的情况。",
+   "artilar": [
+    "插入设备时不会进行后台下载",
+    "随设备而来的额外软件更少"
+   ],
+   "eksiler": [
+    "设备在 Windows 中可能显示为通用图标",
+    "期望厂商的 Store 应用自动安装的设备（耳机、鼠标软件）可能装不上"
+   ],
+   "dokunmamali": [
+    "希望通过 Windows 更新/Store 获得设备软件的人"
+   ],
+   "notlar": [
+    "这是一项系统策略；设备图标和某些设备软件不会再自动从互联网获取。"
+   ],
+   "varsayilan": "未定义（Windows 可能会从互联网获取元数据）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Force; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Name PreventDeviceMetadataFromNetwork -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Name PreventDeviceMetadataFromNetwork -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Device Metadata' -Name PreventDeviceMetadataFromNetwork"
+  },
+  "SYS-022": {
+   "ad": "开启 XMP/EXPO 配置文件（BIOS）",
+   "ne_ise_yarar": "让内存以包装盒上标注的速度运行。关闭时，内存条往往以慢得多的基础速度运行。",
+   "artilar": [
+    "内存以宣称的速度运行",
+    "在对内存敏感的游戏和集成显卡上能明显感觉到"
+   ],
+   "eksiler": [
+    "某些主板/CPU/内存的组合会变得不稳定（蓝屏、无法启动）",
+    "该配置文件可能使 CPU 的内存控制器超出其正常极限"
+   ],
+   "dokunmamali": [
+    "有稳定性问题或在意保修的用户（请先更新 BIOS）"
+   ],
+   "varsayilan": "在大多数主板上为关闭（内存以基础速度运行）。",
+   "gerceklik.aciklama": "在论坛和视频中经常被推荐；收益取决于游戏和 CPU，本项目没有测量过。",
+   "performans_etkisi.gerekce": "收益因游戏和 CPU 而异；本项目没有测量过。",
+   "rehber.adimlar": [
+    "重启计算机并进入 BIOS（通常在启动时按 Del 或 F2）。",
+    "在内存/超频部分，选择 XMP（Intel）或 EXPO/DOCP（AMD）配置文件。",
+    "保存并退出（F10）。如果无法启动，请重置 BIOS；如果不稳定，请关闭该配置文件。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中把 XMP/EXPO 设为 Disabled/Auto。",
+   "rehber.kontrol": "PowerShell：Get-CimInstance Win32_PhysicalMemory | Select-Object Speed, ConfiguredClockSpeed。Speed 是内存条宣称的速度，ConfiguredClockSpeed 是它当前运行的速度。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "让内存以宣称的速度运行（XMP/EXPO）"
+  },
+  "SYS-023": {
+   "ad": "不要关闭安全启动（为了反作弊）",
+   "ne_ise_yarar": "开启安全启动后，只有经过签名的启动软件才能运行。某些反作弊，例如 Valorant（Vanguard）和 Fortnite，可能要求它保持开启。",
+   "artilar": [
+    "带反作弊的游戏不会出现“需要安全启动”的错误",
+    "防止引导链被篡改"
+   ],
+   "eksiler": [
+    "对于未签名的驱动程序或第二个操作系统，可能会有限制"
+   ],
+   "dokunmamali": [
+    "玩带反作弊的游戏（如 Valorant、Fortnite）的人：不要关闭它"
+   ],
+   "varsayilan": "在现代计算机中通常为开启。",
+   "gerceklik.aciklama": "哪个游戏要求安全启动，取决于游戏和版本；请在游戏自己的支持页面上确认。本项目没有测量过。",
+   "performans_etkisi.gerekce": "没有测得关闭安全启动能带来性能提升；在某些游戏中，它还可能导致无法游玩。",
+   "rehber.adimlar": [
+    "先查看 msinfo32 >“安全启动状态”这一行。",
+    "如果 Valorant 或 Fortnite 之类的游戏要求安全启动，而它是“关”，请在 BIOS 的“引导/安全”部分中开启安全启动。",
+    "你不需要为了性能而关闭它；如果你玩带反作弊的游戏，请保持开启。"
+   ],
+   "rehber.geri_alma": "在 BIOS 中把安全启动设为 Disabled。",
+   "rehber.kontrol": "msinfo32 > 系统摘要 >“安全启动状态”（开/关）。PowerShell：Confirm-SecureBootUEFI（管理员）。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "sade_ad": "保持安全启动开启（反作弊）"
+  },
+  "QOL-017": {
+   "ad": "隐藏开始菜单中的“推荐”部分（Windows 11）",
+   "sade_ad": "隐藏开始菜单中的“推荐”列表",
+   "ne_ise_yarar": "移除开始菜单底部的“推荐”（最近的文件和应用）部分。",
+   "artilar": [
+    "开始菜单看起来更简洁",
+    "最近打开的文件不会显示在菜单中"
+   ],
+   "eksiler": [
+    "你无法再从开始菜单访问最近的文件",
+    "它在哪些 Windows 版本上真正有效，本应用没有测试过"
+   ],
+   "dokunmamali": [
+    "经常从开始菜单打开最近文件的人"
+   ],
+   "notlar": [
+    "这是一项 Windows 策略；在某些版本上，Windows 可能在“设置”中显示“由你的组织管理”的提示。"
+   ],
+   "varsayilan": "显示该部分（没有值）。",
+   "gerceklik.aciklama": "Microsoft 的开始菜单策略（Start/HideRecommendedSection，1 = 隐藏该部分）。Microsoft 的页面列出了专业版、企业版和教育版；本应用尚未在真实的 Windows 上试过。",
+   "performans_etkisi.gerekce": "外观设置；对游戏性能没有影响。",
+   "uyumluluk.kaynak_metin.windows": "Windows 11 22H2+",
+   "rehber.adimlar": [
+    "New-Item -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Force | Out-Null; Set-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name HideRecommendedSection -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name HideRecommendedSection -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer' -Name HideRecommendedSection"
+  },
+  "SYS-024": {
+   "ad": "在启动和关机时显示详细的状态消息",
+   "sade_ad": "在启动/关机时显示详细消息",
+   "ne_ise_yarar": "在 Windows 启动、关机和登录时，显示详细的“现在正在做什么”文字，帮助你看出启动慢时卡在了哪里。",
+   "artilar": [
+    "在启动或关机很慢时，可以看到是哪一步在等待"
+   ],
+   "eksiler": [
+    "启动时会出现更多文字",
+    "它只显示信息；并不会让启动变快"
+   ],
+   "dokunmamali": [
+    "没有启动问题的人（开启它没有任何好处）"
+   ],
+   "notlar": [
+    "如果“DisableStatusMessages”值为 1，Windows 会忽略此设置（Microsoft 文章）。"
+   ],
+   "varsayilan": "关（没有值）；显示简短的通用消息。",
+   "gerceklik.aciklama": "记载于 Microsoft 的一篇故障排除文章中（VerboseStatus = 1）。该文章的标题是 Windows Server 2003；本应用没有测试过该值在 Windows 10/11 上是否有效。",
+   "performans_etkisi.gerekce": "对 FPS 或速度没有影响；它只显示用于故障排除的信息。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name VerboseStatus -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name VerboseStatus -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name VerboseStatus"
+  },
+  "NET-010": {
+   "ad": "优先使用 IPv4（而不关闭 IPv6）",
+   "sade_ad": "优先使用 IPv4，而不关闭 IPv6",
+   "ne_ise_yarar": "IPv6 保持开启，但当某个网站同时有 IPv4 和 IPv6 地址时，Windows 会先尝试 IPv4。对于因 IPv6 而遇到连接问题的人，这是 Microsoft 推荐的做法。",
+   "artilar": [
+    "比完全关闭 IPv6 安全得多（Microsoft 不建议关闭它）",
+    "可能有助于解决由 IPv6 引起的网页加载慢和连接错误"
+   ],
+   "eksiler": [
+    "没有证据表明它能降低 ping；只有在 IPv6 造成问题时才会有差别",
+    "需要重启",
+    "不能与“完全关闭 IPv6”（PLC-015）一起使用，因为两者写入的是同一个值"
+   ],
+   "dokunmamali": [
+    "没有网络问题的人"
+   ],
+   "notlar": [
+    "Microsoft：0 和 32 之外的值会使“路由和远程访问”服务失败。此设置只写入 32；关闭它会恢复之前的值。"
+   ],
+   "varsayilan": "没有值；Windows 优先使用 IPv6。",
+   "gerceklik.aciklama": "Microsoft 的文章把这个值（0x20，“Prefer IPv4 over IPv6”）作为替代关闭 IPv6 的推荐做法。只有在 IPv6 造成问题时才有帮助。",
+   "performans_etkisi.gerekce": "没有证据表明它能改善游戏 ping 或 FPS；它只是用来修复由 IPv6 引起的连接问题。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters' -Name DisabledComponents -Type DWord -Value 0x20"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters' -Name DisabledComponents -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters' -Name DisabledComponents"
+  },
+  "SYS-025": {
+   "ad": "恢复启动时的 F8 高级选项（安全模式）菜单",
+   "sade_ad": "启动时按 F8 打开安全模式菜单",
+   "ne_ise_yarar": "计算机启动时按 F8，会打开旧的“高级选项”菜单，其中包含安全模式。",
+   "artilar": [
+    "如果 Windows 无法启动，你可以通过 F8 进入安全模式"
+   ],
+   "eksiler": [
+    "在启动很快的计算机上，可能没有足够的时间按 F8",
+    "会更改引导配置（BCD）；Microsoft 指出，在进行此类更改之前，可能需要先暂停 BitLocker 和安全启动"
+   ],
+   "dokunmamali": [
+    "可以通过 设置 > 恢复 进入安全模式的人",
+    "不想改动引导设置的人"
+   ],
+   "notlar": [
+    "一次性的替代办法：“bcdedit /set {current} onetimeadvancedoptions on”会在下次启动时调出该菜单（Microsoft 文档）。"
+   ],
+   "varsayilan": "标准（F8 会被忽略）。",
+   "gerceklik.aciklama": "Microsoft 的 BCDEdit 文档：bootmenupolicy 为 Legacy 时，F8 菜单可用；为 Standard 时，F8 会被忽略。本应用尚未在真实的 Windows 上试过。",
+   "performans_etkisi.gerekce": "对性能没有影响；它只是让故障排除更容易。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10、Windows 11",
+   "rehber.adimlar": [
+    "bcdedit /set '{current}' bootmenupolicy legacy"
+   ],
+   "rehber.kontrol": "bcdedit /enum '{current}'  （bootmenupolicy 这一行：Standard = 关，Legacy = 开）",
+   "rehber.geri_alma": "bcdedit /set '{current}' bootmenupolicy standard"
+  },
+  "SYS-026": {
+   "ad": "重新开启自动注册表备份（RegBack）",
+   "sade_ad": "重新开启注册表备份",
+   "ne_ise_yarar": "恢复 Windows 10 1803 中被取消的旧行为：计算机重启时，会把注册表的副本写入 RegBack 文件夹，并由一个计划任务管理之后的备份。",
+   "artilar": [
+    "如果注册表损坏，你有一份较旧的副本",
+    "在无法创建还原点时，多一重保障"
+   ],
+   "eksiler": [
+    "占用少量磁盘空间（Microsoft 正是因此默认将其关闭）",
+    "对于损坏的注册表，Microsoft 建议使用还原点；此备份并不能取代它"
+   ],
+   "dokunmamali": [
+    "定期创建还原点的人（本来就已受到很好的保护）"
+   ],
+   "notlar": [
+    "备份在重启后进行；文件会被写入 Windows\\System32\\config\\RegBack 文件夹。"
+   ],
+   "varsayilan": "关（没有值）；自 Windows 10 1803 起不再进行注册表备份。",
+   "gerceklik.aciklama": "该值有 Microsoft 的文档记载（EnablePeriodicBackup = 1，然后重启）。该文章针对的是 Windows 10；本应用没有在 Windows 11 上测试过。",
+   "performans_etkisi.gerekce": "对 FPS 或速度没有影响；它只是做一份备份。",
+   "uyumluluk.kaynak_metin.windows": "Windows 10 1803+、Windows 11",
+   "rehber.adimlar": [
+    "Set-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name EnablePeriodicBackup -Type DWord -Value 1"
+   ],
+   "rehber.kontrol": "Get-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name EnablePeriodicBackup -ErrorAction SilentlyContinue",
+   "rehber.geri_alma": "Remove-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name EnablePeriodicBackup"
+  }
+ }
+}

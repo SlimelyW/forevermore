@@ -18,7 +18,7 @@ RESTART_TEXT = {"yok": "—", "uygulama": "oyunu/uygulamayı yeniden aç", "otur
                 "bilgisayar": "yeniden başlat", "gezgin": "Gezgin'i yeniden başlat",
                 "ses_servisi": "ses birkaç sn kesilir", "durumsal": "gerekebilir"}
 
-HEADER = """# Test kontrol listesi (sürüm 2.5.0 — Revizyon 2 ve 3 dahil)
+HEADER = """# Test kontrol listesi (sürüm 2.5.1 — Revizyon 2 ve 3 dahil)
 
 > **Önemli:** Bu projedeki kod, ayar DEĞİŞTİREN hiçbir işlemde gerçek Windows üzerinde
 > çalıştırılmadı. Aşağıdaki testleri **önce sanal makinede**, sonra kendi bilgisayarında
@@ -293,7 +293,7 @@ Bu dosya `tools/test_listesi_uret.py` ile üretilir; elle düzenleme, betiği g�
 ## 5j. Yeni ad ve çok dil (Revizyon 2 Faz 1)
 
 - ☐ **Yeni ad:** `derle.bat` → `dist\\Forevermore\\Forevermore.exe` oluştu; pencere başlığı, kenar menü,
-  tepsi simgesi ipucu ve Görev Yöneticisi'nde "Forevermore" yazıyor. Dosya özelliklerinde sürüm 2.5.0.
+  tepsi simgesi ipucu ve Görev Yöneticisi'nde "Forevermore" yazıyor. Dosya özelliklerinde sürüm 2.5.1.
 - ☐ **Veri taşıma:** Eski sürümü kullandıysan `%LOCALAPPDATA%\\Forevermore` ilk açılışta oluştu ve içinde
   `eski_klasorden_tasindi.txt` var; `%LOCALAPPDATA%\\PCOptimizer` silinmedi. Değişiklikler sayfasında eski
   sürümde yaptığın değişiklikler görünüyor ve "Eski haline getir" çalışıyor.
@@ -499,7 +499,7 @@ dilini değiştirip oturumu kapat-aç yeterli):
 - ☐ **Paket:** `derle.bat` → sonunda "Bitti", dosya boyutu ve SHA256 yazıyor; arada kırmızı hata yok.
 - ☐ **Açılış:** dist\\Forevermore.zip'i başka bir klasöre aç → Forevermore.exe → yönetici izni sorulur;
   "Hayır" → salt okunur modda açılıyor. "Evet" → normal mod; Sistem menüsünde UAC ve Defender kartları var.
-- ☐ **Lisans:** zip içinde THIRD-PARTY-NOTICES.txt ve PresentMon var; Bilgi menüsünde sürüm 2.5.0.
+- ☐ **Lisans:** zip içinde THIRD-PARTY-NOTICES.txt ve PresentMon var; Bilgi menüsünde sürüm 2.5.1.
 
 ## 5s. Özet kutuları, Bilgi ve logo
 

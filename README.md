@@ -1,134 +1,103 @@
 # Forevermore
 
-Oyuncular için Windows 10/11 ayar uygulaması: bilgisayarınızı tarar, her ayarın ne yaptığını artıları ve eksileriyle
-anlatır, işe yaramayan (placebo) ve zararlı ayarları ayırır, uyguladığınız her değişikliği yedekleyip tek tıkla geri
-alınabilir yapar. **Ücretsiz ve açık kaynaktır (MIT); Pro, hesap, reklam ve telemetri yoktur.**
+A free, open-source (MIT) Windows 10/11 settings app for gamers. It scans your PC, explains what each setting does with
+its pros and cons and an evidence label (real / partial / situational / debated / placebo / harmful), and backs up every
+change so it can be undone with one click. No Pro tier, no account, no ads, no telemetry.
 
-*English: a Windows 10/11 settings app for gamers. It scans your PC, explains every setting with evidence labels,
-separates placebo from real tweaks, and backs up each change so it can be undone with one click. Free and open source
-(MIT); no accounts, no telemetry. See the [English section](#english) below.*
+The app is English by default. Other languages (Turkish, Spanish, German, Russian, Simplified Chinese) can be picked in
+Settings; they are machine translations and have not been reviewed by native speakers.
 
+## What it does
 
+- **Scan and PC details:** reads hardware, drivers, power plan, display, mouse/keyboard and Windows state (read-only).
+- **167 settings, each with an evidence label:** real, partial, situational, debated, placebo or harmful, with source and
+  measurement notes. Risky settings ask twice.
+- **Every change is reversible:** a backup (and, when needed, a system restore point) is made first; undo from the Changes page.
+- **GPU settings:** NVIDIA (NVAPI) and AMD (ADLX) driver settings, scaling, G-SYNC / FreeSync.
+- **Games:** per-game process priority and optional "while playing" options (off by default). They apply only when you press
+  Prepare / Launch and are undone when the game closes or you press Undo. No process tweaks for games with anti-cheat.
+- **Profiles, one-click Boost, app uninstaller, display layout, Before / After measurement** (FPS and frame time via PresentMon).
 
-## Ne yapar
+All features are available to everyone; nothing is locked.
 
-- **Tarama ve PC Detayları:** donanımı, sürücüleri, güç planını, ekranı, fare/klavyeyi ve Windows durumunu okur (salt okunur).
-- **167 ayar, her birinde kanıt etiketi:** gerçek, kısmen, duruma bağlı, tartışmalı, placebo ya da zararlı; kaynak ve
-  ölçüm notlarıyla. Riskli ayarlar iki ayrı uyarıyla sorulur.
-- **Her değişiklik geri alınabilir:** değişiklikten önce yedek ve (gerekirse) sistem geri yükleme noktası; Değişiklikler
-  sayfasından tek tıkla geri alma.
-- **Ekran kartı ayarları:** NVIDIA (NVAPI) ve AMD (ADLX) sürücü ayarları, ölçekleme, G-SYNC / FreeSync.
-- **Oyunlar:** oyun başına işlem önceliği ve isteğe bağlı "Oyun sırasında" seçenekleri (varsayılan kapalı). Seçenekler
-  yalnızca Hazırla / Oyunu başlat'a basınca uygulanır, oyun kapanınca ya da Geri al ile geri alınır; oyun kendiliğinden ayar
-  uygulamaz. Anti-cheat'li oyunlarda süreç ayarı yoktur. Oyun içi ayar rehberleri.
-- **Hazır profiller, tek tuş Boost, uygulama kaldırıcı, ekran yerleşimi, Önce / Sonra ölçümü** (PresentMon ile FPS ve kare süresi).
-- Türkçe ve İngilizce arayüz.
+## Important: it changes system settings
 
-Tüm özellikler herkese açıktır; kilitli bölüm yoktur.
+Forevermore **can change the registry, services, boot options and GPU driver settings**.
 
-## Önemli: sistem ayarlarını değiştirir
+- It tries to create a **system restore point** before the first change and **backs up** every value it writes; you can undo
+  from the Changes page.
+- It asks for **administrator rights** only to apply changes. Without them it opens read-only (scan and guides work).
+  `--onizleme` lets you try everything without changing anything.
+- Some settings reduce security (for example Spectre/Meltdown mitigations) or need a restart; the app says so before you
+  confirm. Read what you are approving. The software is provided **"as is", without warranty** (see [LICENSE](LICENSE)).
+- It does not fully disable Windows Defender, does not interfere with anti-cheat, and has no "memory cleaner" style
+  placebo tools.
 
-Forevermore **kayıt defterini, servisleri, önyükleme ayarlarını ve sürücü ayarlarını değiştirebilir**. Bunu yapmadan önce:
+## Install
 
-- İlk değişiklikte **sistem geri yükleme noktası** almayı dener (Windows'ta Sistem Koruması kapalıysa açmayı önerir) ve
-  değiştirdiği her değeri **yedekler**; Değişiklikler sayfasından geri alabilirsiniz.
-- Ayar değiştirmek için **yönetici izni** ister. Vermezseniz salt okunur modda açılır (tarama ve rehberler çalışır).
-  `--onizleme` ile hiçbir şey değiştirmeden deneyebilirsiniz.
-- Bazı ayarlar güvenliği azaltır (ör. Spectre/Meltdown azaltımları) ya da yeniden başlatma gerektirir; bunlar uygulamada
-  açıkça uyarılır. Neyi onayladığınızı okuyun. Yazılım **garantisiz, "olduğu gibi"** sunulur (bkz. [LICENSE](LICENSE)).
-- Windows Defender'ı tamamen kapatma, anti-cheat'e müdahale ve "bellek temizleyici" gibi zararlı/placebo işlemler yoktur.
+1. Download `Forevermore.zip` from [Releases](https://github.com/SlimelyW/forevermore/releases/latest).
+2. Extract it to a folder (keep the folder intact; `_internal` is part of the program) and run **Forevermore.exe**.
+3. To uninstall, first use Settings > "Prepare for removal" to undo changes, then delete the folder.
 
-## Kurulum
+**Check your download (two steps):**
+1. In PowerShell, in the folder with the zip: `Get-FileHash .\Forevermore.zip -Algorithm SHA256`
+2. Compare the result with the SHA-256 on the Releases page. If it differs, do not run it; download again.
 
-1. [Releases](https://github.com/SlimelyW/forevermore/releases/latest) sayfasından `Forevermore.zip` dosyasını indirin.
-2. Bir klasöre açın (klasörü olduğu gibi tutun; `_internal` programın parçasıdır) ve **Forevermore.exe**'yi çalıştırın.
-3. Kaldırmak için önce uygulamada Ayarlar > "Kaldırmaya hazırla" ile değişiklikleri geri alın, sonra klasörü silin.
+**Windows or your antivirus may show a warning.** This is expected: the program is not code-signed yet and is new, so
+SmartScreen has no reputation for it. Programs packaged with Python + PyInstaller can also trigger false positives in
+some antivirus products. The source is open, so you can read it and build the package yourself. Do not turn your
+antivirus off.
 
-**İndirdiğin dosyayı doğrula (iki adım):**
-1. PowerShell'de zip'in olduğu klasörde şunu yaz: `Get-FileHash .\Forevermore.zip -Algorithm SHA256`
-2. Çıkan değeri Releases sayfasında yazan SHA-256 ile karşılaştır. Aynıysa dosya değişmemiştir; farklıysa çalıştırma, yeniden indir.
+## Run from source and build
 
-Windows uyarı gösterirse bu normaldir, kod imzalama sertifikamız henüz yok; dosyanın SHA-256'sını doğrulayabilirsin.
-Python + PyInstaller ile paketlenen programlar küçük antivirüslerde yanlış alarm verebilir; kod açık olduğu için isterseniz kendiniz derleyebilirsiniz.
-
-## Kaynaktan çalıştırma ve derleme
-
-Gereksinim: Windows 10/11, Python 3.12.
+Requirements: Windows 10/11, Python 3.12.
 
 ```powershell
 py -3.12 -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
-.venv\Scripts\python -m app                 # çalıştır (ayar yazmak için yönetici izni ister)
-.venv\Scripts\python -m app --onizleme      # hiçbir ayarı değiştirmeden dene
-.venv\Scripts\python -m app --kontrol       # pencere açmadan paket öz denetimi
+.venv\Scripts\python -m app                 # run (asks for admin rights to write settings)
+.venv\Scripts\python -m app --onizleme      # try without changing any setting (preview)
+.venv\Scripts\python -m app --kontrol       # package self-check without opening a window
 ```
 
-Testler (pencere açmaz, gerçek sistem ayarı yazmaz):
+Tests (no window, no real system settings written):
 
 ```powershell
 $env:QT_QPA_PLATFORM = "offscreen"
 .venv\Scripts\python -m unittest discover -s tests -t .
 ```
 
-Paket derleme (`dist\Forevermore\` klasörü ve `dist\Forevermore.zip`):
+Build a package (`dist\Forevermore\` and `dist\Forevermore.zip`):
 
 ```powershell
 .\derle.bat
 ```
 
-`derle.bat` ayrı bir derleme ortamı kurar (`requirements-derleme.txt`: PyInstaller), veriyi yeniden üretir, testleri
-çalıştırır, derler ve paket kontrolü yapar. `tools\PresentMon-*.exe` varsa pakete eklenir (Önce / Sonra ölçümü için).
-Resmî paketin güncelleme imzası yapımcının özel anahtarıyla atılır ve anahtar depoda yoktur; kendi derlemeniz imzasız
-olur ve resmî güncelleme kanalıyla karışmaz.
+`derle.bat` sets up a separate build environment (`requirements-derleme.txt`: PyInstaller), regenerates the data, runs the
+tests, builds and checks the package. If `tools\PresentMon-*.exe` exists it is added to the package (Before / After
+measurement). The official package's update signature is made with the maintainer's private key, which is not in this
+repository; your own build is unsigned and does not mix with the official update channel.
 
-Klasör yapısı: `app/core` (ayarlar, yollar, dil), `app/engine` (motor, yedek, işleyiciler, katalog), `app/scan`
-(salt okunur tarama), `app/ui` (Qt arayüzü), `app/games`, `app/measure`; `data/` (ayar kataloğu), `lang/` (çeviriler),
-`tests/`, `tools/`, `docs/`.
+Layout: `app/core` (settings, paths, language), `app/engine` (engine, backup, handlers, catalog), `app/scan` (read-only
+scan), `app/ui` (Qt UI), `app/games`, `app/measure`; `data/` (settings catalog), `lang/` (translations), `tests/`,
+`tools/`, `docs/`.
 
-## Gizlilik
+## Privacy
 
-Telemetri, reklam, analiz yok. Tarama sonuçları, ayarlar, yedekler ve günlükler yalnızca bilgisayarınızda
-(`%LOCALAPPDATA%\Forevermore`, yedekler `%ProgramData%\Forevermore`) kalır. İnternete tek bağlandığı yer güncelleme denetimidir: size bir kez
-sorulur, "evet" derseniz günde en çok bir kez çalışır (yalnızca GitHub, veri göndermez, indirilen paketin imzası doğrulanır);
-"hayır" derseniz kendiliğinden hiç bağlanmaz. Ayarlar > Sistem'den değiştirilir.
+No telemetry, ads or analytics. Scan results, settings, backups and logs stay on your computer
+(`%LOCALAPPDATA%\Forevermore`, backups in `%ProgramData%\Forevermore`). The only network use is the update check: you are
+asked once; if you answer "Yes" it runs at most once a day (GitHub only, sends nothing, and the downloaded package's
+signature is verified). If you answer "No" it never connects on its own. Change it in Settings > System.
 
-## Katkı, güvenlik, destek
+## Contribute, security, support
 
-- Katkı vermek için [CONTRIBUTING.md](CONTRIBUTING.md)
-- Güvenlik açığı bildirmek için [SECURITY.md](SECURITY.md) (açığı herkese açık konu olarak açmayın)
-- Üçüncü taraf bileşenler: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)
-- Beğendiyseniz gönüllü olarak [bir kahve ısmarlayabilirsiniz](https://buymeacoffee.com/forevermore); zorunlu değildir,
-  uygulama hiçbir yerde sormaz.
+- Contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Report a vulnerability: [SECURITY.md](SECURITY.md) (do not open it as a public issue)
+- Third-party components: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)
+- Optional: [buy me a coffee](https://buymeacoffee.com/forevermore). The app never asks.
 
-## Lisans
+## License
 
-[MIT](LICENSE) © 2026 motherboardlabs. Üçüncü taraf bileşenler kendi lisanslarına tabidir. `data/oyun_kapaklari/` altındaki 15 oyun
-kapağı ilgili yayıncılara aittir (MIT kapsamında değildir); yayıncı isterse kaldırılır (`tools/kapak_kaldir.py`, bkz.
-[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)).
-
----
-
-<a id="english"></a>
-
-## English
-
-Forevermore is a free, open-source (MIT) Windows 10/11 settings app for gamers. It scans your PC, explains what each
-setting does with its pros and cons and an evidence label (real / partial / situational / debated / placebo / harmful),
-and backs up every change so it can be undone with one click. There is no Pro tier, no account and no telemetry; the app
-connects to the internet only for the update check it asks you about once (GitHub only, sends nothing;
-answer "No" and it never connects on its own; change it in Settings > System).
-
-**Warning: it changes system settings** (registry, services, boot options, GPU driver settings). It tries to create a
-system restore point before the first change, backs up every value it writes, and asks for administrator rights only to
-apply changes (without them it opens read-only; `--onizleme` tries everything without changing anything). Some settings
-reduce security or need a restart and say so before you confirm. The software is provided "as is", without warranty.
-
-- **Install:** download `Forevermore.zip` from [Releases](https://github.com/SlimelyW/forevermore/releases/latest), extract it, run `Forevermore.exe`.
-- **Check your download (two steps):** (1) In PowerShell, in the folder with the zip, run `Get-FileHash .\Forevermore.zip -Algorithm SHA256`. (2) Compare the result with the SHA-256 on the Releases page; if it differs, do not run it, download again. If Windows shows a warning, that is normal: we do not have a code-signing certificate yet, and you can verify the file's SHA-256.
-- **Run from source:** Python 3.12, `py -3.12 -m venv .venv`, `.venv\Scripts\python -m pip install -r requirements.txt`, `.venv\Scripts\python -m app`.
-- **Tests:** `$env:QT_QPA_PLATFORM="offscreen"; .venv\Scripts\python -m unittest discover -s tests -t .`
-- **Build a package:** `derle.bat` (PyInstaller; unsigned unless you hold the maintainer's update-signing key).
-- **Contribute / report a vulnerability:** [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md).
-- **Support (optional):** [buymeacoffee.com/forevermore](https://buymeacoffee.com/forevermore).
-- **License:** [MIT](LICENSE); third-party components in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt). The 15 game cover images in `data/oyun_kapaklari/` belong to their publishers (not covered by the MIT license) and are removed on request (`tools/kapak_kaldir.py`).
+[MIT](LICENSE) © 2026 motherboardlabs. Third-party components keep their own licenses. The package no longer ships game
+cover images.
