@@ -1,0 +1,1749 @@
+"""Ana pencere: alt-orta menü çubuğu, sayfalar, uyarı şeritleri ve durum satırı.
+
+Hız düzeni:
+- Pencere, önceki oturumun önbelleğiyle HEMEN açılır.
+- Ayar durumları ve tarama arka planda, paralel okunur; her ayarın satırı
+  kendi durumu gelince tek başına güncellenir (sayfa yeniden çizilmez).
+- Sayfalar ilk kez açılınca veya boşta sırayla önceden kurulur.
+
+Ayar değiştirme akışı:
+  1. Salt okunur/önizleme modunda değişiklik yapılmaz.
+  2. Onay: "dikkatli" (veya uyarılı) ayarı açarken tek onay penceresi;
+     "riskli" ayarı açarken VE kapatırken/eski haline getirirken iki ayrı ekran.
+  3. Oturumdaki ilk değişiklikte geri yükleme noktası (bekleme penceresiyle).
+  4. İşlem arka planda; sonuç durum satırında ve gerekirse pencerede.
+"""
+
+import datetime
+import os
+import sys
+import time
+from ctypes import wintypes
+
+from PySide6.QtCore import QEvent, QPoint, QProcess, QRectF, Qt, QTimer
+from PySide6.QtGui import QAction, QColor, QFont, QGuiApplication, QIcon, QKeySequence, QPainter, QPen, QPixmap, QShortcut
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+                               QListWidget, QMainWindow, QMenu, QPlainTextEdit, QPushButton, QStackedWidget,
+                               QSystemTrayIcon, QVBoxLayout, QWidget)
+
+from app.core import admin, consent, guncelleme, i18n, log, paths, settings, tek_ornek
+from app.core.i18n import fmt_date, t
+from app.engine import nvidia_profili, profiles as profile_module, system_protection, varsayilan
+from app.engine.user_presets import PresetStore
+from app.games import recorder
+from app.ui import dialogs, fps_widget, motion, theme, widgets as w
+from app.ui.controller import MODE_NORMAL, MODE_PREVIEW, OWN_PAGE, Controller, is_manual
+from app.ui.live_monitor import LiveMonitor
+from app.ui.page_boost import BoostPage
+from app.ui.page_kaldirici import UninstallerPage
+from app.ui.page_rehber import GuidePage
+from app.ui.page_temizlik import CleanerPage
+from app.ui.page_category import CategoryPage, ManualPage
+from app.ui.page_other import ChangesPage, ProfilesPage, ReportPage
+from app.ui.page_details import PcDetailsPage
+from app.ui.page_settings import AboutPage, SettingsPage, about_data, donate_url_ok
+from app.games import profiles
+from app.games.profiles import GameStore
+from app.games.runtime import GameDetector, GameSession, ProcessOps
+from app.measure import live_fps, presentmon
+from app.ui.page_games import GamesPage
+from app.ui.page_measure import MeasurePage
+from app.ui.page_startup import StartupPage
+from app.ui.page_summary import SummaryPage
+from app.ui.search import SearchBox
+from app.ui.worker import StallWatch, Worker
+
+_log = log.get("ui")
+
+
+
+
+class NavItem(motion.HoverFade, QFrame):
+    """Menü öğesi. Düz kip: ızgara paneli düğmesi (simge + ad yatay). `bar=True`: alt çubuk düğmesi (simge üstte, kısa ad
+    altta, seçilince alt çizgi); `chevron=True` panel açan düğmeye yukarı ok ekler."""
+
+    hover = True
+    hover_radius = 8
+
+    def __init__(self, key, glyph, text, on_click, on_hover=None, bar=False, chevron=False):
+        super().__init__()
+        self._on_hover = on_hover
+        self.setObjectName("NavItem")
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setFocusPolicy(Qt.FocusPolicy.TabFocus)  # klavyeyle gezilir; Enter/Boşluk açar
+        self.setAccessibleName(text)
+        self.key = key
+        self.is_bar = bar
+        self._on_click = on_click
+        marker = QFrame()
+        marker.setObjectName("NavMarker")
+        icon = QLabel(glyph)
+        icon.setFont(theme.icon_font(18 if bar else 16))
+        icon.setStyleSheet(f"color: {theme.category_color(key)}; background: transparent;")  # kategori rengi
+        self.count = QLabel("")
+        self.count.setObjectName("NavCount")
+        self.count.setVisible(False)
+        theme.tabular(self.count)
+        if bar:
+            self.setToolTip(text)
+            self.setMinimumWidth(76)
+            lay = QVBoxLayout(self)
+            lay.setContentsMargins(6, 6, 6, 5)
+            lay.setSpacing(2)
+            top = QHBoxLayout()
+            top.setSpacing(3)
+            top.addStretch(1)
+            top.addWidget(icon)
+            if chevron:
+                arrow = QLabel("")  # yukarı ok (Segoe simgeleri): panel yukarı açılır
+                arrow.setObjectName("NavChev")
+                arrow.setFont(theme.icon_font(9))
+                top.addWidget(arrow)
+            top.addWidget(self.count)
+            top.addStretch(1)
+            lay.addLayout(top)
+            self.text = QLabel(text)
+            self.text.setObjectName("NavText")
+            self.text.setFont(theme.ui_font(11))
+            self.text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            lay.addWidget(self.text)
+            marker.setFixedSize(18, 3)
+            lay.addWidget(marker, 0, Qt.AlignmentFlag.AlignHCenter)
+        else:
+            lay = QHBoxLayout(self)
+            lay.setContentsMargins(0, 8, 10, 8)
+            lay.setSpacing(10)
+            marker.setFixedSize(3, 18)
+            lay.addWidget(marker)
+            icon.setFixedWidth(20)
+            lay.addWidget(icon)
+            self.text = QLabel(text)
+            lay.addWidget(self.text, 1)
+            lay.addWidget(self.count)
+
+    def set_compact(self, on):
+        """Dar pencerede çubuk düğmeleri adsız kalır (ad araç ipucunda ve erişilebilir adda durur)."""
+        if self.is_bar:
+            self.text.setVisible(not on)
+            self.setMinimumWidth(44 if on else 76)
+
+    def set_selected(self, on):
+        if bool(self.property("selected")) == on:  # değişmeyen öğe yeniden boyanmaz (24 menü öğesi × stil = ~19 ms)
+            return
+        self.setProperty("selected", on)
+        w.repolish(self)
+        for child in self.findChildren(QFrame):
+            w.repolish(child)
+
+    def set_tag(self, text):
+        """Menü öğesinin yanında kısa etiket; boş metin gizler."""
+        self.count.setVisible(bool(text))
+        self.count.setText(text)
+
+    def keyPressEvent(self, event):
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Space):
+            self._on_click(self.key)
+        else:
+            super().keyPressEvent(event)
+
+    def focusInEvent(self, event):
+        super().focusInEvent(event)
+        self.update()
+
+    def focusOutEvent(self, event):
+        super().focusOutEvent(event)
+        self.update()
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        if self.hasFocus():  # net odak halkası (mor yalnızca vurgu: odak halkası)
+            painter = QPainter(self)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            painter.setPen(QPen(QColor(theme.palette()["purple"]), 2))
+            painter.drawRoundedRect(QRectF(self.rect()).adjusted(1, 1, -1, -1), 8, 8)
+
+    def enterEvent(self, event):
+        if self._on_hover:
+            self._on_hover(self.key)
+        super().enterEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._on_click(self.key)
+
+
+def _vram_percent(reader):
+    """Oyun kartı belleği doluluğu (%), okunamıyorsa None. 1 GB'tan küçük ayrılmış bellek = tümleşik kart (paylaşımlı): None."""
+    try:
+        read = reader.read() if reader is not None else None
+    except Exception:
+        return None
+    return read[0] / read[1] * 100 if read and read[1] >= 2 ** 30 else None
+
+
+class MainWindow(QMainWindow):
+    # Testler sahte örnekleyici verir; None = Windows performans sayaçları.
+    live_sampler_factory = None
+
+    def __init__(self, controller):
+        super().__init__()
+        self._boot_time = time.time()  # _start_games yalnızca bundan önce kalan oyun günlüğünü geri alır
+        self.c = controller
+        suffix = "" if controller.mode == MODE_NORMAL else f" — {t('ui.mod.' + controller.mode)}"
+        self.setWindowTitle(t("uygulama.ad") + suffix)
+        self.resize(1240, 820)
+        self.setMinimumSize(900, 560)  # 1366×768 ekranda %125 ölçekte (≈1093×614 mantıksal) sığar
+        self.worker = Worker()
+        # Testlerde olay döngüsü testler arasında dönmez; orada kapalı (tests/__init__.py).
+        self.stall_watch = StallWatch(self) if os.environ.get("PCOPT_BEKCI") != "kapali" else None
+        self.live_monitor = LiveMonitor(self.live_sampler_factory)
+        self.game_store = GameStore()
+        self.preset_store = PresetStore()  # kullanıcı presetleri (yalnızca ayar kimlikleri)
+        self.game_detector = None      # "oyun açık mı" (runtime.GameDetector): yalnızca canlı FPS / oyun kaydı açıkken
+        self.recorder = None           # oyun oturumu kaydı: yalnızca oyun sürerken ve ayar açıkken
+        self.live_fps = None           # canlı FPS (app/measure/live_fps.py): yalnızca oyun sürerken ve ayar açıkken
+        self.fps_stats = None
+        self.fps_widget = None         # oyun üstü FPS kutusu (app/ui/fps_widget.py): yalnızca canlı FPS sürerken ve izinliyse
+        self.live_fps_game = None
+        self.vram_reader = None        # ekran kartı belleği okuyucusu: yalnızca canlı FPS sürerken ve "vram_uyari" açıkken
+        self.last_sessions = {}        # oyun kimliği -> son oyun oturumunun özeti (yalnızca bellekte)
+        self.game_session = None       # "Hazırla"yla uygulanmış oyun-sırası seçenekleri (runtime.GameSession); yoksa None
+        self.prepared_game = None      # hazırlanan oyun
+        self.prep_results = None       # son prepare_game'in sonuçları; None = hazırlık yapılamadı (meşgul / hata)
+        self.prep_detector = None      # yalnızca hazırlıkken: oyun kapanınca geri almak için (hiçbir ayar uygulamaz)
+        self.prep_started = False      # hazırlanan oyun açıldı mı
+        self.prep_timer = QTimer(self)  # oyun hiç açılmazsa kendiliğinden geri al
+        self.prep_timer.setSingleShot(True)
+        self.prep_timer.timeout.connect(self._prep_timeout)
+        self.steam_note = False        # son hazırlıkta Steam indirmesi sürüyordu
+        self.tray = None
+        self.quitting = False
+        self.skip_save = False  # "Kaldırmaya hazırla" verileri sildiyse hiçbir şey yazılmaz
+        self.pages = {}
+        self.current = None
+        self._history = []   # önceki ekranlar (Alt+Sol / fare geri / Esc); sayfalar yığında kalır, kaydırma korunur
+        self.busy = False
+        self.scanning = False
+
+        root = QWidget()
+        root.setObjectName("Root")
+        self.setCentralWidget(root)
+        self.toast = w.Toast(self)
+        outer = QVBoxLayout(root)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(0)
+        self._panel_open = None
+        pages = self._build_nav(root)
+        outer.addWidget(self._build_top_strip(root, pages))
+        content = QVBoxLayout()
+        content.setContentsMargins(18, 12, 18, 4)
+        content.setSpacing(6)
+        self.banner_area = QVBoxLayout()
+        self.banner_area.setSpacing(6)
+        content.addLayout(self.banner_area)
+        self.stack = QStackedWidget()
+        content.addWidget(self.stack, 1)
+        self.status = QLabel("")
+        self.status.setObjectName("StatusBar")
+        content.addWidget(self.status)
+        outer.addLayout(content, 1)
+        outer.addWidget(self.strip_holder)  # kategori şeridi: çubuğun hemen üstü, yalnızca grup sayfasında görünür
+        bar_row = QHBoxLayout()  # yüzen çubuk: ortada, kenarlardan ve alttan boşluklu
+        bar_row.setContentsMargins(16, 4, 16, 12)
+        bar_row.addStretch(1)
+        bar_row.addWidget(self.nav_bar)
+        bar_row.addStretch(1)
+        outer.addLayout(bar_row)
+        self._chain_tab_order()
+
+        self._counts_timer = QTimer(self)
+        self._counts_timer.setSingleShot(True)
+        self._counts_timer.timeout.connect(self._update_counts)
+        self._save_timer = QTimer(self)
+        self._save_timer.setSingleShot(True)
+        self._save_timer.timeout.connect(lambda: self.worker.run(self.c.save_cache, serial=False))
+
+        had_cache = self.c.load_cache()
+        self.update_banners()
+        self._auto_update_check()
+        self.navigate("ozet")
+        QShortcut(QKeySequence("Alt+Left"), self, self.go_back)
+        QShortcut(QKeySequence("Esc"), self, self._escape)
+        self._update_counts()
+        if had_cache:
+            self.set_status(t("ui.onbellekten_gosteriliyor"))
+        QTimer.singleShot(0, self._start_background)
+        QTimer.singleShot(300, self._prebuild_pages)
+        QTimer.singleShot(500, self._start_games)
+        self.update_tray()
+
+    # ------------------------------------------------------------------ düzen
+    # Çubuktaki sayfalar; "Araçlar" yukarı açılan panel (araç sayfaları); "Optimizasyonlar" ve "Özelleştirmeler" kategori ŞERİDİ
+    # (çubuğun hemen üstünde, yalnızca o gruptaki bir sayfa açıkken); "Ayarlar" (uygulamanın kendi ayarları) çubukta ayrı
+    # sayfa. Sayfa kimlikleri değişmedi (kategori kimlikleri, "ayarlar", "bilgi" aynı).
+    NAV_BAR = ("profiller", "ozet", "oyunlar", "boost", "temizlik")
+    NAV_TOOLS = ("pc_detay", "kaldirici", "olcum", "degisiklikler", "rapor", "baslangic", "elle", "rehber", "bilgi")
+    CUSTOM_CATEGORIES = ("QOL", "EXP", "SND")  # görünüm/rahatlık; öteki tüm kategoriler "optimizasyonlar" (Placebo dahil: proje kararı)
+    STRIP_GROUPS = ("optimizasyonlar", "ozellestirmeler")
+    COMPACT_BELOW = 840  # bu genişlikten dar pencerede çubuk/şerit düğmeleri adsız (ad kırpılmasın; en küçük pencere 900)
+
+    def _build_nav(self, root):
+        """Alt-orta menü çubuğu, kategori şeridi ve Araçlar paneli. Döndürür: arama için (kimlik, ad) listesi."""
+        self.nav = {}        # sayfa kimliği -> düğme (çubukta, şeritte ya da panelde); seçili sayfa buradan boyanır
+        self.nav_groups = {}  # "optimizasyonlar" / "ozellestirmeler" / "araclar" -> çubuktaki grup düğmesi
+        self.nav_panels = {}  # yalnızca "araclar" yukarı açılan panel
+        self._category_ids = {c["id"] for c in self.c.categories}
+        self.strip_keys = {
+            "optimizasyonlar": [c["id"] for c in self.c.categories if c["id"] not in self.CUSTOM_CATEGORIES],
+            "ozellestirmeler": [k for k in self.CUSTOM_CATEGORIES if k in self._category_ids]}
+        self._group_last = {}  # şerit grubu -> en son açılan kategori (grup düğmesi oraya döner)
+        pages = []
+
+        def item(key, **kwargs):
+            text = t(f"kategori.{key}") if key in self._category_ids else t(f"ui.menu.{key}")
+            self.nav[key] = NavItem(key, theme.ICONS.get(key, ""), text, self.navigate, self._hover_nav, **kwargs)
+            pages.append((key, text))
+            return self.nav[key]
+
+        self.nav_bar = QFrame()
+        self.nav_bar.setObjectName("NavBar")
+        row = QHBoxLayout(self.nav_bar)
+        row.setContentsMargins(6, 4, 6, 4)
+        row.setSpacing(2)
+        for key in self.NAV_BAR:
+            bar_item = item(key, bar=True)
+            bar_item.text.setText(t(f"ui.menu.{key}").split(" (")[0])  # "Boost (bellek)" çubukta "Boost"
+            row.addWidget(bar_item)
+        for key in self.NAV_TOOLS:
+            item(key)
+        self.strip_holder = QWidget()  # ortalı şerit; gizliyken yer kaplamaz
+        holder = QHBoxLayout(self.strip_holder)
+        holder.setContentsMargins(16, 4, 16, 0)
+        holder.addStretch(1)
+        self.nav_strips = {}  # grup -> o grubun şeridi (çubuğun hemen üstündeki ikinci şerit: aynı görsel dil, simge + ad)
+        for group in self.STRIP_GROUPS:  # grup başına ayrı çerçeve: grup değişince yalnızca çerçeve gösterilir/gizlenir (hızlı)
+            strip = QFrame()
+            strip.setObjectName("NavStrip")
+            strip_row = QHBoxLayout(strip)
+            strip_row.setContentsMargins(6, 4, 6, 4)
+            strip_row.setSpacing(2)
+            for key in self.strip_keys[group]:
+                strip_row.addWidget(item(key, bar=True))
+            strip.setVisible(False)
+            holder.addWidget(strip)
+            self.nav_strips[group] = strip
+        holder.addStretch(1)
+        self.strip_holder.setVisible(False)
+        for group in (*self.STRIP_GROUPS, "araclar"):
+            is_strip = group in self.STRIP_GROUPS
+            if is_strip and not self.strip_keys[group]:
+                continue
+            glyph = theme.ICONS[group] if is_strip else ""
+            head = NavItem(group, glyph, t(f"ui.menu.grup.{group}"), self._open_group if is_strip else self._toggle_panel,
+                           bar=True, chevron=not is_strip)
+            self.nav_groups[group] = head
+            row.addWidget(head)
+            if is_strip:
+                continue
+            panel = QFrame(root)
+            panel.setObjectName("NavPanel")
+            panel.setVisible(False)  # çubuğun üstünde yüzer; yerleşime girmez (konum _place_panel'de)
+            lay = QVBoxLayout(panel)
+            lay.setContentsMargins(12, 10, 12, 12)
+            lay.setSpacing(8)
+            title = QLabel(t(f"ui.menu.grup.{group}").upper())
+            title.setObjectName("NavGroup")
+            lay.addWidget(title)
+            panel.grid = QGridLayout()
+            panel.grid.setSpacing(4)
+            lay.addLayout(panel.grid)
+            panel.keys, panel.cols = self.NAV_TOOLS, 0
+            self.nav_panels[group] = panel
+        settings_item = item("ayarlar", bar=True)  # uygulamanın kendi ayarları: panelde değil, çubukta
+        row.addWidget(settings_item)
+        return pages
+
+    def _chain_tab_order(self):
+        """Tab: çubuk soldan sağa; her şerit grubunun düğmesinden hemen sonra o grubun şerit düğmeleri (gizliler atlanır).
+        Pencereye yerleştikten SONRA çağrılır (setTabOrder aynı pencerede olmayan parçalara işlemez)."""
+        order = [self.nav[k] for k in self.NAV_BAR]
+        for group in self.STRIP_GROUPS:
+            if group in self.nav_groups:
+                order += [self.nav_groups[group], *(self.nav[k] for k in self.strip_keys[group])]
+        order += [self.nav_groups["araclar"], self.nav["ayarlar"]]
+        for before, after in zip(order, order[1:]):
+            QWidget.setTabOrder(before, after)
+
+    def _open_group(self, group):
+        """Şerit grubunun düğmesi: gruptaki en son (yoksa ilk) kategoriye gider; zaten grubun içindeyse hiçbir şey yapmaz."""
+        self._close_panel(refocus=False)  # açık Araçlar paneli grup düğmesine basınca da kapansın
+        keys = self.strip_keys[group]
+        if self._group_of(self.current) != group and keys:
+            self.navigate(self._group_last.get(group) if self._group_last.get(group) in keys else keys[0])
+
+    def _build_top_strip(self, root, pages):
+        """Üst şerit: logo + ad, arama (Ctrl+K), bağış bağlantısı. Eski kenar çubuğundaki öğelerin yeni yeri."""
+        strip = QFrame()
+        strip.setObjectName("TopStrip")
+        lay = QHBoxLayout(strip)
+        lay.setContentsMargins(16, 8, 16, 8)
+        lay.setSpacing(12)
+        mark = w.logo(30) or w.IconTile("F", theme.palette()["accent"], 30, letter=True)
+        self.brand_name = QLabel(t("uygulama.ad"))
+        self.brand_name.setObjectName("Brand")
+        lay.addWidget(mark)
+        lay.addWidget(self.brand_name)
+        lay.addStretch(1)
+        self.search_box = SearchBox(self.c.tweaks, pages, self.go_to_tweak, self.navigate, overlay=root,
+                                    actions=self._quick_actions, on_action=self.run_quick_action)
+        self.search_box.setFixedWidth(300)
+        lay.addWidget(self.search_box)
+        QShortcut(QKeySequence("Ctrl+K"), self, self.search_box.focus)
+        url = about_data()["bagis_url"]
+        self.donate_btn = None
+        if donate_url_ok(url):  # sessiz bağlantı, açılır pencere yok
+            self.donate_btn = QPushButton(t("ui.menu.bagis"))
+            self.donate_btn.setObjectName("DonateBtn")
+            self.donate_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.donate_btn.clicked.connect(lambda _=False: os.startfile(url))  # noqa: S606
+            lay.addWidget(self.donate_btn)
+        self.top_strip = strip
+        return strip
+
+    # ------------------------------------------------------------------ yukarı açılan paneller
+    def _fill_panel(self, panel, cols):
+        while panel.grid.count():
+            panel.grid.takeAt(0)
+        for index, key in enumerate(panel.keys):
+            panel.grid.addWidget(self.nav[key], index // cols, index % cols)
+        for column in range(3):
+            panel.grid.setColumnStretch(column, 1 if column < cols else 0)
+        panel.cols = cols
+
+    def _toggle_panel(self, group):
+        if self._panel_open == group:
+            self._close_panel()
+        else:
+            self._open_panel(group)
+
+    def _open_panel(self, group):
+        self._close_panel(refocus=False)
+        head = self.nav_groups[group]
+        by_key = head.hasFocus()  # klavyeyle açıldıysa odak panele geçer (fareyle açılınca halka çıkmaz)
+        self._panel_open = group
+        panel = self.nav_panels[group]
+        self._place_panel()
+        motion.expand(panel, True)
+        panel.raise_()
+        self._mark_groups()
+        if by_key:
+            self.nav[panel.keys[0]].setFocus()
+
+    def _close_panel(self, refocus=True):
+        group, self._panel_open = self._panel_open, None
+        if group is None:
+            return False
+        panel = self.nav_panels[group]
+        focus = QApplication.focusWidget()
+        had_focus = focus is not None and panel.isAncestorOf(focus)
+        panel.setVisible(False)
+        self._mark_groups()
+        if refocus and had_focus:
+            self.nav_groups[group].setFocus()
+        return True
+
+    def _place_panel(self):
+        group = self._panel_open
+        if group is None:
+            return
+        panel, root = self.nav_panels[group], self.centralWidget()
+        avail = root.width() - 24
+        cols = 3 if avail >= 640 else 2 if avail >= 420 else 1
+        if cols != panel.cols:
+            self._fill_panel(panel, cols)
+        panel.layout().activate()
+        hint = panel.sizeHint()
+        width = min(avail, hint.width())
+        head = self.nav_groups[group]
+        centre = head.mapTo(root, head.rect().center()).x()
+        x = max(12, min(centre - width // 2, root.width() - width - 12))
+        y = self.nav_bar.mapTo(root, QPoint(0, 0)).y() - hint.height() - 8
+        panel.setGeometry(x, max(4, y), width, hint.height())
+
+    def _group_of(self, key):
+        for group, keys in self.strip_keys.items():
+            if key in keys:
+                return group
+        return "araclar" if key in self.NAV_TOOLS else None
+
+    def _mark_groups(self):
+        current = self._group_of(self.current)
+        for group, head in self.nav_groups.items():
+            head.set_selected(group == self._panel_open or group == current)
+        self._show_strip(current)
+
+    def _show_strip(self, group):
+        """Kategori şeridi yalnızca şerit grubundaki bir sayfa açıkken görünür ve yalnızca o grubun düğmelerini taşır."""
+        keys = self.strip_keys.get(group, ())
+        if keys:
+            self._group_last[group] = self.current
+        for name, strip in self.nav_strips.items():
+            strip.setVisible(name == group and bool(keys))
+        self.strip_holder.setVisible(bool(keys))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if getattr(self, "nav_bar", None) is not None:
+            self._apply_width(self.width())
+
+    def _apply_width(self, width):
+        """Dar pencerede (< COMPACT_BELOW) çubuk düğmeleri adsız, üst şeritte yalnızca logo + arama kalır (bağış bağlantısı
+        Bilgi sayfasında da var)."""
+        compact = width < self.COMPACT_BELOW
+        for item in (*self.nav.values(), *self.nav_groups.values()):
+            item.set_compact(compact)
+        self.brand_name.setVisible(not compact)
+        if self.donate_btn is not None:
+            self.donate_btn.setVisible(not compact)
+        self.search_box.setFixedWidth(180 if compact else 300)
+        self._place_panel()
+
+    def _page(self, key):
+        if key not in self.pages:
+            if key == "ozet":
+                page = SummaryPage(self)
+            elif key == "profiller":
+                page = ProfilesPage(self)
+            elif key == "degisiklikler":
+                page = ChangesPage(self)
+            elif key == "rapor":
+                page = ReportPage(self)
+            elif key == "ayarlar":
+                page = SettingsPage(self)
+            elif key == "bilgi":
+                page = AboutPage(self)
+            elif key == "elle":
+                page = ManualPage(self)
+            elif key == "rehber":
+                page = GuidePage(self)
+            elif key == "pc_detay":
+                page = PcDetailsPage(self)
+            elif key == "baslangic":
+                page = StartupPage(self)
+            elif key == "oyunlar":
+                page = GamesPage(self)
+            elif key == "olcum":
+                page = MeasurePage(self)
+            elif key == "boost":
+                page = BoostPage(self)
+            elif key == "kaldirici":
+                page = UninstallerPage(self)
+            elif key == "temizlik":
+                page = CleanerPage(self)
+            else:
+                page = CategoryPage(self, next(c for c in self.c.categories if c["id"] == key))
+            self.pages[key] = page
+            self.stack.addWidget(page)
+        return self.pages[key]
+
+    HISTORY_MAX = 30
+    _TEXT_INPUTS = (QLineEdit, QPlainTextEdit, QAbstractSpinBox, QComboBox, QListWidget)
+
+    def go_back(self):
+        """Önceki ekrana döner (yoksa False). Önceki sayfa yığında durduğu için kaydırma konumu korunur."""
+        while self._history:
+            key = self._history.pop()
+            if key != self.current and key in self.nav:
+                self.navigate(key, _back=True)
+                return True
+        return False
+
+    def _escape(self):
+        """Esc: önce açık panel; sayfanın kendi 'bir adım geri'si (Oyunlar alt sayfası); metin/seçim kutusunda yalnızca odağı
+        bırakır (arama kutusu önce temizlenir); aksi halde önceki ekran."""
+        if self._close_panel():
+            return
+        focus = QApplication.focusWidget()
+        page = self.pages.get(self.current)
+        in_page = bool(focus and page and page.isAncestorOf(focus))
+        if isinstance(focus, self._TEXT_INPUTS) and not in_page:  # arama kutusu gibi sayfa dışı giriş: yalnızca odağı bırakır
+            if focus is self.search_box.edit:
+                self.search_box.edit.clear()
+            focus.clearFocus()
+        elif self._page_escape():
+            return
+        elif isinstance(focus, self._TEXT_INPUTS):
+            focus.clearFocus()
+        else:
+            self.go_back()
+
+    def _page_escape(self):
+        """Sayfanın kendi 'bir adım geri'si varsa (ör. Oyunlar'da oyunun alt sayfası → liste) Esc önce onu kullanır."""
+        handler = getattr(self.pages.get(self.current), "handle_escape", None)
+        return bool(handler and handler())
+
+    def mousePressEvent(self, event):
+        """Fare "geri" tuşu (işlenmeyen tıklama pencereye kadar çıkar): önceki ekran."""
+        if event.button() == Qt.MouseButton.BackButton and self.go_back():
+            event.accept()
+            return
+        if self._panel_open and not self.nav_bar.rect().contains(self.nav_bar.mapFrom(self, event.position().toPoint())):
+            self._close_panel(refocus=False)  # çubuğa tıklama kendi düğmesince işlenir (yoksa kapanıp yeniden açılırdı)
+        super().mousePressEvent(event)
+
+    def navigate(self, key, highlight=None, _back=False):
+        if not _back and self.current and key != self.current:
+            if not self._history or self._history[-1] != self.current:
+                self._history.append(self.current)
+                del self._history[:-self.HISTORY_MAX]
+        self._close_panel(refocus=False)
+        for name, item in self.nav.items():
+            item.set_selected(name == key)
+        page = self._page(key)
+        self.stack.setCurrentWidget(page)
+        motion.fade_in(page)
+        self.current = key
+        self._mark_groups()
+        page.on_show(highlight)
+
+    def _quick_actions(self):
+        """Ctrl+K eylemleri: yeni özellik değil, var olan düğmelerin kısayolu (her biri kendi onay/önizleme akışından geçer)."""
+        base = [(k, t(f"ui.eylem.{k}")) for k in ("onerilen", "boost", "temizlik", "tara")]
+        return base + [(f"olc:{g['id']}", t("ui.eylem.olc_hazirla", ad=g["ad"])) for g in self.game_store.games if g.get("exe")]
+
+    def run_quick_action(self, key):
+        if key == "onerilen":
+            picks = self.c.recommendations()
+            if not picks:
+                self.set_status(t("ui.oneri.bos"), "uyari")
+                return
+            hero = getattr(self.pages.get("ozet"), "recommendations", None)
+            self.apply_recommended([self.c.by_id[p["id"]] for p in picks], hero.fill if hero else (lambda: None))
+        elif key == "boost":
+            if not self._blocked():
+                self._page("boost").hizli()  # liste okunur, sonra Boost'un kendi onay penceresi sorar
+                self.navigate("boost")
+        elif key == "temizlik":
+            self.navigate("temizlik")
+            page = self._page("temizlik")
+            if page.found is not None:  # ilk açılışta on_show zaten tarar
+                page.refresh()
+        elif key == "tara":
+            self.start_scan()
+        elif key.startswith("olc:"):
+            game = next((g for g in self.game_store.games if g["id"] == key[4:]), None)
+            if game:
+                self.navigate("oyunlar")
+                page = self._page("oyunlar")
+                page._open(game["id"])
+                page.dongu.baslat(game)  # kendi korumaları ve onay penceresi var
+
+    def go_to_tweak(self, tweak_id):
+        tweak = self.c.by_id.get(tweak_id)
+        if tweak and tweak.get("liste_yoneticisi") in OWN_PAGE:  # kendi menüsünde yapılır
+            self.navigate(OWN_PAGE[tweak["liste_yoneticisi"]])
+        elif tweak and is_manual(tweak):
+            self.navigate("elle", highlight=tweak_id)
+        elif tweak:
+            category = next(c for c in self.c.categories if c["ad"] == tweak["kategori"])
+            self.navigate(category["id"], highlight=tweak_id)
+
+    def _hover_nav(self, key):
+        """Menü öğesinin üstünde duran imleç: sayfa kurulmamış/bayatsa tıklamadan önce arka planda kurulur (80 ms
+        bekleme; geçip giden imleç boşuna kurdurmaz). Tarama ya da değişiklik sürerken hiçbir şey yapılmaz."""
+        self._hover_key = key
+        QTimer.singleShot(80, lambda: self._prebuild_hovered(key))
+
+    def _prebuild_hovered(self, key):
+        if key != getattr(self, "_hover_key", None) or key == self.current or self.busy or self.scanning:
+            return
+        page = self._page(key)
+        if hasattr(page, "ensure_built") and (not page.built or page.stale):
+            page.ensure_built()
+
+    def _prebuild_pages(self):
+        """Kategori sayfalarını boşta, birer birer kurar; ilk açılışta beklenmez."""
+        keys = [c["id"] for c in self.c.categories] + ["profiller"]
+        pending = [k for k in keys if k not in self.pages or not self.pages[k].built]
+        if not pending:
+            return
+        self._page(pending[0]).ensure_built()
+        QTimer.singleShot(30, self._prebuild_pages)
+
+    # ------------------------------------------------------------------ güncelleme
+    def _auto_update_check(self):
+        """Kullanıcı ilk soruda/Ayarlar'da evet dediyse günde en çok bir kez yeni sürüm var mı diye bakar; sessiz: yalnızca
+        durum çubuğuna tek satır yazar, hata sessiz geçilir."""
+        if self.c.mode == MODE_PREVIEW:
+            return
+        if guncelleme.onceki_degisim_hatasi():  # son kurulum eski sürüme döndü: bir kez söylenir (Denetim A S3)
+            self.set_status(t("ui.guncelleme.hata.degisim"), "sorun")
+            return
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if not guncelleme.denetim_vakti(
+                settings.get("guncelleme_denetle"), settings.get("guncelleme_son_deneme"), now):
+            return
+        settings.set("guncelleme_son_deneme", now.isoformat())
+        self.worker.run(guncelleme.kontrol, lambda info: info and self.set_status(
+            t("ui.guncelleme.var_kisa", surum=info["surum"])), lambda _e: None, serial=False)
+
+    def reload_pages(self):
+        """Tarama bittiğinde / toplu değişiklik sonrası: yalnız görünen sayfa hemen yeniden kurulur, diğerleri açılınca.
+        Eskiden kurulmuş tüm sayfalar ana iş parçacığında birden kuruluyordu (Placebo tek başına ~2 sn): "yanıt vermiyor"."""
+        for key, page in self.pages.items():
+            if key == self.current:
+                page.data_reloaded()
+            elif page.built:
+                page.stale = True
+        if self.current:
+            self.pages[self.current].on_show()
+
+    # ------------------------------------------------------------------ şeritler ve durum
+    def set_status(self, text, kind="bilgi"):
+        self.status.setText(text)
+        self.status.setProperty("fg", kind if kind in ("iyi", "sorun") else "")
+        w.repolish(self.status)
+
+    def _recover_backup(self):
+        if not dialogs.ask_yes_no(self, t("ui.yedek_kurtar"), t("ui.yedek_kurtar_soru"),
+                                  yes_text=t("ui.yedek_kurtar"), no_text=t("ui.vazgec")):
+            return
+        count = self.c.engine.store.recover()
+        self.set_status(t("ui.yedek_kurtarildi", sayi=count), "iyi")
+        self._after_backup_reset()
+
+    def _dismiss_broken_backup(self):
+        self.c.engine.store.dismiss_broken()
+        self.set_status(t("ui.yedek_sifirlandi"), "uyari")
+        self._after_backup_reset()
+
+    def _after_backup_reset(self):
+        self.update_banners()
+        for tweak_id in list(self.c.by_id):
+            self._tweak_updated(tweak_id)
+        if self.current == "degisiklikler":
+            self.pages[self.current].data_reloaded()
+
+    def update_banners(self):
+        w.clear_layout(self.banner_area)
+        if self.c.mode != MODE_NORMAL:
+            self.banner_area.addWidget(w.banner(t(f"ui.mod_aciklama.{self.c.mode}"), "uyari"))
+        key = self.c.restart_message_key()
+        if key:
+            self.banner_area.addWidget(w.banner(t("ui.yeniden_gerekli") + " " + t(key), "bilgi"))
+        if self.c.explorer_restart:
+            self.banner_area.addWidget(w.banner(t("yeniden.gezgin"), "bilgi"))
+        store = self.c.engine.store
+        if store.tampered:
+            buttons = [] if store.readonly else [w.button(t("ui.yedek_sifirla"), self._dismiss_broken_backup)]
+            if store.recoverable and not store.readonly:
+                buttons.insert(0, w.button(t("ui.yedek_kurtar"), self._recover_backup, primary=True))
+            self.banner_area.addWidget(w.banner(t("ui.yedek_degistirilmis"), "sorun", *buttons))
+        from app.engine import driver_tools  # noqa: WPS433
+        if driver_tools.in_safe_mode():
+            self.banner_area.addWidget(w.banner(t("ui.guvenli.banner_simdi"), "uyari"))
+        elif self.c.engine.store.has(driver_tools.SAFE_MODE_ID):
+            self.banner_area.addWidget(w.banner(t("ui.guvenli.banner"), "uyari"))
+
+    def _update_counts(self):
+        """Kenar menüde yalnızca önerilen ama açık olmayan ayar sayısı (her satırda "3 / 15" gürültüydü)."""
+        waiting = {}
+        if self.c.scan is not None:
+            for pick in self.c.recommendations(99):
+                cid = self.c.by_id[pick["id"]].get("kategori_id")
+                waiting[cid] = waiting.get(cid, 0) + 1
+        for category in self.c.categories:
+            item = self.nav.get(category["id"])
+            if item and category["id"] != "PLC":
+                item.set_tag(str(waiting[category["id"]]) if waiting.get(category["id"]) else "")
+        for group, head in self.nav_groups.items():  # çubukta, şerit kapalıyken grubun toplamı
+            if group in self.strip_keys:
+                total = sum(n for cid, n in waiting.items() if cid != "PLC" and cid in self.strip_keys[group])
+                head.set_tag(str(total) if total else "")
+
+    def _tweak_updated(self, tweak_id):
+        for page in self.pages.values():
+            page.tweak_updated(tweak_id)
+        self._counts_timer.start(150)
+
+    # ------------------------------------------------------------------ arka plan okuma
+    def _start_background(self):
+        """Durumları hemen, taramayı onunla birlikte başlatır (ikisi de salt okunur)."""
+        self.worker.run(lambda: self.c.refresh_all(on_each=lambda tid: self.worker.call_soon(self._tweak_updated, tid)),
+                        self._states_done, self._background_failed, serial=False)
+        self.start_scan()
+
+    def _states_done(self, _result):
+        self._update_counts()
+        self._save_timer.start(500)
+        if not self.scanning:
+            self.set_status(t("ui.durumlar_guncel"), "iyi")
+
+    def _background_failed(self, _exc):
+        self.set_status(t("ui.tarama_hatasi"), "sorun")
+
+    def start_scan(self):
+        if self.scanning:
+            return
+        self.scanning = True
+        summary = self._page("ozet")
+        summary.set_progress(t("ui.taraniyor"))
+
+        def progress(done, total, name):
+            self.worker.call_soon(summary.set_progress,
+                                  t("tarama.ilerleme", bolum=t(f"bolum.{name}"), sira=done, toplam=total))
+
+        def work():
+            self.c.run_scan(progress=progress)
+            # Tarama donanım profilini kesinleştirdi; uygunluğu tazele (okunmuş durumlar yeniden okunmaz).
+            self.c.refresh_all(on_each=lambda tid: self.worker.call_soon(self._tweak_updated, tid), reread=False)
+
+        def done(_):
+            self.scanning = False
+            self.reload_pages()
+            summary.set_progress(t("tarama.bitti", sure=self.c.scan["toplam_sure"]), running=False)
+            self.set_status(t("tarama.bitti", sure=self.c.scan["toplam_sure"]), "iyi")
+            self._update_counts()
+            self._save_timer.start(500)
+
+        def failed(_exc):
+            self.scanning = False
+            summary.set_progress(t("ui.tarama_hatasi"), running=False)
+            self.set_status(t("ui.tarama_hatasi"), "sorun")
+
+        self.worker.run(work, done, failed, serial=False)
+
+    def recheck_fix(self, tweak_id, done):
+        """Çözümden sonra yalnız bu madde arka planda doğrulanır; arayüz beklemez."""
+        def finished(changed):
+            self._tweak_updated(tweak_id)
+            done(bool(changed))
+        self.worker.run(lambda: self.c.recheck(tweak_id), finished, lambda _e: done(False), serial=False)
+
+    # ------------------------------------------------------------------ oyunlar
+    def _start_games(self):
+        """Eski sürümde yarım kalan oyun ayarlarını geri alır, sonra oyun algılayıcıyı gerekiyorsa başlatır."""
+        if not self.c.can_modify:
+            return
+        system = self.c.engine.system
+
+        def recover():
+            try:
+                presentmon.cleanup_orphans()  # çökmüş ölçümden arkada kalan PresentMon (Denetim YAYIN K5)
+            except Exception:
+                _log.exception("Ölçüm artığı temizlenemedi")
+            return GameSession(system, ProcessOps(), engine=self.c.engine).recover(before=self._boot_time)
+
+        def done(recovered):
+            if recovered:
+                self.set_status(t("ui.oyun_oturumu_geri_alindi"), "bilgi")
+            self.update_game_detector()
+        self.worker.run(recover, done, lambda _e: self.update_game_detector(), serial=False)
+
+    PREP_WAIT_MS = 10 * 60 * 1000  # oyun bu sürede açılmazsa hazırlık geri alınır
+
+    def prepare_game(self, game, launch=None, done=lambda: None):
+        """"Hazırla" / "Oyunu başlat": oyunun AÇIK ve izin verilen oyun-sırası seçeneklerini uygular (motor: yedek, Değişiklikler,
+        geri alma). Oyun kapanınca ya da "Geri al"la geri alınır; yalnızca bu düğmeyle başlar. launch: hazırlıktan sonra çağrılır."""
+        self.prep_results = None
+        if self.busy or self._blocked():
+            done()
+            return
+        if not profiles.runtime_selected(game):
+            if launch:
+                launch()
+            done()
+            return
+        if self.game_session is not None and self.prepared_game["id"] == game["id"]:  # zaten hazır
+            if launch:
+                launch()
+            done()
+            return
+        if self.game_session is not None:  # başka bir oyunun hazırlığı sürüyor: önce geri al
+            self.unprepare_game(lambda: self.prepare_game(game, launch, done), done)
+            return
+        engine = self.c.engine
+        session = GameSession(engine.system, ProcessOps(), engine=engine)
+        self.busy = True  # geri yükleme noktası hazırlanırken de ikinci tıklama başka bir işe girmesin
+
+        def cancel():
+            self.busy = False
+            done()
+
+        def proceed():
+            def finished(results):
+                self.busy = False
+                self._prepared(session, game, results)
+                if launch:
+                    launch()
+                done()
+
+            def failed(_exc):
+                self.busy = False
+                dialogs.show_message(self, t("ui.hata_baslik"), t("hata.beklenmeyen"), "sorun")
+                done()
+            self.worker.run(lambda: session.start(game), finished, failed)
+        self.ensure_prepared(proceed, cancel)
+
+    def _prepared(self, session, game, results):
+        """Hazırlık bitti: tek satır özet; geri alınacak bir şey varsa oyun kapanana kadar tek kısa bakış başlar."""
+        self.prep_results = results
+        names = {k: t(f"ui.hazirla.ad.{k}") for k, _ok, _d in results}
+        applied = [names[k] for k, ok, detail in results if ok and detail not in ("zaten", "indiriyor")]
+        skipped = [names[k] for k, ok, _d in results if not ok]
+        self.steam_note = any(k == "hazirla_steam_uyari" and detail == "indiriyor" for k, _ok, detail in results)
+        parts = []
+        if applied:
+            parts.append(t("ui.hazirla.uygulandi", liste=", ".join(applied)))
+        elif not skipped:
+            parts.append(t("ui.hazirla.hicbiri"))
+        if skipped:
+            parts.append(t("ui.hazirla.atlandi", liste=", ".join(skipped)))
+        if self.steam_note:
+            parts.append(t("ui.hazirla.steam_indiriyor"))
+        self.game_session = session if session.active else None
+        if self.game_session is not None:
+            parts.append(t("ui.hazirla.geri_alinir"))
+            self.prepared_game, self.prep_started = game, False
+            self.prep_detector = GameDetector(lambda: [game], on_event=lambda kind, g: self.worker.call_soon(self._prepared_event, kind))
+            self.prep_detector.start()
+            self.prep_timer.start(self.PREP_WAIT_MS)
+        self.set_status(" ".join(parts), "sorun" if skipped else "iyi")
+        if self.current == "degisiklikler":
+            self.pages[self.current].data_reloaded()
+        self._reload_games_page()
+
+    def _prepared_event(self, kind):
+        if kind == "basladi":
+            self.prep_started = True
+            self.prep_timer.stop()
+        elif self.game_session is not None:
+            self.unprepare_game()
+
+    def _prep_timeout(self):
+        if self.game_session is not None and not self.prep_started:
+            self.unprepare_game()
+
+    def unprepare_game(self, then=None, cancel=lambda: None):
+        """"Geri al" / oyun kapandı / süre doldu: hazırlıkta uygulananların hepsi geri alınır (motor). then: başarılıysa."""
+        session = self.game_session
+        if session is None:
+            if then:
+                then()
+            return
+        self.prep_timer.stop()
+        if self.prep_detector is not None:
+            self.prep_detector.stop()
+            self.prep_detector = None
+        self.busy = True
+
+        def finished(_result):
+            self.busy = False
+            ok = not session.journal_path.exists()
+            if ok:
+                self.game_session, self.prepared_game, self.steam_note = None, None, False
+                self.set_status(t("ui.hazirla.geri_alindi_durum"), "iyi")
+            else:
+                self.set_status(t("ui.hazirla.geri_alinamadi"), "sorun")
+            if self.current == "degisiklikler":
+                self.pages[self.current].data_reloaded()
+            self._reload_games_page()
+            if ok and then:
+                then()
+            elif not ok:
+                cancel()
+
+        def failed(_exc):
+            self.busy = False
+            self.set_status(t("ui.hazirla.geri_alinamadi"), "sorun")
+            cancel()
+        self.worker.run(session.stop, finished, failed)
+
+    def update_game_detector(self):
+        """Canlı FPS veya oyun oturumu kaydı açıksa ve exe'si bilinen oyun varsa "oyun açık mı" algılayıcısını çalıştırır,
+        değilse durdurur (oyun sürerken durdurmaz: oyun bitince yeniden bakılır). Hiçbir oyun ayarı uygulanmaz."""
+        if not self.c.can_modify:
+            return
+        needed = bool((settings.get("canli_fps") or settings.get("oyun_kaydi"))
+                      and any(g.get("exe") for g in self.game_store.games))
+        if needed and self.game_detector is None:
+            self.game_detector = GameDetector(lambda: [g for g in self.game_store.games if g.get("exe")],
+                                              on_event=lambda *a: self.worker.call_soon(self._game_event, *a))
+            self.game_detector.start()
+        elif not needed and self.game_detector is not None and not self.game_detector.active:
+            self.game_detector.stop()
+            self.game_detector = None
+
+    def _reload_games_page(self):
+        page = self.pages.get("oyunlar")
+        if page is not None and page.built:
+            page.data_reloaded()
+
+    def _start_recording(self, game):
+        if self.recorder is None and settings.get("oyun_kaydi"):
+            self.recorder = recorder.SessionRecorder(os.path.basename(game.get("exe") or ""))
+            self.recorder.start()
+
+    def live_fps_allowed(self, game):
+        """Canlı FPS bu oyunda çalışır mı: ayar açık ve oyunda anti-cheat YOK. Anti-cheat'li oyunda hiçbir izinle açılmaz:
+        The First Descendant (EAC + BlackCipher) canlı FPS açıkken kapandı (docs/CANLI_FPS_COKME.md, proje kararı)."""
+        return bool(settings.get("canli_fps")) and not game.get("anti_cheat")
+
+    def fps_widget_allowed(self, game):
+        """FPS kutusu bu oyunda görünür mü: ayar açık ve canlı FPS bu oyunda çalışıyor."""
+        return bool(settings.get("fps_widget")) and self.live_fps_allowed(game)
+
+    def update_fps_widget(self):
+        """Kutu canlı FPS'le birlikte yaşar; oyun sürerken ayar değişirse hemen açılır/kapanır (Alt+H de onunla)."""
+        wanted = self.live_fps is not None and self.fps_widget_allowed(self.live_fps_game)
+        if wanted and self.fps_widget is None:
+            self.fps_widget = fps_widget.FpsWidget(self._fps_widget_text)
+        elif not wanted and self.fps_widget is not None:
+            self.fps_widget.stop()
+            self.fps_widget = None
+
+    def _fps_widget_text(self):
+        percent = _vram_percent(self.vram_reader)
+        return fps_widget.text_for(self.live_fps.snapshot(), None if percent is None else round(percent))
+
+    def _start_live_fps(self, game):
+        if self.live_fps is not None or not self.live_fps_allowed(game):
+            return
+        self.live_fps_game = game
+        self.fps_stats = self.recorder.fps if self.recorder is not None else recorder.FpsStats()  # kayıt açıksa aynı özet
+        try:
+            self.live_fps = live_fps.LiveFps(os.path.basename(game.get("exe") or ""), on_second=self.fps_stats.add,
+                                             on_drop=self.fps_stats.drop,
+                                             on_fail=lambda durum: self.worker.call_soon(self._live_fps_failed, durum))
+            self.live_fps.start()
+        except Exception:
+            _log.exception("Canlı FPS başlatılamadı")
+            self.live_fps = None
+            self._live_fps_failed("baslamadi")
+            return
+        if settings.get("vram_uyari"):
+            try:
+                from app.scan.live import VramReader  # noqa: WPS433 - yalnızca Windows'ta
+                self.vram_reader = VramReader()
+            except Exception:
+                _log.exception("Ekran kartı belleği okuyucusu başlatılamadı")
+        self.update_fps_widget()
+
+    def _live_fps_failed(self, durum):
+        """Canlı FPS hiçbir durumda uygulamayı durdurmaz: ayar kapanır, Oyunlar'da tek satır kalır (ölçücü oyun bitene kadar
+        durumunu gösterir), ayrıntı log'da. Kullanıcı ayarı yeniden açınca sonraki oyunda tekrar denenir."""
+        _log.warning("Canlı FPS başlatılamadı (%s); ayar kapatıldı", durum)
+        settings.set("canli_fps", False)
+        self.update_fps_widget()
+        self.update_game_detector()
+        self.set_status(t("ui.canli_fps.baslamadi"), "uyari")
+        self._reload_games_page()
+
+    def vram_dolu(self):
+        """Oyun kartı belleği %90'ın üstündeyse yüzde (tamsayı), değilse veya okunamıyorsa None."""
+        percent = _vram_percent(self.vram_reader)
+        return round(percent) if percent is not None and percent > 90 else None
+
+    def _stop_live_fps(self):
+        """Canlı FPS özeti ({"fps", "fps_dususleri"}; ölçüm yapılmadıysa {})."""
+        reader, self.vram_reader = self.vram_reader, None
+        if reader is not None:
+            reader.close()
+        live, self.live_fps = self.live_fps, None
+        self.update_fps_widget()
+        if live is None:
+            return {}
+        live.stop()
+        return self.fps_stats.result()
+
+    def _stop_recording(self, game):
+        """Kaynak kullanımı/FPS özeti (ikisi de kapalıysa None). Yeterli örnek varsa ve kayıt açıksa yerel geçmişe de yazılır;
+        yalnızca FPS alınan (kayıt kapalı) oturum geçmişe YAZILMAZ."""
+        fps = self._stop_live_fps()
+        rec, self.recorder = self.recorder, None
+        if rec is None:
+            return dict(fps, ornek=0) if fps else None
+        stats = rec.stop()
+        if stats["ornek"] >= 2:
+            recorder.add_history(game, stats, datetime.datetime.now().isoformat(timespec="seconds"))
+        return stats
+
+    def _game_event(self, kind, game):
+        """Oyun açıldı: kayıt ve canlı FPS başlar. Oyun kapandı: ikisi biter, özet Oyunlar'daki son oturum kartına gider."""
+        if kind == "basladi":
+            self._start_recording(game)
+            self._start_live_fps(game)
+        else:
+            usage = self._stop_recording(game)
+            if usage is not None:
+                self.last_sessions[game["id"]] = {"ad": game["ad"], "kaynak": usage}
+            self.update_game_detector()  # ayar oyun sürerken kapandıysa algılayıcı şimdi durur
+        self._reload_games_page()
+
+    # ------------------------------------------------------------------ değişiklik akışı
+    def ensure_prepared(self, proceed, cancel):
+        engine = self.c.engine
+        if engine.restore_point is not None and (engine.restore_point.ok or engine.accepted_without_restore_point):
+            proceed()
+            return
+        if engine.restore_point is not None:
+            self._restore_point_result(engine.restore_point, proceed, cancel)
+            return
+        choice = settings.get("rp_sorma")
+        if not choice:
+            choice, remember = dialogs.ask_restore_point(self)
+            if choice is None:  # Esc / pencere kapatıldı: vazgeçildi, değişiklik yapılmaz
+                cancel()
+                return
+            if remember:
+                settings.set("rp_sorma", choice)
+        if choice == "atla":
+            engine.skip_restore_point()
+            proceed()
+            return
+        waiting = dialogs.busy(self, t("ui.rp_baslik"), t("ui.rp_olusturuluyor"))
+
+        def done(result):
+            waiting.finish()
+            self._restore_point_result(result, proceed, cancel)
+
+        def failed(_exc):
+            waiting.finish()
+            cancel()
+
+        self.worker.run(engine.prepare, done, failed)
+
+    def _require_restore_point(self, proceed, cancel):
+        """Geri yükleme noktası şart olan ayar: oturumda atlanmış olsa da yeniden denenir, olmazsa uygulanmaz."""
+        engine = self.c.engine
+        if engine.restore_point is not None and engine.restore_point.ok:
+            proceed()
+            return
+        engine.restore_point = None
+        waiting = dialogs.busy(self, t("ui.rp_baslik"), t("ui.rp_olusturuluyor"))
+
+        def done(result):
+            waiting.finish()
+            if result.ok:
+                self.set_status(t(f"rp.{result.status}", zaman=fmt_date(result.when)), "iyi")
+                proceed()
+                return
+
+            def after(fixed):
+                if fixed is not None:
+                    proceed()
+                else:
+                    dialogs.show_message(self, t("ui.rp_baslik"), t("hata.geri_yukleme_zorunlu"), "sorun")
+                    cancel()
+            self.offer_system_protection(after)
+
+        def failed(_exc):
+            waiting.finish()
+            cancel()
+
+        self.worker.run(engine.prepare, done, failed)
+
+    def _restore_point_result(self, result, proceed, cancel):
+        if result.ok:
+            self.set_status(t(f"rp.{result.status}", zaman=fmt_date(result.when)), "iyi")
+            proceed()
+            return
+
+        def after(fixed):
+            if fixed is not None:
+                self._restore_point_result(fixed, proceed, cancel)
+            elif dialogs.ask_yes_no(self, t("ui.rp_baslik"), t("rp.basarisiz") + "\n\n" + t("rp.devam_sorusu"),
+                                    yes_text=t("ui.yine_de_devam"), no_text=t("ui.vazgec")):
+                self.c.engine.accept_without_restore_point()
+                proceed()
+            else:
+                cancel()
+        self.offer_system_protection(after)
+
+    def offer_system_protection(self, done):
+        """Geri yükleme noktası oluşturulamadıysa Sistem Koruması kapalı mı bakılır; kapalıysa onayla açılır.
+        done(RestorePointResult | None): koruma açılıp ilk nokta oluştuysa o sonuç, aksi halde None."""
+        if not self.c.can_modify or not admin.is_admin():  # durum yönetici olmadan okunamaz
+            done(None)
+            return
+        title = t("koruma.baslik")
+        waiting = dialogs.busy(self, title, t("koruma.denetleniyor"))
+
+        def read_failed(exc):
+            waiting.finish()
+            _log.warning("Sistem koruması durumu okunamadı: %s", exc)
+            done(None)
+
+        def read(data):
+            waiting.finish()
+            if data.get("acik") is not False:  # açık ya da okunamadı: sorun başka yerde, mevcut uyarı yeterli
+                done(None)
+                return
+            reason = system_protection.blocker(data)
+            if reason:
+                dialogs.show_message(self, title, t(f"koruma.engel.{reason}", surucu=data["surucu"]), "uyari")
+                done(None)
+                return
+            text = t("koruma.soru", surucu=data["surucu"], gb=system_protection.limit_gb(data["boyut"], data["bos"]),
+                     bos=round(data["bos"] / system_protection.GB))
+            services = system_protection.disabled_services(data)
+            if services:
+                text += "\n\n" + t("koruma.servis_not", liste=", ".join(services))
+            if not dialogs.ask_yes_no(self, title, text, yes_text=t("koruma.ac"), no_text=t("ui.vazgec"), kind="bilgi"):
+                done(None)
+                return
+            working = dialogs.busy(self, title, t("koruma.aciliyor"))
+
+            def finished(res):
+                working.finish()
+                point = res["nokta"]
+                if point is not None:
+                    self.c.engine.restore_point = point
+                self.c.engine.store.history("sistem_koruma", data["surucu"], res["basarili"], res["neden"] or "")
+                good = res["basarili"] and point is not None and point.ok
+                dialogs.show_message(self, title, self._protection_report(res, data),
+                                     "iyi" if good else "uyari" if res["basarili"] else "sorun")
+                done(point if good else None)
+
+            def crashed(exc):
+                working.finish()
+                dialogs.show_message(self, title, t("koruma.sonuc.ac", hata=str(exc)), "sorun")
+                done(None)
+            self.worker.run(lambda: system_protection.enable(self.c.engine.system, data), finished, crashed)
+        self.worker.run(system_protection.status, read, read_failed)
+
+    @staticmethod
+    def _protection_report(res, data):
+        lines = [t("koruma.sonuc.servis", ad=detail) for key, ok, detail in res["adimlar"] if key == "servis" and ok]
+        if not res["basarili"]:
+            detail = next((d for k, ok, d in res["adimlar"] if k == "ac" and not ok), "")
+            lines.append(t(f"koruma.sonuc.{res['neden']}", hata=detail))
+            return "\n\n".join(lines)
+        lines.append(t("koruma.sonuc.acildi", surucu=data["surucu"]))
+        limit_ok = next((ok for k, ok, _d in res["adimlar"] if k == "sinir"), False)
+        lines.append(t("koruma.sonuc.sinir", gb=res["sinir_gb"]) if limit_ok else t("koruma.sonuc.sinir_hata"))
+        point = res["nokta"]
+        if point.ok:
+            lines.append(t(f"rp.{point.status}", zaman=fmt_date(point.when)))
+        else:
+            lines.append(t(f"koruma.sonuc.{res['neden']}", dk=data.get("siklik_dk")))
+        return "\n\n".join(lines)
+
+    def _confirm(self, tweak, enabling, level=None):
+        """Seviye 2 (riskli): açarken ve kapatırken iki ekran. Seviye 1 (dikkatli)
+        veya donanım uyarısı: yalnızca açarken tek ekran."""
+        avail = self.c.availability.get(tweak["id"])
+        level = self.c.engine.confirm_level(tweak) if level is None else level
+        anti_cheat = self.c.meta.get("anti_cheat_uyarisi") if level else ""
+        if level == 2:
+            return dialogs.confirm_risky(self, tweak, avail, enabling, anti_cheat)
+        if enabling and (level == 1 or (avail and avail.warnings)):
+            return dialogs.confirm_careful(self, tweak, avail, anti_cheat)
+        return True
+
+    def _blocked(self):
+        if self.c.can_modify:
+            return False
+        dialogs.show_message(self, t("ui.degistirilemez_baslik"), t(f"ui.mod_aciklama.{self.c.mode}"), "uyari")
+        return True
+
+    def _recheck_reverted(self, ids):
+        """Geri almadan sonra ayarların tespitini yeniden okur (kalkan bulgu çıkar, geri gelen bulgu eklenir; yalnız o
+        maddeler, tam tarama yok). Özet bulgu listesi değiştiyse True. Arka plan iş parçacığında çağrılır."""
+        return any([self.c.recheck(i) for i in set(ids) & set(self.c.by_id)])
+
+    def _related_ids(self, tweak_id):
+        return {tweak_id, self.c.engine.stored_related(tweak_id)}
+
+    def _run_change(self, tweak_id, work, done, undoable=False, reverted=False):
+        self.busy = True
+        self.toast.hide()  # eski "Geri al" başka değişikliği geri almasın
+        before = self._related_ids(tweak_id) if reverted else set()  # geri alınca yedek kaydı silinir
+        saved_name = (self.c.engine.store.get(tweak_id) or {}).get("ad", tweak_id)
+        findings_changed = []
+
+        def finished(result):
+            self.busy = False
+            self.c.note_result(result)
+            entry = self.c.engine.store.get(tweak_id) or {}
+            name = self.c.by_id[tweak_id]["ad"] if tweak_id in self.c.by_id else entry.get("ad", saved_name)
+            self._report_result(result, name, reverted)
+            if reverted and result.ok:
+                self.toast.show_text(t("ui.geri_alindi_kisa", ad=name), 4000)
+            if undoable and result.ok and self.c.engine.store.has(tweak_id):
+                self.toast.show_text(t("ui.uygulandi_kisa", ad=name), 6000, action_label=t("ui.geri_al"),
+                                     action=lambda: self.revert(tweak_id, lambda: None))
+            self.update_banners()
+            self._tweak_updated(tweak_id)
+            if tweak_id == nvidia_profili.PROFIL_ID:
+                self.reload_pages()  # GPU / Ekran / Performans sayfalarındaki kartlar yeni değerleri göstersin
+            if findings_changed:  # geri alma bir sorunlu ayarı geri getirdi: Özet ve ilgili sayfalar kendiliğinden yenilenir
+                self.reload_pages()
+                self._update_counts()
+            elif self.current == "degisiklikler":
+                self.pages[self.current].data_reloaded()
+            self._save_timer.start(500)
+            done()
+
+        def failed(_exc):
+            self.busy = False
+            dialogs.show_message(self, t("ui.hata_baslik"), t("hata.beklenmeyen"), "sorun")
+            done()
+
+        def task():
+            result = work()
+            if tweak_id in self.c.by_id:
+                self.c.refresh_one(tweak_id)
+            elif tweak_id == nvidia_profili.PROFIL_ID:  # profil birkaç ayarın durumunu birden değiştirir
+                for related in nvidia_profili.ILGILI:
+                    self.c.refresh_one(related)
+            if reverted and result.ok and self._recheck_reverted(before):
+                findings_changed.append(1)
+            return result
+
+        self.worker.run(task, finished, failed)
+
+    def _report_result(self, result, name, reverted=False):
+        text = f"{name}: {t(result.key, **result.params)}"
+        if reverted and result.ok:
+            text = t("ui.geri_alindi_kisa", ad=name)
+        for key, params in result.warnings:
+            text += " " + t(key, **params)
+        self.set_status(text, "iyi" if result.ok else "sorun")
+        if not result.ok:
+            dialogs.show_message(self, t("ui.hata_baslik"), text, "sorun")
+
+    def toggle(self, tweak, desired, done):
+        if self.busy or self._blocked():
+            done()
+            return
+        if not self._confirm(tweak, desired):
+            done()
+            return
+        engine = self.c.engine
+        work = lambda: engine.set_enabled(tweak, desired, confirmed=True)  # onay yukarıda alındı
+        needs_restore_point = desired or not engine.store.has(tweak["id"])
+        start = lambda: self._run_change(tweak["id"], work, done, undoable=desired)
+        if desired and tweak.get("geri_yukleme_zorunlu"):
+            self._require_restore_point(start, done)
+        elif needs_restore_point:
+            self.ensure_prepared(start, done)
+        else:
+            start()
+
+    def apply_selection(self, tweak, values, done):
+        if self.busy or self._blocked():
+            done()
+            return
+        work = lambda: self.c.engine.set_selection(tweak, values, confirmed=True)
+        self.ensure_prepared(lambda: self._run_change(tweak["id"], work, done, undoable=True), done)
+
+    def revert(self, tweak_id, done):
+        if self.busy or self._blocked():
+            done()
+            return
+        engine = self.c.engine
+        level = engine.stored_confirm_level(tweak_id)
+        if level == 2:
+            tweak = self.c.by_id.get(tweak_id) or self.c.by_id.get(engine.stored_related(tweak_id) or "")
+            ok = (self._confirm(tweak, False, level) if tweak else
+                  dialogs.ask_yes_no(self, t("ui.risk2_baslik"), t("ui.risk2_geri_metin",
+                                                                   ad=(engine.store.get(tweak_id) or {}).get("ad", tweak_id))))
+            if not ok:
+                done()
+                return
+        self._run_change(tweak_id, lambda: engine.revert(tweak_id, confirmed=True), done, reverted=True)
+
+    def apply_custom(self, change_id, name, steps, values, done, level=0, restart="yok", related=None, after=()):
+        """Yöneticilerden gelen değişiklik (başlangıç öğesi, servis, MSI, aygıt gücü, monitör Hz).
+        Onay ekranları çağıran tarafından gösterilir."""
+        if self.busy or self._blocked():
+            done()
+            return
+        work = lambda: self.c.engine.apply_custom(change_id, name, steps, values, level=level,  # noqa: E731
+                                                  restart=restart, confirmed=True, related=related,
+                                                  after=after)
+        self.ensure_prepared(lambda: self._run_change(change_id, work, done, undoable=True), done)
+
+    def nvidia_profile(self, done=lambda: None):
+        """NVIDIA için optimize et: salt okunur plan (iş parçacığında) -> önizleme -> onaydan sonra tek değişiklik
+        (yedek + Değişiklikler + "Geri al"). G-SYNC satırları için iki plan birden okunur."""
+        if self.busy or self._blocked():
+            done()
+            return
+        system, by_id = self.c.engine.system, self.c.by_id
+        kayitli = {tid for tid in by_id if self.c.engine.store.has(tid)}  # kendi kaydı olan ayarlar: profil yazmaz
+
+        def failed(_exc=None):
+            dialogs.show_message(self, t("ui.nvprofil.pencere"), t("ui.nvidia_okunamadi"), "uyari")
+            done()
+
+        def ready(plans):
+            if plans[False] is None:
+                failed()
+                return
+            rows = dialogs.choose_nvidia_profile(self, plans, by_id)
+            if not rows:
+                done()
+                return
+            steps, values = nvidia_profili.uygulanacaklar(rows)
+
+            def finished():
+                if self.c.engine.store.has(nvidia_profili.PROFIL_ID):
+                    dialogs.show_message(self, t("ui.nvprofil.pencere"), t("ui.nvprofil.sonra"), "bilgi")
+                done()
+            self.apply_custom(nvidia_profili.PROFIL_ID, t("ui.nvprofil.degisiklik"), steps, values, finished,
+                              restart="uygulama", related=nvidia_profili.PROFIL_ID)
+
+        self.worker.run(lambda: {g: nvidia_profili.plan(system, by_id, g, kayitli) for g in (False, True)}, ready, failed, serial=False)
+
+    def restore_default(self, tweak, done):
+        """Başka programın uyguladığı sorunlu ayarı Windows varsayılanına döndürür (app/engine/varsayilan.py):
+        tek satır önizleme + onay, sonra apply_custom (yedek, Değişiklikler, geri alma); yeniden okumayı çağıran yapar."""
+        plan = varsayilan.plan(self.c.engine.system, tweak["id"])
+        if plan is None:
+            self.set_status(t("ui.varsayilan.beklenmeyen"), "uyari")
+            done()
+            return
+        key, params = plan["onizleme"]
+        if not dialogs.ask_yes_no(self, t("ui.varsayilan.dugme"), t(key, **params), yes_text=t("ui.varsayilan.dugme")):
+            done()
+            return
+        self.apply_custom(varsayilan.change_id(tweak["id"]), t("ui.varsayilan.degisiklik", ad=tweak["ad"]),
+                          plan["adimlar"], plan["degerler"], done, related=tweak["id"])
+
+    def run_npi(self, tweak, settings, done, sha256=None):
+        """Yedek yöntem: NVIDIA Profile Inspector ile içe aktarma (geri alınamaz; işlem geçmişine yazılır)."""
+        if self.busy or self._blocked():
+            done()
+            return
+        engine = self.c.engine
+
+        def work():
+            from app.engine.engine import Result  # noqa: WPS433
+            try:
+                engine.system.run_npi_import(settings, sha256)
+            except Exception as exc:
+                engine.store.history("npi", tweak["id"], False, str(exc))
+                return Result(False, "hata.npi_basarisiz")
+            engine.store.history("npi", tweak["id"], True, str(settings))
+            return Result(True, "sonuc.npi")
+        self.ensure_prepared(lambda: self._run_change(tweak["id"], work, done), done)
+
+    def run_action(self, tweak, action, done=lambda: None):
+        """Tek seferlik eylem: geri alınamaz olduğu açıkça sorulur."""
+        if self.busy or self._blocked():
+            done()
+            return
+        if not dialogs.ask_yes_no(self, action["etiket"], t("ui.eylem_onay", ad=action["etiket"]),
+                                  yes_text=t("ui.devam"), no_text=t("ui.vazgec")):
+            done()
+            return
+        self._run_change(tweak["id"], lambda: self.c.engine.run_action(tweak, action["id"]), done)
+
+    def _batch(self, title, task, done):
+        waiting = dialogs.busy(self, title, t("ui.lutfen_bekleyin"))
+        self.busy = True
+
+        def finished(results):
+            waiting.finish()
+            self.busy = False
+            for _, result in results:
+                self.c.note_result(result)
+            self._summarize(title, results)
+            self.update_banners()
+            self.reload_pages()
+            self._update_counts()
+            self._save_timer.start(500)
+            done()
+
+        def failed(_exc):
+            waiting.finish()
+            self.busy = False
+            done()
+
+        self.worker.run(task, finished, failed)
+
+    def revert_all(self, done):
+        if self.busy or self._blocked() or not self.c.changed():
+            done()
+            return
+        if not dialogs.ask_yes_no(self, t("ui.tumunu_geri_al"), t("ui.tumunu_geri_al_soru")):
+            done()
+            return
+
+        def task():
+            related = {i for tid in self.c.engine.changed_ids() for i in self._related_ids(tid)}
+            results = self.c.engine.revert_all()
+            for tweak_id, _ in results:
+                if tweak_id in self.c.by_id:
+                    self.c.refresh_one(tweak_id)
+            self._recheck_reverted(related | {tid for tid, _ in results})
+            return results
+
+        self._batch(t("ui.tumunu_geri_al"), task, done)
+
+    def apply_recommended(self, tweaks, done=lambda: None):
+        """Toplu öneri: önce ÖNİZLEME (neler açılacak), onaydan sonra her zamanki yoldan uygulanır."""
+        if self.busy or self._blocked():
+            done()
+            return
+        ids = dialogs.choose_bulk(self, tweaks)
+        if not ids:
+            done()
+            return
+        self.apply_profile([{"id": i} for i in ids], done, title=t("ui.toplu.sonuc"))
+
+    def apply_profile(self, rows, done, title=None):
+        if self.busy or self._blocked():
+            done()
+            return
+        choices = []
+        for row in rows:
+            tweak = self.c.by_id[row["id"]]
+            if not self._confirm(tweak, True):
+                continue
+            choices.append((row["id"], True))
+        if not choices:
+            done()
+            return
+
+        def task():
+            results = profile_module.apply(self.c.engine, self.c.by_id, choices)
+            for tweak_id, _ in results:
+                self.c.refresh_one(tweak_id)
+            return results
+
+        self.ensure_prepared(lambda: self._batch(title or t("ui.profil_sonuc"), task, done), done)
+
+    def _summarize(self, title, results):
+        ok = [r for r in results if r[1].ok]
+        bad = [r for r in results if not r[1].ok]
+        lines = [t("ui.sonuc_ozet", basarili=len(ok), basarisiz=len(bad))]
+        for tweak_id, result in bad:
+            name = self.c.by_id[tweak_id]["ad"] if tweak_id in self.c.by_id else tweak_id
+            lines.append(f"• {name}: {t(result.key, **result.params)}")
+        if bad:  # hata varsa ayrıntı için pencere; hepsi başarılıysa tıklama istemeyen yeşil onay
+            dialogs.show_message(self, title, "\n".join(lines), "uyari")
+        else:
+            self.toast.show_text(f"{title} · {t('ui.sonuc_kisa', basarili=len(ok))}")
+
+    # ------------------------------------------------------------------ tepsi simgesi
+    def update_tray(self):
+        """Ayar açıksa tepsi simgesini gösterir (Qt'nin kendi bileşeni; ek kütüphane yok)."""
+        wanted = bool(settings.get("tepsiye_kucult")) and QSystemTrayIcon.isSystemTrayAvailable()
+        if wanted and self.tray is None:
+            self.tray = QSystemTrayIcon(app_icon(), self)
+            self.tray.setToolTip(t("uygulama.ad"))
+            menu = QMenu(self)
+            show = QAction(t("ui.tepsi.goster"), menu)
+            show.triggered.connect(self.show_from_tray)
+            leave = QAction(t("ui.tepsi.cikis"), menu)
+            leave.triggered.connect(self.quit_from_tray)
+            menu.addAction(show)
+            menu.addSeparator()
+            menu.addAction(leave)
+            self.tray.setContextMenu(menu)
+            self.tray.activated.connect(lambda reason: self.show_from_tray()
+                                        if reason == QSystemTrayIcon.ActivationReason.Trigger else None)
+            self.tray.show()
+        elif not wanted and self.tray is not None:
+            self.tray.hide()
+            self.tray.deleteLater()
+            self.tray = None
+
+    def show_from_tray(self):
+        self.showNormal()
+        self.raise_()
+        self.activateWindow()
+
+    def nativeEvent(self, event_type, message):
+        """İkinci açılış (tek_ornek.claim) 'pencereni göster' der: tepsideyse bile pencere öne gelir."""
+        if event_type == b"windows_generic_MSG":
+            msg = wintypes.MSG.from_address(int(message))
+            if msg.message == tek_ornek.show_message_id():
+                self.show_from_tray()
+                return True, 0
+        return super().nativeEvent(event_type, message)
+
+    def quit_from_tray(self):
+        self.quitting = True
+        self.close()
+
+    def restart_app(self):
+        """Pencereyi kapatıp uygulamayı yeniden açar (dil değişikliğini uygulamak için)."""
+        self.quitting = True
+        if not self.close():
+            return
+        exe, args = restart_command()
+        QProcess.startDetached(exe, args, str(paths.app_dir()))
+
+    def changeEvent(self, event):
+        """Küçültülünce veya başka pencere öne geçince animasyon çalışmaz (boşta CPU yükü yok)."""
+        if event.type() in (QEvent.Type.WindowStateChange, QEvent.Type.ActivationChange):
+            idle = self.isMinimized() or not self.isActiveWindow()
+            motion.set_paused(idle, "arka_plan")
+            self.live_monitor.set_window_active(not idle)
+        super().changeEvent(event)
+
+    def closeEvent(self, event):
+        if self.tray is not None and not self.quitting:
+            # Tepsiye küçült: pencere gizlenir, canlı FPS / oyun kaydı çalışmaya devam eder.
+            event.ignore()
+            self.hide()
+            self.c.save_cache()
+            return
+        bakim = self.pages["temizlik"].bakim if "temizlik" in self.pages else None
+        if (self.busy or (bakim and bakim.mesgul)) and not dialogs.ask_yes_no(self, t("ui.kapat"), t("ui.islem_suruyor")):
+            event.ignore()
+            self.quitting = False
+            return
+        if bakim:  # bakım aracı sürerken kapatılıyorsa görünmez yönetici süreç kalmasın (Denetim A2 B7)
+            bakim.kapanista_iptal()
+        if "oyunlar" in self.pages:  # süren kanıt döngüsü ölçümü dursun: PresentMon arkada çalışır kalmasın
+            self.pages["oyunlar"].dongu.cancel.set()
+        if self.tray is not None:
+            self.tray.hide()
+        self._save_timer.stop()
+        self._counts_timer.stop()
+        self.live_monitor.stop()
+        self._stop_live_fps()
+        if self.recorder is not None:
+            self.recorder.stop()
+        if self.game_detector is not None:
+            self.game_detector.stop()
+        if self.prep_detector is not None:
+            self.prep_detector.stop()
+        # Çıkarken hazırlıkta uygulananlar geri alınır. İşlem sürüyorsa (işçi aynı oturumu geri alıyor olabilir)
+        # atlanır: günlük kalır, sonraki açılışta recover yapar (Denetim A O1).
+        if self.game_session is not None and not self.busy:
+            self.game_session.stop()
+        if not self.skip_save:
+            self.c.save_cache()
+        self.worker.shutdown()
+        event.accept()
+        QApplication.instance().quit()  # tepsi modu için son pencere kapanınca otomatik çıkış kapalı
+
+
+def app_icon():
+    """Uygulama simgesi: data/logo.png kare tuvalin ortasında; dosya yoksa "F" harfli kendi çizimimiz."""
+    mark = w.logo_pixmap(256)
+    if mark is not None:
+        icon = QIcon()
+        for size in (16, 24, 32, 48, 64, 128, 256):
+            canvas = QPixmap(size, size)
+            canvas.fill(QColor(0, 0, 0, 0))
+            scaled = mark.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
+                                 Qt.TransformationMode.SmoothTransformation)
+            painter = QPainter(canvas)
+            painter.drawPixmap((size - scaled.width()) // 2, (size - scaled.height()) // 2, scaled)
+            painter.end()
+            icon.addPixmap(canvas)
+        return icon
+    pixmap = QPixmap(64, 64)
+    pixmap.fill(QColor(0, 0, 0, 0))
+    painter = QPainter(pixmap)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setBrush(QColor(theme.DARK["accent"]))
+    painter.setPen(QColor(0, 0, 0, 0))
+    painter.drawRoundedRect(4, 4, 56, 56, 14, 14)
+    painter.setPen(QColor("white"))
+    font = QFont(theme.ui_font(13, bold=True))
+    font.setPixelSize(26)
+    painter.setFont(font)
+    painter.drawText(pixmap.rect(), int(Qt.AlignmentFlag.AlignCenter), "F")
+    painter.end()
+    return QIcon(pixmap)
+
+
+def apply_theme(qt_app):
+    qt_app.setStyleSheet(theme.stylesheet())
+
+
+def apply_language(qt_app):
+    """Seçili dilin yazı yönünü (sağdan sola diller için) ve yazı tipini uygular."""
+    rtl = i18n.direction() == "rtl"
+    qt_app.setLayoutDirection(Qt.LayoutDirection.RightToLeft if rtl else Qt.LayoutDirection.LeftToRight)
+    qt_app.setFont(theme.ui_font(13))
+
+
+def restart_command():
+    """Uygulamayı aynı modda yeniden açan komut (dil değişikliği için). Yeniden UAC sorulmaz:
+    yönetici süreç yöneticiyi başlatır; salt okunur süreç salt okunur kalır."""
+    args = [a for a in sys.argv[1:] if a != "--tepside"]
+    if "--yukseltildi" not in args:
+        args.append("--yukseltildi")
+    if getattr(sys, "frozen", False):
+        return sys.executable, args
+    return sys.executable, ["-m", "app"] + args
+
+
+def create_app():
+    qt_app = QApplication.instance() or QApplication(sys.argv)
+    apply_language(qt_app)
+    apply_theme(qt_app)
+    w.install_wheel_guard(qt_app)
+    hints = QGuiApplication.styleHints()
+    if hasattr(hints, "colorSchemeChanged"):
+        hints.colorSchemeChanged.connect(lambda _scheme: apply_theme(qt_app))
+    return qt_app
+
+
+def _hold_timer_resolution(mode):
+    """Kullanıcı Performans menüsünde istediyse, uygulama açık kaldıkça zamanlayıcı çözünürlüğünü ister.
+    Önizleme modunda istenmez. Uygulama kapanınca Windows isteği kendiliğinden bırakır."""
+    value = settings.get("zamanlayici_cozunurlugu")
+    if not value or mode == MODE_PREVIEW:
+        return
+    try:
+        from app.engine import timer_resolution  # noqa: WPS433
+        timer_resolution.hold(int(value))
+    except (OSError, AttributeError) as exc:
+        _log.warning("Zamanlayıcı çözünürlüğü istenemedi: %s", exc)
+
+
+def _ask_update_check(mode, ask=None):
+    """Tek soru, bir kez: `guncelleme_soruldu` yoksa ayar değeri ne olursa olsun (None/True/False) sorulur ve bayrak yazılır.
+    Ayar zaten True ise sorulmaz, yalnızca bayrak işaretlenir. Pencere kapatılırsa "hayır" sayılır. Önizlemede sormaz."""
+    if mode == MODE_PREVIEW or settings.get("guncelleme_soruldu"):
+        return
+    if settings.get("guncelleme_denetle") is not True:
+        ask = ask or (lambda: dialogs.ask_yes_no(None, t("ui.guncelleme.ilk_baslik"), t("ui.guncelleme.ilk_soru"),
+                                                  yes_text=t("ui.guncelleme.ilk_evet"), no_text=t("ui.guncelleme.ilk_hayir"),
+                                                  kind="bilgi"))
+        settings.set("guncelleme_denetle", bool(ask()))
+    settings.set("guncelleme_soruldu", True)
+
+
+def run(mode, in_tray=False):
+    if mode != MODE_PREVIEW and not tek_ornek.claim():
+        _log.info("Uygulama zaten açık: var olan pencere öne getirildi, bu kopya kapanıyor")
+        return 0
+    qt_app = create_app()
+    qt_app.setWindowIcon(app_icon())
+    qt_app.setQuitOnLastWindowClosed(False)  # tepsideyken pencere kapanınca uygulama kapanmasın
+    # İlk açılışta dil seçimi (onaydan önce, çünkü onay metni seçilen dilde gösterilir).
+    if not settings.get("dil"):
+        language = dialogs.ask_language(i18n.available(), i18n.current()) or i18n.current()
+        settings.set("dil", language)
+        if language != i18n.current():
+            i18n.load(language)
+            apply_language(qt_app)
+            apply_theme(qt_app)
+    # İlk açılışta ve sürüm/metin değişince sorumluluk onayı; reddedilirse uygulama açılmaz.
+    if not consent.is_accepted():
+        if not dialogs.ask_consent(consent.text()):
+            _log.info("Başlangıç onayı reddedildi; uygulama kapatılıyor")
+            return 1
+        consent.accept()
+    _ask_update_check(mode)
+    window = MainWindow(Controller(mode))
+    tek_ornek.allow_from_unelevated(int(window.winId()))
+    _hold_timer_resolution(mode)
+    if mode == MODE_PREVIEW:
+        _log.info("Önizleme modu: hiçbir ayar değiştirilmeyecek")
+    if in_tray and window.tray is not None:
+        _log.info("Tepside başlatıldı")
+    else:
+        window.show()
+    return qt_app.exec()

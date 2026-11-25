@@ -1,0 +1,10 @@
+# Yanlış alarm: app/scan/live.py:93 `def array(self, key, fmt=...)` — "key" bir parametre adı, sır değil (generic-api-key).
+# Parmak izi = <commit>:<dosya>:<kural>:<satır>. Her commit için ayrı satır gerekir.
+# Çalışma ağacı taraması (gitleaks dir):
+app/scan/live.py:generic-api-key:93
+# Private geçmiş:
+cb1f7c578df04bfba30c436e1c92c478c231a36f:app/scan/live.py:generic-api-key:93
+# Public geçmiş (SlimelyW/forevermore):
+ef0e9f48e4d0ea240e6754caa54357e47a9f2504:app/scan/live.py:generic-api-key:93
+114f164755134270980b6f0d5551d2b7e7d33ae2:app/scan/live.py:generic-api-key:93
+221b5c4b4c22934027b9c7f29e87dfad8ac79b57:app/scan/live.py:generic-api-key:93

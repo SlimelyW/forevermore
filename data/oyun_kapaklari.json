@@ -1,0 +1,20 @@
+{
+  "_not": "Gömülü oyun kapakları (Steam kitaplık görseli 300x450). Eşleştirme: exe adı (* joker, küçük harf), Steam appid, klasör/takma ad (harf-rakam dışı karakterler yok sayılır, tam eşitlik). Kaynaklar ve kaldırma: docs/KAPAK_KAYNAKLARI.md",
+  "kapaklar": [
+    {"ad": "Apex Legends", "dosya": "apex-legends.jpg", "exe": ["r5apex.exe", "apexlegends.exe"], "appid": ["1172470"], "klasor": ["Apex Legends", "Apex"], "takma": ["Apex Legends"]},
+    {"ad": "Fall Guys", "dosya": "fall-guys.jpg", "exe": ["fallguys_client_game.exe", "fallguys_client.exe"], "appid": ["1097150"], "klasor": ["FallGuys", "Fall Guys"], "takma": ["Fall Guys: Ultimate Knockout", "Fall Guys Ultimate Knockout"]},
+    {"ad": "Grand Theft Auto V", "dosya": "gta-v.jpg", "exe": ["gta5.exe"], "appid": ["271590"], "klasor": ["Grand Theft Auto V", "GTAV"], "takma": ["GTA V", "GTA 5", "Grand Theft Auto 5"]},
+    {"ad": "Overwatch 2", "dosya": "overwatch-2.jpg", "exe": ["overwatch.exe"], "appid": ["2357570"], "klasor": ["Overwatch"], "takma": ["Overwatch", "Overwatch 2"]},
+    {"ad": "Call of Duty", "dosya": "call-of-duty.jpg", "exe": ["cod.exe"], "appid": ["1938090"], "klasor": ["Call of Duty"], "takma": ["Call of Duty: Warzone", "Call of Duty Warzone", "Call of Duty HQ"]},
+    {"ad": "Diablo IV", "dosya": "diablo-iv.jpg", "exe": ["diablo iv.exe"], "appid": ["2344520"], "klasor": ["Diablo IV"], "takma": ["Diablo 4"]},
+    {"ad": "Rocket League", "dosya": "rocket-league.jpg", "exe": ["rocketleague.exe"], "appid": ["252950"], "klasor": ["rocketleague", "Rocket League"], "takma": []},
+    {"ad": "PUBG: BATTLEGROUNDS", "dosya": "pubg.jpg", "exe": ["tslgame.exe"], "appid": ["578080"], "klasor": ["PUBG", "PUBG Battlegrounds"], "takma": ["PUBG", "PUBG: Battlegrounds", "PLAYERUNKNOWN'S BATTLEGROUNDS"]},
+    {"ad": "Rust", "dosya": "rust.jpg", "exe": ["rustclient.exe"], "appid": ["252490"], "klasor": ["Rust"], "takma": []},
+    {"ad": "Warframe", "dosya": "warframe.jpg", "exe": ["warframe.x64.exe", "warframe.exe"], "appid": ["230410"], "klasor": ["Warframe"], "takma": []},
+    {"ad": "Counter-Strike 2", "dosya": "cs2.jpg", "exe": ["cs2.exe"], "appid": ["730"], "klasor": ["Counter-Strike Global Offensive"], "takma": ["CS2", "Counter-Strike 2", "Counter-Strike: Global Offensive"]},
+    {"ad": "Dota 2", "dosya": "dota-2.jpg", "exe": ["dota2.exe"], "appid": ["570"], "klasor": ["dota 2 beta"], "takma": ["Dota 2"]},
+    {"ad": "Helldivers 2", "dosya": "helldivers-2.jpg", "exe": ["helldivers2.exe"], "appid": ["553850"], "klasor": ["Helldivers 2"], "takma": ["HELLDIVERS 2"]},
+    {"ad": "Path of Exile", "dosya": "path-of-exile.jpg", "exe": ["pathofexile*.exe"], "appid": ["238960"], "klasor": ["Path of Exile"], "takma": []},
+    {"ad": "Lost Ark", "dosya": "lost-ark.jpg", "exe": ["lostark.exe"], "appid": ["1599340"], "klasor": ["Lost Ark"], "takma": ["LOST ARK"]}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_aciklama": [
+    "Başlangıç ve servisler > Servisler'deki 'FPS'i etkileyebilecek servisler' süzgeci.",
+    "Her satır ayar veritabanındaki bir ayara bağlıdır ('ilgili'); kaynaklar o ayarın (i) penceresindedir. Yeni kaynaksız iddia eklenmez.",
+    "'durum' ayarın gerçeklik durumudur (gerçek / durumsal / placebo). Metinler lang/<dil>.json içinde 'fps_servis.<servis>' anahtarındadır.",
+    "'onek': true olan servis adları kullanıcıya özel ek alır (ör. BcastDVRUserService_1a2b3)."
+  ],
+  "servisler": [
+    {"servis": "amd3dvcacheSvc", "durum": "gerçek", "ilgili": "CPU-005"},
+    {"servis": "SysMain", "durum": "durumsal", "ilgili": "SYS-002"},
+    {"servis": "WSearch", "durum": "durumsal", "ilgili": "SYS-003"},
+    {"servis": "wuauserv", "durum": "durumsal", "ilgili": "SYS-014"},
+    {"servis": "BITS", "durum": "durumsal", "ilgili": "SYS-014"},
+    {"servis": "UsoSvc", "durum": "durumsal", "ilgili": "SYS-014"},
+    {"servis": "DoSvc", "durum": "durumsal", "ilgili": "NET-005"},
+    {"servis": "BcastDVRUserService", "durum": "durumsal", "ilgili": "PERF-002", "onek": true},
+    {"servis": "DiagTrack", "durum": "placebo", "ilgili": "SYS-004"},
+    {"servis": "XblAuthManager", "durum": "placebo", "ilgili": "SYS-005"},
+    {"servis": "XblGameSave", "durum": "placebo", "ilgili": "SYS-005"},
+    {"servis": "XboxNetApiSvc", "durum": "placebo", "ilgili": "SYS-005"},
+    {"servis": "XboxGipSvc", "durum": "placebo", "ilgili": "SYS-005"},
+    {"servis": "Spooler", "durum": "placebo", "ilgili": "SYS-001"},
+    {"servis": "WerSvc", "durum": "placebo", "ilgili": "SYS-010"},
+    {"servis": "NVDisplay.ContainerLocalSystem", "durum": "placebo", "ilgili": "PLC-025"}
+  ]
+}

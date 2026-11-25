@@ -1,0 +1,75 @@
+{
+  "_aciklama": "Oyunlar sayfasındaki 'Oyun içi ayarlar' kartının GENEL maddeleri (her oyunda aranacak ayarlar). Oyuna özel değer yok: oyun başına doğrulanmış kaynak bulunamadı (docs/D2B_OYUN_YAPILANDIRMA.md). 'kanit': belgeli | olculmus | tartismali | genel (genel = yerleşik topluluk bilgisi, ölçümü yok). 'kaynak': yalnızca ana adres; uygulama bağlanmaz, metin olarak gösterilir.",
+  "maddeler": [
+    {
+      "id": "reflex",
+      "kanit": "belgeli",
+      "kaynak": "nvidia.com (Reflex)",
+      "baslik": {"tr": "Düşük gecikme modu (NVIDIA Reflex)", "en": "Low-latency mode (NVIDIA Reflex)"},
+      "metin": {
+        "tr": "Oyunda Reflex seçeneği varsa Açık yapın (varsa Açık + Boost da denenebilir). NVIDIA, desteklenen oyunlarda sistem gecikmesinin düştüğünü belirtir; gerçek kazanç oyuna ve donanıma bağlıdır.",
+        "en": "If the game has a Reflex option, turn it On (On + Boost can also be tried if offered). NVIDIA states system latency drops in supported games; the real gain depends on the game and hardware."
+      }
+    },
+    {
+      "id": "fps_siniri",
+      "kanit": "tartismali",
+      "kaynak": "blurbusters.com (G-SYNC 101)",
+      "baslik": {"tr": "FPS sınırı", "en": "FPS limit"},
+      "metin": {
+        "tr": "G-SYNC ya da FreeSync kullanıyorsanız sınırı yenileme hızının birkaç kare altına koymak yırtılma ve VRR aralığından çıkma riskini azaltır (Blur Busters). Kullanmıyorsanız sınırın gecikmeye etkisi oyuna göre değişir; kontrollü bir ölçüm yoktur, kendi oyununuzda deneyin.",
+        "en": "With G-SYNC or FreeSync, capping a few frames below the refresh rate reduces tearing and the risk of leaving the VRR range (Blur Busters). Without them, the cap's effect on latency varies by game; there is no controlled measurement, so try it in your own game."
+      }
+    },
+    {
+      "id": "vsync",
+      "kanit": "tartismali",
+      "kaynak": "blurbusters.com (G-SYNC 101)",
+      "baslik": {"tr": "V-Sync", "en": "V-Sync"},
+      "metin": {
+        "tr": "Yırtılma sizi rahatsız etmiyorsa kapalı tutmak ek bekleme eklemez. G-SYNC/FreeSync ile birlikte açık ve FPS sınırlı kullanım yırtılmasız görüntü verir; rekabetçi oyunlarda hangisinin daha düşük gecikmeli olduğu kontrollü olarak gösterilmedi.",
+        "en": "If tearing does not bother you, leaving it off adds no extra wait. With G-SYNC/FreeSync, on plus an FPS cap gives a tear-free picture; which is lower-latency in competitive games has not been shown by a controlled test."
+      }
+    },
+    {
+      "id": "yukseltme",
+      "kanit": "belgeli",
+      "kaynak": "nvidia.com / amd.com / intel.com (DLSS, FSR, XeSS)",
+      "baslik": {"tr": "Yükseltme (DLSS / FSR / XeSS) ve render ölçeği", "en": "Upscaling (DLSS / FSR / XeSS) and render scale"},
+      "metin": {
+        "tr": "Ekran kartı sınırlıysa FPS'i artıran en büyük ayarlardan biridir; Kalite modu görüntüyü az bozar, Performans modu daha çok. İşlemci sınırlıysa (GPU %100'den uzaksa) pek fark yaratmaz.",
+        "en": "When the graphics card is the limit, this is one of the biggest FPS gains; Quality mode softens the image less, Performance mode more. When the CPU is the limit (GPU well below 100%), it changes little."
+      }
+    },
+    {
+      "id": "agir_efektler",
+      "kanit": "genel",
+      "kaynak": "",
+      "baslik": {"tr": "Gölge, hacimsel efekt, yansıma, ışın izleme", "en": "Shadows, volumetric effects, reflections, ray tracing"},
+      "metin": {
+        "tr": "FPS düşükse önce bunları düşürmek genelde görüntüyü az, FPS'i çok etkiler. Bu yerleşik bir topluluk bilgisidir; oyuna göre değişir ve ölçümü yoktur.",
+        "en": "If FPS is low, lowering these first usually costs little image quality for a lot of FPS. This is common community knowledge; it varies by game and has no measurement behind it."
+      }
+    },
+    {
+      "id": "kenar_yumusatma",
+      "kanit": "genel",
+      "kaynak": "",
+      "baslik": {"tr": "Kenar yumuşatma (MSAA, TAA)", "en": "Anti-aliasing (MSAA, TAA)"},
+      "metin": {
+        "tr": "MSAA yüksek değerlerde pahalıdır; FPS'e ihtiyacınız varsa düşük MSAA ya da oyunun kendi hafif yöntemi yeterli olabilir. Görüntü tercihi kişiseldir.",
+        "en": "MSAA is expensive at high values; if you need FPS, low MSAA or the game's own lightweight method may be enough. Image preference is personal."
+      }
+    },
+    {
+      "id": "tam_ekran",
+      "kanit": "tartismali",
+      "kaynak": "devblogs.microsoft.com (DirectX)",
+      "baslik": {"tr": "Ekran modu (tam ekran / çerçevesiz)", "en": "Display mode (fullscreen / borderless)"},
+      "metin": {
+        "tr": "Microsoft, tam ekran optimizasyonlarının (FSO) performans ve gecikmede özel tam ekranla eşdeğer olduğunu söyler; bazı oyuncular yine de özel tam ekranı tercih eder, kontrollü ölçüm nadirdir. Farkı kendi oyununuzda deneyin.",
+        "en": "Microsoft says fullscreen optimizations (FSO) are equivalent to exclusive fullscreen in performance and latency; some players still prefer exclusive fullscreen, and controlled measurements are rare. Try the difference in your own game."
+      }
+    }
+  ]
+}

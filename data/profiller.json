@@ -1,0 +1,54 @@
+{
+  "_aciklama": [
+    "Hazır profiller. 'temel' verilen profilin tüm ayarları önce eklenir, sonra bu profilin ayarları eklenir.",
+    "'secili': true olan ayarlar profil ekranında işaretli gelir. 'dikkatli' riskli ayarlar ASLA işaretli gelemez (kod reddeder) ve açılırken ayrıca onay istenir.",
+    "Bu bilgisayara uymayan ayarlar (ör. masaüstünde laptop ayarı) profil uygulanırken kendiliğinden atlanır.",
+    "Profil adları ve açıklamaları lang/tr.json içinde 'profil.<id>.ad' ve 'profil.<id>.aciklama' anahtarlarındadır."
+  ],
+  "profiller": [
+    {
+      "id": "guvenli",
+      "ayarlar": [
+        {"id": "PERF-001", "secili": true},
+        {"id": "PERF-002", "secili": true},
+        {"id": "INP-007", "secili": true},
+        {"id": "AUD-004", "secili": true},
+        {"id": "NET-005", "secili": true},
+        {"id": "QOL-001", "secili": true},
+        {"id": "QOL-003", "secili": true},
+        {"id": "QOL-008", "secili": true}
+      ]
+    },
+    {
+      "id": "oyun",
+      "temel": "guvenli",
+      "ayarlar": [
+        {"id": "DISP-002", "secili": false},
+        {"id": "DISP-003", "secili": true},
+        {"id": "INP-002", "secili": true},
+        {"id": "PWR-001", "secili": true},
+        {"id": "PWR-003", "secili": true},
+        {"id": "PWR-004", "secili": true},
+        {"id": "CPU-002", "secili": true},
+        {"id": "NET-002", "secili": true},
+        {"id": "GPU-001", "secili": false},
+        {"id": "AUD-001", "secili": false},
+        {"id": "PERF-008", "secili": false}
+      ]
+    },
+    {
+      "id": "dikkatli",
+      "temel": "oyun",
+      "ayarlar": [
+        {"id": "SYS-002", "secili": false},
+        {"id": "SYS-001", "secili": false},
+        {"id": "DISP-005", "secili": false},
+        {"id": "PERF-004", "secili": false},
+        {"id": "PERF-007", "secili": false},
+        {"id": "CPU-001", "secili": false},
+        {"id": "CPU-009", "secili": false},
+        {"id": "GPU-016", "secili": false}
+      ]
+    }
+  ]
+}
